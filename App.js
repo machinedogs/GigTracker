@@ -1,19 +1,22 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import GigTrackerNavigator from './navigation/GigTrackerNavigator';
+import { createStore, combineReducers } from 'redux';
+import { Provider } from 'react-redux';
+
+import eventsReducer from './store/reducers/events'
+import userEventsReducer from './store/reducers/userEvents';
+
+const rootReducer = combineReducers({
+  events: eventsReducer,
+  userEvents: userEventsReducer
+});
+
+const store = createStore(rootReducer);
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-    </View>
+    <Provider store={store} >
+      <GigTrackerNavigator />
+    </Provider>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+};
