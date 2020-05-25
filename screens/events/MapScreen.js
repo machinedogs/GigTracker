@@ -1,8 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, FlatList } from 'react-native';
 
 import { EVENTS } from '../../data/dummy-data';
-import { FlatList } from 'react-native-gesture-handler';
 
 const MapScreen = props => {
   return (
