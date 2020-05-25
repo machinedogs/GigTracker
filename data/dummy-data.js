@@ -16,8 +16,8 @@ export const EVENTS = [
         'Neighborhood Cookout',
         'Hey y\'all, I just moved to the neighborhood and I want to get to know my neighbors! Come out for some grillin, brewin, and party vibes with your truly!',
         'Cookout',
-        39.954007, 
-        -75.165534
+        39.980030, 
+        -75.161853
     ),
     new Event(
         'e3',
@@ -30,10 +30,11 @@ export const EVENTS = [
     ),
     new Event(
         'e4',
-        'Couchtown',
+        'Sofaville',
+        'Mechanical Canine, Another Hospital, Think Machine, James Christopher, and Precious Little Life',
         'Hey guys come out and see Mechanical Canine, Another Hospital, Think Machine, James Christopher, and Precious Little Life. Entry fee is $5 cash.',
         'DIY Show',
-        39.947045, 
-        -75.162265
+        39.967216, 
+        -75.214189
     )
 ];
