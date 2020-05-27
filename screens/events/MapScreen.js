@@ -193,7 +193,7 @@ const generatedMapStyle = [
     "elementType": "labels.text.fill",
     "stylers": [
       {
-        "color": "#352c52"
+        "color": "#aac1f5"
       }
     ]
   },
@@ -201,7 +201,7 @@ const generatedMapStyle = [
     "elementType": "labels.text.stroke",
     "stylers": [
       {
-        "color": "#aac1f5"
+        "color": "#352c52"
       },
       {
         "weight": 2
@@ -432,6 +432,5 @@ const generatedMapStyle = [
     ]
   }
 ]
-
 
 export default MapScreen;
