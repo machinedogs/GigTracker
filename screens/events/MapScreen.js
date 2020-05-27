@@ -56,7 +56,7 @@ const MapScreen = props => {
             label="Category"
             data={categories}
             containerStyle={styles.dropdownStyle}
-            textColor='red'
+            textColor='#fff'
             baseColor='#fff'
             pickerStyle={{backgroundColor: 'gray'}}
             itemTextStyle={styles.containerStyle}
@@ -66,7 +66,7 @@ const MapScreen = props => {
             label="Date"
             data={categories}
             containerStyle={styles.dropdownStyle}
-            textColor='red'
+            textColor='#fff'
             baseColor='#fff'
             pickerStyle={{backgroundColor: 'gray'}}
             itemTextStyle={styles.containerStyle}
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
   textStyle: {
     textAlign: 'left',
     fontSize: 25,
-    color: 'red',
+    color: '#fff',
     paddingTop: 15,
   },
   img: {
