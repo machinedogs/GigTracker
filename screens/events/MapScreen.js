@@ -20,12 +20,9 @@ const MapScreen = props => {
 
   let categories = [{value: 'All events'}];
   events.map(event => {
-    if(categories.includes(event.category)) {
-
-    }else{
-      let category = {
-        value: event.category
-      }
+    categoryString = categories.toString;
+    if(1) { //check if categories contains this category already
+      let category = { value: event.category }
       categories.push(category)
     }
   });
@@ -47,6 +44,7 @@ const MapScreen = props => {
   return (
 
     //change the header bar color? or remove it?
+    //add a dropdown to choose map style?
     <View style={styles.container}>
 
       <View style={styles.container}>
@@ -304,19 +302,18 @@ const generatedMapStyle = [
   },
   {
     "featureType": "road.arterial",
-    "elementType": "geometry",
     "stylers": [
       {
-        "color": "#fdfcf8"
+        "visibility": "off"
       }
     ]
   },
   {
     "featureType": "road.arterial",
-    "elementType": "labels",
+    "elementType": "geometry",
     "stylers": [
       {
-        "visibility": "off"
+        "color": "#fdfcf8"
       }
     ]
   },
