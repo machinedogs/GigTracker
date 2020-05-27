@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Button, FlatList, Dimensions, Image } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { Dropdown } from 'react-native-material-dropdown';
 import FlashOnIcon from '@material-ui/icons/FlashOn';
@@ -22,6 +23,7 @@ const LATITUDE_DELTA = 0.0922
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
 
 const MapScreen = props => {
+  const userId = useSelector(state => state.auth.userId);
   const [events, setEvents] = useState(EVENTS);
 
   let categories = [{ value: 'All events' }];
@@ -113,21 +115,30 @@ const MapScreen = props => {
       </View>
 
       <View style={styles.container}>
-        <Text style={styles.textStyle}>username420</Text>
-        <View style={styles.row}>
-          <Button
-            title="User Profile"
-            onPress={() => { props.navigation.navigate('UserProfile') }}
-          />
-          <Button
-            title="Create Event"
-            onPress={() => { props.navigation.navigate('CreateEvent') }}
-          />
-          <Button
-            title="Saved Events"
-            onPress={() => { props.navigation.navigate('CreateEvent') }}
-          />
-        </View>
+        {!userId ?
+          (
+            <Button
+              title="Login or Sign up"
+              onPress={() => { props.navigation.navigate('Auth') }}
+            />
+          ) :
+          (
+            <View style={styles.row}>
+              <Button
+                title="User Profile"
+                onPress={() => { props.navigation.navigate('UserProfile') }}
+              />
+              <Button
+                title="Create Event"
+                onPress={() => { props.navigation.navigate('CreateEvent') }}
+              />
+              <Button
+                title="Saved Events"
+                onPress={() => { props.navigation.navigate('CreateEvent') }}
+              />
+            </View>
+          )
+        }
       </View>
 
     </View>
