@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Button, FlatList, Dimensions, Image } from 'react-native';
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 import { Dropdown } from 'react-native-material-dropdown';
 import FlashOnIcon from '@material-ui/icons/FlashOn';
 import EventModal from '../../components/eventModal'
@@ -57,9 +57,8 @@ const MapScreen = props => {
 
   // gets called when pin is pressed
   const openEventModal = (event) => {
-    //event modal not implemented yet
     console.log("pressing event pin");
-
+    toggleModal();
 
   }
 
@@ -128,9 +127,16 @@ const MapScreen = props => {
               icon={FlashOnIcon}
               description={event.description}
               key={event.id}
-              onPress={openEventModal}
               tracksViewChanges={false}
-            />
+            ><Callout 
+            style={styles.plainView}
+            onPress={openEventModal}
+            >
+                <View>
+                  <Text>{event.title}</Text>
+                </View>
+              </Callout>
+            </Marker>
           ))}
         </MapView>
 
@@ -202,6 +208,10 @@ const styles = StyleSheet.create({
   },
   dropdownStyle: {
     width: 100
+  },
+  plainView: {
+    flex:1,
+    width: 'auto'
   },
 });
 
