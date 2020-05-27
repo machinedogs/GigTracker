@@ -9,6 +9,7 @@ import {
   KeyboardTimePicker,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
+//import { useTheme } from 'react-navigation/native';
 
 import { EVENTS } from '../../data/dummy-data';
 
@@ -26,15 +27,15 @@ const MapScreen = props => {
   let categories = [{ value: 'All events' }];
   EVENTS.map(event => {
     var count = 0;
-    categories.forEach(function(category){
-      if(event.category === category.value){
-        count = count+1;
+    categories.forEach(function (category) {
+      if (event.category === category.value) {
+        count = count + 1;
       }
-    }); 
-      if(count === 0){
-        let category = { value: event.category }
-        categories.push(category)
-      }
+    });
+    if (count === 0) {
+      let category = { value: event.category }
+      categories.push(category)
+    }
   });
   console.log(categories);
 
@@ -51,6 +52,8 @@ const MapScreen = props => {
     //event modal not implemented yet
   }
 
+  //const theme = useTheme();
+
   return (
 
     //add a dropdown to choose map style?
@@ -66,7 +69,8 @@ const MapScreen = props => {
             containerStyle={styles.dropdownStyle}
             textColor='#fff'
             baseColor='#fff'
-            pickerStyle={{ backgroundColor: 'gray' }}
+            selectedItemColor='#c0392b'
+            pickerStyle={{ backgroundColor: '#ecf0f1' }}
             itemTextStyle={styles.containerStyle}
             onChangeText={filterCategory}
           />
@@ -76,20 +80,21 @@ const MapScreen = props => {
             containerStyle={styles.dropdownStyle}
             textColor='#fff'
             baseColor='#fff'
-            pickerStyle={{ backgroundColor: 'gray' }}
+            selectedItemColor='#c0392b'
+            pickerStyle={{ backgroundColor: '#ecf0f1' }}
             itemTextStyle={styles.containerStyle}
           />
         </View>
       </View>
 
-      <View style={{ flex: 4}}>
+      <View style={{ flex: 4 }}>
         <MapView
           style={styles.mapStyle}
           provider={PROVIDER_GOOGLE}
           showsUserLocation={true}
           rotateEnabled={false}
           showsTraffic={false}
-          customMapStyle={generatedMapStyle}
+          customMapStyle={generatedMapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
         >
           {events.map(event => (
             <Marker
@@ -97,6 +102,7 @@ const MapScreen = props => {
               title={event.title}
               pinColor="#341f97"
               //image={require('../../assets/splash.png')}
+              icon={FlashOnIcon}
               description={event.description}
               key={event.id}
               onPress={openEventModal}
@@ -143,7 +149,7 @@ const styles = StyleSheet.create({
   textStyle: {
     textAlign: 'left',
     fontSize: 22,
-    color: '#fff',
+    color: '#dfe6e9',
   },
   titleStyle: {
     textAlign: 'left',
@@ -179,7 +185,7 @@ const generatedMapStyle = [
     "elementType": "geometry",
     "stylers": [
       {
-        "color": "#ebe3cd"
+        "color": "#ebdfdc"
       }
     ]
   },
@@ -187,7 +193,7 @@ const generatedMapStyle = [
     "elementType": "labels.text.fill",
     "stylers": [
       {
-        "color": "#523735"
+        "color": "#352c52"
       }
     ]
   },
@@ -195,7 +201,10 @@ const generatedMapStyle = [
     "elementType": "labels.text.stroke",
     "stylers": [
       {
-        "color": "#f5f1e6"
+        "color": "#aac1f5"
+      },
+      {
+        "weight": 2
       }
     ]
   },
@@ -214,15 +223,6 @@ const generatedMapStyle = [
     "stylers": [
       {
         "color": "#dcd2be"
-      }
-    ]
-  },
-  {
-    "featureType": "administrative.land_parcel",
-    "elementType": "labels",
-    "stylers": [
-      {
-        "visibility": "off"
       }
     ]
   },
@@ -290,15 +290,6 @@ const generatedMapStyle = [
   },
   {
     "featureType": "poi.park",
-    "elementType": "labels.text",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "poi.park",
     "elementType": "labels.text.fill",
     "stylers": [
       {
@@ -316,7 +307,8 @@ const generatedMapStyle = [
     ]
   },
   {
-    "featureType": "road.arterial",
+    "featureType": "road",
+    "elementType": "labels.icon",
     "stylers": [
       {
         "visibility": "off"
@@ -351,15 +343,6 @@ const generatedMapStyle = [
     ]
   },
   {
-    "featureType": "road.highway",
-    "elementType": "labels",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
     "featureType": "road.highway.controlled_access",
     "elementType": "geometry",
     "stylers": [
@@ -379,27 +362,18 @@ const generatedMapStyle = [
   },
   {
     "featureType": "road.local",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "road.local",
-    "elementType": "labels",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "road.local",
     "elementType": "labels.text.fill",
     "stylers": [
       {
         "color": "#806b63"
+      }
+    ]
+  },
+  {
+    "featureType": "transit",
+    "stylers": [
+      {
+        "visibility": "off"
       }
     ]
   },
