@@ -8,7 +8,12 @@ import ManageEventScreen from '../screens/user/ManageEventScreen';
 
 const EventNavigator = createStackNavigator(
     {
-        Home: MapScreen,
+        Home: {
+            screen: MapScreen, 
+            navigationOptions: {
+                header: null,
+            },
+        },
         CreateEvent: CreateEventScreen,
         UserProfile: UserProfileScreen,
         ManageEvent: ManageEventScreen

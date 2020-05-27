@@ -4,6 +4,12 @@ import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { Dropdown } from 'react-native-material-dropdown';
 import FlashOnIcon from '@material-ui/icons/FlashOn';
 import { Icon } from 'react-native-elements';
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
 
 import { EVENTS } from '../../data/dummy-data';
 
@@ -18,10 +24,10 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
 const MapScreen = props => {
   const [events, setEvents] = useState(EVENTS);
 
-  let categories = [{value: 'All events'}];
-  events.map(event => {
+  let categories = [{ value: 'All events' }];
+  EVENTS.map(event => {
     categoryString = categories.toString;
-    if(1) { //check if categories contains this category already
+    if (1) { //check if categories contains this category already
       let category = { value: event.category }
       categories.push(category)
     }
@@ -29,9 +35,9 @@ const MapScreen = props => {
   console.log(categories);
 
   const filterCategory = (category) => {
-    if(category === 'All events'){
+    if (category === 'All events') {
       setEvents(EVENTS)
-    }else {
+    } else {
       setEvents(EVENTS.filter(event => event.category === category))
     }
     console.log(events);
@@ -43,12 +49,12 @@ const MapScreen = props => {
 
   return (
 
-    //change the header bar color? or remove it?
     //add a dropdown to choose map style?
+    //add dropdown calendar
     <View style={styles.container}>
 
       <View style={styles.container}>
-        <Text style={styles.textStyle}>GigTracker</Text>
+        <Text style={styles.titleStyle}>GigTracker</Text>
         <View style={styles.topBarStyle}>
           <Dropdown
             label="Category"
@@ -56,7 +62,7 @@ const MapScreen = props => {
             containerStyle={styles.dropdownStyle}
             textColor='#fff'
             baseColor='#fff'
-            pickerStyle={{backgroundColor: 'gray'}}
+            pickerStyle={{ backgroundColor: 'gray' }}
             itemTextStyle={styles.containerStyle}
             onChangeText={filterCategory}
           />
@@ -66,7 +72,7 @@ const MapScreen = props => {
             containerStyle={styles.dropdownStyle}
             textColor='#fff'
             baseColor='#fff'
-            pickerStyle={{backgroundColor: 'gray'}}
+            pickerStyle={{ backgroundColor: 'gray' }}
             itemTextStyle={styles.containerStyle}
           />
         </View>
@@ -86,11 +92,11 @@ const MapScreen = props => {
             <Marker
               coordinate={{ latitude: event.latitude, longitude: event.longitude }}
               title={event.title}
-              pinColor="blue"
+              pinColor="purple"
               icon={FlashOnIcon}
               description={event.description}
               key={event.id}
-              onPress={openEventModal} 
+              onPress={openEventModal}
               tracksViewChanges={false}
             />
           ))}
@@ -109,6 +115,10 @@ const MapScreen = props => {
             title="Create Event"
             onPress={() => { props.navigation.navigate('CreateEvent') }}
           />
+          <Button
+            title="Saved Events"
+            onPress={() => { props.navigation.navigate('CreateEvent') }}
+          />
         </View>
       </View>
 
@@ -122,16 +132,23 @@ const styles = StyleSheet.create({
     backgroundColor: '#2c2c54',
     alignItems: 'center',
     justifyContent: 'center',
+    width: Dimensions.get('window').width,
   },
   mapStyle: {
     width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height * 0.6,
+    height: Dimensions.get('window').height * 0.7,
   },
   textStyle: {
     textAlign: 'left',
     fontSize: 25,
     color: '#fff',
     paddingTop: 15,
+  },
+  titleStyle: {
+    textAlign: 'left',
+    fontSize: 25,
+    color: '#fff',
+    paddingTop: 60,
   },
   img: {
     width: 60,
