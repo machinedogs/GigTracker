@@ -92,7 +92,7 @@ const MapScreen = props => {
             <Marker
               coordinate={{ latitude: event.latitude, longitude: event.longitude }}
               title={event.title}
-              pinColor="purple"
+              pinColor="#6c5ce7"
               icon={FlashOnIcon}
               description={event.description}
               key={event.id}
