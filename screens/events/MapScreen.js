@@ -16,14 +16,15 @@ const LATITUDE_DELTA = 0.0922
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
 
 const MapScreen = props => {
+  const [events, setEvents] = useState(EVENTS);
 
-  let categories = [{category: 'All events'}];
-  EVENTS.map(event => {
+  let categories = [{value: 'All events'}];
+  events.map(event => {
     if(categories.includes(event.category)) {
 
     }else{
       let category = {
-        category: event.category
+        value: event.category
       }
       categories.push(category)
     }
@@ -31,18 +32,21 @@ const MapScreen = props => {
   console.log(categories);
 
   const filterCategory = (category) => {
-    EVENTS.filter(event => event.category === category)
-  }
-
-  props.navigation.setOptions={
-    title: 'yooo',
+    if(category === 'All events'){
+      setEvents(EVENTS)
+    }else {
+      setEvents(EVENTS.filter(event => event.category === category))
+    }
+    console.log(events);
   };
+
+  const openEventModal = (event) => {
+    //event modal not implemented yet
+  }
 
   return (
 
-    //change the header bar color?
-    //pass the props to TopBar and BottomBar for navigation?
-    //filter by event.category
+    //change the header bar color? or remove it?
     <View style={styles.container}>
 
       <View style={styles.container}>
@@ -52,7 +56,9 @@ const MapScreen = props => {
             label="Category"
             data={categories}
             containerStyle={styles.dropdownStyle}
+            textColor='red'
             baseColor='#fff'
+            pickerStyle={{backgroundColor: 'gray'}}
             itemTextStyle={styles.containerStyle}
             onChangeText={filterCategory}
           />
@@ -60,7 +66,9 @@ const MapScreen = props => {
             label="Date"
             data={categories}
             containerStyle={styles.dropdownStyle}
+            textColor='red'
             baseColor='#fff'
+            pickerStyle={{backgroundColor: 'gray'}}
             itemTextStyle={styles.containerStyle}
           />
         </View>
@@ -73,9 +81,10 @@ const MapScreen = props => {
           showsUserLocation={true}
           //followsUserLocation={true}
           rotateEnabled={false}
-          //customMapStyle={generatedMapStyle}
+          showsTraffic={false}
+          customMapStyle={generatedMapStyle}
         >
-          {EVENTS.map(event => (
+          {events.map(event => (
             <Marker
               coordinate={{ latitude: event.latitude, longitude: event.longitude }}
               title={event.title}
@@ -83,7 +92,7 @@ const MapScreen = props => {
               icon={FlashOnIcon}
               description={event.description}
               key={event.id}
-              onPress={() => { }}
+              onPress={openEventModal} 
               tracksViewChanges={false}
             />
           ))}
@@ -112,7 +121,7 @@ const MapScreen = props => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#2d3436',
+    backgroundColor: '#2c2c54',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -123,7 +132,7 @@ const styles = StyleSheet.create({
   textStyle: {
     textAlign: 'left',
     fontSize: 25,
-    color: 'white',
+    color: 'red',
     paddingTop: 15,
   },
   img: {
@@ -157,15 +166,7 @@ const generatedMapStyle = [
     "elementType": "geometry",
     "stylers": [
       {
-        "color": "#f5f5f5"
-      }
-    ]
-  },
-  {
-    "elementType": "labels.icon",
-    "stylers": [
-      {
-        "visibility": "off"
+        "color": "#ebe3cd"
       }
     ]
   },
@@ -173,7 +174,7 @@ const generatedMapStyle = [
     "elementType": "labels.text.fill",
     "stylers": [
       {
-        "color": "#616161"
+        "color": "#523735"
       }
     ]
   },
@@ -181,7 +182,34 @@ const generatedMapStyle = [
     "elementType": "labels.text.stroke",
     "stylers": [
       {
-        "color": "#f5f5f5"
+        "color": "#f5f1e6"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      {
+        "color": "#c9b2a6"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative.land_parcel",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      {
+        "color": "#dcd2be"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative.land_parcel",
+    "elementType": "labels",
+    "stylers": [
+      {
+        "visibility": "off"
       }
     ]
   },
@@ -190,7 +218,16 @@ const generatedMapStyle = [
     "elementType": "labels.text.fill",
     "stylers": [
       {
-        "color": "#bdbdbd"
+        "color": "#ae9e90"
+      }
+    ]
+  },
+  {
+    "featureType": "landscape.natural",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#dfd2ae"
       }
     ]
   },
@@ -199,7 +236,16 @@ const generatedMapStyle = [
     "elementType": "geometry",
     "stylers": [
       {
-        "color": "#eeeeee"
+        "color": "#dfd2ae"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "labels.text",
+    "stylers": [
+      {
+        "visibility": "off"
       }
     ]
   },
@@ -208,16 +254,33 @@ const generatedMapStyle = [
     "elementType": "labels.text.fill",
     "stylers": [
       {
-        "color": "#757575"
+        "color": "#93817c"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.business",
+    "stylers": [
+      {
+        "visibility": "off"
       }
     ]
   },
   {
     "featureType": "poi.park",
-    "elementType": "geometry",
+    "elementType": "geometry.fill",
     "stylers": [
       {
-        "color": "#e5e5e5"
+        "color": "#a5b076"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.park",
+    "elementType": "labels.text",
+    "stylers": [
+      {
+        "visibility": "off"
       }
     ]
   },
@@ -226,7 +289,7 @@ const generatedMapStyle = [
     "elementType": "labels.text.fill",
     "stylers": [
       {
-        "color": "#9e9e9e"
+        "color": "#447530"
       }
     ]
   },
@@ -235,16 +298,25 @@ const generatedMapStyle = [
     "elementType": "geometry",
     "stylers": [
       {
-        "color": "#ffffff"
+        "color": "#f5f1e6"
       }
     ]
   },
   {
     "featureType": "road.arterial",
-    "elementType": "labels.text.fill",
+    "elementType": "geometry",
     "stylers": [
       {
-        "color": "#757575"
+        "color": "#fdfcf8"
+      }
+    ]
+  },
+  {
+    "featureType": "road.arterial",
+    "elementType": "labels",
+    "stylers": [
+      {
+        "visibility": "off"
       }
     ]
   },
@@ -253,16 +325,60 @@ const generatedMapStyle = [
     "elementType": "geometry",
     "stylers": [
       {
-        "color": "#dadada"
+        "color": "#f8c967"
       }
     ]
   },
   {
     "featureType": "road.highway",
-    "elementType": "labels.text.fill",
+    "elementType": "geometry.stroke",
     "stylers": [
       {
-        "color": "#616161"
+        "color": "#e9bc62"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "labels",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway.controlled_access",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#e98d58"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway.controlled_access",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      {
+        "color": "#db8555"
+      }
+    ]
+  },
+  {
+    "featureType": "road.local",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "road.local",
+    "elementType": "labels",
+    "stylers": [
+      {
+        "visibility": "off"
       }
     ]
   },
@@ -271,7 +387,7 @@ const generatedMapStyle = [
     "elementType": "labels.text.fill",
     "stylers": [
       {
-        "color": "#9e9e9e"
+        "color": "#806b63"
       }
     ]
   },
@@ -280,7 +396,25 @@ const generatedMapStyle = [
     "elementType": "geometry",
     "stylers": [
       {
-        "color": "#e5e5e5"
+        "color": "#dfd2ae"
+      }
+    ]
+  },
+  {
+    "featureType": "transit.line",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#8f7d77"
+      }
+    ]
+  },
+  {
+    "featureType": "transit.line",
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      {
+        "color": "#ebe3cd"
       }
     ]
   },
@@ -289,16 +423,16 @@ const generatedMapStyle = [
     "elementType": "geometry",
     "stylers": [
       {
-        "color": "#eeeeee"
+        "color": "#dfd2ae"
       }
     ]
   },
   {
     "featureType": "water",
-    "elementType": "geometry",
+    "elementType": "geometry.fill",
     "stylers": [
       {
-        "color": "#c9c9c9"
+        "color": "#b9d3c2"
       }
     ]
   },
@@ -307,10 +441,11 @@ const generatedMapStyle = [
     "elementType": "labels.text.fill",
     "stylers": [
       {
-        "color": "#9e9e9e"
+        "color": "#92998d"
       }
     ]
   }
 ]
+
 
 export default MapScreen;
