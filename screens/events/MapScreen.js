@@ -26,11 +26,16 @@ const MapScreen = props => {
 
   let categories = [{ value: 'All events' }];
   EVENTS.map(event => {
-    categoryString = categories.toString;
-    if (1) { //check if categories contains this category already
-      let category = { value: event.category }
-      categories.push(category)
-    }
+    var count = 0;
+    categories.forEach(function(category){
+      if(event.category === category.value){
+        count = count+1;
+      }
+    }); 
+      if(count === 0){
+        let category = { value: event.category }
+        categories.push(category)
+      }
   });
   console.log(categories);
 
