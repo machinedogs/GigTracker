@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, Button, FlatList, Dimensions, Image } from 'rea
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { Dropdown } from 'react-native-material-dropdown';
 import FlashOnIcon from '@material-ui/icons/FlashOn';
-import { Icon } from 'react-native-elements';
 import DateFnsUtils from '@date-io/date-fns';
 import {
   MuiPickersUtilsProvider,
@@ -83,12 +82,11 @@ const MapScreen = props => {
         </View>
       </View>
 
-      <View style={{ flex: 3 }}>
+      <View style={{ flex: 4}}>
         <MapView
           style={styles.mapStyle}
           provider={PROVIDER_GOOGLE}
           showsUserLocation={true}
-          //followsUserLocation={true}
           rotateEnabled={false}
           showsTraffic={false}
           customMapStyle={generatedMapStyle}
@@ -98,7 +96,7 @@ const MapScreen = props => {
               coordinate={{ latitude: event.latitude, longitude: event.longitude }}
               title={event.title}
               pinColor="#341f97"
-              icon={FlashOnIcon}
+              //image={require('../../assets/splash.png')}
               description={event.description}
               key={event.id}
               onPress={openEventModal}
@@ -109,7 +107,6 @@ const MapScreen = props => {
       </View>
 
       <View style={styles.container}>
-        <Image source={{ uri: 'https://randomuser.me/api/portraits/men/2.jpg' }} style={styles.img} />
         <Text style={styles.textStyle}>username420</Text>
         <View style={styles.row}>
           <Button
@@ -145,9 +142,8 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     textAlign: 'left',
-    fontSize: 25,
+    fontSize: 22,
     color: '#fff',
-    paddingTop: 15,
   },
   titleStyle: {
     textAlign: 'left',
@@ -161,7 +157,6 @@ const styles = StyleSheet.create({
     borderRadius: 100 / 2
   },
   row: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: "flex-start",
     justifyContent: 'flex-start',
@@ -172,13 +167,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
+    paddingBottom: 20,
   },
   dropdownStyle: {
     width: 100
   },
-  containerStyle: {
-    color: 'blue',
-  }
 });
 
 const generatedMapStyle = [
