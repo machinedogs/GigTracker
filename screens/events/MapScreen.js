@@ -388,16 +388,7 @@ const generatedMapStyle = [
     "elementType": "geometry.fill",
     "stylers": [
       {
-        "color": "#fdcb6e"
-      }
-    ]
-  },
-  {
-    "featureType": "road.highway",
-    "elementType": "geometry.stroke",
-    "stylers": [
-      {
-        "color": "#e9bc62"
+        "color": "#bdbdbd"
       }
     ]
   },
@@ -412,10 +403,9 @@ const generatedMapStyle = [
   },
   {
     "featureType": "road.highway.controlled_access",
-    "elementType": "geometry",
     "stylers": [
       {
-        "color": "#cd6133"
+        "color": "#bdbdbd"
       }
     ]
   },
@@ -424,7 +414,7 @@ const generatedMapStyle = [
     "elementType": "geometry.stroke",
     "stylers": [
       {
-        "color": "#db8555"
+        "color": "#bdbdbd"
       }
     ]
   },
