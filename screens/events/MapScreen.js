@@ -25,6 +25,7 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
 const MapScreen = props => {
   const [events, setEvents] = useState(EVENTS);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState({id:"" , title:"", description:""})
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -57,8 +58,15 @@ const MapScreen = props => {
 
   // gets called when pin is pressed
   const openEventModal = (event) => {
-    console.log("pressing event pin");
+    console.log("pressing event callout");
     toggleModal();
+
+  }
+
+  const onPinPress = (event) => {
+    setSelectedEvent({id:event.id, title:event.title, description: event.description});
+    console.log("pressing event callout");
+    console.log(event)
 
   }
 
@@ -118,24 +126,25 @@ const MapScreen = props => {
               description={event.description}
               key={event.id}
               tracksViewChanges={false}
-            ><EventModal
-                title={event.title}
-                description={event.description}
-                hostname={event.hostName}
-                visable={isModalVisible}
-                toggleModal={toggleModal}
-              /><Callout
-                style={styles.plainView}
-                onPress={openEventModal}
-              >
+              onPress={onPinPress.bind(this,event)}
+            ><Callout
+              style={styles.plainView}
+              onPress={openEventModal}
+            >
                 <View>
-                  <Text style={{fontWeight:'bold'}}>{event.title}</Text>
+                  <Text style={{ fontWeight: 'bold' }}>{event.title}</Text>
                 </View>
               </Callout>
             </Marker>
           ))}
         </MapView>
-
+        <EventModal
+          title={selectedEvent.title}
+          description={selectedEvent.description}
+          hostname={selectedEvent.hostName}
+          visable={isModalVisible}
+          toggleModal={toggleModal}
+        />
       </View>
 
       <View style={styles.container}>
