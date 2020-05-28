@@ -27,15 +27,15 @@ const EventModal = (props) => {
                 onBackdropPress={() => props.toggleModal()}
                 swipeThreshold={100}
                 TransitionOutTiming={0}
-                propagateSwipe={true}
                 style={styles.modal}
+                propagateSwipe
             >
 
-                <ScrollView>
+                <ScrollView style={styles.ScrollView}>
                     <View style={styles.container}>
-                        <Text style={styles.title}>Title: {props.title}</Text>
+                        <Text style={styles.title}>{props.title}</Text>
                         <Text style={styles.hostName}>Hostname: {props.hostName}</Text>
-                        <Text style={styles.eventData}>Description: {props.description}</Text>
+                        <Text style={styles.eventData}>{props.description}</Text>
                         <View style={styles.saveButton}>
                             <Button
                                 raised={true}
@@ -54,7 +54,6 @@ const EventModal = (props) => {
 }
 
 
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -71,16 +70,18 @@ const styles = StyleSheet.create({
         color: 'black',
         fontWeight: 'bold',
         padding: 20,
+        marginTop: -10,
         marginBottom: 10,
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "white",
-        borderRadius: 40,
+        borderRadius: 0,
         textShadowRadius: 10,
         shadowColor: 'blue',
-        borderWidth: 5,
+        borderWidth: 0,
         borderColor: '#57a4f2',
-        textAlign: 'center'
+        textAlign: 'center',
+        width: SCREEN_WIDTH
 
     },
     modal: {
@@ -107,6 +108,9 @@ const styles = StyleSheet.create({
         flex: 1,
     }
     ,
+    ScrollView:{
+        marginHorizontal:0
+    }
 
 });
 
