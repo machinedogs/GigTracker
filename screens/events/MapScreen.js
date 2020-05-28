@@ -184,6 +184,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: "flex-start",
     justifyContent: 'flex-start',
+    paddingBottom: 10,
   },
   topBarStyle: {
     flex: 1,
