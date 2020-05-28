@@ -4,6 +4,7 @@ import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { Dropdown } from 'react-native-material-dropdown';
 import FlashOnIcon from '@material-ui/icons/FlashOn';
 import DateFnsUtils from '@date-io/date-fns';
+import DatePicker from 'react-native-datepicker';
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -74,15 +75,32 @@ const MapScreen = props => {
             itemTextStyle={styles.containerStyle}
             onChangeText={filterCategory}
           />
-          <Dropdown
-            label="Date"
-            data={categories}
-            containerStyle={styles.dropdownStyle}
-            textColor='#fff'
-            baseColor='#fff'
-            selectedItemColor='#c0392b'
-            pickerStyle={{ backgroundColor: '#ecf0f1' }}
-            itemTextStyle={styles.containerStyle}
+          <DatePicker
+            style={{ width: 100 }}
+            date={'2020-5-28'}
+            mode="date"
+            placeholder="select date"
+            format="YYYY-MM-DD"
+            minDate="2016-05-01"
+            maxDate="2016-06-01"
+            showIcon={false}
+            style={styles.textStyle}
+            customStyles={{textColor: 'white'}}
+            confirmBtnText="Confirm"
+            cancelBtnText="Cancel"
+            customStyles={{
+              dateIcon: {
+                position: 'absolute',
+                left: 0,
+                top: 4,
+                marginLeft: 0
+              },
+              dateInput: {
+                marginLeft: 36
+              }
+              // ... You can check the source to find the other keys.
+            }}
+            onDateChange={(date) => { }}
           />
         </View>
       </View>
@@ -137,7 +155,7 @@ const MapScreen = props => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#2c2c54',
+    backgroundColor: '#130f40',
     alignItems: 'center',
     justifyContent: 'center',
     width: Dimensions.get('window').width,
@@ -236,15 +254,6 @@ const generatedMapStyle = [
     ]
   },
   {
-    "featureType": "landscape.natural",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#dfd2ae"
-      }
-    ]
-  },
-  {
     "featureType": "poi",
     "elementType": "geometry",
     "stylers": [
@@ -325,6 +334,15 @@ const generatedMapStyle = [
     ]
   },
   {
+    "featureType": "road.arterial",
+    "elementType": "labels",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
     "featureType": "road.highway",
     "elementType": "geometry",
     "stylers": [
@@ -343,11 +361,20 @@ const generatedMapStyle = [
     ]
   },
   {
+    "featureType": "road.highway",
+    "elementType": "labels",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
     "featureType": "road.highway.controlled_access",
     "elementType": "geometry",
     "stylers": [
       {
-        "color": "#e98d58"
+        "color": "#cd6133"
       }
     ]
   },
@@ -357,6 +384,14 @@ const generatedMapStyle = [
     "stylers": [
       {
         "color": "#db8555"
+      }
+    ]
+  },
+  {
+    "featureType": "road.local",
+    "stylers": [
+      {
+        "visibility": "off"
       }
     ]
   },
@@ -418,7 +453,7 @@ const generatedMapStyle = [
     "elementType": "geometry.fill",
     "stylers": [
       {
-        "color": "#b9d3c2"
+        "color": "#95afc0"
       }
     ]
   },
