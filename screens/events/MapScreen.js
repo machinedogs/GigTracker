@@ -5,6 +5,7 @@ import { Dropdown } from 'react-native-material-dropdown';
 import FlashOnIcon from '@material-ui/icons/FlashOn';
 import EventModal from '../../components/eventModal'
 import DateFnsUtils from '@date-io/date-fns';
+import DatePicker from 'react-native-datepicker';
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -93,15 +94,32 @@ const MapScreen = props => {
             itemTextStyle={styles.containerStyle}
             onChangeText={filterCategory}
           />
-          <Dropdown
-            label="Date"
-            data={categories}
-            containerStyle={styles.dropdownStyle}
-            textColor='#fff'
-            baseColor='#fff'
-            selectedItemColor='#c0392b'
-            pickerStyle={{ backgroundColor: '#ecf0f1' }}
-            itemTextStyle={styles.containerStyle}
+          <DatePicker
+            style={{ width: 100 }}
+            date={'5-28-2020'}
+            mode="date"
+            placeholder="select date"
+            format="MM-DD-YYYY"
+            minDate="05-01-2020"
+            maxDate="06-01-2021"
+            showIcon={false}
+            style={styles.textStyle}
+            customStyles={{textColor: 'white'}}
+            confirmBtnText="Confirm"
+            cancelBtnText="Cancel"
+            customStyles={{
+              dateIcon: {
+                position: 'absolute',
+                left: 0,
+                top: 4,
+                marginLeft: 0
+              },
+              dateInput: {
+                marginLeft: 36
+              }
+              // ... You can check the source to find the other keys.
+            }}
+            onDateChange={(date) => { }}
           />
         </View>
       </View>
@@ -172,7 +190,7 @@ const MapScreen = props => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#2c2c54',
+    backgroundColor: '#130f40',
     alignItems: 'center',
     justifyContent: 'center',
     width: Dimensions.get('window').width,
@@ -250,10 +268,33 @@ const generatedMapStyle = [
   },
   {
     "featureType": "administrative",
+    "stylers": [
+      {
+        "color": "#130f40"
+      },
+      {
+        "weight": 8
+      }
+    ]
+  },
+  {
+    "featureType": "administrative",
     "elementType": "geometry.stroke",
     "stylers": [
       {
         "color": "#c9b2a6"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative",
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      {
+        "color": "#ced6e0"
+      },
+      {
+        "weight": 1
       }
     ]
   },
@@ -276,11 +317,11 @@ const generatedMapStyle = [
     ]
   },
   {
-    "featureType": "landscape.natural",
+    "featureType": "landscape.natural.terrain",
     "elementType": "geometry",
     "stylers": [
       {
-        "color": "#dfd2ae"
+        "color": "#dcd2be"
       }
     ]
   },
@@ -324,7 +365,7 @@ const generatedMapStyle = [
     "elementType": "geometry.fill",
     "stylers": [
       {
-        "color": "#a5b076"
+        "color": "#567d46"
       }
     ]
   },
@@ -365,6 +406,15 @@ const generatedMapStyle = [
     ]
   },
   {
+    "featureType": "road.arterial",
+    "elementType": "labels",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
     "featureType": "road.highway",
     "elementType": "geometry",
     "stylers": [
@@ -375,19 +425,27 @@ const generatedMapStyle = [
   },
   {
     "featureType": "road.highway",
-    "elementType": "geometry.stroke",
+    "elementType": "geometry.fill",
     "stylers": [
       {
-        "color": "#e9bc62"
+        "color": "#bdbdbd"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "labels",
+    "stylers": [
+      {
+        "visibility": "off"
       }
     ]
   },
   {
     "featureType": "road.highway.controlled_access",
-    "elementType": "geometry",
     "stylers": [
       {
-        "color": "#e98d58"
+        "color": "#bdbdbd"
       }
     ]
   },
@@ -396,7 +454,15 @@ const generatedMapStyle = [
     "elementType": "geometry.stroke",
     "stylers": [
       {
-        "color": "#db8555"
+        "color": "#bdbdbd"
+      }
+    ]
+  },
+  {
+    "featureType": "road.local",
+    "stylers": [
+      {
+        "visibility": "off"
       }
     ]
   },
@@ -458,7 +524,7 @@ const generatedMapStyle = [
     "elementType": "geometry.fill",
     "stylers": [
       {
-        "color": "#b9d3c2"
+        "color": "#95afc0"
       }
     ]
   },

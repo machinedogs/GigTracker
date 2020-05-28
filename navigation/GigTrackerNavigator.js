@@ -11,7 +11,7 @@ const EventNavigator = createStackNavigator(
         Home: {
             screen: MapScreen, 
             navigationOptions: {
-                header: null,
+                headerShown: false,
             },
         },
         CreateEvent: CreateEventScreen,
