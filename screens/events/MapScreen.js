@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Button, FlatList, Dimensions, Image } from 'react-native';
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 import { Dropdown } from 'react-native-material-dropdown';
 import FlashOnIcon from '@material-ui/icons/FlashOn';
+import EventModal from '../../components/eventModal'
 import DateFnsUtils from '@date-io/date-fns';
 import DatePicker from 'react-native-datepicker';
 import {
@@ -24,6 +25,13 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
 
 const MapScreen = props => {
   const [events, setEvents] = useState(EVENTS);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState({id:"" , title:"", description:""})
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
 
   let categories = [{ value: 'All events' }];
   EVENTS.map(event => {
@@ -49,8 +57,18 @@ const MapScreen = props => {
     console.log(events);
   };
 
+  // gets called when pin is pressed
   const openEventModal = (event) => {
-    //event modal not implemented yet
+    console.log("pressing event callout");
+    toggleModal();
+
+  }
+
+  const onPinPress = (event) => {
+    setSelectedEvent({id:event.id, title:event.title, description: event.description});
+    console.log("pressing event callout");
+    console.log(event)
+
   }
 
   //const theme = useTheme();
@@ -62,6 +80,7 @@ const MapScreen = props => {
     <View style={styles.container}>
 
       <View style={styles.container}>
+
         <Text style={styles.titleStyle}>GigTracker</Text>
         <View style={styles.topBarStyle}>
           <Dropdown
@@ -106,6 +125,7 @@ const MapScreen = props => {
       </View>
 
       <View style={{ flex: 4 }}>
+
         <MapView
           style={styles.mapStyle}
           provider={PROVIDER_GOOGLE}
@@ -123,11 +143,26 @@ const MapScreen = props => {
               icon={FlashOnIcon}
               description={event.description}
               key={event.id}
-              onPress={openEventModal}
               tracksViewChanges={false}
-            />
+              onPress={onPinPress.bind(this,event)}
+            ><Callout
+              style={styles.plainView}
+              onPress={openEventModal}
+            >
+                <View>
+                  <Text style={{ fontWeight: 'bold' }}>{event.title}</Text>
+                </View>
+              </Callout>
+            </Marker>
           ))}
         </MapView>
+        <EventModal
+          title={selectedEvent.title}
+          description={selectedEvent.description}
+          hostname={selectedEvent.hostName}
+          visable={isModalVisible}
+          toggleModal={toggleModal}
+        />
       </View>
 
       <View style={styles.container}>
@@ -161,6 +196,7 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
   },
   mapStyle: {
+    zIndex: -1,
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height * 0.7,
   },
@@ -196,6 +232,10 @@ const styles = StyleSheet.create({
   },
   dropdownStyle: {
     width: 100
+  },
+  plainView: {
+    flex: 1,
+    width: 'auto'
   },
 });
 
