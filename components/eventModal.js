@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Image, Button } from 'react-native';
+import { StyleSheet, Text, View, Image, Button, ScrollView } from 'react-native';
 import SlidingUpPanel from 'rn-sliding-up-panel';
 import Modal from 'react-native-modal';
 import { Dimensions } from 'react-native';
@@ -9,9 +9,6 @@ const { width, height } = Dimensions.get('screen');
 const SCREEN_HEIGHT = height;
 const SCREEN_WIDTH = width;
 const MODAL_HEIGHT = height / 2;
-
-
-
 
 // modal to cover part of map screen. 
 // contains event data
@@ -23,25 +20,29 @@ const EventModal = (props) => {
 
 
             <Modal
-                backgroundColor={'white'}
+                backgroundColor={'#2d3436'}
                 isVisible={props.visable}
-                onSwipeComplete={() => props.toggleModal}
+                onSwipeComplete={() => props.toggleModal()}
                 swipeDirection={"down"}
-                backdropOpacity={.2}
-                swipeThreshold= {50}
-                style ={styles.modal}
+                backdropOpacity={.3}
+                backdropColor={'#2c2c54'}
+                onBackdropPress={() => props.toggleModal()}
+                swipeThreshold={50}
+                propagateSwipe
+                style={styles.modal}
             >
 
+                <ScrollView>
+                    <View style={styles.container}>
+                        <Text style={styles.title}>Title: {props.title}</Text>
+                        <Text style={styles.eventData}>Description: {props.description}</Text>
+                        <Text style={styles.eventData}>Hostname: {props.hostName}</Text>
 
-                <View style={styles.container}>
-
-                    <Text style={styles.title}>Title: {props.title}</Text>
-                    <Text>Description: {props.description}</Text>
-                    <Text>Hostname: {props.hostName}</Text>
-
-                    <Button title="Hide modal" onPress={props.toggleModal} />
-                </View>
+                        <Button title="Hide modal" onPress={props.toggleModal} />
+                    </View >
+                </ScrollView>
             </Modal>
+
         </View>
     );
 
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         zIndex: 100,
-        backgroundColor: 'white',
+        backgroundColor: '#2c2c54',
         alignItems: 'center',
         justifyContent: 'center',
         width: SCREEN_WIDTH,
@@ -62,20 +63,26 @@ const styles = StyleSheet.create({
         padding: 10
     },
     title: {
-        fontSize:30,
+        fontSize: 30,
+        color: 'white',
         fontWeight: 'bold',
-        padding:20,
+        padding: 20,
         alignItems: "center",
         justifyContent: "center"
     },
     modal: {
-        flex:1,
+        flex: 1,
         marginTop: 300,
         marginLeft: 0,
-        marginRight: 0 ,
-      
-    }
+        marginRight: 0,
 
+
+    }
+    ,
+    eventData: {
+        color: 'white',
+        fontSize: 20
+    }
 });
 
 export default EventModal;

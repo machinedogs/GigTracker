@@ -96,16 +96,6 @@ const MapScreen = props => {
             itemTextStyle={styles.containerStyle}
           />
         </View>
-        {
-          events.map(event => (<EventModal
-            title={event.title}
-            description={event.description}
-            hostname={event.hostName}
-            visable={isModalVisible}
-            toggleModal={toggleModal}
-          />
-          ))
-        }
       </View>
 
       <View style={{ flex: 4 }}>
@@ -128,12 +118,18 @@ const MapScreen = props => {
               description={event.description}
               key={event.id}
               tracksViewChanges={false}
-            ><Callout 
-            style={styles.plainView}
-            onPress={openEventModal}
-            >
+            ><EventModal
+                title={event.title}
+                description={event.description}
+                hostname={event.hostName}
+                visable={isModalVisible}
+                toggleModal={toggleModal}
+              /><Callout
+                style={styles.plainView}
+                onPress={openEventModal}
+              >
                 <View>
-                  <Text>{event.title}</Text>
+                  <Text style={{fontWeight:'bold'}}>{event.title}</Text>
                 </View>
               </Callout>
             </Marker>
@@ -210,7 +206,7 @@ const styles = StyleSheet.create({
     width: 100
   },
   plainView: {
-    flex:1,
+    flex: 1,
     width: 'auto'
   },
 });
