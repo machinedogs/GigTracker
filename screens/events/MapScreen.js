@@ -77,12 +77,12 @@ const MapScreen = props => {
           />
           <DatePicker
             style={{ width: 100 }}
-            date={'2020-5-28'}
+            date={'5-28-2020'}
             mode="date"
             placeholder="select date"
-            format="YYYY-MM-DD"
-            minDate="2016-05-01"
-            maxDate="2016-06-01"
+            format="MM-DD-YYYY"
+            minDate="05-01-2020"
+            maxDate="06-01-2021"
             showIcon={false}
             style={styles.textStyle}
             customStyles={{textColor: 'white'}}
@@ -228,10 +228,33 @@ const generatedMapStyle = [
   },
   {
     "featureType": "administrative",
+    "stylers": [
+      {
+        "color": "#130f40"
+      },
+      {
+        "weight": 8
+      }
+    ]
+  },
+  {
+    "featureType": "administrative",
     "elementType": "geometry.stroke",
     "stylers": [
       {
         "color": "#c9b2a6"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative",
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      {
+        "color": "#ced6e0"
+      },
+      {
+        "weight": 1
       }
     ]
   },
@@ -250,6 +273,15 @@ const generatedMapStyle = [
     "stylers": [
       {
         "color": "#ae9e90"
+      }
+    ]
+  },
+  {
+    "featureType": "landscape.natural.terrain",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#dcd2be"
       }
     ]
   },
@@ -293,7 +325,7 @@ const generatedMapStyle = [
     "elementType": "geometry.fill",
     "stylers": [
       {
-        "color": "#a5b076"
+        "color": "#567d46"
       }
     ]
   },
@@ -348,6 +380,15 @@ const generatedMapStyle = [
     "stylers": [
       {
         "color": "#f8c967"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "geometry.fill",
+    "stylers": [
+      {
+        "color": "#fdcb6e"
       }
     ]
   },
