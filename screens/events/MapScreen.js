@@ -149,7 +149,7 @@ const MapScreen = props => {
 
         <MapView
           style={styles.mapStyle}
-          //provider={PROVIDER_GOOGLE}
+          provider={PROVIDER_GOOGLE}
           showsUserLocation={true}
           rotateEnabled={false}
           showsTraffic={false}
