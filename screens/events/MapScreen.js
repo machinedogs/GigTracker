@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button, FlatList, Dimensions, Image } from 'react-native';
+import { StyleSheet, Text, View, Button, FlatList, Dimensions, Image, Platform } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 import { Dropdown } from 'react-native-material-dropdown';
 import FlashOnIcon from '@material-ui/icons/FlashOn';
@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     fontSize: 25,
     color: '#fff',
-    paddingTop: 50,
+    paddingTop: Platform.OS === 'ios' ? 50 : 20,
   },
   img: {
     width: 60,
