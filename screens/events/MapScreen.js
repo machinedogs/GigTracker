@@ -115,33 +115,36 @@ const MapScreen = props => {
             itemTextStyle={styles.containerStyle}
             onChangeText={filterCategory}
           />
-          <DatePicker
-            style={{ width: 100 }}
-            date={date}
-            mode="date"
-            placeholder="select date"
-            format="MM-DD-YYYY"
-            minDate="05-01-2020"
-            maxDate="06-01-2021"
-            showIcon={false}
-            style={styles.textStyle}
-            customStyles={{ textColor: 'white' }}
-            confirmBtnText="Confirm"
-            cancelBtnText="Cancel"
-            customStyles={{
-              dateIcon: {
-                position: 'absolute',
-                left: 0,
-                top: 4,
-                marginLeft: 0
-              },
-              dateInput: {
-                marginLeft: 36
-              }
-              // ... You can check the source to find the other keys.
-            }}
-            onDateChange={filterDate}
-          />
+          <View>
+            <Text style={{color: 'white', fontSize: 12, paddingTop: 13, paddingLeft: 35}}>Select a date</Text>
+            <DatePicker
+              style={{ width: 100 }}
+              date={date}
+              mode="date"
+              placeholder="select date"
+              format="MM-DD-YYYY"
+              minDate="05-01-2020"
+              maxDate="06-01-2021"
+              showIcon={false}
+              style={styles.textStyle}
+              customStyles={{ textColor: 'white' }}
+              confirmBtnText="Confirm"
+              cancelBtnText="Cancel"
+              customStyles={{
+                dateIcon: {
+                  position: 'absolute',
+                  left: 0,
+                  top: 4,
+                  marginLeft: 0
+                },
+                dateInput: {
+                  marginLeft: 36
+                }
+                // ... You can check the source to find the other keys.
+              }}
+              onDateChange={filterDate}
+            />
+          </View>
         </View>
       </View>
 
@@ -215,7 +218,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: Dimensions.get('window').width,
-    
+
   },
   mapStyle: {
     zIndex: -1,
@@ -226,13 +229,13 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     fontSize: 22,
     color: 'white',
-  
+
   },
   titleStyle: {
     textAlign: 'left',
     fontSize: 25,
     color: '#fff',
-    paddingTop: 60,
+    paddingTop: 50,
   },
   img: {
     width: 60,
@@ -255,7 +258,7 @@ const styles = StyleSheet.create({
   },
   dropdownStyle: {
     width: 100
-    
+
   },
   plainView: {
     flex: 1,
