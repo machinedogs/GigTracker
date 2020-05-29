@@ -26,7 +26,24 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
 const MapScreen = props => {
   const [events, setEvents] = useState(EVENTS);
   const [isModalVisible, setModalVisible] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState({id:"" , title:"", description:""})
+  const [selectedEvent, setSelectedEvent] = useState({ id: "", title: "", description: "" })
+
+  const todaysDate = () => {
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1;
+
+    var yyyy = today.getFullYear();
+    if (dd < 10) {
+      dd = '0' + dd;
+    }
+    if (mm < 10) {
+      mm = '0' + mm;
+    }
+    return mm + '/' + dd + '/' + yyyy;
+  }
+
+  const [date, setDate] = useState(todaysDate());
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -54,7 +71,6 @@ const MapScreen = props => {
     } else {
       setEvents(EVENTS.filter(event => event.category === category))
     }
-    console.log(events);
   };
 
   // gets called when pin is pressed
@@ -65,10 +81,15 @@ const MapScreen = props => {
   }
 
   const onPinPress = (event) => {
-    setSelectedEvent({id:event.id, title:event.title, description: event.description});
+    setSelectedEvent({ id: event.id, title: event.title, description: event.description });
     console.log("pressing event callout");
     console.log(event)
 
+  }
+
+  const filterDate = (selectedDate) => {
+    setDate(selectedDate);
+    setEvents(EVENTS.filter(event => event.date === selectedDate))
   }
 
   //const theme = useTheme();
@@ -96,7 +117,7 @@ const MapScreen = props => {
           />
           <DatePicker
             style={{ width: 100 }}
-            date={'5-28-2020'}
+            date={date}
             mode="date"
             placeholder="select date"
             format="MM-DD-YYYY"
@@ -104,7 +125,7 @@ const MapScreen = props => {
             maxDate="06-01-2021"
             showIcon={false}
             style={styles.textStyle}
-            customStyles={{textColor: 'white'}}
+            customStyles={{ textColor: 'white' }}
             confirmBtnText="Confirm"
             cancelBtnText="Cancel"
             customStyles={{
@@ -119,7 +140,7 @@ const MapScreen = props => {
               }
               // ... You can check the source to find the other keys.
             }}
-            onDateChange={(date) => { }}
+            onDateChange={filterDate}
           />
         </View>
       </View>
@@ -128,7 +149,7 @@ const MapScreen = props => {
 
         <MapView
           style={styles.mapStyle}
-          provider={PROVIDER_GOOGLE}
+          //provider={PROVIDER_GOOGLE}
           showsUserLocation={true}
           rotateEnabled={false}
           showsTraffic={false}
@@ -144,7 +165,7 @@ const MapScreen = props => {
               description={event.description}
               key={event.id}
               tracksViewChanges={false}
-              onPress={onPinPress.bind(this,event)}
+              onPress={onPinPress.bind(this, event)}
             ><Callout
               style={styles.plainView}
               onPress={openEventModal}
