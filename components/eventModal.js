@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Image, Button, ScrollView } from 'react-native';
-import SlidingUpPanel from 'rn-sliding-up-panel';
+import { StyleSheet, Text, View, Image, Button, ScrollView, FlatList } from 'react-native';
 import Modal from 'react-native-modal';
 import { Dimensions } from 'react-native';
 
@@ -25,20 +24,26 @@ const EventModal = (props) => {
                 onSwipeComplete={() => props.toggleModal()}
                 swipeDirection={"down"}
                 backdropOpacity={.3}
-                backdropColor={'#2c2c54'}
                 onBackdropPress={() => props.toggleModal()}
-                swipeThreshold={50}
-                propagateSwipe
+                swipeThreshold={100}
+                TransitionOutTiming={0}
                 style={styles.modal}
+                propagateSwipe
             >
 
-                <ScrollView>
+                <ScrollView style={styles.ScrollView}>
                     <View style={styles.container}>
-                        <Text style={styles.title}>Title: {props.title}</Text>
-                        <Text style={styles.eventData}>Description: {props.description}</Text>
-                        <Text style={styles.eventData}>Hostname: {props.hostName}</Text>
+                        <Text style={styles.title}>{props.title}</Text>
+                        <Text style={styles.hostName}>Hostname: {props.hostName}</Text>
+                        <Text style={styles.eventData}>{props.description}</Text>
+                        <View style={styles.saveButton}>
+                            <Button
+                                raised={true}
+                                title="Save Event"
+                                color={'#57a4f2'}
+                            />
+                        </View>
 
-                        <Button title="Hide modal" onPress={props.toggleModal} />
                     </View >
                 </ScrollView>
             </Modal>
@@ -47,8 +52,6 @@ const EventModal = (props) => {
     );
 
 }
-
-
 
 
 const styles = StyleSheet.create({
@@ -64,11 +67,22 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 30,
-        color: 'white',
+        color: 'black',
         fontWeight: 'bold',
         padding: 20,
+        marginTop: -10,
+        marginBottom: 10,
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        backgroundColor: "white",
+        borderRadius: 0,
+        textShadowRadius: 10,
+        shadowColor: 'blue',
+        borderWidth: 0,
+        borderColor: '#57a4f2',
+        textAlign: 'center',
+        width: SCREEN_WIDTH
+
     },
     modal: {
         flex: 1,
@@ -76,13 +90,28 @@ const styles = StyleSheet.create({
         marginLeft: 0,
         marginRight: 0,
 
+    },
+    hostName: {
 
+        fontSize: 25,
+        color: 'white',
     }
     ,
     eventData: {
         color: 'white',
         fontSize: 20
+    },
+    saveButton: {
+        margin: 40,
+        width: SCREEN_WIDTH,
+        paddingTop: 4,
+        flex: 1,
     }
+    ,
+    ScrollView:{
+        marginHorizontal:0
+    }
+
 });
 
 export default EventModal;

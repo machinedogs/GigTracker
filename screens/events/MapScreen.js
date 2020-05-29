@@ -215,6 +215,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: Dimensions.get('window').width,
+    
   },
   mapStyle: {
     zIndex: -1,
@@ -224,7 +225,8 @@ const styles = StyleSheet.create({
   textStyle: {
     textAlign: 'left',
     fontSize: 22,
-    color: '#dfe6e9',
+    color: 'white',
+  
   },
   titleStyle: {
     textAlign: 'left',
@@ -253,6 +255,7 @@ const styles = StyleSheet.create({
   },
   dropdownStyle: {
     width: 100
+    
   },
   plainView: {
     flex: 1,
