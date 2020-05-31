@@ -13,7 +13,7 @@ import { useDispatch } from 'react-redux';
 import Input from '../../components/Input';
 import Card from '../../components/Card';
 import Colors from '../../constants/Colors';
-import * as authActions from '../../store/actions/auth';
+import * as authActions from '../../store/actions/user';
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 

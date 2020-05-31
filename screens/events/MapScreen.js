@@ -23,7 +23,7 @@ const LATITUDE_DELTA = 0.0922
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
 
 const MapScreen = props => {
-  const userId = useSelector(state => state.auth.userId);
+  const userId = useSelector(state => state.user.userId);
   const [events, setEvents] = useState(EVENTS);
 
   let categories = [{ value: 'All events' }];

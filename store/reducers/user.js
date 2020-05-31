@@ -1,8 +1,12 @@
-import { LOGIN, SIGNUP } from "../actions/auth";
+import { LOGIN, SIGNUP } from "../actions/user";
 
 const initialState = {
-    token: null,
-    userId: null
+    userId: null,
+    userName: null,
+    email: null,
+    createdEvents: [],
+    savedEvents: [],
+    token: null
 };
 
 export default (state = initialState, action) => {

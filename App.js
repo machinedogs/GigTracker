@@ -5,13 +5,11 @@ import { Provider } from 'react-redux';
 import ReduxThunk from 'redux-thunk';
 
 import eventsReducer from './store/reducers/events'
-import userEventsReducer from './store/reducers/userEvents';
-import authReducer from './store/reducers/auth';
+import userReducer from './store/reducers/user';
 
 const rootReducer = combineReducers({
   events: eventsReducer,
-  userEvents: userEventsReducer,
-  auth: authReducer
+  user: userReducer
 });
 
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
