@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button, FlatList, Dimensions, Image } from 'react-native';
+import { StyleSheet, Text, View, Button, FlatList, Dimensions, Image, Platform, SafeAreaView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 import { Dropdown } from 'react-native-material-dropdown';
 import FlashOnIcon from '@material-ui/icons/FlashOn';
 import DateFnsUtils from '@date-io/date-fns';
+import DatePicker from 'react-native-datepicker';
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -13,6 +14,9 @@ import {
 //import { useTheme } from 'react-navigation/native';
 
 import { EVENTS } from '../../data/dummy-data';
+import MapStyle from '../../constants/MapStyle';
+import EventModal from '../../components/EventModal'
+import Event from '../../models/event';
 
 const { width, height } = Dimensions.get('window')
 
@@ -22,9 +26,33 @@ const ASPECT_RATIO = width / height
 const LATITUDE_DELTA = 0.0922
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
 
+const todaysDate = () => {
+  var today = new Date();
+  var dd = today.getDate();
+  var mm = today.getMonth() + 1;
+
+  var yyyy = today.getFullYear();
+  if (dd < 10) {
+    dd = '0' + dd;
+  }
+  if (mm < 10) {
+    mm = '0' + mm;
+  }
+  return mm + '/' + dd + '/' + yyyy;
+}
+
 const MapScreen = props => {
   const userId = useSelector(state => state.user.userId);
   const [events, setEvents] = useState(EVENTS);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(new Event)
+
+  const [date, setDate] = useState(todaysDate());
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
 
   let categories = [{ value: 'All events' }];
   EVENTS.map(event => {
@@ -39,7 +67,7 @@ const MapScreen = props => {
       categories.push(category)
     }
   });
-  console.log(categories);
+  // console.log(categories);
 
   const filterCategory = (category) => {
     if (category === 'All events') {
@@ -47,22 +75,38 @@ const MapScreen = props => {
     } else {
       setEvents(EVENTS.filter(event => event.category === category))
     }
-    console.log(events);
   };
 
-  const openEventModal = (event) => {
-    //event modal not implemented yet
+  // gets called when callout is pressed i.e. pin must be pressed first
+  const onEventCalloutPress = () => {
+    console.log("pressing event callout");
+    console.log(selectedEvent)
+    toggleModal();
+
+  }
+
+  const onPinPress = (event) => {
+    setSelectedEvent({ id: event.id, title: event.title, description: event.description, hostName: event.hostName });
+    console.log("pressing pin");
+    console.log(event)
+
+  }
+
+  const filterDate = (selectedDate) => {
+    setDate(selectedDate);
+    setEvents(EVENTS.filter(event => event.date === selectedDate))
+    console.log(selectedDate)
   }
 
   //const theme = useTheme();
 
   return (
-
-    //add a dropdown to choose map style?
+    //add a dropdown to choose map style? -> what if we put it in user settings? could incentivize people to become users
     //add dropdown calendar
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
 
       <View style={styles.container}>
+
         <Text style={styles.titleStyle}>GigTracker</Text>
         <View style={styles.topBarStyle}>
           <Dropdown
@@ -76,27 +120,48 @@ const MapScreen = props => {
             itemTextStyle={styles.containerStyle}
             onChangeText={filterCategory}
           />
-          <Dropdown
-            label="Date"
-            data={categories}
-            containerStyle={styles.dropdownStyle}
-            textColor='#fff'
-            baseColor='#fff'
-            selectedItemColor='#c0392b'
-            pickerStyle={{ backgroundColor: '#ecf0f1' }}
-            itemTextStyle={styles.containerStyle}
-          />
+          <View>
+            <Text style={{ color: 'white', fontSize: 12, paddingTop: 13, paddingLeft: 35 }}>Select a date</Text>
+            <DatePicker
+              style={{ width: 100 }}
+              date={date}
+              mode="date"
+              placeholder="select date"
+              format="MM-DD-YYYY"
+              minDate="05-01-2020" // We should insert the current date here
+              maxDate="06-01-2021" // Max date is 1 year out from current date?
+              showIcon={false}
+              style={styles.textStyle}
+              customStyles={{ textColor: 'white' }}
+              confirmBtnText="Confirm"
+              cancelBtnText="Cancel"
+              customStyles={{
+                dateIcon: {
+                  position: 'absolute',
+                  left: 0,
+                  top: 4,
+                  marginLeft: 0
+                },
+                dateInput: {
+                  marginLeft: 36
+                }
+                // ... You can check the source to find the other keys.
+              }}
+              onDateChange={filterDate}
+            />
+          </View>
         </View>
       </View>
 
       <View style={{ flex: 4 }}>
+
         <MapView
           style={styles.mapStyle}
           provider={PROVIDER_GOOGLE}
           showsUserLocation={true}
           rotateEnabled={false}
           showsTraffic={false}
-          customMapStyle={generatedMapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
+          customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
         >
           {events.map(event => (
             <Marker
@@ -107,11 +172,26 @@ const MapScreen = props => {
               icon={FlashOnIcon}
               description={event.description}
               key={event.id}
-              onPress={openEventModal}
               tracksViewChanges={false}
-            />
+              onPress={onPinPress.bind(this, event)}
+            ><Callout
+              style={styles.plainView}
+              onPress={onEventCalloutPress}
+            >
+                <View>
+                  <Text style={{ fontWeight: 'bold' }}>{event.title}</Text>
+                </View>
+              </Callout>
+            </Marker>
           ))}
         </MapView>
+        <EventModal
+          title={selectedEvent.title}
+          description={selectedEvent.description}
+          hostName={selectedEvent.hostName}
+          visible={isModalVisible}
+          toggleModal={toggleModal}
+        />
       </View>
 
       <View style={styles.container}>
@@ -141,32 +221,35 @@ const MapScreen = props => {
         }
       </View>
 
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#2c2c54',
+    backgroundColor: '#130f40',
     alignItems: 'center',
     justifyContent: 'center',
     width: Dimensions.get('window').width,
+
   },
   mapStyle: {
+    zIndex: -1,
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height * 0.7,
   },
   textStyle: {
     textAlign: 'left',
     fontSize: 22,
-    color: '#dfe6e9',
+    color: 'white',
+
   },
   titleStyle: {
     textAlign: 'left',
     fontSize: 25,
     color: '#fff',
-    paddingTop: 60,
+    paddingTop: 5,
   },
   img: {
     width: 60,
@@ -177,6 +260,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: "flex-start",
     justifyContent: 'flex-start',
+    paddingBottom: 10,
   },
   topBarStyle: {
     flex: 1,
@@ -188,260 +272,14 @@ const styles = StyleSheet.create({
   },
   dropdownStyle: {
     width: 100
+
+  },
+  plainView: {
+    flex: 1,
+    width: 'auto'
   },
 });
 
-const generatedMapStyle = [
-  {
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#ebdfdc"
-      }
-    ]
-  },
-  {
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#aac1f5"
-      }
-    ]
-  },
-  {
-    "elementType": "labels.text.stroke",
-    "stylers": [
-      {
-        "color": "#352c52"
-      },
-      {
-        "weight": 2
-      }
-    ]
-  },
-  {
-    "featureType": "administrative",
-    "elementType": "geometry.stroke",
-    "stylers": [
-      {
-        "color": "#c9b2a6"
-      }
-    ]
-  },
-  {
-    "featureType": "administrative.land_parcel",
-    "elementType": "geometry.stroke",
-    "stylers": [
-      {
-        "color": "#dcd2be"
-      }
-    ]
-  },
-  {
-    "featureType": "administrative.land_parcel",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#ae9e90"
-      }
-    ]
-  },
-  {
-    "featureType": "landscape.natural",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#dfd2ae"
-      }
-    ]
-  },
-  {
-    "featureType": "poi",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#dfd2ae"
-      }
-    ]
-  },
-  {
-    "featureType": "poi",
-    "elementType": "labels.text",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "poi",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#93817c"
-      }
-    ]
-  },
-  {
-    "featureType": "poi.business",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "poi.park",
-    "elementType": "geometry.fill",
-    "stylers": [
-      {
-        "color": "#a5b076"
-      }
-    ]
-  },
-  {
-    "featureType": "poi.park",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#447530"
-      }
-    ]
-  },
-  {
-    "featureType": "road",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#f5f1e6"
-      }
-    ]
-  },
-  {
-    "featureType": "road",
-    "elementType": "labels.icon",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "road.arterial",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#fdfcf8"
-      }
-    ]
-  },
-  {
-    "featureType": "road.highway",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#f8c967"
-      }
-    ]
-  },
-  {
-    "featureType": "road.highway",
-    "elementType": "geometry.stroke",
-    "stylers": [
-      {
-        "color": "#e9bc62"
-      }
-    ]
-  },
-  {
-    "featureType": "road.highway.controlled_access",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#e98d58"
-      }
-    ]
-  },
-  {
-    "featureType": "road.highway.controlled_access",
-    "elementType": "geometry.stroke",
-    "stylers": [
-      {
-        "color": "#db8555"
-      }
-    ]
-  },
-  {
-    "featureType": "road.local",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#806b63"
-      }
-    ]
-  },
-  {
-    "featureType": "transit",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "transit.line",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#dfd2ae"
-      }
-    ]
-  },
-  {
-    "featureType": "transit.line",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#8f7d77"
-      }
-    ]
-  },
-  {
-    "featureType": "transit.line",
-    "elementType": "labels.text.stroke",
-    "stylers": [
-      {
-        "color": "#ebe3cd"
-      }
-    ]
-  },
-  {
-    "featureType": "transit.station",
-    "elementType": "geometry",
-    "stylers": [
-      {
-        "color": "#dfd2ae"
-      }
-    ]
-  },
-  {
-    "featureType": "water",
-    "elementType": "geometry.fill",
-    "stylers": [
-      {
-        "color": "#b9d3c2"
-      }
-    ]
-  },
-  {
-    "featureType": "water",
-    "elementType": "labels.text.fill",
-    "stylers": [
-      {
-        "color": "#92998d"
-      }
-    ]
-  }
-]
+
 
 export default MapScreen;
