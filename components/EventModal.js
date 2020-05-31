@@ -82,7 +82,8 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginLeft: 0,
         marginRight: 0,
-        backgroundColor: '#2c2c54'
+        backgroundColor: '#2c2c54',
+        maxHeight: 400
     },
     hostName: {
 
