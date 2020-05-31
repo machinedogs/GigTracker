@@ -15,12 +15,10 @@ const EventModal = (props) => {
 
 
     return (
-        <View style={{ flex: 1 }}>
-
 
             <Modal
                 backgroundColor={'#2d3436'}
-                isVisible={props.visable}
+                isVisible={props.visible}
                 onSwipeComplete={() => props.toggleModal()}
                 swipeDirection={"down"}
                 backdropOpacity={.3}
@@ -28,10 +26,10 @@ const EventModal = (props) => {
                 swipeThreshold={100}
                 TransitionOutTiming={0}
                 style={styles.modal}
+                borderRadius = {10}
                 propagateSwipe
             >
-
-                <ScrollView style={styles.ScrollView}>
+                <ScrollView>
                     <View style={styles.container}>
                         <Text style={styles.title}>{props.title}</Text>
                         <Text style={styles.hostName}>Hostname: {props.hostName}</Text>
@@ -43,13 +41,10 @@ const EventModal = (props) => {
                                 color={'#57a4f2'}
                             />
                         </View>
-
                     </View >
                 </ScrollView>
             </Modal>
-
-        </View>
-    );
+         );
 
 }
 
@@ -61,9 +56,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#2c2c54',
         alignItems: 'center',
         justifyContent: 'center',
-        width: SCREEN_WIDTH,
-        height: MODAL_HEIGHT,
-        padding: 10
+        padding: 10,
+        borderRadius: 10,
+        overflow: 'hidden'
     },
     title: {
         fontSize: 30,
@@ -75,11 +70,8 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "white",
-        borderRadius: 0,
         textShadowRadius: 10,
         shadowColor: 'blue',
-        borderWidth: 0,
-        borderColor: '#57a4f2',
         textAlign: 'center',
         width: SCREEN_WIDTH
 
@@ -87,8 +79,9 @@ const styles = StyleSheet.create({
     modal: {
         flex: 1,
         marginTop: 300,
-        marginLeft: 0,
-        marginRight: 0,
+        borderRadius: 10
+        //marginLeft: 0,
+        //marginRight: 0,
 
     },
     hostName: {
@@ -103,13 +96,10 @@ const styles = StyleSheet.create({
     },
     saveButton: {
         margin: 40,
-        width: SCREEN_WIDTH,
+        width: SCREEN_WIDTH / 3,
         paddingTop: 4,
         flex: 1,
-    }
-    ,
-    ScrollView:{
-        marginHorizontal:0
+        elevation: 10
     }
 
 });
