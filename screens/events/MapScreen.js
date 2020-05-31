@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Button, FlatList, Dimensions, Image, Platform, SafeAreaView } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 import { Dropdown } from 'react-native-material-dropdown';
 import FlashOnIcon from '@material-ui/icons/FlashOn';
@@ -41,6 +42,7 @@ const todaysDate = () => {
 }
 
 const MapScreen = props => {
+  const userId = useSelector(state => state.user.userId);
   const [events, setEvents] = useState(EVENTS);
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(new Event)
@@ -193,21 +195,30 @@ const MapScreen = props => {
       </View>
 
       <View style={styles.container}>
-        <Text style={styles.textStyle}>username420</Text>
-        <View style={styles.row}>
-          <Button
-            title="User Profile"
-            onPress={() => { props.navigation.navigate('UserProfile') }}
-          />
-          <Button
-            title="Create Event"
-            onPress={() => { props.navigation.navigate('CreateEvent') }}
-          />
-          <Button
-            title="Saved Events"
-            onPress={() => { props.navigation.navigate('CreateEvent') }}
-          />
-        </View>
+        {!userId ?
+          (
+            <Button
+              title="Login or Sign up"
+              onPress={() => { props.navigation.navigate('Auth') }}
+            />
+          ) :
+          (
+            <View style={styles.row}>
+              <Button
+                title="User Profile"
+                onPress={() => { props.navigation.navigate('UserProfile') }}
+              />
+              <Button
+                title="Create Event"
+                onPress={() => { props.navigation.navigate('CreateEvent') }}
+              />
+              <Button
+                title="Saved Events"
+                onPress={() => { props.navigation.navigate('CreateEvent') }}
+              />
+            </View>
+          )
+        }
       </View>
 
     </SafeAreaView>

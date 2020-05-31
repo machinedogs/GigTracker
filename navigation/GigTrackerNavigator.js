@@ -5,6 +5,7 @@ import MapScreen from '../screens/events/MapScreen';
 import CreateEventScreen from '../screens/user/CreateEventScreen';
 import UserProfileScreen from '../screens/user/UserProfileScreen';
 import ManageEventScreen from '../screens/user/ManageEventScreen';
+import AuthScreen from '../screens/user/AuthScreen';
 
 const EventNavigator = createStackNavigator(
     {
@@ -16,7 +17,8 @@ const EventNavigator = createStackNavigator(
         },
         CreateEvent: CreateEventScreen,
         UserProfile: UserProfileScreen,
-        ManageEvent: ManageEventScreen
+        ManageEvent: ManageEventScreen,
+        Auth: AuthScreen
     }
 );
 
