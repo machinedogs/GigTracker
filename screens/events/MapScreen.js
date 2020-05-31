@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, Button, FlatList, Dimensions, Image, Platform }
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 import { Dropdown } from 'react-native-material-dropdown';
 import FlashOnIcon from '@material-ui/icons/FlashOn';
-import EventModal from '../../components/eventModal'
 import DateFnsUtils from '@date-io/date-fns';
 import DatePicker from 'react-native-datepicker';
 import {
@@ -15,6 +14,7 @@ import {
 
 import { EVENTS } from '../../data/dummy-data';
 import MapStyle from '../../constants/MapStyle';
+import EventModal from '../../components/EventModal'
 
 
 const { width, height } = Dimensions.get('window')
@@ -43,9 +43,7 @@ const todaysDate = () => {
 const MapScreen = props => {
   const [events, setEvents] = useState(EVENTS);
   const [isModalVisible, setModalVisible] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState({ id: "", title: "", description: "" })
-
-  
+  const [selectedEvent, setSelectedEvent] = useState({ id: "", title: "", description: "", hostName: "" })
 
   const [date, setDate] = useState(todaysDate());
 
@@ -67,7 +65,7 @@ const MapScreen = props => {
       categories.push(category)
     }
   });
-  console.log(categories);
+  // console.log(categories);
 
   const filterCategory = (category) => {
     if (category === 'All events') {
@@ -95,7 +93,7 @@ const MapScreen = props => {
     setDate(selectedDate);
     setEvents(EVENTS.filter(event => event.date === selectedDate))
     console.log(selectedDate)
-  } 
+  }
 
   //const theme = useTheme();
 
@@ -189,7 +187,7 @@ const MapScreen = props => {
           title={selectedEvent.title}
           description={selectedEvent.description}
           hostname={selectedEvent.hostName}
-          visable={isModalVisible}
+          visible={isModalVisible}
           toggleModal={toggleModal}
         />
       </View>

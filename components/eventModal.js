@@ -20,7 +20,7 @@ const EventModal = (props) => {
 
             <Modal
                 backgroundColor={'#2d3436'}
-                isVisible={props.visable}
+                isVisible={props.visible}
                 onSwipeComplete={() => props.toggleModal()}
                 swipeDirection={"down"}
                 backdropOpacity={.3}
