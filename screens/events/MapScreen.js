@@ -15,7 +15,7 @@ import {
 import { EVENTS } from '../../data/dummy-data';
 import MapStyle from '../../constants/MapStyle';
 import EventModal from '../../components/EventModal'
-
+import Event from '../../models/event';
 
 const { width, height } = Dimensions.get('window')
 
@@ -43,7 +43,7 @@ const todaysDate = () => {
 const MapScreen = props => {
   const [events, setEvents] = useState(EVENTS);
   const [isModalVisible, setModalVisible] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState({ id: "", title: "", description: "", hostName: "" })
+  const [selectedEvent, setSelectedEvent] = useState(new Event)
 
   const [date, setDate] = useState(todaysDate());
 
@@ -76,15 +76,16 @@ const MapScreen = props => {
   };
 
   // gets called when callout is pressed i.e. pin must be pressed first
-  const onEventCalloutPress = (event) => {
+  const onEventCalloutPress = () => {
     console.log("pressing event callout");
+    console.log(selectedEvent)
     toggleModal();
 
   }
 
   const onPinPress = (event) => {
-    setSelectedEvent({ id: event.id, title: event.title, description: event.description });
-    console.log("pressing event callout");
+    setSelectedEvent({ id: event.id, title: event.title, description: event.description, hostName: event.hostName });
+    console.log("pressing pin");
     console.log(event)
 
   }
@@ -98,8 +99,7 @@ const MapScreen = props => {
   //const theme = useTheme();
 
   return (
-
-    //add a dropdown to choose map style?
+    //add a dropdown to choose map style? -> what if we put it in user settings? could incentivize people to become users
     //add dropdown calendar
     <View style={styles.container}>
 
@@ -186,7 +186,7 @@ const MapScreen = props => {
         <EventModal
           title={selectedEvent.title}
           description={selectedEvent.description}
-          hostname={selectedEvent.hostName}
+          hostName={selectedEvent.hostName}
           visible={isModalVisible}
           toggleModal={toggleModal}
         />
