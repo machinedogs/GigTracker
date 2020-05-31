@@ -75,8 +75,8 @@ const MapScreen = props => {
     }
   };
 
-  // gets called when pin is pressed
-  const openEventModal = (event) => {
+  // gets called when callout is pressed i.e. pin must be pressed first
+  const onEventCalloutPress = (event) => {
     console.log("pressing event callout");
     toggleModal();
 
@@ -126,8 +126,8 @@ const MapScreen = props => {
               mode="date"
               placeholder="select date"
               format="MM-DD-YYYY"
-              minDate="05-01-2020"
-              maxDate="06-01-2021"
+              minDate="05-01-2020" // We should insert the current date here
+              maxDate="06-01-2021" // Max date is 1 year out from current date?
               showIcon={false}
               style={styles.textStyle}
               customStyles={{ textColor: 'white' }}
@@ -174,7 +174,7 @@ const MapScreen = props => {
               onPress={onPinPress.bind(this, event)}
             ><Callout
               style={styles.plainView}
-              onPress={openEventModal}
+              onPress={onEventCalloutPress}
             >
                 <View>
                   <Text style={{ fontWeight: 'bold' }}>{event.title}</Text>
