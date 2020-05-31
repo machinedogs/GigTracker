@@ -25,25 +25,27 @@ const ASPECT_RATIO = width / height
 const LATITUDE_DELTA = 0.0922
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
 
+const todaysDate = () => {
+  var today = new Date();
+  var dd = today.getDate();
+  var mm = today.getMonth() + 1;
+
+  var yyyy = today.getFullYear();
+  if (dd < 10) {
+    dd = '0' + dd;
+  }
+  if (mm < 10) {
+    mm = '0' + mm;
+  }
+  return mm + '/' + dd + '/' + yyyy;
+}
+
 const MapScreen = props => {
   const [events, setEvents] = useState(EVENTS);
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState({ id: "", title: "", description: "" })
 
-  const todaysDate = () => {
-    var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth() + 1;
-
-    var yyyy = today.getFullYear();
-    if (dd < 10) {
-      dd = '0' + dd;
-    }
-    if (mm < 10) {
-      mm = '0' + mm;
-    }
-    return mm + '/' + dd + '/' + yyyy;
-  }
+  
 
   const [date, setDate] = useState(todaysDate());
 
@@ -92,7 +94,8 @@ const MapScreen = props => {
   const filterDate = (selectedDate) => {
     setDate(selectedDate);
     setEvents(EVENTS.filter(event => event.date === selectedDate))
-  }
+    console.log(selectedDate)
+  } 
 
   //const theme = useTheme();
 
