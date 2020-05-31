@@ -103,9 +103,9 @@ const AuthScreen = props => {
     );
 
     return (
-        <KeyboardAvoidingView
-            behavior="padding"
-            keyboardVerticalOffset={50}
+        <View
+            //behavior="padding"
+            //keyboardVerticalOffset={50}
             style={styles.screen}
         >
                 <Card style={styles.authContainer}>
@@ -154,7 +154,7 @@ const AuthScreen = props => {
                         </View>
                     </ScrollView>
                 </Card>
-        </KeyboardAvoidingView>
+        </View>
     );
 };
 

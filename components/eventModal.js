@@ -79,10 +79,10 @@ const styles = StyleSheet.create({
     modal: {
         flex: 1,
         marginTop: 300,
-        borderRadius: 10
-        //marginLeft: 0,
-        //marginRight: 0,
-
+        borderRadius: 10,
+        marginLeft: 0,
+        marginRight: 0,
+        backgroundColor: '#2c2c54'
     },
     hostName: {
 
