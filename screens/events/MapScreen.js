@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button, FlatList, Dimensions, Image, Platform } from 'react-native';
+import { StyleSheet, Text, View, Button, FlatList, Dimensions, Image, Platform, SafeAreaView } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 import { Dropdown } from 'react-native-material-dropdown';
 import FlashOnIcon from '@material-ui/icons/FlashOn';
@@ -101,7 +101,7 @@ const MapScreen = props => {
   return (
     //add a dropdown to choose map style? -> what if we put it in user settings? could incentivize people to become users
     //add dropdown calendar
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
 
       <View style={styles.container}>
 
@@ -210,7 +210,7 @@ const MapScreen = props => {
         </View>
       </View>
 
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     fontSize: 25,
     color: '#fff',
-    paddingTop: Platform.OS === 'ios' ? 50 : 20,
+    paddingTop: 5,
   },
   img: {
     width: 60,
