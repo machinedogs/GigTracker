@@ -103,9 +103,9 @@ const AuthScreen = props => {
     );
 
     return (
-        <View
-            //behavior="padding"
-            //keyboardVerticalOffset={50}
+        <KeyboardAvoidingView
+            behavior='height'
+            keyboardVerticalOffset={3}
             style={styles.screen}
         >
                 <Card style={styles.authContainer}>
@@ -145,7 +145,7 @@ const AuthScreen = props => {
                         }
                         <View style={styles.buttonContainer}>
                             <Button
-                                title={`Switch to ${isSignup ? 'Login' : 'Sign Up'}`}
+                                title={`Or ${isSignup ? 'Login' : 'Sign Up'}`}
                                 color={Colors.accent}
                                 onPress={() => {
                                     setIsSignup(prevState => !prevState);
@@ -154,7 +154,7 @@ const AuthScreen = props => {
                         </View>
                     </ScrollView>
                 </Card>
-        </View>
+        </KeyboardAvoidingView>
     );
 };
 
