@@ -49,11 +49,13 @@ const AuthScreen = props => {
     const [formState, dispatchFormState] = useReducer(formReducer, {
         inputValues: {
             email: '',
-            password: ''
+            password: '',
+            username: ''
         },
         inputValidities: {
             email: false,
-            password: false
+            password: false,
+            username: false
         },
         formIsValid: false
     });
@@ -69,12 +71,14 @@ const AuthScreen = props => {
         if (isSignup) {
             action = authActions.signup(
                 formState.inputValues.email,
-                formState.inputValues.password
+                formState.inputValues.password,
+                formState.inputValues.username,
             );
         } else {
             action = authActions.login(
                 formState.inputValues.email,
-                formState.inputValues.password
+                formState.inputValues.password,
+                formState.inputValues.username,
             );
         }
         setError(null);
@@ -108,52 +112,70 @@ const AuthScreen = props => {
             keyboardVerticalOffset={3}
             style={styles.screen}
         >
-                <Card style={styles.authContainer}>
-                    <ScrollView>
-                        <Input
-                            id="email"
-                            label="E-Mail"
-                            keyboardType="email-address"
-                            required
-                            email
-                            autoCapitalize="none"
-                            errorText="Please enter a valid email address."
-                            onInputChange={inputChangeHandler}
-                            initialValue=""
-                        />
-                        <Input
-                            id="password"
-                            label="Password"
-                            keyboardType="default"
-                            secureTextEntry
-                            required
-                            minLength={5}
-                            autoCapitalize="none"
-                            errorText="Please enter a valid password."
-                            onInputChange={inputChangeHandler}
-                            initialValue=""
-                        />
-                        {isLoading ?
-                            <ActivityIndicator size='small' color={Colors.primary} /> :
+            <Card style={styles.authContainer}>
+                <ScrollView>
+                    {
+                        isSignup ?
+                            <Input
+                                id="username"
+                                label="Username"
+                                keyboardType="default"
+                                required
+                                autoCapitalize="none"
+                                errorText="Please enter a valid username"
+                                onInputChange={inputChangeHandler}
+                                initialValue=""
+                            /> :
+                            null
+                    }
+                    <Input
+                        id="email"
+                        label="Email"
+                        keyboardType="email-address"
+                        required
+                        email
+                        autoCapitalize="none"
+                        errorText="Please enter a valid email address"
+                        onInputChange={inputChangeHandler}
+                        initialValue=""
+                    />
+                    <Input
+                        id="password"
+                        label="Password"
+                        keyboardType="default"
+                        secureTextEntry
+                        required
+                        minLength={5}
+                        autoCapitalize="none"
+                        errorText="Please enter a valid password"
+                        onInputChange={inputChangeHandler}
+                        initialValue=""
+                    />
+                    {isLoading ?
+                        (
                             <View style={styles.buttonContainer}>
-                                <Button
-                                    title={isSignup ? 'Sign Up' : 'Login'}
-                                    color={Colors.primary}
-                                    onPress={authHandler}
-                                />
+                                <ActivityIndicator size='small' color={Colors.primary} />
                             </View>
-                        }
+                        ) :
                         <View style={styles.buttonContainer}>
                             <Button
-                                title={`Or ${isSignup ? 'Login' : 'Sign Up'}`}
-                                color={Colors.accent}
-                                onPress={() => {
-                                    setIsSignup(prevState => !prevState);
-                                }}
+                                title={isSignup ? 'Sign Up' : 'Login'}
+                                color={Colors.primary}
+                                onPress={authHandler}
                             />
                         </View>
-                    </ScrollView>
-                </Card>
+                    }
+                    <View style={styles.buttonContainer}>
+                        <Button
+                            title={`Or ${isSignup ? 'Login' : 'Sign Up'}`}
+                            color={Colors.accent}
+                            onPress={() => {
+                                setIsSignup(prevState => !prevState);
+                            }}
+                        />
+                    </View>
+                </ScrollView>
+            </Card>
         </KeyboardAvoidingView>
     );
 };
@@ -171,7 +193,7 @@ const styles = StyleSheet.create({
     authContainer: {
         width: '80%',
         maxWidth: 400,
-        maxHeight: 400,
+        maxHeight: 450,
         padding: 20
     },
     buttonContainer: {

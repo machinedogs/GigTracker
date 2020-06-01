@@ -42,7 +42,7 @@ const todaysDate = () => {
 }
 
 const MapScreen = props => {
-  const userId = useSelector(state => state.user.userId);
+  const userToken = useSelector(state => state.user.token);
   const [events, setEvents] = useState(EVENTS);
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(new Event)
@@ -195,7 +195,7 @@ const MapScreen = props => {
       </View>
 
       <View style={styles.container}>
-        {!userId ?
+        {!userToken ?
           (
             <Button
               title="Login or Sign up"
