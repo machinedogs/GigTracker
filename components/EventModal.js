@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         padding: 10,
-        borderRadius: 10,
+        borderRadius: 0,
         overflow: 'hidden'
     },
     title: {
@@ -79,11 +79,12 @@ const styles = StyleSheet.create({
     modal: {
         flex: 1,
         marginTop: 300,
-        borderRadius: 10,
+        borderRadius: 0,
         marginLeft: 0,
         marginRight: 0,
+        marginBottom: 0,
         backgroundColor: '#2c2c54',
-        maxHeight: 400
+        maxHeight:500
     },
     hostName: {
 

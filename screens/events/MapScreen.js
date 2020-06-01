@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, Text, View, Button, FlatList, Dimensions, Image, Platform, SafeAreaView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
@@ -26,6 +26,7 @@ const ASPECT_RATIO = width / height
 const LATITUDE_DELTA = 0.0922
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
 
+
 const todaysDate = () => {
   var today = new Date();
   var dd = today.getDate();
@@ -41,17 +42,44 @@ const todaysDate = () => {
   return mm + '/' + dd + '/' + yyyy;
 }
 
+
+
+
+
+
 const MapScreen = props => {
   const userId = useSelector(state => state.user.userId);
   const [events, setEvents] = useState(EVENTS);
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(new Event)
+  const [startingCoords, setStartingCoords] = useState({
+    latitude: 0,
+    longitude: 0,
+    latitudeDelta: 0.00922 * 1.5,
+    longitudeDelta: 0.00421 * 1.5
+  })
 
   const [date, setDate] = useState(todaysDate());
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
+
+  // Similar to componentDidMount and componentDidUpdate:
+  useEffect(() => {
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        let initialPosition = JSON.stringify(position);
+        console.log(initialPosition);
+        console.log("region " + position);
+        coords = { latitude: position.coords.latitude, longitude: position.coords.longitude, latitudeDelta: .009, longitudeDelta: .009 };
+        console.log(coords);
+        setStartingCoords(coords)
+        
+        console.log(startingCoords);
+      }, (error) => console.log(error));
+  }, []);
 
 
   let categories = [{ value: 'All events' }];
@@ -107,7 +135,7 @@ const MapScreen = props => {
 
       <View style={styles.container}>
 
-        <Text style={styles.titleStyle}>GigTracker</Text>
+        <Text style={styles.top}>GigTracker</Text>
         <View style={styles.topBarStyle}>
           <Dropdown
             label="Category"
@@ -161,6 +189,8 @@ const MapScreen = props => {
           showsUserLocation={true}
           rotateEnabled={false}
           showsTraffic={false}
+          toolbarEnabled={true}
+          region = {startingCoords}
           customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
         >
           {events.map(event => (
@@ -228,16 +258,24 @@ const MapScreen = props => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#130f40',
     alignItems: 'center',
     justifyContent: 'center',
     width: Dimensions.get('window').width,
 
+
   },
+  top: {
+    backgroundColor: '#130f40',
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: Dimensions.get('window').width,
+  }
+  ,
   mapStyle: {
     zIndex: -1,
     width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height * 0.7,
+    height: Dimensions.get('window').height * .86,
   },
   textStyle: {
     textAlign: 'left',
@@ -260,7 +298,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: "flex-start",
     justifyContent: 'flex-start',
-    paddingBottom: 10,
+    paddingBottom: 0,
   },
   topBarStyle: {
     flex: 1,
@@ -268,7 +306,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    paddingBottom: 20,
+    paddingBottom: 10,
+    backgroundColor: '#130f40'
   },
   dropdownStyle: {
     width: 100
