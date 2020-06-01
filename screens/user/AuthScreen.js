@@ -181,14 +181,19 @@ const AuthScreen = props => {
 };
 
 AuthScreen.navigationOptions = {
-    headerTitle: 'Authenticate'
+    headerTitle: 'Login or Signup',
+    headerStyle: {
+        backgroundColor: Colors.primary,
+    },
+    headerTintColor: Colors.lightText,
 };
 
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: Colors.lightBackground
     },
     authContainer: {
         width: '80%',
