@@ -73,6 +73,7 @@ const AuthScreen = props => {
                 formState.inputValues.email,
                 formState.inputValues.password,
                 formState.inputValues.username,
+                formState.inputValues.passwordConfirmation,
             );
         } else {
             action = authActions.login(
@@ -114,7 +115,7 @@ const AuthScreen = props => {
         >
             <Card style={styles.authContainer}>
                 <ScrollView>
-                    {
+                    { // only display username on sign up screen
                         isSignup ?
                             <Input
                                 id="username"
@@ -140,17 +141,33 @@ const AuthScreen = props => {
                         initialValue=""
                     />
                     <Input
-                        id="password"
-                        label="Password"
-                        keyboardType="default"
-                        secureTextEntry
-                        required
-                        minLength={5}
-                        autoCapitalize="none"
-                        errorText="Please enter a valid password"
-                        onInputChange={inputChangeHandler}
-                        initialValue=""
-                    />
+                                id="password"
+                                label="Password"
+                                keyboardType="default"
+                                secureTextEntry
+                                required
+                                minLength={5}
+                                autoCapitalize="none"
+                                errorText="Please enter a valid password"
+                                onInputChange={inputChangeHandler}
+                                initialValue=""
+                            />
+                    { // only display password confirmation on sign up screen
+                        isSignup ?
+                            <Input
+                                id="passwordConfirmation"
+                                label="Confirm Password"
+                                keyboardType="default"
+                                secureTextEntry
+                                required
+                                minLength={5}
+                                autoCapitalize="none"
+                                errorText="Please enter a valid password"
+                                onInputChange={inputChangeHandler}
+                                initialValue=""
+                            /> : null
+
+                    }
                     {isLoading ?
                         (
                             <View style={styles.buttonContainer}>
