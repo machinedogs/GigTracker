@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Image, Button, ScrollView, FlatList } from 'react-native';
+import { StyleSheet, Text, View, Image, Button, FlatList, TouchableOpacity } from 'react-native';
 import Modal from 'react-native-modal';
 import { Dimensions } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 const { width, height } = Dimensions.get('screen');
@@ -16,22 +17,30 @@ const EventModal = (props) => {
 
     return (
 
-            <Modal
-                backgroundColor={'#2d3436'}
-                isVisible={props.visible}
-                onSwipeComplete={() => props.toggleModal()}
-                swipeDirection={"down"}
-                backdropOpacity={.3}
-                onBackdropPress={() => props.toggleModal()}
-                swipeThreshold={100}
-                TransitionOutTiming={0}
-                style={styles.modal}
-                borderRadius = {10}
-                propagateSwipe
+        <Modal
+            backgroundColor={'#2d3436'}
+            isVisible={props.visible}
+            onSwipeComplete={() => props.toggleModal()}
+            backdropOpacity={.3}
+            swipeDirection={'down'}
+            onBackdropPress={() => props.toggleModal()}
+            swipeThreshold={100}
+            TransitionOutTiming={0}
+            style={styles.modal}
+            borderRadius={10}
+            propagateSwipe
+        >
+            <View>
+                <Text style={styles.title}>{props.title}</Text>
+            </View>
+            <ScrollView
+                showsVerticalScrollIndicator={true}
             >
-                <ScrollView>
+                <TouchableOpacity
+                    activeOpacity={1}
+                >
                     <View style={styles.container}>
-                        <Text style={styles.title}>{props.title}</Text>
+
                         <Text style={styles.hostName}>Hostname: {props.hostName}</Text>
                         <Text style={styles.eventData}>{props.description}</Text>
                         <View style={styles.saveButton}>
@@ -42,9 +51,10 @@ const EventModal = (props) => {
                             />
                         </View>
                     </View >
-                </ScrollView>
-            </Modal>
-         );
+                </TouchableOpacity>
+            </ScrollView>
+        </Modal>
+    );
 
 }
 
@@ -84,7 +94,7 @@ const styles = StyleSheet.create({
         marginRight: 0,
         marginBottom: 0,
         backgroundColor: '#2c2c54',
-        maxHeight: MODAL_HEIGHT + 30
+        maxHeight: SCREEN_HEIGHT
     },
     hostName: {
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, Button, FlatList, Dimensions, Image, Platform, SafeAreaView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
@@ -46,12 +46,6 @@ const MapScreen = props => {
   const [events, setEvents] = useState(EVENTS);
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(new Event)
-  const [startingCoords, setStartingCoords] = useState({
-    latitude: 0,
-    longitude: 0,
-    latitudeDelta: 0.00922 * 1.5,
-    longitudeDelta: 0.00421 * 1.5
-  })
   let mapRef = useRef(null);
   const [date, setDate] = useState(todaysDate());
 
@@ -59,19 +53,14 @@ const MapScreen = props => {
     setModalVisible(!isModalVisible);
   };
 
-
   //  get initial location then animate to that location
   // only do this on mount and unmount of map component 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        let initialPosition = JSON.stringify(position);
-        console.log(initialPosition);
-        console.log("region " + position);
         coords = { latitude: position.coords.latitude, longitude: position.coords.longitude, latitudeDelta: .009, longitudeDelta: .009 };
         console.log(coords);
         mapRef.current.animateToRegion(coords, 1000);
-        console.log(coords);
       }, (error) => console.log(error));
   }, []);
 
@@ -135,9 +124,11 @@ const MapScreen = props => {
             label="Category"
             data={categories}
             containerStyle={styles.dropdownStyle}
-            textColor='#fff'
             baseColor='#fff'
+            dropdownOffset={{top:40,left:0}}
+            dropdownPosition= {-5.35}
             selectedItemColor='#c0392b'
+            animationDuration={50}
             pickerStyle={{ backgroundColor: '#ecf0f1' }}
             itemTextStyle={styles.containerStyle}
             onChangeText={filterCategory}
@@ -154,7 +145,6 @@ const MapScreen = props => {
               maxDate="06-01-2021" // Max date is 1 year out from current date?
               showIcon={false}
               style={styles.textStyle}
-              customStyles={{ textColor: 'white' }}
               confirmBtnText="Confirm"
               cancelBtnText="Cancel"
               customStyles={{
@@ -166,6 +156,10 @@ const MapScreen = props => {
                 },
                 dateInput: {
                   marginLeft: 36
+                },
+                dateText:{
+                  color: '#FFFFFF',
+                  justifyContent: 'flex-start'
                 }
                 // ... You can check the source to find the other keys.
               }}
@@ -175,13 +169,15 @@ const MapScreen = props => {
         </View>
       </View>
 
-      <View style={{ flex: 4 }}>
+      <View style={{ flex: 4 }} >
 
         <MapView
           style={styles.mapStyle}
           provider={PROVIDER_GOOGLE}
-          showsUserLocation={true}
+          showsUserLocation
+          showsMyLocationButton
           rotateEnabled={false}
+
           showsTraffic={false}
           toolbarEnabled={true}
           ref={mapRef}
@@ -255,7 +251,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: Dimensions.get('window').width,
-
+    
 
   },
   top: {
