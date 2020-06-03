@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
         marginRight: 0,
         marginBottom: 0,
         backgroundColor: '#2c2c54',
-        maxHeight:500
+        maxHeight: MODAL_HEIGHT + 30
     },
     hostName: {
 

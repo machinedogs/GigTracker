@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { StyleSheet, Text, View, Button, FlatList, Dimensions, Image, Platform, SafeAreaView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
@@ -12,7 +12,6 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 //import { useTheme } from 'react-navigation/native';
-
 import { EVENTS } from '../../data/dummy-data';
 import MapStyle from '../../constants/MapStyle';
 import EventModal from '../../components/EventModal'
@@ -42,11 +41,6 @@ const todaysDate = () => {
   return mm + '/' + dd + '/' + yyyy;
 }
 
-
-
-
-
-
 const MapScreen = props => {
   const userId = useSelector(state => state.user.userId);
   const [events, setEvents] = useState(EVENTS);
@@ -58,16 +52,17 @@ const MapScreen = props => {
     latitudeDelta: 0.00922 * 1.5,
     longitudeDelta: 0.00421 * 1.5
   })
-
+  let mapRef = useRef(null);
   const [date, setDate] = useState(todaysDate());
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
 
-  // Similar to componentDidMount and componentDidUpdate:
-  useEffect(() => {
 
+  //  get initial location then animate to that location
+  // only do this on mount and unmount of map component 
+  useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         let initialPosition = JSON.stringify(position);
@@ -75,9 +70,8 @@ const MapScreen = props => {
         console.log("region " + position);
         coords = { latitude: position.coords.latitude, longitude: position.coords.longitude, latitudeDelta: .009, longitudeDelta: .009 };
         console.log(coords);
-        setStartingCoords(coords)
-        
-        console.log(startingCoords);
+        mapRef.current.animateToRegion(coords, 1000);
+        console.log(coords);
       }, (error) => console.log(error));
   }, []);
 
@@ -190,7 +184,7 @@ const MapScreen = props => {
           rotateEnabled={false}
           showsTraffic={false}
           toolbarEnabled={true}
-          region = {startingCoords}
+          ref={mapRef}
           customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
         >
           {events.map(event => (
