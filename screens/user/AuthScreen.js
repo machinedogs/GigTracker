@@ -134,7 +134,6 @@ const AuthScreen = props => {
                         label="Email"
                         keyboardType="email-address"
                         required
-                        email
                         autoCapitalize="none"
                         errorText="Please enter a valid email address"
                         onInputChange={inputChangeHandler}
