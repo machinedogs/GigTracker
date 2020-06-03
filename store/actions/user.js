@@ -5,7 +5,7 @@ export const signup = (email, password, username, passwordConfirmation) => {
     console.log(username, passwordConfirmation);
     return async dispatch => {
         const response = await fetch(
-            'https://gigservice.herokuapp.com/hosts',
+            'https://gig-authentication-service.herokuapp.com/hosts',
             {
                 method: 'POST',
                 headers: {
@@ -44,7 +44,7 @@ export const signup = (email, password, username, passwordConfirmation) => {
 export const login = (email, password) => {
     return async dispatch => {
         const response = await fetch(
-            'https://gigservice.herokuapp.com/hosts/sign_in',
+            'https://gig-authentication-service.herokuapp.com/hosts/sign_in',
             {
                 method: 'POST',
                 headers: {
