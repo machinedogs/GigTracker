@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Text, View, Button, FlatList, Dimensions, Image, Platform, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, Button, FlatList, Dimensions, Image, Platform, SafeAreaView, TouchableOpacity } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 import { Dropdown } from 'react-native-material-dropdown';
 import FlashOnIcon from '@material-ui/icons/FlashOn';
 import DateFnsUtils from '@date-io/date-fns';
 import DatePicker from 'react-native-datepicker';
+import { Icon } from 'react-native-elements'
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -125,8 +126,8 @@ const MapScreen = props => {
             data={categories}
             containerStyle={styles.dropdownStyle}
             baseColor='#fff'
-            dropdownOffset={{top:40,left:0}}
-            dropdownPosition= {-5.35}
+            dropdownOffset={{ top: 40, left: 0 }}
+            dropdownPosition={-5.35}
             selectedItemColor='#c0392b'
             animationDuration={50}
             pickerStyle={{ backgroundColor: '#ecf0f1' }}
@@ -157,8 +158,9 @@ const MapScreen = props => {
                 dateInput: {
                   marginLeft: 36
                 },
-                dateText:{
+                dateText: {
                   color: '#FFFFFF',
+                  fontWeight: 'bold',
                   justifyContent: 'flex-start'
                 }
                 // ... You can check the source to find the other keys.
@@ -177,7 +179,6 @@ const MapScreen = props => {
           showsUserLocation
           showsMyLocationButton
           rotateEnabled={false}
-
           showsTraffic={false}
           toolbarEnabled={true}
           ref={mapRef}
@@ -224,18 +225,43 @@ const MapScreen = props => {
           ) :
           (
             <View style={styles.row}>
-              <Button
-                title="User Profile"
-                onPress={() => { props.navigation.navigate('UserProfile') }}
-              />
-              <Button
-                title="Create Event"
-                onPress={() => { props.navigation.navigate('CreateEvent') }}
-              />
-              <Button
-                title="Saved Events"
-                onPress={() => { props.navigation.navigate('CreateEvent') }}
-              />
+
+              <TouchableOpacity>
+                <Icon
+                  reverse
+                  raised
+                  name='user'
+                  type='font-awesome'
+                  color='#341f97'
+                  onPress={() => { props.navigation.navigate('UserProfile') }}
+                />
+
+              </TouchableOpacity>
+
+              <TouchableOpacity>
+                <Icon
+                  reverse
+                  raised
+                  name='plus'
+                  type='font-awesome'
+                  color='#341f97'
+                  onPress={() => { props.navigation.navigate('CreateEvent') }}
+                />
+
+              </TouchableOpacity>
+
+              <TouchableOpacity>
+                <Icon
+                  reverse
+                  raised
+                  name='bookmark'
+                  type='font-awesome'
+                  color='#341f97'
+                  onPress={() => { props.navigation.navigate('CreateEvent') }}
+                />
+
+              </TouchableOpacity>
+
             </View>
           )
         }
@@ -251,7 +277,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: Dimensions.get('window').width,
-    
+
 
   },
   top: {
