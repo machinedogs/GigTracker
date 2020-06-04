@@ -49,13 +49,15 @@ const AuthScreen = props => {
     const [formState, dispatchFormState] = useReducer(formReducer, {
         inputValues: {
             email: '',
+            username: '',
             password: '',
-            username: ''
+            passwordConfirmation: ''
         },
         inputValidities: {
             email: false,
+            username: false,
             password: false,
-            username: false
+            passwordConfirmation: false
         },
         formIsValid: false
     });

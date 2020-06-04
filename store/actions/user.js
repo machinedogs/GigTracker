@@ -2,24 +2,28 @@ export const SIGNUP = 'SIGNUP';
 export const LOGIN = 'LOGIN';
 
 export const signup = (email, password, username, passwordConfirmation) => {
-    console.log(username, passwordConfirmation);
+    console.log(email, password, username, passwordConfirmation);
     return async dispatch => {
-        const response = await fetch(
-            'https://gig-authentication-service.herokuapp.com/hosts',
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "name": username,
-                    "email": email,
-                    "password": password,
-                    "password_confirmation": passwordConfirmation
-                })
-            }
-        );
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
 
+        var raw = JSON.stringify({
+            "name": username,
+            "email": email,
+            "password": password,
+            "password_confirmation": passwordConfirmation
+        });
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+
+
+        const response = await fetch("https://gig-authentication-service.herokuapp.com/api/v1/hosts", requestOptions);
+        /*
         if (!response.ok) {
             const errorResData = await response.json();
             const errorId = errorResData.error.message;
@@ -29,33 +33,41 @@ export const signup = (email, password, username, passwordConfirmation) => {
             }
             throw new Error(message);
         }
-
-        const resData = await response.json();
+        */
+       const resData = await response.json();
         console.log(resData);
-        dispatch({ 
-            type: SIGNUP, 
-            token: resData.data.auth_token, 
-            userId: resData.data.host.name 
+        
+        dispatch({
+            type: SIGNUP,
+            userName: resData.data.host.name,
+            userEmail: resData.data.host.email,
+            accessToken: resData.data.authorization.auth_token.token,
+            refreshToken: resData.data.authorization.refresh_token.token
         });
+        
     };
 };
 
 // (TODO): Sign in by username or password
 export const login = (email, password) => {
     return async dispatch => {
-        const response = await fetch(
-            'https://gig-authentication-service.herokuapp.com/hosts/sign_in',
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "email": email,
-                    "password": password
-                })
-            }
-        );
+
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+            "email": email,
+            "password": password
+        });
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+
+        const response = await fetch("https://gig-authentication-service.herokuapp.com/api/v1/hosts/sign_in", requestOptions);
 
         if (!response.ok) {
             const errorResData = await response.json();
@@ -71,10 +83,12 @@ export const login = (email, password) => {
 
         const resData = await response.json();
         console.log(resData);
-        dispatch({ 
-            type: LOGIN, 
-            token: resData.data.auth_token, 
-            userId: resData.data.host.name 
+        dispatch({
+            type: LOGIN,
+            userName: resData.data.host.name,
+            userEmail: resData.data.host.email,
+            accessToken: resData.data.authorization.auth_token.token,
+            refreshToken: resData.data.authorization.refresh_token.token
         });
     };
 };
