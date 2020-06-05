@@ -4,9 +4,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 import { Dropdown } from 'react-native-material-dropdown';
 import FlashOnIcon from '@material-ui/icons/FlashOn';
+import Drawer from 'react-native-drawer';
 import DateFnsUtils from '@date-io/date-fns';
 import DatePicker from 'react-native-datepicker';
-import { Icon } from 'react-native-elements'
+import { Icon } from 'react-native-elements';
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -15,8 +16,9 @@ import {
 //import { useTheme } from 'react-navigation/native';
 import { EVENTS } from '../../data/dummy-data';
 import MapStyle from '../../constants/MapStyle';
-import EventModal from '../../components/EventModal'
+import EventModal from '../../components/EventModal';
 import Event from '../../models/event';
+import ControlPanel from '../../components/controlPanel';
 
 const { width, height } = Dimensions.get('window')
 
@@ -48,12 +50,19 @@ const MapScreen = props => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(new Event)
   let mapRef = useRef(null);
+  let menuRef = useRef(null);
   const [date, setDate] = useState(todaysDate());
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
 
+  const closeControlPanel = () => {
+    menuRef.current._drawer.close()
+  };
+  const openControlPanel = () => {
+    menuRef.current._drawer.open()
+  };
   //  get initial location then animate to that location
   // only do this on mount and unmount of map component 
   useEffect(() => {
@@ -64,7 +73,6 @@ const MapScreen = props => {
         mapRef.current.animateToRegion(coords, 1000);
       }, (error) => console.log(error));
   }, []);
-
 
   let categories = [{ value: 'All events' }];
   EVENTS.map(event => {
@@ -94,14 +102,12 @@ const MapScreen = props => {
     console.log("pressing event callout");
     console.log(selectedEvent)
     toggleModal();
-
   }
 
   const onPinPress = (event) => {
     setSelectedEvent({ id: event.id, title: event.title, description: event.description, hostName: event.hostName });
     console.log("pressing pin");
     console.log(event)
-
   }
 
   const filterDate = (selectedDate) => {
@@ -110,15 +116,12 @@ const MapScreen = props => {
     console.log(selectedDate)
   }
 
-  //const theme = useTheme();
-
   return (
     //add a dropdown to choose map style? -> what if we put it in user settings? could incentivize people to become users
     //add dropdown calendar
     <SafeAreaView style={styles.container}>
 
       <View style={styles.container}>
-
         <Text style={styles.top}>GigTracker</Text>
         <View style={styles.topBarStyle}>
           <Dropdown
@@ -172,7 +175,6 @@ const MapScreen = props => {
       </View>
 
       <View style={{ flex: 4 }} >
-
         <MapView
           style={styles.mapStyle}
           provider={PROVIDER_GOOGLE}
@@ -218,14 +220,21 @@ const MapScreen = props => {
       <View style={styles.container}>
         {!userId ?
           (
-            <Button
-              title="Login or Sign up"
-              onPress={() => { props.navigation.navigate('Auth') }}
-            />
+            <TouchableOpacity>
+              <Icon
+                reverse
+                raised
+                name='user'
+                type='font-awesome'
+                color='#341f97'
+                size={35}
+                reverseColor='white'
+                onPress={() => { props.navigation.navigate('Auth') }}
+              />
+            </TouchableOpacity>
           ) :
           (
             <View style={styles.row}>
-
               <TouchableOpacity>
                 <Icon
                   reverse
@@ -233,11 +242,10 @@ const MapScreen = props => {
                   name='user'
                   type='font-awesome'
                   color='#341f97'
+                  size={35}
                   onPress={() => { props.navigation.navigate('UserProfile') }}
                 />
-
               </TouchableOpacity>
-
               <TouchableOpacity>
                 <Icon
                   reverse
@@ -245,11 +253,10 @@ const MapScreen = props => {
                   name='plus'
                   type='font-awesome'
                   color='#341f97'
+                  size={35}
                   onPress={() => { props.navigation.navigate('CreateEvent') }}
                 />
-
               </TouchableOpacity>
-
               <TouchableOpacity>
                 <Icon
                   reverse
@@ -257,11 +264,10 @@ const MapScreen = props => {
                   name='bookmark'
                   type='font-awesome'
                   color='#341f97'
+                  size={35}
                   onPress={() => { props.navigation.navigate('CreateEvent') }}
                 />
-
               </TouchableOpacity>
-
             </View>
           )
         }
@@ -277,8 +283,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: Dimensions.get('window').width,
-
-
   },
   top: {
     backgroundColor: '#130f40',
@@ -327,7 +331,6 @@ const styles = StyleSheet.create({
   },
   dropdownStyle: {
     width: 100
-
   },
   plainView: {
     flex: 1,

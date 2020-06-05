@@ -3,7 +3,8 @@ import { StyleSheet, Text, View, Image, Button, FlatList, TouchableOpacity } fro
 import Modal from 'react-native-modal';
 import { Dimensions } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-
+import { Icon } from 'react-native-elements';
+import Colors from '../constants/Colors';
 
 const { width, height } = Dimensions.get('screen');
 const SCREEN_HEIGHT = height;
@@ -30,29 +31,31 @@ const EventModal = (props) => {
             borderRadius={10}
             propagateSwipe
         >
-            <View>
-                <Text style={styles.title}>{props.title}</Text>
+            <View style={{ flex: 1, flexDirection: 'column' }}>
+                <View>
+                    <Text style={styles.title}>{props.title}</Text>
+                </View>
+                <ScrollView showsVerticalScrollIndicator={true}>
+                    <TouchableOpacity activeOpacity={1}>
+                        <View style={styles.container}>
+                            <Text style={styles.hostName}>Hostname: {props.hostName}</Text>
+                            <View style={{ paddingLeft: 0 }} >
+                                <Image
+                                    source={{ uri: 'https://cdn.igeeksblog.com/wp-content/uploads/2016/12/28113822/Best-iPhone-and-iPad-Party-Apps.jpg' }}
+                                    style={{ width: 350, height: 200 }} />
+                            </View>
+                            <Text style={styles.eventData}>{props.description}</Text>
+                            <View style={styles.saveButton}>
+                                <Button
+                                    raised={true}
+                                    title="Save Event"
+                                    color={'#57a4f2'}
+                                />
+                            </View>
+                        </View >
+                    </TouchableOpacity>
+                </ScrollView>
             </View>
-            <ScrollView
-                showsVerticalScrollIndicator={true}
-            >
-                <TouchableOpacity
-                    activeOpacity={1}
-                >
-                    <View style={styles.container}>
-
-                        <Text style={styles.hostName}>Hostname: {props.hostName}</Text>
-                        <Text style={styles.eventData}>{props.description}</Text>
-                        <View style={styles.saveButton}>
-                            <Button
-                                raised={true}
-                                title="Save Event"
-                                color={'#57a4f2'}
-                            />
-                        </View>
-                    </View >
-                </TouchableOpacity>
-            </ScrollView>
         </Modal>
     );
 
@@ -68,7 +71,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         padding: 10,
         borderRadius: 0,
-        overflow: 'hidden'
+        overflow: 'hidden',
+        flexDirection: "column",
     },
     title: {
         fontSize: 30,
@@ -87,7 +91,6 @@ const styles = StyleSheet.create({
 
     },
     modal: {
-        flex: 1,
         marginTop: 300,
         borderRadius: 0,
         marginLeft: 0,
@@ -97,22 +100,28 @@ const styles = StyleSheet.create({
         maxHeight: SCREEN_HEIGHT
     },
     hostName: {
-
+        flexDirection: "column",
+        margin: 10,
+        marginRight: 0,
         fontSize: 25,
+        textAlign: 'left',
         color: 'white',
+        paddingRight: 0,
+        alignContent: "flex-start"
     }
     ,
     eventData: {
         color: 'white',
+        margin: 10,
         fontSize: 20
     },
     saveButton: {
-        margin: 40,
+        margin: 20,
         width: SCREEN_WIDTH / 3,
         paddingTop: 4,
         flex: 1,
         elevation: 10
-    }
+    },
 
 });
 
