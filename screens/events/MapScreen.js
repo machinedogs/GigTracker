@@ -297,12 +297,6 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height * .86,
   },
-  textStyle: {
-    textAlign: 'left',
-    fontSize: 22,
-    color: 'white',
-
-  },
   titleStyle: {
     textAlign: 'left',
     fontSize: 25,
