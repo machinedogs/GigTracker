@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Button, FlatList, Dimensions, Image, Platform, SafeAreaView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
+import MapView from 'react-native-map-clustering';
+import { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 import { Dropdown } from 'react-native-material-dropdown';
 import FlashOnIcon from '@material-ui/icons/FlashOn';
 import DateFnsUtils from '@date-io/date-fns';
@@ -39,6 +40,26 @@ const todaysDate = () => {
     mm = '0' + mm;
   }
   return mm + '/' + dd + '/' + yyyy;
+};
+
+function getCurrentLocation() {
+  navigator.geolocation.getCurrentPosition(
+      position => {
+      let region = {
+              latitude: parseFloat(position.coords.latitude),
+              longitude: parseFloat(position.coords.longitude),
+              latitudeDelta: LATITUDE_DELTA,
+              longitudeDelta: LONGITUDE_DELTA
+          };
+          return region;
+      },
+      error => console.log(error),
+      {
+          enableHighAccuracy: true,
+          timeout: 20000,
+          maximumAge: 1000
+      }
+  );
 }
 
 const MapScreen = props => {
@@ -156,12 +177,17 @@ const MapScreen = props => {
       <View style={{ flex: 4 }}>
 
         <MapView
+          initialRegion={{latitude: 37.78825,
+            longitude: -122.4324,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421}}
           style={styles.mapStyle}
           provider={PROVIDER_GOOGLE}
           showsUserLocation={true}
           rotateEnabled={false}
           showsTraffic={false}
           customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
+          clusterColor="#341f97"
         >
           {events.map(event => (
             <Marker
