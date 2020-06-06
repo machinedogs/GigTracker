@@ -1,3 +1,5 @@
+import React from 'react';
+import {Button} from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 
@@ -15,7 +17,18 @@ const EventNavigator = createStackNavigator(
                 headerShown: false,
             },
         },
-        CreateEvent: CreateEventScreen,
+        CreateEvent: {
+            screen: CreateEventScreen,
+            navigationOptions: {
+                title: "Create Event",
+                /*headerRight: () => (
+                    <Button
+                      onPress={() => alert('This is a button!')}
+                      title="Submit"
+                    />
+                  ),*/
+            }
+        },
         UserProfile: UserProfileScreen,
         ManageEvent: ManageEventScreen,
         Auth: AuthScreen
