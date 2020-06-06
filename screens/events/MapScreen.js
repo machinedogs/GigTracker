@@ -297,6 +297,7 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height * .86,
   },
+
   titleStyle: {
     textAlign: 'left',
     fontSize: 25,
