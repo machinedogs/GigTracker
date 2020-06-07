@@ -1,26 +1,64 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { StyleSheet, Text, View, Dimensions, TextInput, Button, Platform, ScrollView, SafeAreaView } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import Modal from 'react-native-modal';
+import Mapview, { PROVIDER_GOOGLE, Marker, } from 'react-native-maps';
+import MapStyle from '../../constants/MapStyle';
+
 import Event from '../../models/event';
+import MapView from 'react-native-maps';
+
+const { width, height } = Dimensions.get('window')
+
+const SCREEN_HEIGHT = height
+const SCREEN_WIDTH = width
+const ASPECT_RATIO = width / height
+const LATITUDE_DELTA = 0.0922
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
+
+async function getCurrentLocation() {
+  navigator.geolocation.getCurrentPosition(
+      position => {
+      let region = {
+              latitude: parseFloat(position.coords.latitude),
+              latitudeDelta: LATITUDE_DELTA,
+              longitude: parseFloat(position.coords.longitude),
+              longitudeDelta: LONGITUDE_DELTA
+          };
+          console.log(region)
+          return region;
+      },
+      error => console.log(error),
+      {
+          enableHighAccuracy: true,
+          timeout: 20000,
+          maximumAge: 1000
+      }
+  );
+}
+
+const curLoc = getCurrentLocation();
 
 const MapScreen = event => {
 
   let initTitle = event.title ? event.title : '';
   let initDescription = event.description ? event.description : '';
-  let initLocation = event.latitude ? { latitude: event.latitude, longitude: event.longitude } : '';
+  let initLocation = event.latitude ? { latitude: event.latitude, longitude: event.longitude } : curLoc;
   let initCategory = event.category ? event.category : '';
+  let initDate = event.date ? event.date : new Date(0);
 
   const [title, setTitle] = useState(initTitle);
-  const [description, setDescription] = useState('');
-  const [location, setLocation] = useState('');
-  const [date, setDate] = useState(new Date(1598051730000));
+  const [description, setDescription] = useState(initDescription);
+  const [location, setLocation] = useState(initLocation);
+  const [date, setDate] = useState(new Date());
   //SET TIME
   const [showDate, setShowDate] = useState(false);
   const [showTime, setShowTime] = useState(false);
   const [category, setCategory] = useState(initCategory);
+  const [showMap, setShowMap] = useState(false);
 
   const onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -30,18 +68,33 @@ const MapScreen = event => {
 
   const onChangeTime = () => { };
 
-  const showDateMode = () => {
-    setShowDate(true);
+  const toggleShowDate = () => {
+    showDate ? setShowDate(false) : setShowDate(true);
   };
 
-  const showTimeMode = () => {
-    setShowTime(true);
+  const toggleShowTime = () => {
+    showTime ? setShowTime(false) : setShowTime(true);
   };
+
+  const stringifyDate = (date) => {
+    var dd = date.getDate();
+    var mm = date.getMonth() + 1;
+
+    var yyyy = date.getFullYear();
+    if (dd < 10) {
+      dd = '0' + dd;
+    }
+    if (mm < 10) {
+      mm = '0' + mm;
+    }
+    return mm + '/' + dd + '/' + yyyy;
+  }
 
   const saveEvent = () => {
     if (title && description && location && date && category) {
-      const newEvent = new Event(1000, date, 'USER', title, description, category, 'latitude', longitude)
-      //Dispatch action (CREATE_EVENT, event)
+      const newEvent = new Event(1000, stringifyDate(date), 'USER', title, description, category, 'latitude', 'longitude')
+      console.log(newEvent);
+      //Dispatch action (CREATE_EVENT, newEvent)
     } else {
       //alert that event is not valid
       alert('Fill out all event info before submitting.')
@@ -50,13 +103,30 @@ const MapScreen = event => {
 
   const dateTitle = () => {
     return (
-      showDate ? date.toString() : 'Select date...'
+      date.toString() ? date.toString() : 'Select date...'
     )
+  }
+
+  const handleDragEnd = (e) => {
+    setLocation({
+      latitude: e.latitude,
+      longitude: e.longitude
+    });
+    console.log('location is ' + location)
+  }
+
+  let mapRef = useRef(null);
+
+
+
+  const toggleShowMap = () => {
+    showMap ? setShowMap(false) : setShowMap(true);
   }
 
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
       <ScrollView>
         <View style={{ justifyContent: 'flex-end', alignItems: 'flex-end', flexDirection: 'row', flex: 1 }}>
         </View>
@@ -77,11 +147,12 @@ const MapScreen = event => {
         />
         <DropDownPicker
           items={[
-            { label: 'Political', value: 'political' },
             { label: 'Music', value: 'music' },
+            { label: 'Political', value: 'political' },
             { label: 'Sports', value: 'sports' },
             { label: 'Meeting', value: 'meeting' },
             { label: 'Party', value: 'party' },
+            { label: 'Protest', value: 'protest' },
             { label: 'Food', value: 'food' },
           ]}
           defaultValue={initCategory}
@@ -120,8 +191,46 @@ const MapScreen = event => {
             },
           }}
         />
+        <Button onPress={toggleShowMap} title={"Drop a pin..."} />
+          <Modal
+            isVisible={showMap}
+            onSwipeComplete={toggleShowMap}
+            swipeDirection={"down"}
+            backdropOpacity={.3}
+            onBackdropPress={toggleShowMap}
+            swipeThreshold={100}
+            TransitionOutTiming={0}
+            style={styles.modal}
+            borderRadius={10}
+            propagateSwipe
+          >
+            <MapView
+              initialRegion={ curLoc }
+              style={styles.mapStyle}
+              provider={PROVIDER_GOOGLE}
+              showsUserLocation
+              showsMyLocationButton
+              rotateEnabled={false}
+              showsTraffic={false}
+              toolbarEnabled={true}
+              ref={mapRef}
+              customMapStyle={MapStyle}
+              clusterColor="#341f97"
+            >
+              <Marker
+                coordinate={{ latitude: curLoc.latitude, longitude: curLoc.longitude }}
+                title={title}
+                description={description}
+                //pinColor="#341f97"
+                //tracksViewChanges={false}
+                draggable
+                onDragStart={handleDragEnd}
+                onDragEnd={handleDragEnd}
+              />
+            </MapView>
+          </Modal>
         <View style={styles.container}>
-          <Button onPress={showDateMode} title={dateTitle()} />
+          <Button onPress={toggleShowDate} title={dateTitle()} />
         </View>
         {showDate && (
           <DateTimePicker
@@ -132,7 +241,7 @@ const MapScreen = event => {
           />
         )}
         <View style={styles.container}>
-          <Button onPress={showTimeMode} title="Select time..." />
+          <Button onPress={toggleShowTime} title='Select a time...' />
         </View>
         {showTime && (
           <DateTimePicker
@@ -145,14 +254,15 @@ const MapScreen = event => {
         <TouchableOpacity
           onPress={saveEvent}
         >
-          <Text style={{ 
-            textAlign: 'right', 
-            fontSize: 22, 
-            color: 'gray', 
+          <Text style={{
+            textAlign: 'right',
+            fontSize: 22,
+            color: 'gray',
             paddingRight: 30
-            }}>Submit</Text>
+          }}>Submit</Text>
         </TouchableOpacity>
       </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -185,7 +295,21 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     width: 350,
     height: 120,
-  }
+  },
+  modal: {
+    flex: 1,
+    marginTop: 300,
+    borderRadius: 10,
+    marginLeft: 0,
+    marginRight: 0,
+    maxHeight: 400,
+    backgroundColor: 'yellow'
+  },
+  mapStyle: {
+    zIndex: -1,
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height * .3,
+  },
 });
 
 export default MapScreen;
