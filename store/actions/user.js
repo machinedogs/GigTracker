@@ -2,6 +2,53 @@ import * as SecureStore from 'expo-secure-store';
 
 export const SIGNUP = 'SIGNUP';
 export const LOGIN = 'LOGIN';
+export const AUTHENTICATE = 'AUTHENTICATE';
+
+export const authenticate = (userName, userEmail, accessToken, refreshToken) => {
+    return { 
+        type: AUTHENTICATE, 
+        userName: userName, 
+        userEmail: userEmail, 
+        accessToken: accessToken, 
+        refreshToken: refreshToken
+    };
+};
+
+export const refresh = (email, userName, refreshToken) => {
+    return async dispatch => {
+        var raw = "";
+
+        var requestOptions = {
+            method: 'GET',
+            body: raw,
+            redirect: 'follow'
+        };
+
+        const response = await fetch(
+            `https://gig-authentication-service.herokuapp.com/api/v1/refresh?refresh_token=${refreshToken}`,
+            requestOptions)
+        const resData = await response.json();
+
+        console.log('contacted refresh endpoint');
+        dispatch({
+            type: LOGIN,
+            userName: userName,
+            userEmail: email,
+            accessToken: resData.data.authorization.auth_token.token,
+            refreshToken: resData.data.authorization.refresh_token.token
+        });
+        let accessExpiration = new Date(resData.data.authorization.auth_token.expires);
+        let refreshExpiration = new Date(resData.data.authorization.refresh_token.expires);
+        saveDataToStorage(
+            userName,
+            email,
+            resData.data.authorization.auth_token.token,
+            resData.data.authorization.refresh_token.token,
+            accessExpiration,
+            refreshExpiration
+        )
+    };
+};
 
 export const signup = (email, password, username, passwordConfirmation) => {
     console.log(email, password, username, passwordConfirmation);
@@ -93,7 +140,7 @@ export const login = (email, password) => {
             //const errorResData = await response.json();
             let message;
             if (resData.data.email) {
-                message = 'Email is already\nTaken';
+                message = 'Email is alreadyTaken';
             }
 
             throw new Error(message);

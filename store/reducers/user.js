@@ -1,4 +1,4 @@
-import { LOGIN, SIGNUP } from "../actions/user";
+import { LOGIN, SIGNUP, AUTHENTICATE } from "../actions/user";
 
 const initialState = {
     //userId: null,
@@ -20,6 +20,13 @@ export default (state = initialState, action) => {
                 refreshToken: action.refreshToken
             }
         case SIGNUP:
+            return {
+                userName: action.userName,
+                userEmail: action.userEmail,
+                accessToken: action.accessToken,
+                refreshToken: action.refreshToken
+            }
+        case AUTHENTICATE:
             return {
                 userName: action.userName,
                 userEmail: action.userEmail,
