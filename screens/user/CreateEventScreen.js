@@ -191,7 +191,7 @@ const MapScreen = event => {
             },
           }}
         />
-        <Button onPress={toggleShowMap} title={"Drop a pin..."} />
+        <Button onPress={toggleShowMap} title="Drop a pin..." />
           <Modal
             isVisible={showMap}
             onSwipeComplete={toggleShowMap}
@@ -203,7 +203,7 @@ const MapScreen = event => {
             style={styles.modal}
             borderRadius={10}
             propagateSwipe
-          >
+          >{curLoc && (
             <MapView
               initialRegion={ curLoc }
               style={styles.mapStyle}
@@ -228,6 +228,7 @@ const MapScreen = event => {
                 onDragEnd={handleDragEnd}
               />
             </MapView>
+          )}
           </Modal>
         <View style={styles.container}>
           <Button onPress={toggleShowDate} title={dateTitle()} />
