@@ -41,7 +41,8 @@
     "redux-thunk": "^2.3.0",
     "rn-sliding-up-panel": "^2.4.2",
     "serialize-javascript": "^3.0.0",
-    "watchman": "^1.0.0"
+    "watchman": "^1.0.0",
+    "expo-secure-store": "~8.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",
