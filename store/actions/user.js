@@ -54,6 +54,16 @@ export const signup = (email, password, username, passwordConfirmation) => {
             accessToken: resData.data.authorization.auth_token.token,
             refreshToken: resData.data.authorization.refresh_token.token
         });
+        let accessExpiration = new Date(resData.data.authorization.auth_token.expires);
+        let refreshExpiration = new Date(resData.data.authorization.refresh_token.expires);
+        saveDataToStorage(
+            resData.data.host.name,
+            resData.data.host.email,
+            resData.data.authorization.auth_token.token,
+            resData.data.authorization.refresh_token.token,
+            accessExpiration,
+            refreshExpiration
+        )
     };
 };
 
@@ -98,12 +108,22 @@ export const login = (email, password) => {
             accessToken: resData.data.authorization.auth_token.token,
             refreshToken: resData.data.authorization.refresh_token.token
         });
+        let accessExpiration = new Date(resData.data.authorization.auth_token.expires);
+        let refreshExpiration = new Date(resData.data.authorization.refresh_token.expires);
+        saveDataToStorage(
+            resData.data.host.name,
+            resData.data.host.email,
+            resData.data.authorization.auth_token.token,
+            resData.data.authorization.refresh_token.token,
+            accessExpiration,
+            refreshExpiration
+        )
     };
 };
 
-const saveDataToStorage = (userId, userEmail, accessToken, refreshToken, accessExpiration, refreshExpiration) => {
+const saveDataToStorage = (userName, userEmail, accessToken, refreshToken, accessExpiration, refreshExpiration) => {
     SecureStore.setItemAsync('userData', JSON.stringify({
-        userId: userId,
+        userName: userName,
         userEmail: userEmail,
         accessToken: accessToken,
         refreshToken: refreshToken,
