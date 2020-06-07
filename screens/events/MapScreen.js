@@ -1,23 +1,25 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button, FlatList, Dimensions, Image, Platform, SafeAreaView } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { StyleSheet, Text, View, Button, FlatList, Dimensions, Image, Platform, SafeAreaView, TouchableOpacity } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import MapView from 'react-native-map-clustering';
 import { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 import { Dropdown } from 'react-native-material-dropdown';
 import FlashOnIcon from '@material-ui/icons/FlashOn';
+import Drawer from 'react-native-drawer';
 import DateFnsUtils from '@date-io/date-fns';
 import DatePicker from 'react-native-datepicker';
+import { Icon } from 'react-native-elements';
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 //import { useTheme } from 'react-navigation/native';
-
 import { EVENTS } from '../../data/dummy-data';
 import MapStyle from '../../constants/MapStyle';
-import EventModal from '../../components/EventModal'
+import EventModal from '../../components/EventModal';
 import Event from '../../models/event';
+import ControlPanel from '../../components/controlPanel';
 
 const { width, height } = Dimensions.get('window')
 
@@ -26,6 +28,7 @@ const SCREEN_WIDTH = width
 const ASPECT_RATIO = width / height
 const LATITUDE_DELTA = 0.0922
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
+
 
 const todaysDate = () => {
   var today = new Date();
@@ -67,13 +70,30 @@ const MapScreen = props => {
   const [events, setEvents] = useState(EVENTS);
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(new Event)
-
+  let mapRef = useRef(null);
+  let menuRef = useRef(null);
   const [date, setDate] = useState(todaysDate());
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
 
+  const closeControlPanel = () => {
+    menuRef.current._drawer.close()
+  };
+  const openControlPanel = () => {
+    menuRef.current._drawer.open()
+  };
+  //  get initial location then animate to that location
+  // only do this on mount and unmount of map component 
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        coords = { latitude: position.coords.latitude, longitude: position.coords.longitude, latitudeDelta: .009, longitudeDelta: .009 };
+        console.log(coords);
+        mapRef.current.animateToRegion(coords, 1000);
+      }, (error) => console.log(error));
+  }, []);
 
   let categories = [{ value: 'All events' }];
   EVENTS.map(event => {
@@ -103,14 +123,12 @@ const MapScreen = props => {
     console.log("pressing event callout");
     console.log(selectedEvent)
     toggleModal();
-
   }
 
   const onPinPress = (event) => {
     setSelectedEvent({ id: event.id, title: event.title, description: event.description, hostName: event.hostName });
     console.log("pressing pin");
     console.log(event)
-
   }
 
   const filterDate = (selectedDate) => {
@@ -119,24 +137,23 @@ const MapScreen = props => {
     console.log(selectedDate)
   }
 
-  //const theme = useTheme();
-
   return (
     //add a dropdown to choose map style? -> what if we put it in user settings? could incentivize people to become users
     //add dropdown calendar
     <SafeAreaView style={styles.container}>
 
       <View style={styles.container}>
-
-        <Text style={styles.titleStyle}>GigTracker</Text>
+        <Text style={styles.top}>GigTracker</Text>
         <View style={styles.topBarStyle}>
           <Dropdown
             label="Category"
             data={categories}
             containerStyle={styles.dropdownStyle}
-            textColor='#fff'
             baseColor='#fff'
+            dropdownOffset={{ top: 40, left: 0 }}
+            dropdownPosition={-5.35}
             selectedItemColor='#c0392b'
+            animationDuration={50}
             pickerStyle={{ backgroundColor: '#ecf0f1' }}
             itemTextStyle={styles.containerStyle}
             onChangeText={filterCategory}
@@ -153,7 +170,6 @@ const MapScreen = props => {
               maxDate="06-01-2021" // Max date is 1 year out from current date?
               showIcon={false}
               style={styles.textStyle}
-              customStyles={{ textColor: 'white' }}
               confirmBtnText="Confirm"
               cancelBtnText="Cancel"
               customStyles={{
@@ -165,6 +181,11 @@ const MapScreen = props => {
                 },
                 dateInput: {
                   marginLeft: 36
+                },
+                dateText: {
+                  color: '#FFFFFF',
+                  fontWeight: 'bold',
+                  justifyContent: 'flex-start'
                 }
                 // ... You can check the source to find the other keys.
               }}
@@ -174,8 +195,7 @@ const MapScreen = props => {
         </View>
       </View>
 
-      <View style={{ flex: 4 }}>
-
+      <View style={{ flex: 4 }} >
         <MapView
           initialRegion={{latitude: 37.78825,
             longitude: -122.4324,
@@ -183,9 +203,12 @@ const MapScreen = props => {
             longitudeDelta: 0.0421}}
           style={styles.mapStyle}
           provider={PROVIDER_GOOGLE}
-          showsUserLocation={true}
+          showsUserLocation
+          showsMyLocationButton
           rotateEnabled={false}
           showsTraffic={false}
+          toolbarEnabled={true}
+          ref={mapRef}
           customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
           clusterColor="#341f97"
         >
@@ -223,25 +246,54 @@ const MapScreen = props => {
       <View style={styles.container}>
         {!userId ?
           (
-            <Button
-              title="Login or Sign up"
-              onPress={() => { props.navigation.navigate('Auth') }}
-            />
+            <TouchableOpacity>
+              <Icon
+                reverse
+                raised
+                name='user'
+                type='font-awesome'
+                color='#341f97'
+                size={35}
+                reverseColor='white'
+                onPress={() => { props.navigation.navigate('Auth') }}
+              />
+            </TouchableOpacity>
           ) :
           (
             <View style={styles.row}>
-              <Button
-                title="User Profile"
-                onPress={() => { props.navigation.navigate('UserProfile') }}
-              />
-              <Button
-                title="Create Event"
-                onPress={() => { props.navigation.navigate('CreateEvent') }}
-              />
-              <Button
-                title="Saved Events"
-                onPress={() => { props.navigation.navigate('CreateEvent') }}
-              />
+              <TouchableOpacity>
+                <Icon
+                  reverse
+                  raised
+                  name='user'
+                  type='font-awesome'
+                  color='#341f97'
+                  size={35}
+                  onPress={() => { props.navigation.navigate('UserProfile') }}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Icon
+                  reverse
+                  raised
+                  name='plus'
+                  type='font-awesome'
+                  color='#341f97'
+                  size={35}
+                  onPress={() => { props.navigation.navigate('CreateEvent') }}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Icon
+                  reverse
+                  raised
+                  name='bookmark'
+                  type='font-awesome'
+                  color='#341f97'
+                  size={35}
+                  onPress={() => { props.navigation.navigate('CreateEvent') }}
+                />
+              </TouchableOpacity>
             </View>
           )
         }
@@ -254,23 +306,24 @@ const MapScreen = props => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#130f40',
     alignItems: 'center',
     justifyContent: 'center',
     width: Dimensions.get('window').width,
-
   },
+  top: {
+    backgroundColor: '#130f40',
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: Dimensions.get('window').width,
+  }
+  ,
   mapStyle: {
     zIndex: -1,
     width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height * 0.7,
+    height: Dimensions.get('window').height * .86,
   },
-  textStyle: {
-    textAlign: 'left',
-    fontSize: 22,
-    color: 'white',
 
-  },
   titleStyle: {
     textAlign: 'left',
     fontSize: 25,
@@ -286,7 +339,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: "flex-start",
     justifyContent: 'flex-start',
-    paddingBottom: 10,
+    paddingBottom: 0,
   },
   topBarStyle: {
     flex: 1,
@@ -294,11 +347,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    paddingBottom: 20,
+    paddingBottom: 10,
+    backgroundColor: '#130f40'
   },
   dropdownStyle: {
     width: 100
-
   },
   plainView: {
     flex: 1,
