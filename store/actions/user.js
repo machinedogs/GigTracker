@@ -1,7 +1,5 @@
 import * as SecureStore from 'expo-secure-store';
 
-export const SIGNUP = 'SIGNUP';
-export const LOGIN = 'LOGIN';
 export const AUTHENTICATE = 'AUTHENTICATE';
 
 export const authenticate = (userName, userEmail, accessToken, refreshToken) => {
@@ -31,7 +29,7 @@ export const refresh = (email, userName, refreshToken) => {
 
         console.log('contacted refresh endpoint');
         dispatch({
-            type: LOGIN,
+            type: AUTHENTICATE,
             userName: userName,
             userEmail: email,
             accessToken: resData.data.authorization.auth_token.token,
@@ -95,7 +93,7 @@ export const signup = (email, password, username, passwordConfirmation) => {
 
         console.log(resData);
         dispatch({
-            type: SIGNUP,
+            type: AUTHENTICATE,
             userName: resData.data.host.name,
             userEmail: resData.data.host.email,
             accessToken: resData.data.authorization.auth_token.token,
