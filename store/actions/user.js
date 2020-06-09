@@ -1,6 +1,7 @@
 import * as SecureStore from 'expo-secure-store';
 
 export const AUTHENTICATE = 'AUTHENTICATE';
+export const LOGOUT = 'LOGOUT';
 
 export const authenticate = (userName, userEmail, accessToken, refreshToken) => {
     return { 
@@ -11,6 +12,11 @@ export const authenticate = (userName, userEmail, accessToken, refreshToken) => 
         refreshToken: refreshToken
     };
 };
+
+export const logout = () => {
+    SecureStore.deleteItemAsync('userData'); // remove the user saved data
+    return { type: LOGOUT };
+}
 
 export const refresh = (email, userName, refreshToken) => {
     return async dispatch => {
@@ -147,7 +153,7 @@ export const login = (email, password) => {
         //const resData = await response.json();
         console.log(resData);
         dispatch({
-            type: LOGIN,
+            type: AUTHENTICATE,
             userName: resData.data.host.name,
             userEmail: resData.data.host.email,
             accessToken: resData.data.authorization.auth_token.token,
