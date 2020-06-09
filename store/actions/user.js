@@ -4,11 +4,11 @@ export const AUTHENTICATE = 'AUTHENTICATE';
 export const LOGOUT = 'LOGOUT';
 
 export const authenticate = (userName, userEmail, accessToken, refreshToken) => {
-    return { 
-        type: AUTHENTICATE, 
-        userName: userName, 
-        userEmail: userEmail, 
-        accessToken: accessToken, 
+    return {
+        type: AUTHENTICATE,
+        userName: userName,
+        userEmail: userEmail,
+        accessToken: accessToken,
         refreshToken: refreshToken
     };
 };
@@ -16,6 +16,15 @@ export const authenticate = (userName, userEmail, accessToken, refreshToken) => 
 export const logout = () => {
     SecureStore.deleteItemAsync('userData'); // remove the user saved data
     return { type: LOGOUT };
+}
+
+export const deleteAccount = () => {
+    return async dispatch => {
+        // put logic for hitting delete endpoint here
+
+        SecureStore.deleteItemAsync('userData'); // remove the user saved data
+        dispatch({ type: LOGOUT });
+    }
 }
 
 export const refresh = (email, userName, refreshToken) => {
