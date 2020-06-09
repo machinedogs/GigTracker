@@ -6,8 +6,11 @@ import {
     StyleSheet,
     Button,
     ActivityIndicator,
-    Alert
+    Alert,
+    TouchableWithoutFeedback,
+    Platform
 } from 'react-native';
+import { useHeaderHeight } from 'react-navigation-stack';
 import { useDispatch } from 'react-redux';
 
 import Input from '../../components/Input';
@@ -111,8 +114,7 @@ const AuthScreen = props => {
 
     return (
         <KeyboardAvoidingView
-            behavior='height'
-            keyboardVerticalOffset={3}
+            behavior={Platform.OS == "ios" ? "padding" : "height"}
             style={styles.screen}
         >
             <Card style={styles.authContainer}>
@@ -143,17 +145,17 @@ const AuthScreen = props => {
                         initialValue=""
                     />
                     <Input
-                                id="password"
-                                label="Password"
-                                keyboardType="default"
-                                secureTextEntry
-                                required
-                                minLength={5}
-                                autoCapitalize="none"
-                                errorText="Please enter a valid password"
-                                onInputChange={inputChangeHandler}
-                                initialValue=""
-                            />
+                        id="password"
+                        label="Password"
+                        keyboardType="default"
+                        secureTextEntry
+                        required
+                        minLength={5}
+                        autoCapitalize="none"
+                        errorText="Please enter a valid password"
+                        onInputChange={inputChangeHandler}
+                        initialValue=""
+                    />
                     { // only display password confirmation on sign up screen
                         isSignup ?
                             <Input
