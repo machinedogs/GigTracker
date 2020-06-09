@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { StyleSheet, Text, View, Dimensions, TextInput, Button, Platform, ScrollView, SafeAreaView, } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { StyleSheet, Text, View, Dimensions, TextInput, Button, Platform, ScrollView, SafeAreaView } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -7,11 +7,9 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import Modal from 'react-native-modal';
 import Mapview, { PROVIDER_GOOGLE, Marker, } from 'react-native-maps';
 import MapStyle from '../../constants/MapStyle';
-import { useDispatch } from 'react-redux';
 
 import Event from '../../models/event';
 import MapView from 'react-native-maps';
-import { CREATE_EVENT } from '../../store/actions/events';
 
 const { width, height } = Dimensions.get('window')
 
@@ -62,22 +60,6 @@ const MapScreen = event => {
   const [category, setCategory] = useState(initCategory);
   const [showMap, setShowMap] = useState(false);
 
-  const dispatch = useDispatch();
-
-  let mapRef = useRef(null);
-
-  //  get initial location then animate to that location
-  // only do this on mount and unmount of map component 
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        coords = { latitude: position.coords.latitude, longitude: position.coords.longitude, latitudeDelta: .009, longitudeDelta: .009 };
-        console.log(coords);
-        setLocation(coords);
-        mapRef.current.animateToRegion(coords, 1000);
-      }, (error) => console.log(error));
-  }, []);
-
   const onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShowDate(Platform.OS === 'ios');
@@ -113,7 +95,6 @@ const MapScreen = event => {
       const newEvent = new Event(1000, stringifyDate(date), 'USER', title, description, category, 'latitude', 'longitude')
       console.log(newEvent);
       //Dispatch action (CREATE_EVENT, newEvent)
-      dispatch({type: CREATE_EVENT, event: newEvent})
     } else {
       //alert that event is not valid
       alert('Fill out all event info before submitting.')
@@ -134,6 +115,7 @@ const MapScreen = event => {
     console.log('location is ' + location)
   }
 
+  let mapRef = useRef(null);
 
 
 
@@ -146,14 +128,15 @@ const MapScreen = event => {
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
       <ScrollView>
-        <Text>Title</Text>
+        <View style={{ justifyContent: 'flex-end', alignItems: 'flex-end', flexDirection: 'row', flex: 1 }}>
+        </View>
         <TextInput
           style={styles.titleStyle}
           onChangeText={text => setTitle(text)}
           value={title}
           placeholder={'Add a title...'}
         />
-        <Text>Description</Text>
+        <Text>  </Text>
         <TextInput
           style={styles.descriptionStyle}
           onChangeText={text => setDescription(text)}
@@ -162,7 +145,6 @@ const MapScreen = event => {
           multiline
           numberOfLines={5}
         />
-        <Text>Category</Text>
         <DropDownPicker
           items={[
             { label: 'Music', value: 'music' },
@@ -179,8 +161,6 @@ const MapScreen = event => {
           dropDownStyle={{ backgroundColor: '#fafafa' }}
           onChangeItem={category => setCategory(category)}
         />
-        <Text>Location</Text>
-        
         <GooglePlacesAutocomplete
           placeholder='Enter Location'
           minLength={2}
@@ -223,9 +203,9 @@ const MapScreen = event => {
             style={styles.modal}
             borderRadius={10}
             propagateSwipe
-          >
+          >{curLoc && (
             <MapView
-              //initialRegion={ curLoc }
+              initialRegion={ curLoc }
               style={styles.mapStyle}
               provider={PROVIDER_GOOGLE}
               showsUserLocation
@@ -238,7 +218,7 @@ const MapScreen = event => {
               clusterColor="#341f97"
             >
               <Marker
-                coordinate={{ latitude: location.latitude, longitude: location.longitude }}
+                coordinate={{ latitude: curLoc.latitude, longitude: curLoc.longitude }}
                 title={title}
                 description={description}
                 //pinColor="#341f97"
@@ -248,10 +228,9 @@ const MapScreen = event => {
                 onDragEnd={handleDragEnd}
               />
             </MapView>
-          
+          )}
           </Modal>
         <View style={styles.container}>
-        <Text>Date</Text>
           <Button onPress={toggleShowDate} title={dateTitle()} />
         </View>
         {showDate && (
@@ -263,7 +242,6 @@ const MapScreen = event => {
           />
         )}
         <View style={styles.container}>
-        <Text>Time</Text>
           <Button onPress={toggleShowTime} title='Select a time...' />
         </View>
         {showTime && (
@@ -325,7 +303,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginLeft: 0,
     marginRight: 0,
-    maxHeight: height*0.5,
+    maxHeight: 400,
     backgroundColor: 'yellow'
   },
   mapStyle: {
