@@ -12,6 +12,7 @@ import { useDispatch } from 'react-redux';
 import Event from '../../models/event';
 import MapView from 'react-native-maps';
 import { CREATE_EVENT } from '../../store/actions/events';
+import * as eventActions from '../../store/actions/events';
 
 const { width, height } = Dimensions.get('window')
 
@@ -110,10 +111,9 @@ const MapScreen = event => {
 
   const saveEvent = () => {
     if (title && description && location && date && category) {
-      const newEvent = new Event(1000, stringifyDate(date), 'USER', title, description, category.value, location.latitude, location.longitude)
+      const newEvent = new Event(1000, date.toISOString(), 'host', 'email', title, description, category.value, location.latitude, location.longitude)
       console.log(newEvent);
-      //Dispatch action (CREATE_EVENT, newEvent)
-      dispatch({type: CREATE_EVENT, event: newEvent})
+      dispatch(eventActions.createEvent(newEvent));
     } else {
       //alert that event is not valid
       alert('Fill out all event info before submitting.')
@@ -126,10 +126,10 @@ const MapScreen = event => {
     )
   }
 
-  const handleDragEnd = (e) => {
+  const handleDragEnd = (coordinate) => {
     setLocation({
-      latitude: e.latitude,
-      longitude: e.longitude
+      latitude: coordinate.latitude,
+      longitude: coordinate.longitude
     });
     console.log('location is ' + location)
   }
@@ -237,12 +237,10 @@ const MapScreen = event => {
             >
               <Marker
                 coordinate={{ latitude: location.latitude, longitude: location.longitude }}
-                title={title}
-                description={description}
                 //pinColor="#341f97"
                 //tracksViewChanges={false}
                 draggable
-                onDragStart={handleDragEnd}
+                //onDragStart={handleDragEnd}
                 onDragEnd={handleDragEnd}
               />
             </MapView>
@@ -323,13 +321,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginLeft: 0,
     marginRight: 0,
-    maxHeight: height*0.5,
-    backgroundColor: 'yellow'
+    maxHeight: height*0.6,
+    backgroundColor: '#b2bec3'
   },
   mapStyle: {
     zIndex: -1,
     width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height * .3,
+    height: Dimensions.get('window').height * .5,
   },
 });
 

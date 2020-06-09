@@ -4,7 +4,7 @@ export const ADD_TO_MY_EVENTS = 'ADD_TO_MY_EVENTS';
 
 export const createEvent = (event) => {
     console.log('Event to be created: ' + event);
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
@@ -12,13 +12,11 @@ export const createEvent = (event) => {
             "title": event.title,
             "description": event.description,
             "date": event.date,
-            "category": event.category, //e.g. "music", "sports"
+            "category": event.category, 
             "latitude": event.latitude,
             "longitude": event.longitude,
-            "host": {
-                "username": event.host.username,
-                "email": event.host.email
-            }
+            "name": getState().user.userName,
+            "email": getState().user.userEmail
         });
 
         var requestOptions = {
@@ -28,8 +26,13 @@ export const createEvent = (event) => {
             redirect: 'follow'
         };
 
-        const response = await fetch("/https://gigservice.herokuapp.com/api/v1/events", requestOptions);
+        const access_token = getState().user.accessToken;
+
+        console.log('boutta send');
+
+        const response = await fetch(`https://gigservice.herokuapp.com/api/v1/events?auth_token=${access_token}`, requestOptions);
         const resData = await response.json();
+        console.log(resData);
 
         if (resData.status === 'ERROR') {
             let message = "There was an error posting this event.";
@@ -42,6 +45,9 @@ export const createEvent = (event) => {
             type: CREATE_EVENT,
             event: event,
         });
+
+        alert("Succesfully created event!");
+        //navigate home
     }
 };
 
