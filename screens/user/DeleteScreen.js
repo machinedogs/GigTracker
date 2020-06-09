@@ -30,6 +30,16 @@ const DeleteScreen = props => {
     );
 }
 
+DeleteScreen.navigationOptions = {
+    headerTitle: 'Delete Account',
+    headerStyle: {
+        backgroundColor: Colors.primary,
+    },
+    headerTintColor: Colors.lightText,
+    headerBackTitle: 'Profile'
+    
+};
+
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
