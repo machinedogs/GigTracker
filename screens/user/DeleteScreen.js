@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { useDispatch } from 'react-redux';
-import Colors from '../../constants/Colors';
 
+import Colors from '../../constants/Colors';
+import Card from '../../components/Card';
 import * as authActions from '../../store/actions/user';
 
 const DeleteScreen = props => {
@@ -16,16 +17,21 @@ const DeleteScreen = props => {
 
     return (
         <View style={styles.screen}>
-            <Text>
-                This is the Delete Account Screen.
+            <Card style={styles.container}>
+                <Text>
+                    This is the Delete Account Screen.
             </Text>
-            <Text>
-                We will delete your user data from our servers. Please confirm below:
+                <Text>
+                    We will delete your user data from our servers.
             </Text>
-            <Button
-                title='I am sure. Cya suckers!'
-                onPress={deleteAccountHandler}
-            />
+                <Text>
+                    Please confirm below:
+            </Text>
+                <Button
+                    title='Adios!'
+                    onPress={deleteAccountHandler}
+                />
+            </Card>
         </View>
     );
 }
@@ -37,7 +43,7 @@ DeleteScreen.navigationOptions = {
     },
     headerTintColor: Colors.lightText,
     headerBackTitle: 'Profile'
-    
+
 };
 
 const styles = StyleSheet.create({
@@ -45,8 +51,17 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: "#fff",
-        paddingHorizontal: 50
+        backgroundColor: Colors.lightBackground,
+        paddingHorizontal: 50,
+    },
+    container: {
+        width: '80%',
+        maxWidth: '95%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minWidth: 300,
+        maxHeight: 450,
+        padding: 20
     }
 });
 
