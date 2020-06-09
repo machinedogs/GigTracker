@@ -7,8 +7,10 @@ const initialState = {
 export default (state = initialState, action) => {
     switch (action.type) {
         case CREATE_EVENT:
-            // upload event to database
-            return state;
+            return {
+                ...state,
+                newEvent: action.event
+            };
         default:
             return state;
     }

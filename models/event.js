@@ -6,8 +6,10 @@ class Event {
         this.title = title;
         this.description = description;
         this.category = category;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.location = {
+            latitude: latitude,
+            longitude: longitude
+        }
     }
 };
 
