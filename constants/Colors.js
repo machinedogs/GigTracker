@@ -1,6 +1,6 @@
 export default {
-    primary: '#C2185B',
-    accent: '#FFC107',
+    primary: '#341f97',
+    accent: '#c0392b',
     lightBackground: '#ecf0f1',
     lightText: '#fff',
     purpleButton: '#341f97',
