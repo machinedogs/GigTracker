@@ -11,7 +11,6 @@ import {
     Platform,
     Keyboard
 } from 'react-native';
-import { useHeaderHeight } from 'react-navigation-stack';
 import { useDispatch } from 'react-redux';
 
 import Input from '../../components/Input';

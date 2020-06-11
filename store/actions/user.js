@@ -4,18 +4,47 @@ export const AUTHENTICATE = 'AUTHENTICATE';
 export const LOGOUT = 'LOGOUT';
 
 export const authenticate = (userName, userEmail, accessToken, refreshToken) => {
-    return { 
-        type: AUTHENTICATE, 
-        userName: userName, 
-        userEmail: userEmail, 
-        accessToken: accessToken, 
+    return {
+        type: AUTHENTICATE,
+        userName: userName,
+        userEmail: userEmail,
+        accessToken: accessToken,
         refreshToken: refreshToken
     };
 };
 
 export const logout = () => {
-    SecureStore.deleteItemAsync('userData'); // remove the user saved data
+    console.log("Removing user data from storage and memory")
+    deleteFromStorage('userDate'); // remove the user saved data
     return { type: LOGOUT };
+}
+
+export const deleteAccount = () => {
+    return async (dispatch, getState) => {
+        const refreshToken = getState().user.refreshToken;
+
+        // Assemble Delete Request
+        var raw = "";
+        var requestOptions = {
+            method: 'DELETE',
+            body: raw,
+            redirect: 'follow'
+        };
+        const response = await fetch(
+            `https://gig-authentication-service.herokuapp.com/api/v1/hosts?refresh_token=${refreshToken}`,
+            requestOptions
+        )
+        const resData = await response.json();
+        
+        if (resData.error) {
+            let message = 'Could not delete account';
+
+            throw new Error(message);
+        }
+        console.log("Deleting User")
+        deleteFromStorage('userData'); // remove the user saved data
+        dispatch({ type: LOGOUT });
+    }
 }
 
 export const refresh = (email, userName, refreshToken) => {
@@ -179,4 +208,8 @@ const saveDataToStorage = (userName, userEmail, accessToken, refreshToken, acces
         refreshExpiration: refreshExpiration.toISOString()
     })
     );
+}
+
+const deleteFromStorage = (itemKey) => {
+    SecureStore.deleteItemAsync(itemKey);
 }
