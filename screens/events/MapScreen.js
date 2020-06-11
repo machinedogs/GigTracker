@@ -328,20 +328,20 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    width: Dimensions.get('window').width,
+    width: SCREEN_WIDTH,
   },
   top: {
     backgroundColor: '#2d3436',
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    width: Dimensions.get('window').width,
+    width: SCREEN_WIDTH,
   }
   ,
   mapStyle: {
     zIndex: -1,
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height * .86,
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT * .86,
   },
 
   titleStyle: {
@@ -363,7 +363,7 @@ const styles = StyleSheet.create({
   },
   topBarStyle: {
     flex: 1,
-    width: Dimensions.get('window').width,
+    width: SCREEN_WIDTH,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',

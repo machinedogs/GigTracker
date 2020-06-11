@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-start',
-    width: Dimensions.get('window').width - 10,
+    width: SCREEN_WIDTH - 10,
     padding: 15,
   },
   textStyle: {
