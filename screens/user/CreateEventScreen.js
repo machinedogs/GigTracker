@@ -169,6 +169,7 @@ const MapScreen = event => {
             { label: 'Food', value: 'food' },
           ]}
           defaultValue={initCategory}
+          placeholder="Select a category"
           containerStyle={{ height: 40 }}
           style={{ backgroundColor: '#fafafa' }}
           dropDownStyle={{ backgroundColor: '#fafafa' }}
