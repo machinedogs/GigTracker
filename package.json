@@ -44,7 +44,8 @@
     "rn-sliding-up-panel": "^2.4.2",
     "serialize-javascript": "^3.0.0",
     "watchman": "^1.0.0",
-    "@expo/vector-icons": "^10.0.0"
+    "@expo/vector-icons": "^10.0.0",
+    "expo-font": "~8.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",

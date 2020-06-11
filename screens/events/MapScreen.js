@@ -259,6 +259,15 @@ MapScreen.navigationOptions = navData => {
             onPress={() => { }}
           />
         </HeaderButtons>
+      ),
+      headerRight: () => (
+        <HeaderButtons HeaderButtonComponent={HeaderButton} >
+          <Item
+            title='Menu'
+            iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
+            onPress={() => { }}
+          />
+        </HeaderButtons>
       )
   }
 }

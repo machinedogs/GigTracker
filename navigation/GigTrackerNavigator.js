@@ -16,9 +16,14 @@ const EventNavigator = createStackNavigator(
         Home: {
             screen: MapScreen, 
             navigationOptions: {
-                headerTitle: 'GigTracker',
+                headerTitle: 'Mapper',
+                headerTitleStyle: {
+                    fontFamily: 'jack-silver',
+                    fontSize: 36,
+                },
                 headerStyle: {
                     backgroundColor: Colors.darkPurple,
+                    height: 110
                 },
                 headerTintColor: Colors.lightText,
                 gestureEnabled: false, // this stops us from swiping back to startup screen
