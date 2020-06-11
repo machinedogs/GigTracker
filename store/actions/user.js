@@ -140,12 +140,9 @@ export const login = (email, password) => {
         const response = await fetch("https://gig-authentication-service.herokuapp.com/api/v1/hosts/sign_in", requestOptions);
         const resData = await response.json();
 
-        if (resData.status === 'ERROR') {
+        if (resData.error) {
             //const errorResData = await response.json();
-            let message;
-            if (resData.data.email) {
-                message = 'Email is alreadyTaken';
-            }
+            let message = "Email or Password is Invalid";
 
             throw new Error(message);
         }
