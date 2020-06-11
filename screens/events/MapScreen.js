@@ -92,12 +92,12 @@ const MapScreen = props => {
     };
 
     const response = await fetch("https://gigservice.herokuapp.com/api/v1/events");
-    const theEvents = await response.json();
+    theEvents = await response.json();
     //const theEvents = await JSON.parse(data);
     console.log(theEvents);
-    setEvents(theEvents)
+    setEvents(theEvents);
   }, [])
-
+  
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
@@ -120,7 +120,7 @@ const MapScreen = props => {
   }, []);
 
   let categories = [{ value: 'All events' }];
-  EVENTS.map(event => {
+  theEvents.map(event => {
     var count = 0;
     categories.forEach(function (category) {
       if (event.category === category.value) {
@@ -135,9 +135,9 @@ const MapScreen = props => {
 
   const filterCategory = (category) => {
     if (category === 'All events') {
-      setEvents(EVENTS)
+      setEvents(theEvents)
     } else {
-      setEvents(EVENTS.filter(event => event.category === category))
+      setEvents(theEvents.filter(event => event.category === category))
     }
   };
 
@@ -156,8 +156,8 @@ const MapScreen = props => {
 
   const filterDate = (selectedDate) => {
     setDate(selectedDate);
-    setEvents(EVENTS.filter(event => event.date === selectedDate))
-    console.log(selectedDate)
+    setEvents(theEvents.filter(event => event.date === selectedDate))
+    console.log(selectedDate + '\n' + events.map((event) => {event.toString()}))
   }
 
   return (
@@ -188,9 +188,9 @@ const MapScreen = props => {
               date={date}
               mode="date"
               placeholder="select date"
-              format="MM-DD-YYYY"
-              minDate="05-01-2020" // We should insert the current date here
-              maxDate="06-01-2021" // Max date is 1 year out from current date?
+              format="YYYY-MM-DD"
+              minDate="2020-06-09" // We should insert the current date here
+              maxDate="2021-06-01" // Max date is 1 year out from current date?
               showIcon={false}
               style={styles.textStyle}
               confirmBtnText="Confirm"
@@ -331,7 +331,7 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
   },
   top: {
-    backgroundColor: '#2c2c54',
+    backgroundColor: '#2d3436',
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -368,7 +368,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     alignItems: 'center',
     paddingBottom: 10,
-    backgroundColor: '#2c2c54'
+    backgroundColor: '#2d3436'
   },
   dropdownStyle: {
     width: 100

@@ -323,7 +323,7 @@ const styles = StyleSheet.create({
     marginLeft: 0,
     marginRight: 0,
     maxHeight: SCREEN_HEIGHT*0.6,
-    backgroundColor: '#84817a'
+    backgroundColor: '#2d3436'
   },
   mapStyle: {
     zIndex: -1,
