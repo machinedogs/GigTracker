@@ -10,7 +10,7 @@ const DeleteScreen = props => {
     const dispatch = useDispatch();
 
     const deleteAccountHandler = () => {
-        console.log("user is deleting account");
+        console.log("User triggered deleteAccount action creator");
         dispatch(authActions.deleteAccount());
         props.navigation.navigate('Home');
     }
