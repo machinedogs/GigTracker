@@ -243,7 +243,7 @@ const MapScreen = props => {
                   type='font-awesome'
                   color='#341f97'
                   size={35}
-                  onPress={() => { props.navigation.navigate('UserProfile') }}
+                  onPress={() => { props.navigation.navigate('Profile') }}
                 />
               </TouchableOpacity>
               <TouchableOpacity>
