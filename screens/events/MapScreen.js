@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, Button, FlatList, Dimensions, Image, Platform, SafeAreaView, TouchableOpacity } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import MapView from 'react-native-map-clustering';
 import { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
+import MapView from 'react-native-map-clustering';
 import { Dropdown } from 'react-native-material-dropdown';
 import FlashOnIcon from '@material-ui/icons/FlashOn';
 import Drawer from 'react-native-drawer';
@@ -43,11 +43,11 @@ const todaysDate = () => {
     mm = '0' + mm;
   }
   return mm + '/' + dd + '/' + yyyy;
-};
+}
 
 function getCurrentLocation() {
   navigator.geolocation.getCurrentPosition(
-      position => {
+       position => {
       let region = {
               latitude: parseFloat(position.coords.latitude),
               longitude: parseFloat(position.coords.longitude),
@@ -64,6 +64,7 @@ function getCurrentLocation() {
       }
   );
 }
+
 
 const MapScreen = props => {
   const userAccessToken = useSelector(state => state.user.accessToken);
@@ -89,7 +90,7 @@ const MapScreen = props => {
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        coords = { latitude: position.coords.latitude, longitude: position.coords.longitude, latitudeDelta: .009, longitudeDelta: .009 };
+        coords = { latitude: position.coords.latitude, longitude: position.coords.longitude, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA };
         console.log(coords);
         mapRef.current.animateToRegion(coords, 1000);
       }, (error) => console.log(error));
@@ -197,10 +198,7 @@ const MapScreen = props => {
 
       <View style={{ flex: 4 }} >
         <MapView
-          initialRegion={{latitude: 37.78825,
-            longitude: -122.4324,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421}}
+          //initialRegion={getCurrentLocation()}
           style={styles.mapStyle}
           provider={PROVIDER_GOOGLE}
           showsUserLocation

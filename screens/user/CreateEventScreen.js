@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { StyleSheet, Text, View, Dimensions, TextInput, Button, Platform, ScrollView, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, TextInput, Button, Platform, ScrollView, SafeAreaView, Alert } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -27,12 +27,10 @@ async function getCurrentLocation() {
       position => {
       let region = {
               latitude: parseFloat(position.coords.latitude),
-              latitudeDelta: LATITUDE_DELTA,
+              //latitudeDelta: LATITUDE_DELTA,
               longitude: parseFloat(position.coords.longitude),
-              longitudeDelta: LONGITUDE_DELTA
+              //longitudeDelta: LONGITUDE_DELTA
           };
-          console.log(region)
-          return region;
       },
       error => console.log(error),
       {
@@ -72,8 +70,7 @@ const MapScreen = event => {
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        coords = { latitude: position.coords.latitude, longitude: position.coords.longitude, latitudeDelta: .009, longitudeDelta: .009 };
-        console.log(coords);
+        coords = { latitude: position.coords.latitude, longitude: position.coords.longitude, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA };
         setLocation(coords);
         mapRef.current.animateToRegion(coords, 1000);
       }, (error) => console.log(error));
@@ -116,7 +113,7 @@ const MapScreen = event => {
       dispatch(eventActions.createEvent(newEvent));
     } else {
       //alert that event is not valid
-      alert('Fill out all event info before submitting.')
+      Alert.alert('Incomplete form', 'Fill out all event info before submitting.', [{ text: 'OK' }]);
     }
   }
 
@@ -131,13 +128,12 @@ const MapScreen = event => {
       latitude: coordinate.latitude,
       longitude: coordinate.longitude
     });
-    console.log('location is ' + location)
+    console.log('lat: ' + location.latitude + ' long: ' + location.longitude)
   }
 
   const toggleShowMap = () => {
     showMap ? setShowMap(false) : setShowMap(true);
   }
-
 
   return (
     <SafeAreaView style={styles.container}>
@@ -223,7 +219,7 @@ const MapScreen = event => {
             propagateSwipe
           >{curLoc && (
             <MapView
-              //initialRegion={ curLoc }
+              initialRegion={ location }
               style={styles.mapStyle}
               provider={PROVIDER_GOOGLE}
               showsUserLocation
@@ -236,12 +232,11 @@ const MapScreen = event => {
               clusterColor="#341f97"
             >
               <Marker
-                coordinate={{ latitude: location.latitude, longitude: location.longitude }}
-                //pinColor="#341f97"
-                //tracksViewChanges={false}
+                coordinate={location}
+                pinColor="#341f97"
+                tracksViewChanges={false}
                 draggable
-                //onDragStart={handleDragEnd}
-                onDragEnd={handleDragEnd}
+                //onDragEnd={handleDragEnd}
               />
             </MapView>
           )}
@@ -292,7 +287,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     width: Dimensions.get('window').width - 10,
-    padding: 15
+    padding: 15,
   },
   textStyle: {
     textAlign: 'left',
@@ -322,7 +317,7 @@ const styles = StyleSheet.create({
     marginLeft: 0,
     marginRight: 0,
     maxHeight: height*0.6,
-    backgroundColor: '#b2bec3'
+    backgroundColor: '#bdc3c7'
   },
   mapStyle: {
     zIndex: -1,
