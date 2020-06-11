@@ -45,9 +45,9 @@ const todaysDate = () => {
   return mm + '/' + dd + '/' + yyyy;
 }
 
-function getCurrentLocation() {
+/*function getCurrentLocation() {
   navigator.geolocation.getCurrentPosition(
-       position => {
+       async position => {
       let region = {
               latitude: parseFloat(position.coords.latitude),
               longitude: parseFloat(position.coords.longitude),
@@ -63,7 +63,7 @@ function getCurrentLocation() {
           maximumAge: 1000
       }
   );
-}
+}*/
 
 const INITIAL_REGION = {
   latitude: 52.5,
@@ -72,16 +72,31 @@ const INITIAL_REGION = {
   longitudeDelta: 8.5,
 };
 
+let theEvents = [];
 
 
 const MapScreen = props => {
+
   const userAccessToken = useSelector(state => state.user.accessToken);
-  const [events, setEvents] = useState(EVENTS);
+  const [events, setEvents] = useState(theEvents);
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(new Event)
   let mapRef = useRef(null);
   let menuRef = useRef(null);
   const [date, setDate] = useState(todaysDate());
+
+  useEffect(async () => {
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
+
+    const response = await fetch("https://gigservice.herokuapp.com/api/v1/events");
+    const theEvents = await response.json();
+    //const theEvents = await JSON.parse(data);
+    console.log(theEvents);
+    setEvents(theEvents)
+  }, [])
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -117,7 +132,6 @@ const MapScreen = props => {
       categories.push(category)
     }
   });
-  // console.log(categories);
 
   const filterCategory = (category) => {
     if (category === 'All events') {
@@ -220,7 +234,7 @@ const MapScreen = props => {
         >
           {events.map(event => (
             <Marker
-              coordinate={{ latitude: event.latitude, longitude: event.longitude }}
+              coordinate={{ latitude: event.location.latitude, longitude: event.location.longitude }}
               title={event.title}
               pinColor="#341f97"
               //image={require('../../assets/splash.png')}
@@ -317,7 +331,7 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
   },
   top: {
-    backgroundColor: '#130f40',
+    backgroundColor: '#2c2c54',
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -354,7 +368,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     alignItems: 'center',
     paddingBottom: 10,
-    backgroundColor: '#130f40'
+    backgroundColor: '#2c2c54'
   },
   dropdownStyle: {
     width: 100

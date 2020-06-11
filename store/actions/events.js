@@ -31,22 +31,23 @@ export const createEvent = (event) => {
             redirect: 'follow'
         };
 
-        try{
-            const response = await fetch("/https://gigservice.herokuapp.com/api/v1/events", requestOptions);
-        const resData = await response.json();
+        try {
+            const access_token = getState().user.accessToken;
+            const response = await fetch(`/https://gigservice.herokuapp.com/api/v1/events.json?auth_token=${access_token}`, requestOptions);
+            const resData = await response.json();
 
-        if (resData.status === 'ERROR') {
-            let message = "There was an error posting this event.";
-            throw new Error(message);
-        }
+            if (resData.status === 'ERROR') {
+                let message = "There was an error posting this event.";
+                throw new Error(message);
+            }
 
-        console.log("Response: " + resData);
+            console.log("Response: " + resData);
 
-        dispatch({
-            type: CREATE_EVENT,
-            event: event,
-        });
-        } catch(err) {
+            dispatch({
+                type: CREATE_EVENT,
+                event: event,
+            });
+        } catch (err) {
             alert(err)
         }
     }
