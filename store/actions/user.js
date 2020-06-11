@@ -1,18 +1,53 @@
 import * as SecureStore from 'expo-secure-store';
 
-export const SIGNUP = 'SIGNUP';
-export const LOGIN = 'LOGIN';
 export const AUTHENTICATE = 'AUTHENTICATE';
+export const LOGOUT = 'LOGOUT';
 
 export const authenticate = (userName, userEmail, accessToken, refreshToken) => {
-    return { 
-        type: AUTHENTICATE, 
-        userName: userName, 
-        userEmail: userEmail, 
-        accessToken: accessToken, 
+    return {
+        type: AUTHENTICATE,
+        userName: userName,
+        userEmail: userEmail,
+        accessToken: accessToken,
         refreshToken: refreshToken
     };
 };
+
+export const logout = () => {
+    return async (dispatch) => {
+        console.log("Removing user data from storage and memory")
+        deleteFromStorage('userData'); // remove the user saved data
+        dispatch({ type: LOGOUT });
+    }
+}
+
+export const deleteAccount = () => {
+    return async (dispatch, getState) => {
+        const refreshToken = getState().user.refreshToken;
+
+        // Assemble Delete Request
+        var raw = "";
+        var requestOptions = {
+            method: 'DELETE',
+            body: raw,
+            redirect: 'follow'
+        };
+        const response = await fetch(
+            `https://gig-authentication-service.herokuapp.com/api/v1/hosts?refresh_token=${refreshToken}`,
+            requestOptions
+        )
+        const resData = await response.json();
+
+        if (resData.error) {
+            let message = 'Could not delete account';
+
+            throw new Error(message);
+        }
+        console.log("Deleting User")
+        deleteFromStorage('userData'); // remove the user saved data
+        dispatch({ type: LOGOUT });
+    }
+}
 
 export const refresh = (email, userName, refreshToken) => {
     return async dispatch => {
@@ -31,7 +66,7 @@ export const refresh = (email, userName, refreshToken) => {
 
         console.log('contacted refresh endpoint');
         dispatch({
-            type: LOGIN,
+            type: AUTHENTICATE,
             userName: userName,
             userEmail: email,
             accessToken: resData.data.authorization.auth_token.token,
@@ -95,7 +130,7 @@ export const signup = (email, password, username, passwordConfirmation) => {
 
         console.log(resData);
         dispatch({
-            type: SIGNUP,
+            type: AUTHENTICATE,
             userName: resData.data.host.name,
             userEmail: resData.data.host.email,
             accessToken: resData.data.authorization.auth_token.token,
@@ -136,12 +171,9 @@ export const login = (email, password) => {
         const response = await fetch("https://gig-authentication-service.herokuapp.com/api/v1/hosts/sign_in", requestOptions);
         const resData = await response.json();
 
-        if (resData.status === 'ERROR') {
+        if (resData.error) {
             //const errorResData = await response.json();
-            let message;
-            if (resData.data.email) {
-                message = 'Email is alreadyTaken';
-            }
+            let message = 'Email or Password is Invalid';
 
             throw new Error(message);
         }
@@ -149,7 +181,7 @@ export const login = (email, password) => {
         //const resData = await response.json();
         console.log(resData);
         dispatch({
-            type: LOGIN,
+            type: AUTHENTICATE,
             userName: resData.data.host.name,
             userEmail: resData.data.host.email,
             accessToken: resData.data.authorization.auth_token.token,
@@ -178,4 +210,8 @@ const saveDataToStorage = (userName, userEmail, accessToken, refreshToken, acces
         refreshExpiration: refreshExpiration.toISOString()
     })
     );
+}
+
+const deleteFromStorage = (itemKey) => {
+    SecureStore.deleteItemAsync(itemKey);
 }

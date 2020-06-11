@@ -7,6 +7,7 @@ import UserProfileScreen from '../screens/user/UserProfileScreen';
 import ManageEventScreen from '../screens/user/ManageEventScreen';
 import AuthScreen from '../screens/user/AuthScreen';
 import StartupScreen from '../screens/StartupScreen';
+import DeleteScreen from '../screens/user/DeleteScreen';
 
 const EventNavigator = createStackNavigator(
     {
@@ -15,12 +16,14 @@ const EventNavigator = createStackNavigator(
             screen: MapScreen, 
             navigationOptions: {
                 headerShown: false,
+                gestureEnabled: false, // this stops us from swiping back to startup screen
             },
         },
         CreateEvent: CreateEventScreen,
         UserProfile: UserProfileScreen,
         ManageEvent: ManageEventScreen,
-        Auth: AuthScreen
+        Auth: AuthScreen,
+        Delete: DeleteScreen
     }
 );
 
