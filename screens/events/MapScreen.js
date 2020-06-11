@@ -135,56 +135,61 @@ const MapScreen = props => {
   return (
     //add a dropdown to choose map style? -> what if we put it in user settings? could incentivize people to become users
     //add dropdown calendar
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <StatusBar backgroundColor='#130f40' barStyle='light-content' />
 
 
-      <View style={{ flex: 4 }} >
-        <MapView
-          style={styles.mapStyle}
-          provider={PROVIDER_GOOGLE}
-          showsUserLocation
-          showsMyLocationButton
-          rotateEnabled={false}
-          showsTraffic={false}
-          toolbarEnabled={true}
-          ref={mapRef}
-          customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
-        >
-          {events.map(event => (
-            <Marker
-              coordinate={{ latitude: event.latitude, longitude: event.longitude }}
-              title={event.title}
-              pinColor="#341f97"
-              //image={require('../../assets/splash.png')}
-              icon={FlashOnIcon}
-              description={event.description}
-              key={event.id}
-              tracksViewChanges={false}
-              onPress={onPinPress.bind(this, event)}
-            ><Callout
-              style={styles.plainView}
-              onPress={onEventCalloutPress}
-            >
-                <View>
-                  <Text style={{ fontWeight: 'bold' }}>{event.title}</Text>
-                </View>
-              </Callout>
-            </Marker>
-          ))}
-        </MapView>
-        <EventModal
-          title={selectedEvent.title}
-          description={selectedEvent.description}
-          hostName={selectedEvent.hostName}
-          visible={isModalVisible}
-          toggleModal={toggleModal}
-        />
-      </View>
+      <MapView
+        style={styles.map}
+        provider={PROVIDER_GOOGLE}
+        showsUserLocation
+        showsMyLocationButton
+        rotateEnabled={false}
+        showsTraffic={false}
+        toolbarEnabled={true}
+        ref={mapRef}
+        customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
+      >
+        {events.map(event => (
+          <Marker
+            coordinate={{ latitude: event.latitude, longitude: event.longitude }}
+            title={event.title}
+            pinColor="#341f97"
+            //image={require('../../assets/splash.png')}
+            icon={FlashOnIcon}
+            description={event.description}
+            key={event.id}
+            tracksViewChanges={false}
+            onPress={onPinPress.bind(this, event)}
+          ><Callout
+            style={styles.plainView}
+            onPress={onEventCalloutPress}
+          >
+              <View>
+                <Text style={{ fontWeight: 'bold' }}>{event.title}</Text>
+              </View>
+            </Callout>
+          </Marker>
+        ))
+        }
 
-      <View style={styles.container}>
-        {!userAccessToken ?
-          (
+      </MapView>
+      <EventModal
+        title={selectedEvent.title}
+        description={selectedEvent.description}
+        hostName={selectedEvent.hostName}
+        visible={isModalVisible}
+        toggleModal={toggleModal}
+      />
+      {!userAccessToken ?
+        (
+          <SafeAreaView
+            style={{
+              position: 'absolute',//use absolute position to show button on top of the map
+              bottom: '1%',
+              alignSelf: 'center' //for align to right
+            }}
+          >
             <TouchableOpacity>
               <Icon
                 reverse
@@ -197,63 +202,65 @@ const MapScreen = props => {
                 onPress={() => { props.navigation.navigate('Auth') }}
               />
             </TouchableOpacity>
-          ) :
-          (
-            <View style={styles.row}>
-              <TouchableOpacity>
-                <Icon
-                  reverse
-                  raised
-                  name='user'
-                  type='font-awesome'
-                  color='#341f97'
-                  size={35}
-                  onPress={() => { props.navigation.navigate('UserProfile') }}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <Icon
-                  reverse
-                  raised
-                  name='plus'
-                  type='font-awesome'
-                  color='#341f97'
-                  size={35}
-                  onPress={() => { props.navigation.navigate('CreateEvent') }}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <Icon
-                  reverse
-                  raised
-                  name='bookmark'
-                  type='font-awesome'
-                  color='#341f97'
-                  size={35}
-                  onPress={() => { props.navigation.navigate('CreateEvent') }}
-                />
-              </TouchableOpacity>
-            </View>
-          )
-        }
-      </View>
+          </SafeAreaView>
+        ) :
+        (
+          <SafeAreaView style={styles.row}>
+            <TouchableOpacity>
+              <Icon
+                reverse
+                raised
+                name='user'
+                type='font-awesome'
+                color='#341f97'
+                size={35}
+                onPress={() => { props.navigation.navigate('UserProfile') }}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Icon
+                reverse
+                raised
+                name='plus'
+                type='font-awesome'
+                color='#341f97'
+                size={35}
+                onPress={() => { props.navigation.navigate('CreateEvent') }}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Icon
+                reverse
+                raised
+                name='bookmark'
+                type='font-awesome'
+                color='#341f97'
+                size={35}
+                onPress={() => { props.navigation.navigate('CreateEvent') }}
+              />
+            </TouchableOpacity>
+          </SafeAreaView>
+        )
+      }
 
-    </SafeAreaView>
+
+    </View>
   );
 }
 
 MapScreen.navigationOptions = navData => {
   return {
-    headerLeft: (
-    <HeaderButtons HeaderButtonComponent={HeaderButton} >
-        <Item
-          title='Menu'
-          iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
-          onPress={() => {}}
-        />
-      </HeaderButtons>
-  )
-}
+    headerLeft: () =>
+      (
+        <HeaderButtons HeaderButtonComponent={HeaderButton} >
+          <Item
+            title='Menu'
+            iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
+            onPress={() => { }}
+          />
+        </HeaderButtons>
+      )
+  }
 }
 
 const styles = StyleSheet.create({
@@ -271,7 +278,8 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
   }
   ,
-  mapStyle: {
+  map: {
+    flex: 1,
     zIndex: -1,
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
@@ -293,6 +301,9 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: 'flex-start',
     paddingBottom: 0,
+    position: 'absolute',//use absolute position to show button on top of the map
+    bottom: '0.5%',
+    alignSelf: 'center' //for align to righ
   },
   topBarStyle: {
     flex: 2,
