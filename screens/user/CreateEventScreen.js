@@ -240,14 +240,6 @@ const MapScreen = event => {
                 //onDragEnd={handleDragEnd}
 =======
                 coordinate={{ latitude: location.latitude, longitude: location.longitude }}
-                title={title}
-                description={description}
-                //pinColor="#341f97"
-                //tracksViewChanges={false}
-                draggable
-                onDragStart={handleDragEnd}
-                onDragEnd={handleDragEnd}
->>>>>>> parent of a197de3... create event is working, except location is broken
               />
             </MapView>
           )}
@@ -327,13 +319,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginLeft: 0,
     marginRight: 0,
-<<<<<<< HEAD
     maxHeight: height*0.6,
     backgroundColor: '#bdc3c7'
-=======
-    maxHeight: height*0.5,
-    backgroundColor: 'yellow'
->>>>>>> parent of a197de3... create event is working, except location is broken
   },
   mapStyle: {
     zIndex: -1,
