@@ -322,13 +322,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginLeft: 0,
     marginRight: 0,
-    maxHeight: height*0.6,
-    backgroundColor: '#bdc3c7'
+    maxHeight: SCREEN_HEIGHT*0.6,
+    backgroundColor: '#84817a'
   },
   mapStyle: {
     zIndex: -1,
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height * .3,
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT * .5,
   },
 });
 

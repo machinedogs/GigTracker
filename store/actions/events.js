@@ -31,7 +31,8 @@ export const createEvent = (event) => {
             redirect: 'follow'
         };
 
-        const response = await fetch("/https://gigservice.herokuapp.com/api/v1/events", requestOptions);
+        try{
+            const response = await fetch("/https://gigservice.herokuapp.com/api/v1/events", requestOptions);
         const resData = await response.json();
 
         if (resData.status === 'ERROR') {
@@ -45,6 +46,9 @@ export const createEvent = (event) => {
             type: CREATE_EVENT,
             event: event,
         });
+        } catch(err) {
+            alert(err)
+        }
     }
 };
 
