@@ -14,9 +14,11 @@ export const authenticate = (userName, userEmail, accessToken, refreshToken) => 
 };
 
 export const logout = () => {
-    console.log("Removing user data from storage and memory")
-    deleteFromStorage('userDate'); // remove the user saved data
-    return { type: LOGOUT };
+    return async (dispatch) => {
+        console.log("Removing user data from storage and memory")
+        deleteFromStorage('userData'); // remove the user saved data
+        dispatch({ type: LOGOUT });
+    }
 }
 
 export const deleteAccount = () => {
@@ -35,7 +37,7 @@ export const deleteAccount = () => {
             requestOptions
         )
         const resData = await response.json();
-        
+
         if (resData.error) {
             let message = 'Could not delete account';
 
@@ -171,7 +173,7 @@ export const login = (email, password) => {
 
         if (resData.error) {
             //const errorResData = await response.json();
-            let message = "Email or Password is Invalid";
+            let message = 'Email or Password is Invalid';
 
             throw new Error(message);
         }
