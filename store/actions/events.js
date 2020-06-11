@@ -1,25 +1,28 @@
 export const CREATE_EVENT = 'CREATE_EVENT';
 export const ADD_TO_MY_EVENTS = 'ADD_TO_MY_EVENTS';
 
+import Host from '../../models/host';
+import Location from '../../models/location';
+
 
 export const createEvent = (event) => {
     console.log('Event to be created: ' + event);
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
+
+        const newLocation = new Location(event.location.latitude, event.location.longitude);
+        const newHost = new Host(getState().user.userName, getState().user.userEmail);
 
         var raw = JSON.stringify({
             "title": event.title,
             "description": event.description,
             "date": event.date,
             "category": event.category, //e.g. "music", "sports"
-            "latitude": event.latitude,
-            "longitude": event.longitude,
-            "host": {
-                "username": event.host.username,
-                "email": event.host.email
-            }
+            "location": newLocation,
+            "host": newHost
         });
+        console.log(raw);
 
         var requestOptions = {
             method: 'POST',

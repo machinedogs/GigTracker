@@ -65,6 +65,14 @@ function getCurrentLocation() {
   );
 }
 
+const INITIAL_REGION = {
+  latitude: 52.5,
+  longitude: 19.2,
+  latitudeDelta: 8.5,
+  longitudeDelta: 8.5,
+};
+
+
 
 const MapScreen = props => {
   const userAccessToken = useSelector(state => state.user.accessToken);
@@ -198,7 +206,7 @@ const MapScreen = props => {
 
       <View style={{ flex: 4 }} >
         <MapView
-          //initialRegion={getCurrentLocation()}
+          initialRegion={INITIAL_REGION}
           style={styles.mapStyle}
           provider={PROVIDER_GOOGLE}
           showsUserLocation

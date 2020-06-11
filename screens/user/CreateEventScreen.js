@@ -11,7 +11,7 @@ import { useDispatch } from 'react-redux';
 
 import Event from '../../models/event';
 import MapView from 'react-native-maps';
-import { CREATE_EVENT } from '../../store/actions/events';
+import * as eventActions from '../../store/actions/events';
 
 const { width, height } = Dimensions.get('window')
 
@@ -63,6 +63,7 @@ const MapScreen = event => {
   const dispatch = useDispatch();
 
   let mapRef = useRef(null);
+  let markerRef = useRef(null);
 
   //  get initial location then animate to that location
   // only do this on mount and unmount of map component 
@@ -107,10 +108,9 @@ const MapScreen = event => {
 
   const saveEvent = () => {
     if (title && description && location && date && category) {
-      const newEvent = new Event(1000, stringifyDate(date), 'USER', title, description, category.value, location.latitude, location.longitude)
-      console.log(newEvent);
+      const newEvent = new Event(1000, stringifyDate(date), 'USER', 'email', title, description, category.value, location.latitude, location.longitude)
       //Dispatch action (CREATE_EVENT, newEvent)
-      dispatch({type: CREATE_EVENT, event: newEvent})
+      dispatch(eventActions.createEvent(newEvent));
     } else {
       //alert that event is not valid
       Alert.alert('Incomplete form', 'Fill out all event info before submitting.', [{ text: 'OK' }]);
@@ -125,8 +125,8 @@ const MapScreen = event => {
 
   const handleDragEnd = (e) => {
     setLocation({
-      latitude: e.latitude,
-      longitude: e.longitude
+      latitude: e.nativeEvent.coordinate.latitude,
+      longitude: e.nativeEvent.coordinate.longitude
     });
     console.log('lat: ' + location.latitude + ' long: ' + location.longitude)
   }
@@ -219,7 +219,12 @@ const MapScreen = event => {
             propagateSwipe
           >{curLoc && (
             <MapView
-              initialRegion={ location }
+              initialRegion={{
+                latitude: location.latitude,
+                latitudeDelta: LATITUDE_DELTA,
+                longitude: location.longitude,
+                longitudeDelta: LONGITUDE_DELTA
+              }}
               style={styles.mapStyle}
               provider={PROVIDER_GOOGLE}
               showsUserLocation
@@ -232,14 +237,12 @@ const MapScreen = event => {
               clusterColor="#341f97"
             >
               <Marker
-<<<<<<< HEAD
+                ref={markerRef}
                 coordinate={location}
                 pinColor="#341f97"
                 tracksViewChanges={false}
                 draggable
-                //onDragEnd={handleDragEnd}
-=======
-                coordinate={{ latitude: location.latitude, longitude: location.longitude }}
+                onDragEnd={handleDragEnd}
               />
             </MapView>
           )}

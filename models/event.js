@@ -1,8 +1,11 @@
 class Event {
-    constructor(id, date, hostName, title, description, category, latitude, longitude) {
+    constructor(id, date, hostName, hostEmail, title, description, category, latitude, longitude) {
         this.id = id;
         this.date = date;
-        this.hostName = hostName;
+        this.host = {
+            hostName: hostName,
+            hostEmail: hostEmail
+        }
         this.title = title;
         this.description = description;
         this.category = category;
