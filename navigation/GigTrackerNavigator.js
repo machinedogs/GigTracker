@@ -1,6 +1,7 @@
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 
+import Colors from '../constants/Colors';
 import MapScreen from '../screens/events/MapScreen';
 import CreateEventScreen from '../screens/user/CreateEventScreen';
 import UserProfileScreen from '../screens/user/UserProfileScreen';
@@ -15,7 +16,11 @@ const EventNavigator = createStackNavigator(
         Home: {
             screen: MapScreen, 
             navigationOptions: {
-                headerShown: false,
+                headerTitle: 'GigTracker',
+                headerStyle: {
+                    backgroundColor: Colors.darkPurple,
+                },
+                headerTintColor: Colors.lightText,
                 gestureEnabled: false, // this stops us from swiping back to startup screen
             },
         },

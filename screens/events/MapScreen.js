@@ -1,7 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Text, View, Button, FlatList, Dimensions, Image, Platform, SafeAreaView, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  FlatList,
+  Dimensions,
+  Image,
+  Platform,
+  SafeAreaView,
+  TouchableOpacity,
+  StatusBar
+} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
+import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import { Dropdown } from 'react-native-material-dropdown';
 import FlashOnIcon from '@material-ui/icons/FlashOn';
 import Drawer from 'react-native-drawer';
@@ -14,10 +27,13 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 //import { useTheme } from 'react-navigation/native';
+
 import { EVENTS } from '../../data/dummy-data';
 import MapStyle from '../../constants/MapStyle';
 import EventModal from '../../components/EventModal';
 import Event from '../../models/event';
+import HeaderButton from '../../components/HeaderButton';
+import Colors from '../../constants/Colors';
 import ControlPanel from '../../components/controlPanel';
 
 const { width, height } = Dimensions.get('window')
@@ -70,7 +86,7 @@ const MapScreen = props => {
       (position) => {
         coords = { latitude: position.coords.latitude, longitude: position.coords.longitude, latitudeDelta: .009, longitudeDelta: .009 };
         console.log(coords);
-        mapRef.current.animateToRegion(coords, 1000);
+        mapRef.current.animateToRegion(coords, 0);
       }, (error) => console.log(error));
   }, []);
 
@@ -120,59 +136,8 @@ const MapScreen = props => {
     //add a dropdown to choose map style? -> what if we put it in user settings? could incentivize people to become users
     //add dropdown calendar
     <SafeAreaView style={styles.container}>
+      <StatusBar backgroundColor='#130f40' barStyle='light-content' />
 
-      <View style={styles.container}>
-        <Text style={styles.top}>GigTracker</Text>
-        <View style={styles.topBarStyle}>
-          <Dropdown
-            label="Category"
-            data={categories}
-            containerStyle={styles.dropdownStyle}
-            baseColor='#fff'
-            dropdownOffset={{ top: 40, left: 0 }}
-            dropdownPosition={-5.35}
-            selectedItemColor='#c0392b'
-            animationDuration={50}
-            pickerStyle={{ backgroundColor: '#ecf0f1' }}
-            itemTextStyle={styles.containerStyle}
-            onChangeText={filterCategory}
-          />
-          <View>
-            <Text style={{ color: 'white', fontSize: 12, paddingTop: 13, paddingLeft: 35 }}>Select a date</Text>
-            <DatePicker
-              style={{ width: 100 }}
-              date={date}
-              mode="date"
-              placeholder="select date"
-              format="MM-DD-YYYY"
-              minDate="05-01-2020" // We should insert the current date here
-              maxDate="06-01-2021" // Max date is 1 year out from current date?
-              showIcon={false}
-              style={styles.textStyle}
-              confirmBtnText="Confirm"
-              cancelBtnText="Cancel"
-              customStyles={{
-                dateIcon: {
-                  position: 'absolute',
-                  left: 0,
-                  top: 4,
-                  marginLeft: 0
-                },
-                dateInput: {
-                  marginLeft: 36
-                },
-                dateText: {
-                  color: '#FFFFFF',
-                  fontWeight: 'bold',
-                  justifyContent: 'flex-start'
-                }
-                // ... You can check the source to find the other keys.
-              }}
-              onDateChange={filterDate}
-            />
-          </View>
-        </View>
-      </View>
 
       <View style={{ flex: 4 }} >
         <MapView
@@ -277,25 +242,39 @@ const MapScreen = props => {
   );
 }
 
+MapScreen.navigationOptions = navData => {
+  return {
+    headerLeft: (
+    <HeaderButtons HeaderButtonComponent={HeaderButton} >
+        <Item
+          title='Menu'
+          iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
+          onPress={() => {}}
+        />
+      </HeaderButtons>
+  )
+}
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    width: Dimensions.get('window').width,
+    //width: Dimensions.get('window').width,
   },
   top: {
     backgroundColor: '#130f40',
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    //justifyContent: 'center',
     width: Dimensions.get('window').width,
   }
   ,
   mapStyle: {
     zIndex: -1,
     width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height * .86,
+    height: Dimensions.get('window').height,
   },
 
   titleStyle: {
@@ -316,7 +295,7 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
   },
   topBarStyle: {
-    flex: 1,
+    flex: 2,
     width: Dimensions.get('window').width,
     flexDirection: 'row',
     justifyContent: 'space-evenly',

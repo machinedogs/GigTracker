@@ -4,5 +4,6 @@ export default {
     lightBackground: '#ecf0f1',
     lightText: '#fff',
     purpleButton: '#341f97',
-    purpleBackground: '#2c2c54'
+    purpleBackground: '#2c2c54',
+    darkPurple: '#130f40'
 };
