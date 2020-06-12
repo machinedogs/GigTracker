@@ -29,6 +29,8 @@ const PinMarker = (props) => {
         <Image
             style={{ maxHeight: 75, maxWidth: 75 }}
             key={`${extraData}`}
+            // check for platform here, this is because with android we need to force a rerender
+            key={Platform.OS === 'android' ? `${extraData}` : null}
             source={pinIcon}
         />
     )
