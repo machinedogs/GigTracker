@@ -8,7 +8,7 @@ const initialState = {
     savedEvents: [],
     accessToken: null,
     refreshToken: null,
-    profileImage: null,
+    profileImage: 'https://filmdaily.co/wp-content/uploads/2020/05/avatar_lede-1300x976.jpg',
     wallpaperImage:null,
 };
 
@@ -16,6 +16,7 @@ export default (state = initialState, action) => {
     switch (action.type) {
         case LOGIN:
             return {
+                ...state,
                 userName: action.userName,
                 userEmail: action.userEmail,
                 accessToken: action.accessToken,
@@ -23,6 +24,7 @@ export default (state = initialState, action) => {
             }
         case SIGNUP:
             return {
+                ...state,
                 userName: action.userName,
                 userEmail: action.userEmail,
                 accessToken: action.accessToken,
@@ -30,6 +32,7 @@ export default (state = initialState, action) => {
             }
         case AUTHENTICATE:
             return {
+                ...state,
                 userName: action.userName,
                 userEmail: action.userEmail,
                 accessToken: action.accessToken,

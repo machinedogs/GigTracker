@@ -17,6 +17,8 @@ export const authenticate = (userName, userEmail, accessToken, refreshToken) => 
 };
 
 export const updateUserProfile = (profileImage) => {
+    console.log('Dispatching Action-inside, here is the url the dispatcher got')
+    console.log(profileImage)
     return { 
         type: UPDATE_PROFILE, 
         profileImage: profileImage

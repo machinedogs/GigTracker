@@ -7,16 +7,16 @@ import {
 	Image,
 	Alert,
 } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Container, Header, Tab, Tabs, TabHeading, Icon } from "native-base";
 import * as ImagePicker from "expo-image-picker";
-import updateUserProfile from "../../store/actions/user";
+import { updateUserProfile } from "../../store/actions/user";
 import * as firebase from "firebase";
-import {firebaseConfig} from '../../firebase/index';
+import { firebaseConfig } from "../../firebase/index";
 
 const UserProfileScreen = (props) => {
-	const [ImageUri, setImageUri] = useState("");
 	const dispatch = useDispatch();
+	var profileImage = useSelector((state) => state.user.profileImage);
 
 	//Function that lets you pick the image from your library
 	let openImagePickerAsync = async () => {
@@ -30,29 +30,36 @@ const UserProfileScreen = (props) => {
 		let pickerResult = await ImagePicker.launchImageLibraryAsync();
 		if (!pickerResult.cancelled) {
 			//generate random file name
-			let fileName = Math.random().toString(36).substring(7);
-			console.log(pickerResult);
-			console.log(fileName);
-			uploadImage(pickerResult.uri, fileName)
-				.then(() => {
-					Alert.alert("Success");
-				})
-				.catch((error) => {
-					Alert.alert('error');
-				});
+			var fileName = Math.random().toString(36).substring(7);
+			console.log(`Random File Name ${fileName}`);
+			var response = await uploadImage(pickerResult.uri, fileName);
+			console.log("About to dispatch action with file name");
+			dispatch(updateUserProfile(await getImage(fileName)));
 		}
 	};
+	//Uploads image
 	uploadImage = async (uri, imageName) => {
 		console.log("In upload");
 		const response = await fetch(uri);
 		const blob = await response.blob();
-		if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
-		
-		
+		if (firebase.apps.length === 0) {
+			firebase.initializeApp(firebaseConfig);
+		}
 		var ref = firebase.storage().ref().child(`images/${imageName}`);
 		return ref.put(blob);
 	};
 
+	//get image from firebase
+	getImage = async (path) => {
+		console.log(`Getting Image with name ${path}`);
+		var url = await firebase
+			.storage()
+			.ref()
+			.child(`images/${path}`)
+			.getDownloadURL();
+		console.log(`Got image from firebase. here it is.... ${url}`);
+		return url;
+	};
 	return (
 		<View style={styles.container}>
 			<View style={styles.header}>
@@ -67,17 +74,7 @@ const UserProfileScreen = (props) => {
 					onPress={openImagePickerAsync}
 					style={styles.avatarContainer}
 				>
-					<Image
-						style={styles.avatar}
-						source={
-							ImageUri
-								? { uri: ImageUri }
-								: {
-										uri:
-											"https://filmdaily.co/wp-content/uploads/2020/05/avatar_lede-1300x976.jpg",
-								  }
-						}
-					/>
+				<Image style={styles.avatar} source={{ uri: profileImage }} />
 				</TouchableOpacity>
 			</View>
 
