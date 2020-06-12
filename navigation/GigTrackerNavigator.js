@@ -16,14 +16,14 @@ const EventNavigator = createStackNavigator(
         Home: {
             screen: MapScreen, 
             navigationOptions: {
-                headerTitle: 'Mapper',
+                headerTitle: 'Conjure',
                 headerTitleStyle: {
                     fontFamily: 'jack-silver',
                     fontSize: 32,
                     justifyContent: 'center'
                 },
                 headerStyle: {
-                    backgroundColor: Colors.darkPurple,
+                    backgroundColor: Colors.darkGrey,
                     height: 110
                 },
                 headerTintColor: Colors.lightText,

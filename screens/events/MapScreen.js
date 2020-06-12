@@ -136,7 +136,7 @@ const MapScreen = props => {
     //add a dropdown to choose map style? -> what if we put it in user settings? could incentivize people to become users
     //add dropdown calendar
     <View style={styles.container}>
-      <StatusBar backgroundColor='#130f40' barStyle='light-content' />
+      <StatusBar backgroundColor={Colors.darkGrey} barStyle='light-content' />
 
 
       <MapView
@@ -212,7 +212,7 @@ const MapScreen = props => {
                 raised
                 name='user'
                 type='font-awesome'
-                color='#341f97'
+                color={Colors.darkGrey}
                 size={35}
                 onPress={() => { props.navigation.navigate('UserProfile') }}
               />
@@ -223,7 +223,7 @@ const MapScreen = props => {
                 raised
                 name='plus'
                 type='font-awesome'
-                color='#341f97'
+                color={Colors.darkGrey}
                 size={35}
                 onPress={() => { props.navigation.navigate('CreateEvent') }}
               />
@@ -234,7 +234,7 @@ const MapScreen = props => {
                 raised
                 name='bookmark'
                 type='font-awesome'
-                color='#341f97'
+                color={Colors.darkGrey}
                 size={35}
                 onPress={() => { props.navigation.navigate('CreateEvent') }}
               />
@@ -312,7 +312,7 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
     position: 'absolute',//use absolute position to show button on top of the map
     bottom: '0.5%',
-    alignSelf: 'center' //for align to righ
+    alignSelf: 'center' //for align to right
   },
   topBarStyle: {
     flex: 2,
