@@ -20,6 +20,9 @@
     "eslint-plugin-react-hooks": "^4.0.4",
     "expo": "~37.0.3",
     "expo-cli": "^3.20.9",
+    "expo-image-picker": "~8.1.0",
+    "expo-secure-store": "~8.1.0",
+    "firebase": "^7.15.1",
     "native-base": "^2.13.12",
     "react": "~16.9.0",
     "react-devtools": "^3.6.3",
@@ -43,8 +46,7 @@
     "redux-thunk": "^2.3.0",
     "rn-sliding-up-panel": "^2.4.2",
     "serialize-javascript": "^3.0.0",
-    "watchman": "^1.0.0",
-    "expo-secure-store": "~8.1.0"
+    "watchman": "^1.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",

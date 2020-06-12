@@ -3,7 +3,6 @@ import GigTrackerNavigator from './navigation/GigTrackerNavigator';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import ReduxThunk from 'redux-thunk';
-
 import eventsReducer from './store/reducers/events'
 import userReducer from './store/reducers/user';
 

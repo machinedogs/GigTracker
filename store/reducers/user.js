@@ -1,4 +1,4 @@
-import { LOGIN, SIGNUP, AUTHENTICATE } from "../actions/user";
+import { LOGIN, SIGNUP, AUTHENTICATE,UPDATE_PROFILE, UPDATE_WALLPAPER } from "../actions/user";
 
 const initialState = {
     //userId: null,
@@ -7,7 +7,9 @@ const initialState = {
     createdEvents: [],
     savedEvents: [],
     accessToken: null,
-    refreshToken: null
+    refreshToken: null,
+    profileImage: null,
+    wallpaperImage:null,
 };
 
 export default (state = initialState, action) => {
@@ -32,6 +34,16 @@ export default (state = initialState, action) => {
                 userEmail: action.userEmail,
                 accessToken: action.accessToken,
                 refreshToken: action.refreshToken
+            }
+        case UPDATE_PROFILE:
+            return {
+                ...state,
+                profileImage: action.profileImage
+            }
+        case UPDATE_WALLPAPER:
+            return {
+                ...state,
+                wallpaperImage: action.wallpaperImage
             }
         default:
             return state;

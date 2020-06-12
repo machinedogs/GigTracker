@@ -3,6 +3,8 @@ import * as SecureStore from 'expo-secure-store';
 export const SIGNUP = 'SIGNUP';
 export const LOGIN = 'LOGIN';
 export const AUTHENTICATE = 'AUTHENTICATE';
+export const UPDATE_PROFILE = 'UPDATE_PROFILE';
+export const UPDATE_WALLPAPER = 'UPDATE_WALLPAPER';
 
 export const authenticate = (userName, userEmail, accessToken, refreshToken) => {
     return { 
@@ -11,6 +13,20 @@ export const authenticate = (userName, userEmail, accessToken, refreshToken) => 
         userEmail: userEmail, 
         accessToken: accessToken, 
         refreshToken: refreshToken
+    };
+};
+
+export const updateUserProfile = (profileImage) => {
+    return { 
+        type: UPDATE_PROFILE, 
+        profileImage: profileImage
+    };
+};
+
+export const updateWallpaper = (wallpaperImage) => {
+    return { 
+        type: UPDATE_WALLPAPER, 
+        wallpaperImage: wallpaperImage
     };
 };
 
