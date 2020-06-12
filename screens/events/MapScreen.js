@@ -1,11 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Text, View, Button, FlatList, Dimensions, Image, Platform, SafeAreaView, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, SafeAreaView, TouchableOpacity } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 import { Dropdown } from 'react-native-material-dropdown';
-import FlashOnIcon from '@material-ui/icons/FlashOn';
-import Drawer from 'react-native-drawer';
-import DateFnsUtils from '@date-io/date-fns';
 import DatePicker from 'react-native-datepicker';
 import { Icon } from 'react-native-elements';
 import {
@@ -18,7 +15,8 @@ import { EVENTS } from '../../data/dummy-data';
 import MapStyle from '../../constants/MapStyle';
 import EventModal from '../../components/EventModal';
 import Event from '../../models/event';
-import ControlPanel from '../../components/controlPanel';
+import PinMarker from '../../components/CustomMarker'
+
 
 const { width, height } = Dimensions.get('window')
 
@@ -27,6 +25,7 @@ const SCREEN_WIDTH = width
 const ASPECT_RATIO = width / height
 const LATITUDE_DELTA = 0.0922
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
+
 
 
 const todaysDate = () => {
@@ -50,19 +49,12 @@ const MapScreen = props => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(new Event)
   let mapRef = useRef(null);
-  let menuRef = useRef(null);
   const [date, setDate] = useState(todaysDate());
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
 
-  const closeControlPanel = () => {
-    menuRef.current._drawer.close()
-  };
-  const openControlPanel = () => {
-    menuRef.current._drawer.open()
-  };
   //  get initial location then animate to that location
   // only do this on mount and unmount of map component 
   useEffect(() => {
@@ -85,9 +77,9 @@ const MapScreen = props => {
     if (count === 0) {
       let category = { value: event.category }
       categories.push(category)
+      console.log(category)
     }
   });
-  // console.log(categories);
 
   const filterCategory = (category) => {
     if (category === 'All events') {
@@ -190,21 +182,21 @@ const MapScreen = props => {
             <Marker
               coordinate={{ latitude: event.latitude, longitude: event.longitude }}
               title={event.title}
-              pinColor="#341f97"
-              //image={require('../../assets/splash.png')}
-              icon={FlashOnIcon}
               description={event.description}
               key={event.id}
               tracksViewChanges={false}
               onPress={onPinPress.bind(this, event)}
-            ><Callout
-              style={styles.plainView}
-              onPress={onEventCalloutPress}
             >
+              <PinMarker category={event.category} />
+              <Callout
+                style={styles.plainView}
+                onPress={onEventCalloutPress}
+              >
                 <View>
                   <Text style={{ fontWeight: 'bold' }}>{event.title}</Text>
                 </View>
               </Callout>
+
             </Marker>
           ))}
         </MapView>
@@ -329,7 +321,8 @@ const styles = StyleSheet.create({
   },
   plainView: {
     flex: 1,
-    width: 'auto'
+    width: 'auto',
+
   },
 });
 
