@@ -19,7 +19,8 @@ const EventNavigator = createStackNavigator(
                 headerTitle: 'Mapper',
                 headerTitleStyle: {
                     fontFamily: 'jack-silver',
-                    fontSize: 36,
+                    fontSize: 32,
+                    justifyContent: 'center'
                 },
                 headerStyle: {
                     backgroundColor: Colors.darkPurple,

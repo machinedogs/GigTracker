@@ -6,11 +6,13 @@ import Colors from '../constants/Colors';
 
 const CustomHeaderButton = props => {
     return (
-        <HeaderButton 
-        {...props} 
-        IconComponent={Ionicons} 
-        iconSize={23} 
-        color={Colors.lightText} />
+        <HeaderButton
+            {...props}
+            IconComponent={Ionicons}
+            iconSize={30}
+            color={Colors.lightText}
+            style={{paddingHorizontal: 10}}
+        />
     );
 };
 

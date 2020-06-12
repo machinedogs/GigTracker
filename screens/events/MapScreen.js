@@ -255,16 +255,16 @@ MapScreen.navigationOptions = navData => {
         <HeaderButtons HeaderButtonComponent={HeaderButton} >
           <Item
             title='Menu'
-            iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
+            iconName={Platform.OS === 'android' ? 'md-options' : 'ios-options'}
             onPress={() => { }}
           />
         </HeaderButtons>
       ),
       headerRight: () => (
-        <HeaderButtons HeaderButtonComponent={HeaderButton} >
+        <HeaderButtons HeaderButtonComponent={HeaderButton}>
           <Item
             title='Menu'
-            iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
+            iconName={Platform.OS === 'android' ? 'md-calendar' : 'ios-calendar'}
             onPress={() => { }}
           />
         </HeaderButtons>
