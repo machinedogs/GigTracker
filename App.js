@@ -18,7 +18,8 @@ const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
 const fetchFonts = () => {
   return Font.loadAsync({
-    'jack-silver': require('./assets/fonts/Jacksilver.ttf')
+    'jack-silver': require('./assets/fonts/Jacksilver.ttf'),
+    'dumbledor': require('./assets/fonts/dumbledor.3-cut-up.ttf')
   });
 };
 

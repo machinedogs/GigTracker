@@ -186,7 +186,7 @@ const MapScreen = props => {
           <SafeAreaView
             style={{
               position: 'absolute',//use absolute position to show button on top of the map
-              bottom: '1%',
+              bottom: '0.5%',
               alignSelf: 'center' //for align to right
             }}
           >
@@ -196,8 +196,8 @@ const MapScreen = props => {
                 raised
                 name='user'
                 type='font-awesome'
-                color='#341f97'
-                size={35}
+                color={Colors.darkGrey}
+                size={28}
                 reverseColor='white'
                 onPress={() => { props.navigation.navigate('Auth') }}
               />
@@ -213,7 +213,7 @@ const MapScreen = props => {
                 name='user'
                 type='font-awesome'
                 color={Colors.darkGrey}
-                size={35}
+                size={28}
                 onPress={() => { props.navigation.navigate('UserProfile') }}
               />
             </TouchableOpacity>
@@ -224,7 +224,7 @@ const MapScreen = props => {
                 name='plus'
                 type='font-awesome'
                 color={Colors.darkGrey}
-                size={35}
+                size={28}
                 onPress={() => { props.navigation.navigate('CreateEvent') }}
               />
             </TouchableOpacity>
@@ -235,15 +235,13 @@ const MapScreen = props => {
                 name='bookmark'
                 type='font-awesome'
                 color={Colors.darkGrey}
-                size={35}
+                size={28}
                 onPress={() => { props.navigation.navigate('CreateEvent') }}
               />
             </TouchableOpacity>
           </SafeAreaView>
         )
       }
-
-
     </View>
   );
 }
@@ -293,7 +291,6 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
   },
-
   titleStyle: {
     textAlign: 'left',
     fontSize: 25,
@@ -307,11 +304,10 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    alignItems: "flex-start",
-    justifyContent: 'flex-start',
-    paddingBottom: 0,
+    justifyContent: 'space-evenly',
     position: 'absolute',//use absolute position to show button on top of the map
-    bottom: '0.5%',
+    bottom: 0,
+    paddingBottom: 19,
     alignSelf: 'center' //for align to right
   },
   topBarStyle: {
