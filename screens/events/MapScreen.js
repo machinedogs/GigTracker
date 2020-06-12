@@ -181,7 +181,6 @@ const MapScreen = props => {
           {events.map(event => (
             <Marker
               coordinate={{ latitude: event.latitude, longitude: event.longitude }}
-              title={event.title}
               description={event.description}
               key={event.id}
               tracksViewChanges={false}
@@ -193,7 +192,7 @@ const MapScreen = props => {
                 onPress={onEventCalloutPress}
               >
                 <View>
-                  <Text style={{ fontWeight: 'bold' }}>{event.title}</Text>
+                  <Text style={{ fontWeight: 'bold' , width:100}}>{event.title}</Text>
                 </View>
               </Callout>
 
@@ -321,8 +320,7 @@ const styles = StyleSheet.create({
   },
   plainView: {
     flex: 1,
-    width: 'auto',
-
+    maxWidth: 'auto',
   },
 });
 

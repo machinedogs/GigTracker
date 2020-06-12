@@ -10,37 +10,29 @@ const PartyPin = require('../assets/Pins/PartyPin.png');
 const MusicPin = require('../assets/Pins/MusicPin.png');
 
 const PinMarker = (props) => {
-    // this state is to force a rerender of the image, this is a known issue with android react native maps.
     const [extraData, setExtraData] = useState(false);
-    const [category, setCategory] = useState();
-    
-
     useEffect(() => { setExtraData(true); }, []);
-    useEffect(() => {
-        if (props.category === "music") {
-            setCategory(MusicPin);
-            console.log(props.category)
-            console.log("marker category " + category);
-        }
-        else
-            if (props.category === "meeting") {
-                setCategory(MeetingPin);
-                console.log("marker category " + category);
-            } else
-                if (props.category === "party") {
-                    setCategory(PartyPin);
-                    console.log("marker category " + category);
-                }
-        console.log("marker category " + category);
+    let pinIcon;
+    if (props.category === "music") {
+        pinIcon = require('../assets/Pins/MusicPin.png');
+        console.log("Marker Category: " + props.category)
+    }
+    else if (props.category === "meeting") {
+        pinIcon = require('../assets/Pins/MeetingPin.png');
+        console.log("Marker Category: " + props.category)
+    } else if (props.category === "party") {
+        pinIcon = require('../assets/Pins/PartyPin.png');
+        console.log("Marker Category: " + props.category)
+    }
 
-    }, []);
     return (
         <Image
             style={{ maxHeight: 75, maxWidth: 75 }}
             key={`${extraData}`}
-            source={category}
+            source={pinIcon}
         />
     )
 }
+
 
 export default PinMarker;
