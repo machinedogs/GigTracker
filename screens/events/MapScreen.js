@@ -94,6 +94,7 @@ const MapScreen = props => {
     const response = await fetch("https://gigservice.herokuapp.com/api/v1/events");
     theEvents = await response.json();
     //const theEvents = await JSON.parse(data);
+
     console.log(theEvents);
     setEvents(theEvents);
   }, [])
@@ -230,15 +231,13 @@ const MapScreen = props => {
           toolbarEnabled={true}
           ref={mapRef}
           customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
-          clusterColor="#341f97"
+          clusterColor="#341f97" 
         >
           {events.map(event => (
             <Marker
-              coordinate={{ latitude: event.location.latitude, longitude: event.location.longitude }}
+              coordinate={{ latitude: parseFloat(event.location.latitude), longitude: parseFloat(event.location.longitude) }}
               title={event.title}
               pinColor="#341f97"
-              //image={require('../../assets/splash.png')}
-              icon={FlashOnIcon}
               description={event.description}
               key={event.id}
               tracksViewChanges={false}
