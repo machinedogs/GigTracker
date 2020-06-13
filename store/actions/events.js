@@ -11,16 +11,19 @@ export const createEvent = (event) => {
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
-        const newLocation = new Location(event.location.latitude, event.location.longitude);
-        const newHost = new Host(getState().user.userName, getState().user.userEmail);
+        //const newLocation = new Location(event.location.latitude, event.location.longitude);
+        //const newHost = new Host(getState().user.userName, getState().user.userEmail);
 
+        //{ "title": "Party 2", "description": "Come party yall", "date": "", "type_id": "1", "latitude": "39.98", "longitude": "-75.16" }
         var raw = JSON.stringify({
             "title": event.title,
             "description": event.description,
             "date": event.date,
             "category": event.category, //e.g. "music", "sports"
-            "location": newLocation,
-            "host": newHost
+            "latitude": event.location.latitude,
+            "longitude": event.location.longitude,
+            //"hostName": event.host.hostName,
+            //"hostEmail": event.host.hostEmail
         });
         console.log(raw);
 
@@ -33,11 +36,12 @@ export const createEvent = (event) => {
 
         try {
             const access_token = getState().user.accessToken;
-            const response = await fetch(`/https://gigservice.herokuapp.com/api/v1/events.json?auth_token=${access_token}`, requestOptions);
+            const response = await fetch(`https://gigservice.herokuapp.com/api/v1/events?auth_token=${access_token}`, requestOptions);
             const resData = await response.json();
 
             if (resData.status === 'ERROR') {
                 let message = "There was an error posting this event.";
+                alert(message);
                 throw new Error(message);
             }
 
@@ -47,6 +51,8 @@ export const createEvent = (event) => {
                 type: CREATE_EVENT,
                 event: event,
             });
+
+            alert("Successfully created event.")
         } catch (err) {
             alert(err)
         }

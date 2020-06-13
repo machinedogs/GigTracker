@@ -161,12 +161,13 @@ const MapScreen = event => {
         <DropDownPicker
           items={[
             { label: 'Music', value: 'music' },
-            { label: 'Political', value: 'political' },
             { label: 'Sports', value: 'sports' },
             { label: 'Meeting', value: 'meeting' },
             { label: 'Party', value: 'party' },
             { label: 'Protest', value: 'protest' },
             { label: 'Food', value: 'food' },
+            { label: 'Discussion', value: 'discussion'},
+            { label: 'Political', value: 'political' },
           ]}
           defaultValue={initCategory}
           placeholder="Select a category"

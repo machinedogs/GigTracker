@@ -43,8 +43,8 @@ const todaysDate = () => {
     mm = '0' + mm;
   }
   return mm + '/' + dd + '/' + yyyy;
-}
-
+} 
+ 
 /*function getCurrentLocation() {
   navigator.geolocation.getCurrentPosition(
        async position => {
