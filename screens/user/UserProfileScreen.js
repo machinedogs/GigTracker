@@ -79,7 +79,7 @@ const UserProfileScreen = (props) => {
 					style={styles.wallpaper}
 					source={{
 						uri:
-							"https://i.pinimg.com/originals/61/f5/fd/61f5fdd2641a22295b8ea7957fd80b50.jpg",
+							"https://visme.co/blog/wp-content/uploads/2017/07/50-Beautiful-and-Minimalist-Presentation-Backgrounds-018.jpg",
 					}}
 				/>
 				<TouchableOpacity
@@ -88,8 +88,10 @@ const UserProfileScreen = (props) => {
 				>
 				<Image style={styles.avatar} source={{ uri: profileImage }} />
 				</TouchableOpacity>
-			</View>
 
+				<Text>Name</Text>
+				
+			</View>
 			<View style={styles.content}>
 				<Tabs>
 					<Tab heading="Hosted Events"></Tab>
@@ -106,9 +108,13 @@ const styles = StyleSheet.create({
 		height: "100%",
 		flex: 1,
 	},
+	text:{
+		position: 'absolute',
+		fontFamily: 'Cochin'
+	},
 	wallpaper: {
 		height: "100%",
-		width: "100%",
+		width: "100%"
 	},
 	header: {
 		height: "25%",
@@ -127,10 +133,10 @@ const styles = StyleSheet.create({
 		borderRadius: 63,
 		borderWidth: 4,
 		borderColor: "white",
-		marginBottom: 50,
+		marginBottom: 10 ,
 		alignSelf: "center",
 		position: "absolute",
-		marginTop: 70,
+		marginTop: 20,
 	},
 	avatar: {
 		width: "100%",
