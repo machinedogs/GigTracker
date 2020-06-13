@@ -1,5 +1,4 @@
-import { LOGIN, SIGNUP, AUTHENTICATE,UPDATE_PROFILE, UPDATE_WALLPAPER } from "../actions/user";
-import { AUTHENTICATE, LOGOUT } from "../actions/user";
+import { LOGIN, SIGNUP, AUTHENTICATE, LOGOUT, UPDATE_PROFILE, UPDATE_WALLPAPER } from "../actions/user";
 
 const initialState = {
     //userId: null,
@@ -9,7 +8,7 @@ const initialState = {
     savedEvents: [],
     accessToken: null,
     refreshToken: null,
-    profileImage: 'https://www.naspp.com/App_Themes/NASPP/images/default_user.png',
+    profileImage: null,
     wallpaperImage:null,
 };
 

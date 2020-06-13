@@ -15,6 +15,9 @@ const StartupScreen = props => {
     const dispatch = useDispatch();
     useEffect(() => {
         const tryLogin = async () => {
+            // SecureStore.deleteItemAsync('userData')
+            // SecureStore.deleteItemAsync('images')
+
             // change this to secure store function
             const userData = await SecureStore.getItemAsync('userData');
 

@@ -7,13 +7,19 @@ import {
 	Text,
 	View,
 	TouchableOpacity,
+	Button,
 	Alert,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Container, Header, Tab, Tabs, TabHeading, Icon } from "native-base";
 import { updateUserProfile } from "../../store/actions/user";
-import { openImagePickerAsync, uploadImage, getImage } from '../../screens/helper/ImageHelpers'
-import { saveProfileDataToStorage } from '../../screens/helper/secureStorageHelpers';
+import {
+	openImagePickerAsync,
+	uploadImage,
+	getImage,
+} from "../../screens/helper/ImageHelpers";
+import { saveProfileDataToStorage } from "../../screens/helper/secureStorageHelpers";
+import * as authActions from "../../store/actions/user";
 
 const UserProfileScreen = (props) => {
 	const dispatch = useDispatch();
@@ -21,16 +27,16 @@ const UserProfileScreen = (props) => {
 	var user = useSelector((state) => state.user);
 
 	let updateProfilePhoto = async () => {
-		console.log('Inside update profile photo ');
+		console.log("Inside update profile photo ");
 		//Get image from camera library
 		var file = await openImagePickerAsync();
-		//Get image from firebase 
+		//Get image from firebase
 		var imageUrl = await getImage(file);
 		//dispatch action
 		dispatch(updateUserProfile(imageUrl));
 		//Save uri to storage
 		saveProfileDataToStorage(imageUrl);
-	}
+	};
 
 	return (
 		<View style={styles.container}>
@@ -61,6 +67,22 @@ const UserProfileScreen = (props) => {
 					<Tab heading="Saved Events"></Tab>
 				</Tabs>
 			</View>
+			<View style={styles.ButtonContainer}>
+				<Button
+					title="Logout"
+					onPress={() => {
+						dispatch(authActions.logout());
+						props.navigation.navigate("Home");
+					}}
+				/>
+				<Button
+					title="Delete Account"
+					onPress={() => {
+						// Take user to delete account screen and let them delete
+						props.navigation.navigate("Delete");
+					}}
+				/>
+			</View>
 		</View>
 	);
 };
@@ -73,12 +95,20 @@ const styles = StyleSheet.create({
 		margin: 0,
 		padding: 0,
 	},
+	ButtonContainer:{
+		height:'100%',
+		width:'100%',
+		flex: 1
+	},
 	container: {
 		flex: 1,
+		width:'100%',
+		height:'100%'
 	},
 	content: {
 		width: "100%",
-		height: "100%",
+		height: "80%",
+		flex:4
 	},
 	headerBackgroundImage: {
 		paddingBottom: 20,
