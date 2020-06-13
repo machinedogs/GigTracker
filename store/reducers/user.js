@@ -1,4 +1,5 @@
 import { LOGIN, SIGNUP, AUTHENTICATE,UPDATE_PROFILE, UPDATE_WALLPAPER } from "../actions/user";
+import { AUTHENTICATE, LOGOUT } from "../actions/user";
 
 const initialState = {
     //userId: null,
@@ -48,6 +49,8 @@ export default (state = initialState, action) => {
                 ...state,
                 wallpaperImage: action.wallpaperImage
             }
+        case LOGOUT:
+            return initialState;
         default:
             return state;
     }

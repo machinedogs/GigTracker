@@ -40,6 +40,7 @@
     "react-native-vector-icons": "^6.6.0",
     "react-native-web": "~0.11.7",
     "react-navigation": "^4.3.9",
+    "react-navigation-header-buttons": "^4.0.2",
     "react-navigation-stack": "^2.5.1",
     "react-redux": "^7.2.0",
     "redux": "^4.0.5",
@@ -47,7 +48,9 @@
     "redux-thunk": "^2.3.0",
     "rn-sliding-up-panel": "^2.4.2",
     "serialize-javascript": "^3.0.0",
-    "watchman": "^1.0.0"
+    "watchman": "^1.0.0",
+    "@expo/vector-icons": "^10.0.0",
+    "expo-font": "~8.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",

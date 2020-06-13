@@ -1,24 +1,29 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Text, View, Button, FlatList, Dimensions, Image, Platform, SafeAreaView, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  FlatList,
+  Dimensions,
+  Image,
+  Platform,
+  SafeAreaView,
+  TouchableOpacity,
+  StatusBar
+} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
-import { Dropdown } from 'react-native-material-dropdown';
+import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import FlashOnIcon from '@material-ui/icons/FlashOn';
-import Drawer from 'react-native-drawer';
-import DateFnsUtils from '@date-io/date-fns';
-import DatePicker from 'react-native-datepicker';
 import { Icon } from 'react-native-elements';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
-//import { useTheme } from 'react-navigation/native';
+
 import { EVENTS } from '../../data/dummy-data';
 import MapStyle from '../../constants/MapStyle';
 import EventModal from '../../components/EventModal';
 import Event from '../../models/event';
-import ControlPanel from '../../components/controlPanel';
+import HeaderButton from '../../components/HeaderButton';
+import Colors from '../../constants/Colors';
 
 const { width, height } = Dimensions.get('window')
 
@@ -70,7 +75,7 @@ const MapScreen = props => {
       (position) => {
         coords = { latitude: position.coords.latitude, longitude: position.coords.longitude, latitudeDelta: .009, longitudeDelta: .009 };
         console.log(coords);
-        mapRef.current.animateToRegion(coords, 1000);
+        mapRef.current.animateToRegion(coords, 0);
       }, (error) => console.log(error));
   }, []);
 
@@ -119,162 +124,139 @@ const MapScreen = props => {
   return (
     //add a dropdown to choose map style? -> what if we put it in user settings? could incentivize people to become users
     //add dropdown calendar
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
+      <StatusBar backgroundColor={Colors.darkGrey} barStyle='light-content' />
 
-      <View style={styles.container}>
-        <Text style={styles.top}>GigTracker</Text>
-        <View style={styles.topBarStyle}>
-          <Dropdown
-            label="Category"
-            data={categories}
-            containerStyle={styles.dropdownStyle}
-            baseColor='#fff'
-            dropdownOffset={{ top: 40, left: 0 }}
-            dropdownPosition={-5.35}
-            selectedItemColor='#c0392b'
-            animationDuration={50}
-            pickerStyle={{ backgroundColor: '#ecf0f1' }}
-            itemTextStyle={styles.containerStyle}
-            onChangeText={filterCategory}
-          />
-          <View>
-            <Text style={{ color: 'white', fontSize: 12, paddingTop: 13, paddingLeft: 35 }}>Select a date</Text>
-            <DatePicker
-              style={{ width: 100 }}
-              date={date}
-              mode="date"
-              placeholder="select date"
-              format="MM-DD-YYYY"
-              minDate="05-01-2020" // We should insert the current date here
-              maxDate="06-01-2021" // Max date is 1 year out from current date?
-              showIcon={false}
-              style={styles.textStyle}
-              confirmBtnText="Confirm"
-              cancelBtnText="Cancel"
-              customStyles={{
-                dateIcon: {
-                  position: 'absolute',
-                  left: 0,
-                  top: 4,
-                  marginLeft: 0
-                },
-                dateInput: {
-                  marginLeft: 36
-                },
-                dateText: {
-                  color: '#FFFFFF',
-                  fontWeight: 'bold',
-                  justifyContent: 'flex-start'
-                }
-                // ... You can check the source to find the other keys.
-              }}
-              onDateChange={filterDate}
-            />
-          </View>
-        </View>
-      </View>
 
-      <View style={{ flex: 4 }} >
-        <MapView
-          style={styles.mapStyle}
-          provider={PROVIDER_GOOGLE}
-          showsUserLocation
-          showsMyLocationButton
-          rotateEnabled={false}
-          showsTraffic={false}
-          toolbarEnabled={true}
-          ref={mapRef}
-          customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
-        >
-          {events.map(event => (
-            <Marker
-              coordinate={{ latitude: event.latitude, longitude: event.longitude }}
-              title={event.title}
-              pinColor="#341f97"
-              //image={require('../../assets/splash.png')}
-              icon={FlashOnIcon}
-              description={event.description}
-              key={event.id}
-              tracksViewChanges={false}
-              onPress={onPinPress.bind(this, event)}
-            ><Callout
-              style={styles.plainView}
-              onPress={onEventCalloutPress}
-            >
-                <View>
-                  <Text style={{ fontWeight: 'bold' }}>{event.title}</Text>
-                </View>
-              </Callout>
-            </Marker>
-          ))}
-        </MapView>
-        <EventModal
-          title={selectedEvent.title}
-          description={selectedEvent.description}
-          hostName={selectedEvent.hostName}
-          visible={isModalVisible}
-          toggleModal={toggleModal}
-        />
-      </View>
+      <MapView
+        style={styles.map}
+        provider={PROVIDER_GOOGLE}
+        showsUserLocation
+        showsMyLocationButton
+        rotateEnabled={false}
+        showsTraffic={false}
+        toolbarEnabled={true}
+        ref={mapRef}
+        customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
+      >
+        {events.map(event => (
+          <Marker
+            coordinate={{ latitude: event.latitude, longitude: event.longitude }}
+            title={event.title}
+            pinColor="#341f97"
+            //image={require('../../assets/splash.png')}
+            icon={FlashOnIcon}
+            description={event.description}
+            key={event.id}
+            tracksViewChanges={false}
+            onPress={onPinPress.bind(this, event)}
+          ><Callout
+            style={styles.plainView}
+            onPress={onEventCalloutPress}
+          >
+              <View>
+                <Text style={{ fontWeight: 'bold' }}>{event.title}</Text>
+              </View>
+            </Callout>
+          </Marker>
+        ))
+        }
 
-      <View style={styles.container}>
-        {!userAccessToken ?
-          (
+      </MapView>
+      <EventModal
+        title={selectedEvent.title}
+        description={selectedEvent.description}
+        hostName={selectedEvent.hostName}
+        visible={isModalVisible}
+        toggleModal={toggleModal}
+      />
+      {!userAccessToken ?
+        (
+          <SafeAreaView
+            style={{
+              position: 'absolute',//use absolute position to show button on top of the map
+              bottom: '0.5%',
+              alignSelf: 'center' //for align to right
+            }}
+          >
             <TouchableOpacity>
               <Icon
                 reverse
                 raised
                 name='user'
                 type='font-awesome'
-                color='#341f97'
-                size={35}
+                color={Colors.darkGrey}
+                size={28}
                 reverseColor='white'
                 onPress={() => { props.navigation.navigate('Auth') }}
               />
             </TouchableOpacity>
-          ) :
-          (
-            <View style={styles.row}>
-              <TouchableOpacity>
-                <Icon
-                  reverse
-                  raised
-                  name='user'
-                  type='font-awesome'
-                  color='#341f97'
-                  size={35}
-                  onPress={() => { props.navigation.navigate('Profile') }}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <Icon
-                  reverse
-                  raised
-                  name='plus'
-                  type='font-awesome'
-                  color='#341f97'
-                  size={35}
-                  onPress={() => { props.navigation.navigate('CreateEvent') }}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <Icon
-                  reverse
-                  raised
-                  name='bookmark'
-                  type='font-awesome'
-                  color='#341f97'
-                  size={35}
-                  onPress={() => { props.navigation.navigate('CreateEvent') }}
-                />
-              </TouchableOpacity>
-            </View>
-          )
-        }
-      </View>
-
-    </SafeAreaView>
+          </SafeAreaView>
+        ) :
+        (
+          <SafeAreaView style={styles.row}>
+            <TouchableOpacity>
+              <Icon
+                reverse
+                raised
+                name='user'
+                type='font-awesome'
+                color={Colors.darkGrey}
+                size={28}
+                onPress={() => { props.navigation.navigate('UserProfile') }}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Icon
+                reverse
+                raised
+                name='plus'
+                type='font-awesome'
+                color={Colors.darkGrey}
+                size={28}
+                onPress={() => { props.navigation.navigate('CreateEvent') }}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Icon
+                reverse
+                raised
+                name='bookmark'
+                type='font-awesome'
+                color={Colors.darkGrey}
+                size={28}
+                onPress={() => { props.navigation.navigate('CreateEvent') }}
+              />
+            </TouchableOpacity>
+          </SafeAreaView>
+        )
+      }
+    </View>
   );
+}
+
+MapScreen.navigationOptions = navData => {
+  return {
+    headerLeft: () =>
+      (
+        <HeaderButtons HeaderButtonComponent={HeaderButton} >
+          <Item
+            title='Menu'
+            iconName={Platform.OS === 'android' ? 'md-options' : 'ios-options'}
+            onPress={() => { }}
+          />
+        </HeaderButtons>
+      ),
+      headerRight: () => (
+        <HeaderButtons HeaderButtonComponent={HeaderButton}>
+          <Item
+            title='Menu'
+            iconName={Platform.OS === 'android' ? 'md-calendar' : 'ios-calendar'}
+            onPress={() => { }}
+          />
+        </HeaderButtons>
+      )
+  }
 }
 
 const styles = StyleSheet.create({
@@ -282,22 +264,23 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    width: Dimensions.get('window').width,
+    paddingTop: 0,
+    //width: Dimensions.get('window').width,
   },
   top: {
     backgroundColor: '#130f40',
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    //justifyContent: 'center',
     width: Dimensions.get('window').width,
   }
   ,
-  mapStyle: {
+  map: {
+    flex: 1,
     zIndex: -1,
     width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height * .86,
+    height: Dimensions.get('window').height,
   },
-
   titleStyle: {
     textAlign: 'left',
     fontSize: 25,
@@ -311,12 +294,14 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    alignItems: "flex-start",
-    justifyContent: 'flex-start',
-    paddingBottom: 0,
+    justifyContent: 'space-evenly',
+    position: 'absolute',//use absolute position to show button on top of the map
+    bottom: 0,
+    paddingBottom: 19,
+    alignSelf: 'center' //for align to right
   },
   topBarStyle: {
-    flex: 1,
+    flex: 2,
     width: Dimensions.get('window').width,
     flexDirection: 'row',
     justifyContent: 'space-evenly',

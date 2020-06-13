@@ -6,7 +6,10 @@ import {
     StyleSheet,
     Button,
     ActivityIndicator,
-    Alert
+    Alert,
+    TouchableWithoutFeedback,
+    Platform,
+    Keyboard
 } from 'react-native';
 import { useDispatch } from 'react-redux';
 
@@ -111,38 +114,41 @@ const AuthScreen = props => {
 
     return (
         <KeyboardAvoidingView
-            behavior='height'
-            keyboardVerticalOffset={3}
+            behavior={Platform.OS == "ios" ? "padding" : "height"}
             style={styles.screen}
         >
-            <Card style={styles.authContainer}>
-                <ScrollView>
-                    { // only display username on sign up screen
-                        isSignup ?
+            <TouchableWithoutFeedback onPress={() => {
+                Keyboard.dismiss();
+            }}>
+                <View style={styles.screen}>
+                    <Card style={styles.authContainer}>
+                        <ScrollView>
+                            { // only display username on sign up screen
+                                isSignup ?
+                                    <Input
+                                        id="username"
+                                        label="Username"
+                                        keyboardType="default"
+                                        required
+                                        autoCapitalize="none"
+                                        errorText="Please enter a valid username"
+                                        onInputChange={inputChangeHandler}
+                                        initialValue=""
+                                    /> :
+                                    null
+                            }
                             <Input
-                                id="username"
-                                label="Username"
-                                keyboardType="default"
+                                id="email"
+                                label="Email"
+                                keyboardType="email-address"
                                 required
+                                email
                                 autoCapitalize="none"
-                                errorText="Please enter a valid username"
+                                errorText="Please enter a valid email address"
                                 onInputChange={inputChangeHandler}
                                 initialValue=""
-                            /> :
-                            null
-                    }
-                    <Input
-                        id="email"
-                        label="Email"
-                        keyboardType="email-address"
-                        required
-                        email
-                        autoCapitalize="none"
-                        errorText="Please enter a valid email address"
-                        onInputChange={inputChangeHandler}
-                        initialValue=""
-                    />
-                    <Input
+                            />
+                            <Input
                                 id="password"
                                 label="Password"
                                 keyboardType="default"
@@ -154,47 +160,49 @@ const AuthScreen = props => {
                                 onInputChange={inputChangeHandler}
                                 initialValue=""
                             />
-                    { // only display password confirmation on sign up screen
-                        isSignup ?
-                            <Input
-                                id="passwordConfirmation"
-                                label="Confirm Password"
-                                keyboardType="default"
-                                secureTextEntry
-                                required
-                                minLength={5}
-                                autoCapitalize="none"
-                                errorText="Please enter a valid password"
-                                onInputChange={inputChangeHandler}
-                                initialValue=""
-                            /> : null
+                            { // only display password confirmation on sign up screen
+                                isSignup ?
+                                    <Input
+                                        id="passwordConfirmation"
+                                        label="Confirm Password"
+                                        keyboardType="default"
+                                        secureTextEntry
+                                        required
+                                        minLength={5}
+                                        autoCapitalize="none"
+                                        errorText="Please enter a valid password"
+                                        onInputChange={inputChangeHandler}
+                                        initialValue=""
+                                    /> : null
 
-                    }
-                    {isLoading ?
-                        (
+                            }
+                            {isLoading ?
+                                (
+                                    <View style={styles.buttonContainer}>
+                                        <ActivityIndicator size='small' color={Colors.primary} />
+                                    </View>
+                                ) :
+                                <View style={styles.buttonContainer}>
+                                    <Button
+                                        title={isSignup ? 'Sign Up' : 'Login'}
+                                        color={Colors.primary}
+                                        onPress={authHandler}
+                                    />
+                                </View>
+                            }
                             <View style={styles.buttonContainer}>
-                                <ActivityIndicator size='small' color={Colors.primary} />
+                                <Button
+                                    title={`Or ${isSignup ? 'Login' : 'Sign Up'}`}
+                                    color={Colors.accent}
+                                    onPress={() => {
+                                        setIsSignup(prevState => !prevState);
+                                    }}
+                                />
                             </View>
-                        ) :
-                        <View style={styles.buttonContainer}>
-                            <Button
-                                title={isSignup ? 'Sign Up' : 'Login'}
-                                color={Colors.primary}
-                                onPress={authHandler}
-                            />
-                        </View>
-                    }
-                    <View style={styles.buttonContainer}>
-                        <Button
-                            title={`Or ${isSignup ? 'Login' : 'Sign Up'}`}
-                            color={Colors.accent}
-                            onPress={() => {
-                                setIsSignup(prevState => !prevState);
-                            }}
-                        />
-                    </View>
-                </ScrollView>
-            </Card>
+                        </ScrollView>
+                    </Card>
+                </View>
+            </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
     );
 };
@@ -216,7 +224,8 @@ const styles = StyleSheet.create({
     },
     authContainer: {
         width: '80%',
-        maxWidth: 400,
+        maxWidth: '95%',
+        minWidth: 300,
         maxHeight: 450,
         padding: 20
     },
