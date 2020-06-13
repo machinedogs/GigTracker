@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Container, Header, Tab, Tabs, TabHeading, Icon } from "native-base";
 import { updateUserProfile } from "../../store/actions/user";
 import { openImagePickerAsync, uploadImage, getImage } from '../../screens/helper/ImageHelpers'
-import { saveDataToStorage } from '../../screens/helper/secureStorageHelpers';
+import { saveProfileDataToStorage } from '../../screens/helper/secureStorageHelpers';
 
 const UserProfileScreen = (props) => {
 	const dispatch = useDispatch();
@@ -29,7 +29,7 @@ const UserProfileScreen = (props) => {
 		//dispatch action
 		dispatch(updateUserProfile(imageUrl));
 		//Save uri to storage
-		saveDataToStorage(imageUrl);
+		saveProfileDataToStorage(imageUrl);
 	}
 
 	return (
