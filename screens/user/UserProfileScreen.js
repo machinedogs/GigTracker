@@ -11,74 +11,27 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Container, Header, Tab, Tabs, TabHeading, Icon } from "native-base";
-import * as ImagePicker from "expo-image-picker";
 import { updateUserProfile } from "../../store/actions/user";
-import * as firebase from "firebase";
-import { firebaseConfig } from "../../firebase/index";
-import * as SecureStore from "expo-secure-store";
+import { openImagePickerAsync, uploadImage, getImage } from '../../screens/helper/ImageHelpers'
+import { saveDataToStorage } from '../../screens/helper/secureStorageHelpers';
 
 const UserProfileScreen = (props) => {
 	const dispatch = useDispatch();
 	var profileImage = useSelector((state) => state.user.profileImage);
 	var user = useSelector((state) => state.user);
 
-	//Function that lets you pick the image from your library
-	let openImagePickerAsync = async () => {
-		let permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
-
-		if (permissionResult.granted === false) {
-			alert("Permission to access camera roll is required!");
-			return;
-		}
-
-		let pickerResult = await ImagePicker.launchImageLibraryAsync();
-		if (!pickerResult.cancelled) {
-			//generate random file name
-			var fileName = Math.random().toString(36).substring(7);
-			console.log(`Random File Name ${fileName}`);
-			var response = await uploadImage(pickerResult.uri, fileName);
-			console.log("About to dispatch action with file name");
-			dispatch(updateUserProfile(await getImage(fileName)));
-		}
-	};
-	//Uploads image
-	uploadImage = async (uri, imageName) => {
-		console.log("In upload");
-		const response = await fetch(uri);
-		const blob = await response.blob();
-		if (firebase.apps.length === 0) {
-			firebase.initializeApp(firebaseConfig);
-		}
-		var ref = firebase.storage().ref().child(`images/${imageName}`);
-		return ref.put(blob);
-	};
-
-	//get image from firebase
-	getImage = async (path) => {
-		console.log(`Getting Image with name ${path}`);
-		var url = await firebase
-			.storage()
-			.ref()
-			.child(`images/${path}`)
-			.getDownloadURL();
-		console.log(`Got image from firebase. here it is.... ${url}`);
+	let updateProfilePhoto = async () => {
+		console.log('Inside update profile photo ');
+		//Get image from camera library
+		var file = await openImagePickerAsync();
+		//Get image from firebase 
+		var imageUrl = await getImage(file);
+		//dispatch action
+		dispatch(updateUserProfile(imageUrl));
 		//Save uri to storage
-		saveDataToStorage(url);
-		return url;
-	};
+		saveDataToStorage(imageUrl);
+	}
 
-	//Saves profile uri to local machine storage
-	const saveDataToStorage = async (profileImage) => {
-		console.log(
-			`Save to storage got the uri....${profileImage}...securely storing it`
-		);
-		SecureStore.setItemAsync(
-			"images",
-			JSON.stringify({
-				profileImage: profileImage,
-			})
-		);
-	};
 	return (
 		<View style={styles.container}>
 			<View style={styles.headerContainer}>
@@ -92,7 +45,7 @@ const UserProfileScreen = (props) => {
 				>
 					<View style={styles.headerColumn}>
 						<TouchableOpacity
-							onPress={openImagePickerAsync}
+							onPress={updateProfilePhoto}
 							style={styles.userImageContainer}
 						>
 							<Image style={styles.userImage} source={{ uri: profileImage }} />

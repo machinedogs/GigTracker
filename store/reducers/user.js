@@ -8,7 +8,7 @@ const initialState = {
     savedEvents: [],
     accessToken: null,
     refreshToken: null,
-    profileImage: 'https://filmdaily.co/wp-content/uploads/2020/05/avatar_lede-1300x976.jpg',
+    profileImage: 'https://www.naspp.com/App_Themes/NASPP/images/default_user.png',
     wallpaperImage:null,
 };
 

@@ -20,6 +20,7 @@ const StartupScreen = props => {
             const images = await SecureStore.getItemAsync('images');
             //Means user has data saved, otherwise don't take into account
             if(images != null){
+                console.log('Getting image from storage ');
                 const transformedImageData = JSON.parse(images);
                 console.log(transformedImageData)
                 const { profileImage } = transformedImageData
