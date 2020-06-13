@@ -13,6 +13,7 @@ import * as ImagePicker from "expo-image-picker";
 import { updateUserProfile } from "../../store/actions/user";
 import * as firebase from "firebase";
 import { firebaseConfig } from "../../firebase/index";
+import * as SecureStore from 'expo-secure-store';
 
 const UserProfileScreen = (props) => {
 	const dispatch = useDispatch();
@@ -58,8 +59,19 @@ const UserProfileScreen = (props) => {
 			.child(`images/${path}`)
 			.getDownloadURL();
 		console.log(`Got image from firebase. here it is.... ${url}`);
+		//Save uri to storage
+		saveDataToStorage(url)
 		return url;
 	};
+
+	//Saves profile uri to local machine storage 
+	const saveDataToStorage = async (profileImage) => {
+		console.log(`Save to storage got the uri....${profileImage}...securely storing it`)
+		SecureStore.setItemAsync('images', JSON.stringify({
+			profileImage: profileImage
+		})
+	);
+	}
 	return (
 		<View style={styles.container}>
 			<View style={styles.header}>
