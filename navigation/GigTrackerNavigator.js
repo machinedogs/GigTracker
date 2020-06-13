@@ -20,7 +20,7 @@ const EventNavigator = createStackNavigator(
                 headerTitleStyle: {
                     fontFamily: 'jack-silver',
                     fontSize: 32,
-                    justifyContent: 'center'
+                    textAlign: 'center'
                 },
                 headerStyle: {
                     backgroundColor: Colors.darkGrey,

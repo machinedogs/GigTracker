@@ -15,18 +15,8 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
-import { Dropdown } from 'react-native-material-dropdown';
 import FlashOnIcon from '@material-ui/icons/FlashOn';
-import Drawer from 'react-native-drawer';
-import DateFnsUtils from '@date-io/date-fns';
-import DatePicker from 'react-native-datepicker';
 import { Icon } from 'react-native-elements';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
-//import { useTheme } from 'react-navigation/native';
 
 import { EVENTS } from '../../data/dummy-data';
 import MapStyle from '../../constants/MapStyle';
@@ -34,7 +24,6 @@ import EventModal from '../../components/EventModal';
 import Event from '../../models/event';
 import HeaderButton from '../../components/HeaderButton';
 import Colors from '../../constants/Colors';
-import ControlPanel from '../../components/controlPanel';
 
 const { width, height } = Dimensions.get('window')
 
