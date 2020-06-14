@@ -32,7 +32,7 @@ const EventNavigator = createStackNavigator(
             },
         },
         CreateEvent: CreateEventScreen,
-        UserProfile: UserProfileScreen,
+        Profile: UserProfileScreen,
         ManageEvent: ManageEventScreen,
         Auth: AuthScreen,
         Delete: DeleteScreen
