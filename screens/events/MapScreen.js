@@ -1,25 +1,31 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Text, View, Button, FlatList, Dimensions, Image, Platform, SafeAreaView, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  FlatList,
+  Dimensions,
+  Image,
+  Platform,
+  SafeAreaView,
+  TouchableOpacity,
+  StatusBar
+} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 import MapView from 'react-native-map-clustering';
 import { Dropdown } from 'react-native-material-dropdown';
+import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import FlashOnIcon from '@material-ui/icons/FlashOn';
-import Drawer from 'react-native-drawer';
-import DateFnsUtils from '@date-io/date-fns';
-import DatePicker from 'react-native-datepicker';
 import { Icon } from 'react-native-elements';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
-//import { useTheme } from 'react-navigation/native';
+
 import { EVENTS } from '../../data/dummy-data';
 import MapStyle from '../../constants/MapStyle';
 import EventModal from '../../components/EventModal';
 import Event from '../../models/event';
-import ControlPanel from '../../components/controlPanel';
+import HeaderButton from '../../components/HeaderButton';
+import Colors from '../../constants/Colors';
 
 const { width, height } = Dimensions.get('window')
 
@@ -116,7 +122,7 @@ const MapScreen = props => {
       (position) => {
         coords = { latitude: position.coords.latitude, longitude: position.coords.longitude, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA };
         console.log(coords);
-        mapRef.current.animateToRegion(coords, 1000);
+        mapRef.current.animateToRegion(coords, 0);
       }, (error) => console.log(error));
   }, []);
 
@@ -164,7 +170,8 @@ const MapScreen = props => {
   return (
     //add a dropdown to choose map style? -> what if we put it in user settings? could incentivize people to become users
     //add dropdown calendar
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
+      <StatusBar backgroundColor={Colors.darkGrey} barStyle='light-content' />
 
       <View style={styles.container}>
         <Text style={styles.top}>GigTracker</Text>
@@ -262,64 +269,100 @@ const MapScreen = props => {
         />
       </View>
 
-      <View style={styles.container}>
-        {!userAccessToken ?
-          (
+      <EventModal
+        title={selectedEvent.title}
+        description={selectedEvent.description}
+        hostName={selectedEvent.hostName}
+        visible={isModalVisible}
+        toggleModal={toggleModal}
+      />
+      {!userAccessToken ?
+        (
+          <SafeAreaView
+            style={{
+              position: 'absolute',//use absolute position to show button on top of the map
+              bottom: '0.5%',
+              alignSelf: 'center' //for align to right
+            }}
+          >
             <TouchableOpacity>
               <Icon
                 reverse
                 raised
                 name='user'
                 type='font-awesome'
-                color='#341f97'
-                size={35}
+                color={Colors.darkGrey}
+                size={28}
                 reverseColor='white'
                 onPress={() => { props.navigation.navigate('Auth') }}
               />
             </TouchableOpacity>
-          ) :
-          (
-            <View style={styles.row}>
-              <TouchableOpacity>
-                <Icon
-                  reverse
-                  raised
-                  name='user'
-                  type='font-awesome'
-                  color='#341f97'
-                  size={35}
-                  onPress={() => { props.navigation.navigate('UserProfile') }}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <Icon
-                  reverse
-                  raised
-                  name='plus'
-                  type='font-awesome'
-                  color='#341f97'
-                  size={35}
-                  onPress={() => { props.navigation.navigate('CreateEvent') }}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <Icon
-                  reverse
-                  raised
-                  name='bookmark'
-                  type='font-awesome'
-                  color='#341f97'
-                  size={35}
-                  onPress={() => { props.navigation.navigate('CreateEvent') }}
-                />
-              </TouchableOpacity>
-            </View>
-          )
-        }
-      </View>
-
-    </SafeAreaView>
+          </SafeAreaView>
+        ) :
+        (
+          <SafeAreaView style={styles.row}>
+            <TouchableOpacity>
+              <Icon
+                reverse
+                raised
+                name='user'
+                type='font-awesome'
+                color={Colors.darkGrey}
+                size={28}
+                onPress={() => { props.navigation.navigate('UserProfile') }}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Icon
+                reverse
+                raised
+                name='plus'
+                type='font-awesome'
+                color={Colors.darkGrey}
+                size={28}
+                onPress={() => { props.navigation.navigate('CreateEvent') }}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Icon
+                reverse
+                raised
+                name='bookmark'
+                type='font-awesome'
+                color={Colors.darkGrey}
+                size={28}
+                onPress={() => { props.navigation.navigate('CreateEvent') }}
+              />
+            </TouchableOpacity>
+          </SafeAreaView>
+        )
+      }
+    </View>
   );
+}
+
+MapScreen.navigationOptions = navData => {
+  return {
+    headerLeft: () =>
+      (
+        <HeaderButtons HeaderButtonComponent={HeaderButton} >
+          <Item
+            title='Menu'
+            iconName={Platform.OS === 'android' ? 'md-options' : 'ios-options'}
+            onPress={() => { }}
+          />
+        </HeaderButtons>
+      ),
+      headerRight: () => (
+        <HeaderButtons HeaderButtonComponent={HeaderButton}>
+          <Item
+            title='Menu'
+            iconName={Platform.OS === 'android' ? 'md-calendar' : 'ios-calendar'}
+            onPress={() => { }}
+          />
+        </HeaderButtons>
+      )
+  }
 }
 
 const styles = StyleSheet.create({
@@ -328,6 +371,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: SCREEN_WIDTH,
+    paddingTop: 0,
   },
   top: {
     backgroundColor: '#2d3436',
@@ -335,14 +379,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: SCREEN_WIDTH,
+    //justifyContent: 'center',
   }
   ,
-  mapStyle: {
+  map: {
+    flex: 1,
     zIndex: -1,
     width: SCREEN_WIDTH,
     height: SCREEN_HEIGHT * .86,
   },
-
   titleStyle: {
     textAlign: 'left',
     fontSize: 25,
@@ -356,13 +401,15 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    alignItems: "flex-start",
-    justifyContent: 'flex-start',
-    paddingBottom: 0,
+    justifyContent: 'space-evenly',
+    position: 'absolute',//use absolute position to show button on top of the map
+    bottom: 0,
+    paddingBottom: 19,
+    alignSelf: 'center' //for align to right
   },
   topBarStyle: {
-    flex: 1,
     width: SCREEN_WIDTH,
+    flex: 2,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',

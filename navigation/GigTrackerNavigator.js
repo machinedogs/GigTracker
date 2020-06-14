@@ -1,14 +1,17 @@
 import React from 'react';
 import {Button} from 'react-native';
+import { Platform } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 
+import Colors from '../constants/Colors';
 import MapScreen from '../screens/events/MapScreen';
 import CreateEventScreen from '../screens/user/CreateEventScreen';
 import UserProfileScreen from '../screens/user/UserProfileScreen';
 import ManageEventScreen from '../screens/user/ManageEventScreen';
 import AuthScreen from '../screens/user/AuthScreen';
 import StartupScreen from '../screens/StartupScreen';
+import DeleteScreen from '../screens/user/DeleteScreen';
 
 const EventNavigator = createStackNavigator(
     {
@@ -16,7 +19,18 @@ const EventNavigator = createStackNavigator(
         Home: {
             screen: MapScreen, 
             navigationOptions: {
-                headerShown: false,
+                headerTitle: 'Conjure',
+                headerTitleStyle: {
+                    fontFamily: 'jack-silver',
+                    fontSize: 32,
+                    textAlign: 'center'
+                },
+                headerStyle: {
+                    backgroundColor: Colors.darkGrey,
+                    height: 110
+                },
+                headerTintColor: Colors.lightText,
+                gestureEnabled: false, // this stops us from swiping back to startup screen
             },
         },
         CreateEvent: {
@@ -33,7 +47,8 @@ const EventNavigator = createStackNavigator(
         },
         UserProfile: UserProfileScreen,
         ManageEvent: ManageEventScreen,
-        Auth: AuthScreen
+        Auth: AuthScreen,
+        Delete: DeleteScreen
     }
 );
 
