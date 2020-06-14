@@ -12,11 +12,9 @@ import {
 	Body,
 	Right,
 } from "native-base";
+import { Entypo } from '@expo/vector-icons'; 
 
 export const EventCard = (props) => {
-    let dataArray = [
-        {title: props.event.title, content: props.event.description}
-    ]
 	return (
 			<Content>
 				<Card>
@@ -37,6 +35,10 @@ export const EventCard = (props) => {
                             <Text>{props.event.description}</Text>
 						</Content>
 					<CardItem>
+						<Left>
+							<Entypo name="location-pin" size={20} color="black" />
+							<Text>{props.event.address}</Text>
+						</Left>
 						<Right>
 							<Text>{props.event.date}</Text>
 						</Right>

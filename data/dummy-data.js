@@ -24,6 +24,7 @@ export const EVENTS = [
         'party',
         39.952461,
         -75.163714,
+        'Temple University',
         Host_Person
     )
 ];
@@ -37,6 +38,7 @@ export const event = new Event(
     'party',
     39.952461,
     -75.163714,
+    'Temple University',
     Host_Person
 )
 
@@ -50,6 +52,7 @@ export const events = [
     'party',
     39.952461,
     -75.163714,
+    'Temple University',
     Host_Person2
     ),
     new Event(
@@ -61,6 +64,7 @@ export const events = [
         'party',
         39.952461,
         -75.163714,
+        'Temple University',
         Host_Person
         )
 ]
