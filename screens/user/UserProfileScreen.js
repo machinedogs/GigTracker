@@ -4,6 +4,7 @@ import {
 	ImageBackground,
 	Platform,
 	StyleSheet,
+	FlatList,
 	Text,
 	View,
 	TouchableOpacity,
@@ -20,11 +21,14 @@ import {
 } from "../../screens/helper/ImageHelpers";
 import { saveProfileDataToStorage } from "../../screens/helper/secureStorageHelpers";
 import * as authActions from "../../store/actions/user";
-
+import { events } from "../../data/dummy-data";
+import { EventCard } from "../../components/EventCard";
 const UserProfileScreen = (props) => {
 	const dispatch = useDispatch();
 	var profileImage = useSelector((state) => state.user.profileImage);
 	var user = useSelector((state) => state.user);
+
+	const DATA = events;
 
 	let updateProfilePhoto = async () => {
 		console.log("Inside update profile photo ");
@@ -33,9 +37,9 @@ const UserProfileScreen = (props) => {
 		//Get image from firebase
 		var imageUrl = await getImage(file);
 		//dispatch action
-		console.log('Dispatching update user profile with ')
-		console.log(user)
-		dispatch(updateUserProfile(imageUrl,user));
+		console.log("Dispatching update user profile with ");
+		console.log(user);
+		dispatch(updateUserProfile(imageUrl, user));
 		//Save uri to storage
 		saveProfileDataToStorage(imageUrl);
 	};
@@ -65,10 +69,17 @@ const UserProfileScreen = (props) => {
 			</View>
 			<View style={styles.content}>
 				<Tabs>
+					<Tab heading="Saved Events">
+						<FlatList
+							data={DATA}
+							renderItem={({ item }) => <EventCard event={item} />}
+							keyExtractor={(item) => item.id}
+						/>
+					</Tab>
 					<Tab heading="Hosted Events"></Tab>
-					<Tab heading="Saved Events"></Tab>
 				</Tabs>
 			</View>
+
 			<View style={styles.ButtonContainer}>
 				<Button
 					title="Logout"
@@ -97,20 +108,20 @@ const styles = StyleSheet.create({
 		margin: 0,
 		padding: 0,
 	},
-	ButtonContainer:{
-		height:'100%',
-		width:'100%',
-		flex: 1
+	ButtonContainer: {
+		height: "100%",
+		width: "100%",
+		flex: 1,
 	},
 	container: {
 		flex: 1,
-		width:'100%',
-		height:'100%'
+		width: "100%",
+		height: "100%",
 	},
 	content: {
 		width: "100%",
 		height: "80%",
-		flex:4
+		flex: 4,
 	},
 	headerBackgroundImage: {
 		paddingBottom: 20,

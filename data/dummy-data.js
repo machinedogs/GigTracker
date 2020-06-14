@@ -1,54 +1,60 @@
 import Event from '../models/event';
+import Host from '../models/host';
+
+export const Host_Person = 
+    new Host(
+        "https://firebasestorage.googleapis.com/v0/b/gigg-146b7.appspot.com/o/images%2Fgf0ugg?alt=media&token=b0666290-24db-4b4e-a8a8-b1fcc8ae2585",
+        "fake1",
+        "fake1@gmail.com"
+        )
 
 export const EVENTS = [
     new Event(
         'e1',
-        '06-01-2020',
-        'MachinedogsDevTeam',
-        'GigTracker Launch Event!',
-        'This is the first hosted event here on GigTracker. We are shitting our pants with excitement, come join us at City Hall bitches!',
+        'Partyy at my crib',
+        'Its a party man, bring the booze',
+        '6-14-2020',
+        'https://images.pexels.com/photos/1190298/pexels-photo-1190298.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
         'party',
         39.952461,
-        -75.163714
+        -75.163714,
+        Host_Person
+    )
+];
+
+export const event = new Event(
+    'e1',
+    'Partyy at my crib',
+    'Its a party man, bring the booze',
+    '6-14-2020',
+    'https://images.pexels.com/photos/1190298/pexels-photo-1190298.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+    'party',
+    39.952461,
+    -75.163714,
+    Host_Person
+)
+
+export const events = [
+    new Event(
+    'e1',
+    'Partyy at my crib',
+    'Its a party man, bring the booze',
+    '6-14-2020',
+    'https://images.pexels.com/photos/1190298/pexels-photo-1190298.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+    'party',
+    39.952461,
+    -75.163714,
+    Host_Person
     ),
     new Event(
         'e2',
-        '06-02-2020',
-        'SlipDawg97',
-        'Neighborhood Cookout',
-        'Hey y\'all, I just moved to the neighborhood and I want to get to know my neighbors! Come out for some grillin, brewin, and party vibes with your truly!',
+        'Partyy at my crib',
+        'Its a party man, bring the booze',
+        '6-14-2020',
+        'https://images.pexels.com/photos/1190298/pexels-photo-1190298.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
         'party',
-        39.980030, 
-        -75.161853
-    ),
-    new Event(
-        'e3',
-        '6-2-2020',
-        'IlluminatiBoi4',
-        'Illuminati Cult Meeting',
-        'Hello my brothers, this is the 4,234th meeting of the Philadelphia Illuminati chapter. We are convening at the Masonic Temple and will be sacrificing a 3 people.<3',
-        'meeting',
-        39.953587, 
-        -75.162734
-    ),
-    new Event(
-        'e4',
-        '06-03-2020',
-        'Sofaville',
-        'Mechanical Canine, Another Hospital, Think Machine, James Christopher, and Precious Little Life',
-        'Hey guys come out and see Mechanical Canine, Another Hospital, Think Machine, James Christopher, and Precious Little Life. Entry fee is $5 cash.',
-        'music',
-        39.967216, 
-        -75.214189
-    ),
-    new Event(
-        'e5',
-        '06-10-2020',
-        'MachinedogsDevTeam',
-        'Party At Brahms!',
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-        'party',
-        40.0598809,
-        -75.1904771
-    )
-];
+        39.952461,
+        -75.163714,
+        Host_Person
+        )
+]
