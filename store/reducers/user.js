@@ -14,25 +14,10 @@ const initialState = {
 
 export default (state = initialState, action) => {
     switch (action.type) {
-        case LOGIN:
-            return {
-                ...state,
-                userName: action.userName,
-                userEmail: action.userEmail,
-                accessToken: action.accessToken,
-                refreshToken: action.refreshToken
-            }
-        case SIGNUP:
-            return {
-                ...state,
-                userName: action.userName,
-                userEmail: action.userEmail,
-                accessToken: action.accessToken,
-                refreshToken: action.refreshToken
-            }
         case AUTHENTICATE:
+            console.log(`Authenticating.....`)
             return {
-                ...state,
+                ...state, 
                 userName: action.userName,
                 userEmail: action.userEmail,
                 accessToken: action.accessToken,

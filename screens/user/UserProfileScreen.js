@@ -33,7 +33,9 @@ const UserProfileScreen = (props) => {
 		//Get image from firebase
 		var imageUrl = await getImage(file);
 		//dispatch action
-		dispatch(updateUserProfile(imageUrl));
+		console.log('Dispatching update user profile with ')
+		console.log(user)
+		dispatch(updateUserProfile(imageUrl,user));
 		//Save uri to storage
 		saveProfileDataToStorage(imageUrl);
 	};

@@ -45,6 +45,7 @@ const StartupScreen = props => {
             }
             // check if access token expired, then make refresh endpoint call
             if (accessTokenExpiryDate <= new Date()) {
+                console.log('refreshing tokens')
                 await dispatch(authActions.refresh(userEmail, userName, refreshToken))
                 props.navigation.navigate('Home');
                 return;
