@@ -81,8 +81,7 @@ const UserProfileScreen = (props) => {
 					<Tab heading="Hosted Events"></Tab>
 				</Tabs>
 			</View>
-
-			{/* <View style={styles.ButtonContainer}>
+			<View style={styles.ButtonContainer}>
 				<Button
 					title="Logout"
 					onPress={() => {
@@ -97,7 +96,7 @@ const UserProfileScreen = (props) => {
 						props.navigation.navigate("Delete");
 					}}
 				/>
-			</View> */}
+			</View>
 		</View>
 		</ScrollView>
 	);
