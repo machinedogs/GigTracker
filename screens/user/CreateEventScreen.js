@@ -1,9 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { StyleSheet, Text, View, Dimensions, TextInput, Button, Platform, ScrollView, SafeAreaView, Alert } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, TextInput, Platform, ScrollView, SafeAreaView, Alert, TouchableOpacity } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import Modal from 'react-native-modal';
 import Mapview, { PROVIDER_GOOGLE, Marker, } from 'react-native-maps';
 import MapStyle from '../../constants/MapStyle';
@@ -207,7 +206,7 @@ const MapScreen = event => {
             },
           }}
         />
-        <Button onPress={toggleShowMap} title="Drop a pin..." />
+        <TouchableOpacity onPress={toggleShowMap} title="Drop a pin..." style={styles.buttonStyle}/>
           <Modal
             isVisible={showMap}
             onSwipeComplete={toggleShowMap}
@@ -251,7 +250,7 @@ const MapScreen = event => {
           </Modal>
         <View style={styles.container}>
         <Text>Date</Text>
-          <Button onPress={toggleShowDate} title={dateTitle()} />
+          <TouchableOpacity onPress={toggleShowDate} title={dateTitle()} style={styles.buttonStyle}/>
         </View>
         {showDate && (
           <DateTimePicker
@@ -263,7 +262,9 @@ const MapScreen = event => {
         )}
         <View style={styles.container}>
         <Text>Time</Text>
-          <Button onPress={toggleShowTime} title='Select a time...' />
+          <TouchableOpacity onPress={toggleShowTime} title='Select a time...' style={styles.buttonStyle}>
+            <Text>Select a time...</Text>
+          </TouchableOpacity>
         </View>
         {showTime && (
           <DateTimePicker
@@ -332,6 +333,14 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH,
     height: SCREEN_HEIGHT * .5,
   },
+  buttonStyle: {
+    height: 40,
+    width: 200,
+    color: 'black',
+    borderColor: 'blue',
+    backgroundColor: 'red',
+    alignItems: 'center'
+  }
 });
 
 export default MapScreen;
