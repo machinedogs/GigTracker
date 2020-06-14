@@ -126,7 +126,7 @@ const MapScreen = props => {
       }, (error) => console.log(error));
   }, []);
 
-  let categories = [{ value: 'All events' }];
+  /*let categories = [{ value: 'All events' }];
   theEvents.map(event => {
     var count = 0;
     categories.forEach(function (category) {
@@ -138,7 +138,7 @@ const MapScreen = props => {
       let category = { value: event.category }
       categories.push(category)
     }
-  });
+  });*/
 
   const filterCategory = (category) => {
     if (category === 'All events') {
@@ -173,102 +173,43 @@ const MapScreen = props => {
     <View style={styles.container}>
       <StatusBar backgroundColor={Colors.darkGrey} barStyle='light-content' />
 
-      <View style={styles.container}>
-        <Text style={styles.top}>GigTracker</Text>
-        <View style={styles.topBarStyle}>
-          <Dropdown
-            label="Category"
-            data={categories}
-            containerStyle={styles.dropdownStyle}
-            baseColor='#fff'
-            dropdownOffset={{ top: 40, left: 0 }}
-            dropdownPosition={-5.35}
-            selectedItemColor='#c0392b'
-            animationDuration={50}
-            pickerStyle={{ backgroundColor: '#ecf0f1' }}
-            itemTextStyle={styles.containerStyle}
-            onChangeText={filterCategory}
-          />
-          <View>
-            <Text style={{ color: 'white', fontSize: 12, paddingTop: 13, paddingLeft: 35 }}>Select a date</Text>
-            <DatePicker
-              style={{ width: 100 }}
-              date={date}
-              mode="date"
-              placeholder="select date"
-              format="YYYY-MM-DD"
-              minDate="2020-06-09" // We should insert the current date here
-              maxDate="2021-06-01" // Max date is 1 year out from current date?
-              showIcon={false}
-              style={styles.textStyle}
-              confirmBtnText="Confirm"
-              cancelBtnText="Cancel"
-              customStyles={{
-                dateIcon: {
-                  position: 'absolute',
-                  left: 0,
-                  top: 4,
-                  marginLeft: 0
-                },
-                dateInput: {
-                  marginLeft: 36
-                },
-                dateText: {
-                  color: '#FFFFFF',
-                  fontWeight: 'bold',
-                  justifyContent: 'flex-start'
-                }
-                // ... You can check the source to find the other keys.
-              }}
-              onDateChange={filterDate}
-            />
-          </View>
-        </View>
-      </View>
+      <MapView
+        initialRegion={INITIAL_REGION}
+        style={styles.map}
+        provider={PROVIDER_GOOGLE}
+        showsUserLocation
+        showsMyLocationButton
+        rotateEnabled={false}
+        showsTraffic={false}
+        toolbarEnabled={true}
+        ref={mapRef}
+        customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
+        clusterColor="#341f97" 
+      >
+        {events.map(event => (
+          <Marker
+            coordinate={{ latitude: parseFloat(event.location.latitude), longitude: parseFloat(event.location.longitude) }}
+            title={event.title}
+            pinColor="#341f97"
+            //image={require('../../assets/splash.png')}
+            icon={FlashOnIcon}
+            description={event.description}
+            key={event.id}
+            tracksViewChanges={false}
+            onPress={onPinPress.bind(this, event)}
+          ><Callout
+            style={styles.plainView}
+            onPress={onEventCalloutPress}
+          >
+              <View>
+                <Text style={{ fontWeight: 'bold' }}>{event.title}</Text>
+              </View>
+            </Callout>
+          </Marker>
+        ))
+        }
 
-      <View style={{ flex: 4 }} >
-        <MapView
-          initialRegion={INITIAL_REGION}
-          style={styles.mapStyle}
-          provider={PROVIDER_GOOGLE}
-          showsUserLocation
-          showsMyLocationButton
-          rotateEnabled={false}
-          showsTraffic={false}
-          toolbarEnabled={true}
-          ref={mapRef}
-          customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
-          clusterColor="#341f97" 
-        >
-          {events.map(event => (
-            <Marker
-              coordinate={{ latitude: parseFloat(event.location.latitude), longitude: parseFloat(event.location.longitude) }}
-              title={event.title}
-              pinColor="#341f97"
-              description={event.description}
-              key={event.id}
-              tracksViewChanges={false}
-              onPress={onPinPress.bind(this, event)}
-            ><Callout
-              style={styles.plainView}
-              onPress={onEventCalloutPress}
-            >
-                <View>
-                  <Text style={{ fontWeight: 'bold' }}>{event.title}</Text>
-                </View>
-              </Callout>
-            </Marker>
-          ))}
-        </MapView>
-        <EventModal
-          title={selectedEvent.title}
-          description={selectedEvent.description}
-          hostName={selectedEvent.hostName}
-          visible={isModalVisible}
-          toggleModal={toggleModal}
-        />
-      </View>
-
+      </MapView>
       <EventModal
         title={selectedEvent.title}
         description={selectedEvent.description}
@@ -309,7 +250,7 @@ const MapScreen = props => {
                 type='font-awesome'
                 color={Colors.darkGrey}
                 size={28}
-                onPress={() => { props.navigation.navigate('Profile') }}
+                onPress={() => { props.navigation.navigate('UserProfile') }}
               />
             </TouchableOpacity>
             <TouchableOpacity>
@@ -386,7 +327,7 @@ const styles = StyleSheet.create({
     flex: 1,
     zIndex: -1,
     width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT * .86,
+    height: SCREEN_HEIGHT //* .86,
   },
   titleStyle: {
     textAlign: 'left',

@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { StyleSheet, Text, View, Dimensions, TextInput, Platform, ScrollView, SafeAreaView, Alert, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, TextInput, Platform, ScrollView, SafeAreaView, Alert, TouchableOpacity, Modal } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DropDownPicker from 'react-native-dropdown-picker';
-import Modal from 'react-native-modal';
+//import Modal from 'react-native-modal';
 import Mapview, { PROVIDER_GOOGLE, Marker, } from 'react-native-maps';
 import MapStyle from '../../constants/MapStyle';
 import { useDispatch } from 'react-redux';
@@ -108,8 +108,8 @@ const MapScreen = event => {
   const saveEvent = () => {
     if (title && description && location && date && category) {
       const newEvent = new Event(1000, stringifyDate(date), 'USER', 'email', title, description, category.value, location.latitude, location.longitude)
-      //Dispatch action (CREATE_EVENT, newEvent)
       dispatch(eventActions.createEvent(newEvent));
+      event.navigation.navigate('Home');
     } else {
       //alert that event is not valid
       Alert.alert('Incomplete form', 'Fill out all event info before submitting.', [{ text: 'OK' }]);
@@ -175,8 +175,9 @@ const MapScreen = event => {
           dropDownStyle={{ backgroundColor: '#fafafa' }}
           onChangeItem={category => setCategory(category)}
         />
-        <Text>Location</Text>
-        <GooglePlacesAutocomplete
+        <View style={styles.container}>
+        <Text>Location:</Text>
+        {/*<GooglePlacesAutocomplete
           placeholder='Enter Location'
           minLength={2}
           autoFocus={false}
@@ -205,10 +206,14 @@ const MapScreen = event => {
               color: '#1faadb',
             },
           }}
-        />
-        <TouchableOpacity onPress={toggleShowMap} title="Drop a pin..." style={styles.buttonStyle}/>
+        />*/}
+        <TouchableOpacity onPress={toggleShowMap} title="Drop a pin..." style={styles.buttonStyle}>
+        <Text style={styles.textInButtonStyle}>lat: {location.latitude}, long: {location.longitude}</Text>
+        </TouchableOpacity>
+        </View>
+          {showMap && (
+          <View style={styles.centeredView}>
           <Modal
-            isVisible={showMap}
             onSwipeComplete={toggleShowMap}
             swipeDirection={"down"}
             backdropOpacity={.3}
@@ -218,7 +223,9 @@ const MapScreen = event => {
             style={styles.modal}
             borderRadius={10}
             propagateSwipe
-          >{curLoc && (
+          >{location && (
+            <View style={styles.centeredView}>
+            <View style={styles.modalView}>
             <MapView
               initialRegion={{
                 latitude: location.latitude,
@@ -246,11 +253,20 @@ const MapScreen = event => {
                 onDragEnd={handleDragEnd}
               />
             </MapView>
+              <Text> </Text>
+            <TouchableOpacity style={styles.modalButton} onPress={toggleShowMap}>
+              <Text style={{color: 'white'}}>Ok</Text>
+            </TouchableOpacity>
+            </View>
+            </View>
           )}
           </Modal>
+          </View>)}
         <View style={styles.container}>
-        <Text>Date</Text>
-          <TouchableOpacity onPress={toggleShowDate} title={dateTitle()} style={styles.buttonStyle}/>
+        <Text>Date:</Text>
+          <TouchableOpacity onPress={toggleShowDate} title={dateTitle()} style={styles.buttonStyle}>
+            <Text style={styles.textInButtonStyle}>{stringifyDate(date)}</Text>
+          </TouchableOpacity>
         </View>
         {showDate && (
           <DateTimePicker
@@ -261,9 +277,9 @@ const MapScreen = event => {
           />
         )}
         <View style={styles.container}>
-        <Text>Time</Text>
+        <Text>Time:</Text>
           <TouchableOpacity onPress={toggleShowTime} title='Select a time...' style={styles.buttonStyle}>
-            <Text>Select a time...</Text>
+            <Text style={styles.textInButtonStyle}>Select a time...</Text>
           </TouchableOpacity>
         </View>
         {showTime && (
@@ -326,20 +342,56 @@ const styles = StyleSheet.create({
     marginLeft: 0,
     marginRight: 0,
     maxHeight: SCREEN_HEIGHT*0.6,
-    backgroundColor: '#2d3436'
+    backgroundColor: '#2d3436',
   },
   mapStyle: {
     zIndex: -1,
-    width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT * .5,
+    width: SCREEN_WIDTH*.85,
+    height: SCREEN_HEIGHT * .7,
   },
   buttonStyle: {
-    height: 40,
+    height: 50,
     width: 200,
     color: 'black',
     borderColor: 'blue',
-    backgroundColor: 'red',
-    alignItems: 'center'
+    backgroundColor: 'white',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  textInButtonStyle: {
+    
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "#2d3436",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    justifyContent: 'center',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  modalButton: {
+    height: 50,
+    width: 50,
+    borderRadius: 20,
+    color: 'black',
+    borderColor: 'blue',
+    backgroundColor: '#84817a',
+    alignItems: 'center',
+    justifyContent: 'center',
   }
 });
 

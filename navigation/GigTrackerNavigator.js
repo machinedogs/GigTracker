@@ -37,12 +37,6 @@ const EventNavigator = createStackNavigator(
             screen: CreateEventScreen,
             navigationOptions: {
                 title: "Create Event",
-                /*headerRight: () => (
-                    <Button
-                      onPress={() => alert('This is a button!')}
-                      title="Submit"
-                    />
-                  ),*/
             }
         },
         UserProfile: UserProfileScreen,
