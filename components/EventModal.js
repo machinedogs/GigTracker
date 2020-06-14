@@ -15,6 +15,12 @@ const MODAL_HEIGHT = height / 2;
 // contains event data
 const EventModal = (props) => {
 
+    const deleteEvent = () => {
+        //this line was not tested
+        if(getState().user.userName === this.props.hostName){
+            //make delete request
+        }
+    }
 
     return (
 
