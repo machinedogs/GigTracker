@@ -34,7 +34,7 @@ export const EventCard = (props) => {
 					</CardItem>
                         <Content padder>
                             <Text style={styles.titleText}>{props.event.title}</Text>
-                            <Text style={styles.baseText}>{props.event.description}</Text>
+                            <Text>{props.event.description}</Text>
 						</Content>
 					<CardItem>
 						<Right>
@@ -47,9 +47,9 @@ export const EventCard = (props) => {
 };
 
 const styles = StyleSheet.create({
-    baseText: {
-      fontFamily: "Cochin"
-    },
+    // baseText: {
+    //   fontFamily: "Cochin"
+    // },
     titleText: {
       fontSize: 20,
       fontWeight: "bold"

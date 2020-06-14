@@ -4,6 +4,7 @@ import {
 	ImageBackground,
 	Platform,
 	StyleSheet,
+	ScrollView,
 	FlatList,
 	Text,
 	View,
@@ -45,6 +46,7 @@ const UserProfileScreen = (props) => {
 	};
 
 	return (
+		<ScrollView>
 		<View style={styles.container}>
 			<View style={styles.headerContainer}>
 				<ImageBackground
@@ -80,7 +82,7 @@ const UserProfileScreen = (props) => {
 				</Tabs>
 			</View>
 
-			<View style={styles.ButtonContainer}>
+			{/* <View style={styles.ButtonContainer}>
 				<Button
 					title="Logout"
 					onPress={() => {
@@ -95,8 +97,9 @@ const UserProfileScreen = (props) => {
 						props.navigation.navigate("Delete");
 					}}
 				/>
-			</View>
+			</View> */}
 		</View>
+		</ScrollView>
 	);
 };
 
@@ -120,14 +123,16 @@ const styles = StyleSheet.create({
 	},
 	content: {
 		width: "100%",
-		height: "80%",
-		flex: 4,
+		height: "100%",
+		flex: 5,
 	},
 	headerBackgroundImage: {
 		paddingBottom: 20,
 		paddingTop: 35,
 	},
-	headerContainer: {},
+	headerContainer: {
+		// height:'35%'
+	},
 	headerColumn: {
 		backgroundColor: "transparent",
 		...Platform.select({
@@ -137,7 +142,7 @@ const styles = StyleSheet.create({
 				marginTop: -1,
 			},
 			android: {
-				alignItems: "center",
+				alignItems: "center"
 			},
 		}),
 	},
