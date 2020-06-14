@@ -76,6 +76,7 @@ const UserProfileScreen = (props) => {
 							data={DATA}
 							renderItem={({ item }) => <EventCard event={item} />}
 							keyExtractor={(item) => item.id}
+							scrollEnabled={false}
 						/>
 					</Tab>
 					<Tab heading="Hosted Events"></Tab>
