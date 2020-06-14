@@ -1,6 +1,8 @@
 import * as SecureStore from 'expo-secure-store';
 
 export const AUTHENTICATE = 'AUTHENTICATE';
+export const UPDATE_PROFILE = 'UPDATE_PROFILE';
+export const UPDATE_WALLPAPER = 'UPDATE_WALLPAPER';
 export const LOGOUT = 'LOGOUT';
 
 export const authenticate = (userName, userEmail, accessToken, refreshToken) => {
@@ -12,7 +14,58 @@ export const authenticate = (userName, userEmail, accessToken, refreshToken) => 
         refreshToken: refreshToken
     };
 };
+//updates service
+export const updateDatabaseProfile = (profileImage, user) =>{
+    return async () => {
+        const accessToken = user.accessToken;
+        console.log('access token update db got')
+        console.log(accessToken)
+        var raw = '';
 
+        var requestOptions = {
+            method: 'POST',
+            body: raw,
+            redirect: 'follow'
+        };
+        console.log('request options')
+        console.log(requestOptions)
+        console.log(`https://gigservice.herokuapp.com/api/v1/hosts?auth_token=${accessToken}&profileImage=${profileImage}`)
+        const response = await fetch(
+            `https://gigservice.herokuapp.com/api/v1/hosts?auth_token=${accessToken}&profileImage=${profileImage}`,
+            requestOptions)
+        const resData = await response.json();
+        console.log('Updated DB with new profile')
+        console.log(resData)
+    }
+}
+
+export const updateUserProfile = (profileImage,user) => {
+    return async (dispatch)=> {
+    console.log('Dispatching Action-inside, here is the url the dispatcher got')
+    console.log(profileImage)
+    console.log('Dispatching updating db profile')
+    console.log(profileImage)
+    //updates database 
+    dispatch(updateDatabaseProfile(profileImage, user))
+    //updates store
+    dispatch(UpdateProfile(profileImage))
+    
+    console.log('updating profile')
+ }
+}
+export const UpdateProfile = (profileImage) =>{
+    return { 
+        type: UPDATE_PROFILE, 
+        profileImage: profileImage
+    };
+}
+
+export const updateWallpaper = (wallpaperImage) => {
+    return { 
+        type: UPDATE_WALLPAPER, 
+        wallpaperImage: wallpaperImage
+    };
+};
 export const logout = () => {
     return async (dispatch) => {
         console.log("Removing user data from storage and memory")
@@ -51,6 +104,7 @@ export const deleteAccount = () => {
 
 export const refresh = (email, userName, refreshToken) => {
     return async dispatch => {
+        console.log('refreshing tokens!!!')
         var raw = "";
 
         var requestOptions = {
@@ -63,15 +117,11 @@ export const refresh = (email, userName, refreshToken) => {
             `https://gig-authentication-service.herokuapp.com/api/v1/refresh?refresh_token=${refreshToken}`,
             requestOptions)
         const resData = await response.json();
-
+        
         console.log('contacted refresh endpoint');
-        dispatch({
-            type: AUTHENTICATE,
-            userName: userName,
-            userEmail: email,
-            accessToken: resData.data.authorization.auth_token.token,
-            refreshToken: resData.data.authorization.refresh_token.token
-        });
+        console.log(resData)
+        dispatch(authenticate(userName,email,resData.data.authorization.auth_token.token,resData.data.authorization.refresh_token.token ))
+
         let accessExpiration = new Date(resData.data.authorization.auth_token.expires);
         let refreshExpiration = new Date(resData.data.authorization.refresh_token.expires);
         saveDataToStorage(
@@ -108,7 +158,8 @@ export const signup = (email, password, username, passwordConfirmation) => {
 
         const response = await fetch("https://gig-authentication-service.herokuapp.com/api/v1/hosts", requestOptions);
         const resData = await response.json();
-
+        console.log('Here is response from host')
+        console.log(resData)
         if (resData.status === 'ERROR') {
             let message;
             let errorArray = [];
@@ -129,13 +180,9 @@ export const signup = (email, password, username, passwordConfirmation) => {
         }
 
         console.log(resData);
-        dispatch({
-            type: AUTHENTICATE,
-            userName: resData.data.host.name,
-            userEmail: resData.data.host.email,
-            accessToken: resData.data.authorization.auth_token.token,
-            refreshToken: resData.data.authorization.refresh_token.token
-        });
+        dispatch(authenticate(resData.data.host.name,resData.data.host.email,resData.data.authorization.auth_token.token,resData.data.authorization.refresh_token.token ))
+        //Get profile pic from service and save to store 
+        dispatch(UpdateProfile(resData.data.host.profile))
         let accessExpiration = new Date(resData.data.authorization.auth_token.expires);
         let refreshExpiration = new Date(resData.data.authorization.refresh_token.expires);
         saveDataToStorage(
@@ -155,7 +202,7 @@ export const login = (email, password) => {
 
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
-
+        console.log('Logging in......')
         var raw = JSON.stringify({
             "email": email,
             "password": password
@@ -180,13 +227,10 @@ export const login = (email, password) => {
 
         //const resData = await response.json();
         console.log(resData);
-        dispatch({
-            type: AUTHENTICATE,
-            userName: resData.data.host.name,
-            userEmail: resData.data.host.email,
-            accessToken: resData.data.authorization.auth_token.token,
-            refreshToken: resData.data.authorization.refresh_token.token
-        });
+        dispatch(authenticate(resData.data.host.name,resData.data.host.email,resData.data.authorization.auth_token.token,resData.data.authorization.refresh_token.token ))
+        //save profile image response from service to screen
+        console.log(`Logging in..${resData.data.host.profile}`)
+        dispatch(UpdateProfile(resData.data.host.profile))
         let accessExpiration = new Date(resData.data.authorization.auth_token.expires);
         let refreshExpiration = new Date(resData.data.authorization.refresh_token.expires);
         saveDataToStorage(

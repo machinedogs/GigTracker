@@ -10,7 +10,7 @@ const BottomBar = (props) => {
             <View style={styles.row}>
                 <Button
                     title="User Profile"
-                    onPress={() => { props.navigation.navigate('UserProfile') }}
+                    onPress={() => { props.navigation.navigate('Profile') }}
                 />
                 <Button
                     title="Create Event"

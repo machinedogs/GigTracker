@@ -8,13 +8,14 @@ import * as Font from 'expo-font';
 
 import eventsReducer from './store/reducers/events'
 import userReducer from './store/reducers/user';
+import { composeWithDevTools } from 'redux-devtools-extension';
 
 const rootReducer = combineReducers({
   events: eventsReducer,
   user: userReducer
 });
 
-const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
+const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(ReduxThunk)));
 
 const fetchFonts = () => {
   return Font.loadAsync({
