@@ -75,7 +75,8 @@ const MapScreen = event => {
       }, (error) => console.log(error));
   }, []);
 
-  const onChangeDate = (event, selectedDate) => {
+
+  const onChangeDate = (e, selectedDate) => {
     const currentDate = selectedDate || date;
     setShowDate(Platform.OS === 'ios');
     setDate(currentDate);

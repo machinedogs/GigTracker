@@ -1,7 +1,8 @@
-import { CREATE_EVENT } from '../actions/events';
+import { CREATE_EVENT, GET_EVENTS } from '../actions/events';
 
 const initialState = {
-    events: {}
+    foo: [],
+    events: []
 };
 
 export default (state = initialState, action) => {
@@ -9,10 +10,14 @@ export default (state = initialState, action) => {
         case CREATE_EVENT:
             return {
                 ...state,
-                newEvent: action.event
+                events: state.events.concat(action.event)
+            };
+        case GET_EVENTS:
+            return {
+                ...state,
+                events: action.events
             };
         default:
             return state;
     }
-    // return state;
 };

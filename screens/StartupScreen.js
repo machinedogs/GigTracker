@@ -6,18 +6,22 @@ import {
 } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateUserProfile } from '../store/actions/user';
 import * as authActions from '../store/actions/user';
+import * as eventActions from '../store/actions/events';
+
 import { getProfileDataStorage  } from '../screens/helper/secureStorageHelpers';
 
 const StartupScreen = props => {
+    const events = useSelector(state => state.events.events)
     const dispatch = useDispatch();
+
     useEffect(() => {
         const tryLogin = async () => {
-            // SecureStore.deleteItemAsync('userData')
+            //SecureStore.deleteItemAsync('userData')
             // SecureStore.deleteItemAsync('images')
-
+            await dispatch(eventActions.getEvents());
             // change this to secure store function
             const userData = await SecureStore.getItemAsync('userData');
 

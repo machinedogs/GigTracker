@@ -1,9 +1,32 @@
 export const CREATE_EVENT = 'CREATE_EVENT';
 export const ADD_TO_MY_EVENTS = 'ADD_TO_MY_EVENTS';
+export const GET_EVENTS = 'GET_EVENTS';
 
 import Host from '../../models/host';
 import Location from '../../models/location';
 
+export const getEvents = () => {
+    console.log('Pulling events from microservice');
+    return async (dispatch) => {
+        var requestOptions = {
+            method: 'GET',
+            redirect: 'follow'
+        };
+
+        const response = await fetch("https://gigservice.herokuapp.com/api/v1/events", requestOptions);
+        const theEvents = await response.json();
+        //const theEvents = await JSON.parse(data);
+
+        if (theEvents) {
+            console.log(theEvents)
+        }
+        //setEvents(theEvents);
+        dispatch({
+            type: GET_EVENTS,
+            events: theEvents
+        });
+    }
+}
 
 export const createEvent = (event) => {
     console.log('Event to be created: ' + event);
@@ -46,12 +69,10 @@ export const createEvent = (event) => {
             }
 
             console.log("Response: " + resData);
-
             dispatch({
                 type: CREATE_EVENT,
                 event: event,
             });
-
             alert("Successfully created event.")
         } catch (err) {
             alert(err)

@@ -12,7 +12,7 @@ import {
   TouchableOpacity,
   StatusBar
 } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch, useCallback } from 'react-redux';
 import { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 import MapView from 'react-native-map-clustering';
 import { Dropdown } from 'react-native-material-dropdown';
@@ -26,6 +26,8 @@ import EventModal from '../../components/EventModal';
 import Event from '../../models/event';
 import HeaderButton from '../../components/HeaderButton';
 import Colors from '../../constants/Colors';
+import * as eventActions from '../../store/actions/events';
+
 
 const { width, height } = Dimensions.get('window')
 
@@ -49,8 +51,8 @@ const todaysDate = () => {
     mm = '0' + mm;
   }
   return mm + '/' + dd + '/' + yyyy;
-} 
- 
+}
+
 /*function getCurrentLocation() {
   navigator.geolocation.getCurrentPosition(
        async position => {
@@ -78,33 +80,17 @@ const INITIAL_REGION = {
   longitudeDelta: 8.5,
 };
 
-let theEvents = [];
-
-
 const MapScreen = props => {
 
   const userAccessToken = useSelector(state => state.user.accessToken);
-  const [events, setEvents] = useState(theEvents);
+  const events = useSelector(state => state.events.events);
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(new Event)
   let mapRef = useRef(null);
   let menuRef = useRef(null);
   const [date, setDate] = useState(todaysDate());
+  const dispatch = useDispatch();
 
-  useEffect(async () => {
-    var requestOptions = {
-      method: 'GET',
-      redirect: 'follow'
-    };
-
-    const response = await fetch("https://gigservice.herokuapp.com/api/v1/events");
-    theEvents = await response.json();
-    //const theEvents = await JSON.parse(data);
-
-    console.log(theEvents);
-    setEvents(theEvents);
-  }, [])
-  
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
@@ -121,10 +107,22 @@ const MapScreen = props => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         coords = { latitude: position.coords.latitude, longitude: position.coords.longitude, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA };
-        console.log(coords);
+        console.log("Got the coords: " + coords);
         mapRef.current.animateToRegion(coords, 0);
       }, (error) => console.log(error));
   }, []);
+
+  const refreshEvents = () => {
+    console.log("Refreshing events")
+    dispatch(eventActions.getEvents());
+  }
+
+  /*
+  useEffect(() => {
+    console.log("Map screen is pulling events");
+    dispatch(eventActions.getEvents());
+  }, [events]);
+  */
 
   /*let categories = [{ value: 'All events' }];
   theEvents.map(event => {
@@ -142,9 +140,9 @@ const MapScreen = props => {
 
   const filterCategory = (category) => {
     if (category === 'All events') {
-      setEvents(theEvents)
+      //setEvents(theEvents)
     } else {
-      setEvents(theEvents.filter(event => event.category === category))
+      //setEvents(theEvents.filter(event => event.category === category))
     }
   };
 
@@ -160,12 +158,13 @@ const MapScreen = props => {
     console.log("pressing pin");
     console.log(event)
   }
-
+  /*
   const filterDate = (selectedDate) => {
     setDate(selectedDate);
-    setEvents(theEvents.filter(event => event.date === selectedDate))
+    //setEvents(events.filter(event => event.date === selectedDate))
     console.log(selectedDate + '\n' + events.map((event) => {event.toString()}))
   }
+  */
 
   return (
     //add a dropdown to choose map style? -> what if we put it in user settings? could incentivize people to become users
@@ -184,7 +183,7 @@ const MapScreen = props => {
         toolbarEnabled={true}
         ref={mapRef}
         customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
-        clusterColor="#341f97" 
+        clusterColor="#341f97"
       >
         {events.map(event => (
           <Marker
@@ -217,6 +216,26 @@ const MapScreen = props => {
         visible={isModalVisible}
         toggleModal={toggleModal}
       />
+      <SafeAreaView
+        style={{
+          position: 'absolute',//use absolute position to show button on top of the map
+          topBarStyle: '0.5%',
+          alignSelf: 'flex-end' //for align to right
+        }}
+      >
+        <TouchableOpacity>
+          <Icon
+            reverse
+            raised
+            name='refresh'
+            type='font-awesome'
+            color={Colors.darkGrey}
+            size={28}
+            reverseColor='white'
+            onPress={refreshEvents}
+          />
+        </TouchableOpacity>
+      </SafeAreaView>
       {!userAccessToken ?
         (
           <SafeAreaView
@@ -294,15 +313,15 @@ MapScreen.navigationOptions = navData => {
           />
         </HeaderButtons>
       ),
-      headerRight: () => (
-        <HeaderButtons HeaderButtonComponent={HeaderButton}>
-          <Item
-            title='Menu'
-            iconName={Platform.OS === 'android' ? 'md-calendar' : 'ios-calendar'}
-            onPress={() => { }}
-          />
-        </HeaderButtons>
-      )
+    headerRight: () => (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item
+          title='Menu'
+          iconName={Platform.OS === 'android' ? 'md-calendar' : 'ios-calendar'}
+          onPress={() => { }}
+        />
+      </HeaderButtons>
+    )
   }
 }
 
