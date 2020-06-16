@@ -157,6 +157,7 @@ const MapScreen = event => {
           multiline
           numberOfLines={5}
         />
+        </View>
         <Text>Category</Text>
         <DropDownPicker
           items={[
@@ -166,17 +167,17 @@ const MapScreen = event => {
             { label: 'Party', value: 'party' },
             { label: 'Protest', value: 'protest' },
             { label: 'Food', value: 'food' },
+            { label: 'Market', value: 'market' },
             { label: 'Discussion', value: 'discussion'},
             { label: 'Political', value: 'political' },
           ]}
           defaultValue={initCategory}
           placeholder="Select a category"
           containerStyle={{ height: 40 }}
-          style={{ backgroundColor: '#fafafa' }}
+          style={{ backgroundColor: '#fafafa', zIndex: 2,  }}
           dropDownStyle={{ backgroundColor: '#fafafa' }}
           onChangeItem={category => setCategory(category)}
         />
-        </View>
         <View style={styles.container}>
         <Text>Location:</Text>
         {/*<GooglePlacesAutocomplete
