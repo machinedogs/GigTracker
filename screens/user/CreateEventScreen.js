@@ -137,8 +137,8 @@ const MapScreen = event => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.container}>
       <ScrollView>
+      <View style={{padding: 12}}>
         <View style={{ justifyContent: 'flex-end', alignItems: 'flex-end', flexDirection: 'row', flex: 1 }}>
         </View>
         <Text>Title</Text>
@@ -176,6 +176,7 @@ const MapScreen = event => {
           dropDownStyle={{ backgroundColor: '#fafafa' }}
           onChangeItem={category => setCategory(category)}
         />
+        </View>
         <View style={styles.container}>
         <Text>Location:</Text>
         {/*<GooglePlacesAutocomplete
@@ -227,6 +228,7 @@ const MapScreen = event => {
           >{location && (
             <View style={styles.centeredView}>
             <View style={styles.modalView}>
+              <Text style={{color: 'white', padding: 10, fontSize: 15}}>Hold the pin down for a second before dragging...</Text>
             <MapView
               initialRegion={{
                 latitude: location.latitude,
@@ -301,8 +303,12 @@ const MapScreen = event => {
             paddingRight: 30
           }}>Submit</Text>
         </TouchableOpacity>
+        <View style={styles.container}>
+        <Text style={{color:'gray'}}>Note: If you are hosting this event at a private location, we recommend not using the exact 
+          location of your address but somewhere nearby. Include a contact where people can ask you directly
+          for the address.</Text>
+          </View>
       </ScrollView>
-      </View>
     </SafeAreaView>
   );
 }
