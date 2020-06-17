@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { StyleSheet, Text, View, Dimensions, TextInput, Platform, ScrollView, SafeAreaView, Alert, TouchableOpacity, Modal, Vibration } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, TextInput, Platform, ScrollView, SafeAreaView, Alert, TouchableOpacity, Modal, Image } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { Textarea, Input, Item, Button, Icon, Header, Left, Body, Right, Title, Image } from "native-base";
+import { Textarea, Input, Item, Button, Icon, Header, Left, Body, Right, Title } from "native-base";
 //import Modal from 'react-native-modal';
 import Mapview, { PROVIDER_GOOGLE, Marker, } from 'react-native-maps';
 import MapStyle from '../../constants/MapStyle';
@@ -89,14 +89,13 @@ const stringifyTime = (time) => {
 
 const CreateEventScreen = event => {
 
-  let initTitle = event.title ? event.title : '';
-  let initDescription = event.description ? event.description : '';
-  let initLocation = event.latitude ? { latitude: event.latitude, longitude: event.longitude } : curLoc;
-  let initCategory = event.category ? event.category : '';
-  let initDate = event.date ? event.date : new Date();
-  let initTime = event.date ? event.date : new Date();
-  let initImage = event.image ? event.image : 'https://images.unsplash.com/photo-1582266255765-fa5cf1a1d501?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'
-
+  const initTitle = event.title ? event.title : '';
+  const initDescription = event.description ? event.description : '';
+  const initLocation = event.latitude ? { latitude: event.latitude, longitude: event.longitude } : curLoc;
+  const initCategory = event.category ? event.category : '';
+  const initDate = event.date ? event.date : new Date();
+  const initTime = event.date ? event.date : new Date();
+  const initImage = event.image ? event.image : "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
   const [title, setTitle] = useState(initTitle);
   const [description, setDescription] = useState(initDescription);
   const [location, setLocation] = useState(initLocation);
@@ -188,15 +187,14 @@ const CreateEventScreen = event => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        <View style={{ padding: 12 }}>
-        <View style={styles.headerContainer}>
-          <Button
+        <View style={{ padding: 12, alignItems: 'center', justifyContent: 'center' }}>
+        <Text style={styles.text}>Photo</Text>
+          <TouchableOpacity
             onPress={updateEventPhoto}
-            style={styles.userImageContainer}
+            style={styles.eventImageContainer}
           >
-            <Image style={styles.userImage} source={image ? { uri: image } : {uri: "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="}} />
-          </Button>
-          </View>
+            <Image source={{ uri: image }} style={styles.eventImage} />
+          </TouchableOpacity>
           <Text style={styles.text}>Title</Text>
           <Item rounded>
             <Input
@@ -478,17 +476,15 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-  userImageContainer: {
-    borderColor: "#FFFFFF",
-    borderRadius: 85,
-    borderWidth: 4,
+  eventImageContainer: {
+    borderColor: "gray",
+    borderWidth: 1,
     height: 170,
     marginBottom: 15,
-    width: 170,
+    width: SCREEN_WIDTH*0.8,
   },
-  userImage: {
+  eventImage: {
     borderColor: "#A5A5A5",
-    borderRadius: 85,
     height: "100%",
     width: "100%",
   },
