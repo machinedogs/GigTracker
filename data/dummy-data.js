@@ -1,5 +1,6 @@
 import Event from '../models/event';
 import Host from '../models/host';
+import Location from '../models/location';
 
 export const Host_Person = 
     new Host(
@@ -13,6 +14,7 @@ export const Host_Person2 =
             "fake2",
             "fake2@gmail.com"
             )
+export const location = new Location(39.952461,-75.163714, 'Temple University' )
 
 export const EVENTS = [
     new Event(
@@ -22,9 +24,7 @@ export const EVENTS = [
         '6-14-2020',
         'https://images.pexels.com/photos/1190298/pexels-photo-1190298.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
         'party',
-        39.952461,
-        -75.163714,
-        'Temple University',
+        location,
         Host_Person
     )
 ];
@@ -36,9 +36,7 @@ export const event = new Event(
     '6-14-2020',
     'https://images.pexels.com/photos/1190298/pexels-photo-1190298.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
     'party',
-    39.952461,
-    -75.163714,
-    'Temple University',
+    location,
     Host_Person
 )
 
@@ -50,9 +48,7 @@ export const events = [
     '6-14-2020',
     'https://images.pexels.com/photos/1190298/pexels-photo-1190298.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
     'party',
-    39.952461,
-    -75.163714,
-    'Temple University',
+    location,
     Host_Person2
     ),
     new Event(
@@ -62,9 +58,7 @@ export const events = [
         '6-14-2020',
         'https://www.godominicanrepublic.com/wp-content/uploads/2019/11/coco-bongo-last-party-of-the-year.jpg',
         'party',
-        39.952461,
-        -75.163714,
-        'Temple University',
+        location,
         Host_Person
         )
 ]
