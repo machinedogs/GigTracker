@@ -15,7 +15,7 @@ export const authenticate = (userName, userEmail, accessToken, refreshToken) => 
     };
 };
 //updates service
-export const updateDatabaseProfile = (profileImage, user) =>{
+export const updateDatabaseProfile = (profileImage, user) => {
     return async () => {
         const accessToken = user.accessToken;
         console.log('access token update db got')
@@ -39,30 +39,30 @@ export const updateDatabaseProfile = (profileImage, user) =>{
     }
 }
 
-export const updateUserProfile = (profileImage,user) => {
-    return async (dispatch)=> {
-    console.log('Dispatching Action-inside, here is the url the dispatcher got')
-    console.log(profileImage)
-    console.log('Dispatching updating db profile')
-    console.log(profileImage)
-    //updates database 
-    dispatch(updateDatabaseProfile(profileImage, user))
-    //updates store
-    dispatch(UpdateProfile(profileImage))
-    
-    console.log('updating profile')
- }
+export const updateUserProfile = (profileImage, user) => {
+    return async (dispatch) => {
+        console.log('Dispatching Action-inside, here is the url the dispatcher got')
+        console.log(profileImage)
+        console.log('Dispatching updating db profile')
+        console.log(profileImage)
+        //updates database 
+        dispatch(updateDatabaseProfile(profileImage, user))
+        //updates store
+        dispatch(UpdateProfile(profileImage))
+
+        console.log('updating profile')
+    }
 }
-export const UpdateProfile = (profileImage) =>{
-    return { 
-        type: UPDATE_PROFILE, 
+export const UpdateProfile = (profileImage) => {
+    return {
+        type: UPDATE_PROFILE,
         profileImage: profileImage
     };
 }
 
 export const updateWallpaper = (wallpaperImage) => {
-    return { 
-        type: UPDATE_WALLPAPER, 
+    return {
+        type: UPDATE_WALLPAPER,
         wallpaperImage: wallpaperImage
     };
 };
@@ -112,26 +112,35 @@ export const refresh = (email, userName, refreshToken) => {
             body: raw,
             redirect: 'follow'
         };
+        try {
+            const response = await fetch(
+                `https://gig-authentication-service.herokuapp.com/api/v1/refresh?refresh_token=${refreshToken}`,
+                requestOptions)
+            const resData = await response.json();
 
-        const response = await fetch(
-            `https://gig-authentication-service.herokuapp.com/api/v1/refresh?refresh_token=${refreshToken}`,
-            requestOptions)
-        const resData = await response.json();
-        
-        console.log('contacted refresh endpoint');
-        console.log(resData)
-        dispatch(authenticate(userName,email,resData.data.authorization.auth_token.token,resData.data.authorization.refresh_token.token ))
+            console.log('contacted refresh endpoint');
+            console.log(resData)
+            dispatch(authenticate(
+                userName,
+                email,
+                resData.data.authorization.auth_token.token,
+                resData.data.authorization.refresh_token.token
+            ))
 
-        let accessExpiration = new Date(resData.data.authorization.auth_token.expires);
-        let refreshExpiration = new Date(resData.data.authorization.refresh_token.expires);
-        saveDataToStorage(
-            userName,
-            email,
-            resData.data.authorization.auth_token.token,
-            resData.data.authorization.refresh_token.token,
-            accessExpiration,
-            refreshExpiration
-        )
+            let accessExpiration = new Date(resData.data.authorization.auth_token.expires);
+            let refreshExpiration = new Date(resData.data.authorization.refresh_token.expires);
+            saveDataToStorage(
+                userName,
+                email,
+                resData.data.authorization.auth_token.token,
+                resData.data.authorization.refresh_token.token,
+                accessExpiration,
+                refreshExpiration
+            );
+        } catch (error) {
+            console.log(error)
+        }
+
     };
 };
 
@@ -180,7 +189,7 @@ export const signup = (email, password, username, passwordConfirmation) => {
         }
 
         console.log(resData);
-        dispatch(authenticate(resData.data.host.name,resData.data.host.email,resData.data.authorization.auth_token.token,resData.data.authorization.refresh_token.token ))
+        dispatch(authenticate(resData.data.host.name, resData.data.host.email, resData.data.authorization.auth_token.token, resData.data.authorization.refresh_token.token))
         //Get profile pic from service and save to store 
         dispatch(UpdateProfile(resData.data.host.profile))
         let accessExpiration = new Date(resData.data.authorization.auth_token.expires);
@@ -227,7 +236,7 @@ export const login = (email, password) => {
 
         //const resData = await response.json();
         console.log(resData);
-        dispatch(authenticate(resData.data.host.name,resData.data.host.email,resData.data.authorization.auth_token.token,resData.data.authorization.refresh_token.token ))
+        dispatch(authenticate(resData.data.host.name, resData.data.host.email, resData.data.authorization.auth_token.token, resData.data.authorization.refresh_token.token))
         //save profile image response from service to screen
         console.log(`Logging in..${resData.data.host.profile}`)
         dispatch(UpdateProfile(resData.data.host.profile))
