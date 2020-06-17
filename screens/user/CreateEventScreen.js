@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Dimensions, TextInput, Platform, ScrollView, Sa
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { Textarea, Input, Item, Button, Icon, Header, Left, Body, Right, Title } from "native-base";
+import { Textarea, Input, Item, Button, Icon, Header, Left, Body, Right, Title, Image } from "native-base";
 //import Modal from 'react-native-modal';
 import Mapview, { PROVIDER_GOOGLE, Marker, } from 'react-native-maps';
 import MapStyle from '../../constants/MapStyle';
@@ -14,6 +14,11 @@ import Location from '../../models/location';
 import Host from '../../models/host';
 import MapView from 'react-native-maps';
 import * as eventActions from '../../store/actions/events';
+import {
+  openImagePickerAsync,
+  uploadImage,
+  getImage,
+} from "../../screens/helper/ImageHelpers";
 
 const { width, height } = Dimensions.get('window')
 
@@ -44,7 +49,7 @@ async function getCurrentLocation() {
 
 const curLoc = getCurrentLocation();
 
-combineDateAndTime = function(date, time) {
+combineDateAndTime = function (date, time) {
   timeString = time.getHours() + ':' + time.getMinutes() + ':00';
 
   var year = date.getFullYear();
@@ -67,33 +72,41 @@ const stringifyDate = (date) => {
     mm = '0' + mm;
   }
   var wkday = date.getDay();
-    if(wkday === 0) wkday = 'Sunday';
-    else if(wkday === 1) wkday = 'Monday';
-    else if(wkday === 2) wkday = 'Tuesday';
-    else if(wkday === 3) wkday = 'Wednesday';
-    else if(wkday === 4) wkday = 'Thursday';
-    else if(wkday === 5) wkday = 'Friday';
-    else if(wkday === 6) wkday = 'Saturday';
+  if (wkday === 0) wkday = 'Sunday';
+  else if (wkday === 1) wkday = 'Monday';
+  else if (wkday === 2) wkday = 'Tuesday';
+  else if (wkday === 3) wkday = 'Wednesday';
+  else if (wkday === 4) wkday = 'Thursday';
+  else if (wkday === 5) wkday = 'Friday';
+  else if (wkday === 6) wkday = 'Saturday';
   return wkday + ', ' + mm + '/' + dd + '/' + yyyy;
 }
 
-const MapScreen = event => {
+const stringifyTime = (time) => {
+  var str = time.toTimeString();
+
+}
+
+const CreateEventScreen = event => {
 
   let initTitle = event.title ? event.title : '';
   let initDescription = event.description ? event.description : '';
   let initLocation = event.latitude ? { latitude: event.latitude, longitude: event.longitude } : curLoc;
   let initCategory = event.category ? event.category : '';
-  let initDate = event.date ? event.date : new Date(0);
+  let initDate = event.date ? event.date : new Date();
+  let initTime = event.date ? event.date : new Date();
+  let initImage = event.image ? event.image : 'https://images.unsplash.com/photo-1582266255765-fa5cf1a1d501?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'
 
   const [title, setTitle] = useState(initTitle);
   const [description, setDescription] = useState(initDescription);
   const [location, setLocation] = useState(initLocation);
-  const [date, setDate] = useState(new Date());
-  //SET TIME
+  const [date, setDate] = useState(initDate);
+  const [time, setTime] = useState(initTime);
   const [showDate, setShowDate] = useState(false);
   const [showTime, setShowTime] = useState(false);
   const [category, setCategory] = useState(initCategory);
   const [showMap, setShowMap] = useState(false);
+  const [image, setImage] = useState(initImage);
 
   const dispatch = useDispatch();
 
@@ -118,7 +131,11 @@ const MapScreen = event => {
     setDate(currentDate);
   };
 
-  const onChangeTime = () => { };
+  const onChangeTime = (e, selectedTime) => {
+    const currentTime = selectedTime || time;
+    setShowTime(Platform.OS === 'ios');
+    setTime(currentTime);
+  };
 
   const toggleShowDate = () => {
     showDate ? setShowDate(false) : setShowDate(true);
@@ -131,8 +148,8 @@ const MapScreen = event => {
   const saveEvent = () => {
     if (title && description && location && date && category) {
       // constructor(id, title, description, date,image, category,location, host ) 
-      const newEvent = new Event(1000, title, description, date, null, category.value, 
-        new Location(location.latitude, location.longitude), new Host('','',''));
+      const newEvent = new Event(1000, title, description, date, null, category.value,
+        new Location(location.latitude, location.longitude), new Host('', '', ''));
       dispatch(eventActions.createEvent(newEvent));
       event.navigation.navigate('Home');
     } else {
@@ -159,11 +176,26 @@ const MapScreen = event => {
     showMap ? setShowMap(false) : setShowMap(true);
   }
 
+  let updateEventPhoto = async () => {
+    console.log("Inside update event photo ");
+    //Get image from camera library
+    var file = await openImagePickerAsync();
+    //Get image from firebase
+    var imageUrl = await getImage(file);
+    setImage(imageUrl);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <View style={{ padding: 12 }}>
-          <View style={{ justifyContent: 'flex-end', alignItems: 'flex-end', flexDirection: 'row', flex: 1 }}>
+        <View style={styles.headerContainer}>
+          <Button
+            onPress={updateEventPhoto}
+            style={styles.userImageContainer}
+          >
+            <Image style={styles.userImage} source={image ? { uri: image } : {uri: "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="}} />
+          </Button>
           </View>
           <Text style={styles.text}>Title</Text>
           <Item rounded>
@@ -218,7 +250,7 @@ const MapScreen = event => {
           />
         </View>
         <View style={styles.container}>
-          <Text style={{fontFamily: Platform.OS === 'ios' ? 'Sinhala Sangam MN' : '',}}>Location:</Text>
+          <Text style={{ fontFamily: Platform.OS === 'ios' ? 'Sinhala Sangam MN' : '', }}>Location:</Text>
           {/*<GooglePlacesAutocomplete
           placeholder='Enter Location'
           minLength={2}
@@ -250,7 +282,7 @@ const MapScreen = event => {
           }}
         />*/}
           <Button iconRight light onPress={toggleShowMap} style={styles.buttonStyle}>
-            <Text style={{fontFamily: Platform.OS === 'ios' ? 'Sinhala Sangam MN' : '',}}>Drop a pin...</Text>
+            <Text style={{ fontFamily: Platform.OS === 'ios' ? 'Sinhala Sangam MN' : '', }}>Drop a pin...</Text>
             <Icon name='pin' />
           </Button>
         </View>
@@ -266,54 +298,54 @@ const MapScreen = event => {
               borderRadius={10}
               propagateSwipe
             >
-              <Header style={{backgroundColor: '#2d3436'}}>
-              <Left>
-              </Left>
-              <Body>
-                <Title style={{color: '#fff', fontFamily: Platform.OS === 'ios' ? 'Sinhala Sangam MN' : '', fontSize: 20}}>Select location</Title>
-              </Body>
-              <Right>
-                <Button transparent onPress={toggleShowMap}>
-                  <Icon name='md-checkmark' />
-                </Button>
-              </Right>
-            </Header>
-              <View style={{backgroundColor: '#2d3436', zIndex: 100, borderColor: '#2d3436'}}>
+              <Header style={{ backgroundColor: '#2d3436' }}>
+                <Left>
+                </Left>
+                <Body>
+                  <Title style={{ color: '#fff', fontFamily: Platform.OS === 'ios' ? 'Sinhala Sangam MN' : '', fontSize: 20 }}>Select location</Title>
+                </Body>
+                <Right>
+                  <Button transparent onPress={toggleShowMap}>
+                    <Icon name='md-checkmark' />
+                  </Button>
+                </Right>
+              </Header>
+              <View style={{ backgroundColor: '#2d3436', zIndex: 100, borderColor: '#2d3436' }}>
                 <Text style={{ color: 'white', padding: 10, fontSize: 15, fontFamily: Platform.OS === 'ios' ? 'Sinhala Sangam MN' : '', }}>Hold the pin down for a second before dragging...</Text>
-                </View>
-                <MapView
-                  initialRegion={{
-                    latitude: location.latitude,
-                    latitudeDelta: LATITUDE_DELTA,
-                    longitude: location.longitude,
-                    longitudeDelta: LONGITUDE_DELTA
-                  }}
-                  style={styles.mapStyle}
-                  provider={PROVIDER_GOOGLE}
-                  showsUserLocation
-                  showsMyLocationButton
-                  rotateEnabled={false}
-                  showsTraffic={false}
-                  toolbarEnabled={true}
-                  ref={mapRef}
-                  customMapStyle={MapStyle}
-                  clusterColor="#341f97"
-                >
-                  <Marker
-                    ref={markerRef}
-                    coordinate={location}
-                    pinColor="#341f97"
-                    tracksViewChanges={false}
-                    draggable
-                    onDragEnd={handleDragEnd}
-                  />
-                </MapView>
+              </View>
+              <MapView
+                initialRegion={{
+                  latitude: location.latitude,
+                  latitudeDelta: LATITUDE_DELTA,
+                  longitude: location.longitude,
+                  longitudeDelta: LONGITUDE_DELTA
+                }}
+                style={styles.mapStyle}
+                provider={PROVIDER_GOOGLE}
+                showsUserLocation
+                showsMyLocationButton
+                rotateEnabled={false}
+                showsTraffic={false}
+                toolbarEnabled={true}
+                ref={mapRef}
+                customMapStyle={MapStyle}
+                clusterColor="#341f97"
+              >
+                <Marker
+                  ref={markerRef}
+                  coordinate={location}
+                  pinColor="#341f97"
+                  tracksViewChanges={false}
+                  draggable
+                  onDragEnd={handleDragEnd}
+                />
+              </MapView>
             </Modal>
           </View>)}
         <View style={styles.container}>
-          <Text style={{fontFamily: Platform.OS === 'ios' ? 'Sinhala Sangam MN' : '',}}>Date:</Text>
+          <Text style={{ fontFamily: Platform.OS === 'ios' ? 'Sinhala Sangam MN' : '', }}>Date:</Text>
           <Button iconRight light onPress={toggleShowDate} style={styles.buttonStyle}>
-            <Text style={{textAlign: 'center', fontFamily: Platform.OS === 'ios' ? 'Sinhala Sangam MN' : '',}}>{stringifyDate(date)}</Text>
+            <Text style={{ textAlign: 'center', fontFamily: Platform.OS === 'ios' ? 'Sinhala Sangam MN' : '', }}>{stringifyDate(date)}</Text>
             <Icon name='calendar' />
           </Button>
         </View>
@@ -322,21 +354,20 @@ const MapScreen = event => {
             value={date}
             mode={'date'}
             onChange={onChangeDate}
-            isVis
           />
         )}
         <View style={styles.container}>
-          <Text style={{fontFamily: Platform.OS === 'ios' ? 'Sinhala Sangam MN' : '',}}>Time:</Text>
+          <Text style={{ fontFamily: Platform.OS === 'ios' ? 'Sinhala Sangam MN' : '', }}>Time:</Text>
           <Button iconRight light onPress={toggleShowTime} style={styles.buttonStyle}>
-            <Text>Select a time...</Text>
+            <Text>{stringifyTime(time)}</Text>
             <Icon name='clock' />
           </Button>
         </View>
         {showTime && (
           <DateTimePicker
-            value={date}
+            value={time}
             mode={'time'}
-            is24Hour={true}
+            is24Hour={false}
             onChange={onChangeTime}
           />
         )}
@@ -447,6 +478,20 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
+  userImageContainer: {
+    borderColor: "#FFFFFF",
+    borderRadius: 85,
+    borderWidth: 4,
+    height: 170,
+    marginBottom: 15,
+    width: 170,
+  },
+  userImage: {
+    borderColor: "#A5A5A5",
+    borderRadius: 85,
+    height: "100%",
+    width: "100%",
+  },
 });
 
-export default MapScreen;
+export default CreateEventScreen;
