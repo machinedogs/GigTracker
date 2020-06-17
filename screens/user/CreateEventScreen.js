@@ -10,6 +10,8 @@ import MapStyle from '../../constants/MapStyle';
 import { useDispatch } from 'react-redux';
 
 import Event from '../../models/event';
+import Location from '../../models/location';
+import Host from '../../models/host';
 import MapView from 'react-native-maps';
 import * as eventActions from '../../store/actions/events';
 
@@ -110,14 +112,8 @@ const MapScreen = event => {
   const saveEvent = () => {
     if (title && description && location && date && category) {
       // constructor(id, title, description, date,image, category,location, host ) 
-      const newEvent = new Event(1000, title, description, date, null, category.valuestringifyDate(date), {
-        profile: '',
-        name: '',
-        email: ''
-      }, {
-        latitude: location.latitude,
-        longituded: location.longitude
-      });
+      const newEvent = new Event(1000, title, description, date, null, category.value, 
+        new Location(location.latitude, location.longitude), new Host('','',''));
       dispatch(eventActions.createEvent(newEvent));
       event.navigation.navigate('Home');
     } else {
