@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Dimensions, TextInput, Platform, ScrollView, Sa
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { Textarea, Input, Item, Button, Icon, Header, Left, Body, Right, Title } from "native-base";
 //import Modal from 'react-native-modal';
 import Mapview, { PROVIDER_GOOGLE, Marker, } from 'react-native-maps';
 import MapStyle from '../../constants/MapStyle';
@@ -22,20 +23,20 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
 
 async function getCurrentLocation() {
   navigator.geolocation.getCurrentPosition(
-      position => {
+    position => {
       let region = {
-              latitude: parseFloat(position.coords.latitude),
-              //latitudeDelta: LATITUDE_DELTA,
-              longitude: parseFloat(position.coords.longitude),
-              //longitudeDelta: LONGITUDE_DELTA
-          };
-      },
-      error => console.log(error),
-      {
-          enableHighAccuracy: true,
-          timeout: 20000,
-          maximumAge: 1000
-      }
+        latitude: parseFloat(position.coords.latitude),
+        //latitudeDelta: LATITUDE_DELTA,
+        longitude: parseFloat(position.coords.longitude),
+        //longitudeDelta: LONGITUDE_DELTA
+      };
+    },
+    error => console.log(error),
+    {
+      enableHighAccuracy: true,
+      timeout: 20000,
+      maximumAge: 1000
+    }
   );
 }
 
@@ -108,7 +109,15 @@ const MapScreen = event => {
 
   const saveEvent = () => {
     if (title && description && location && date && category) {
-      const newEvent = new Event(1000, stringifyDate(date), 'USER', 'email', title, description, category.value, location.latitude, location.longitude)
+      // constructor(id, title, description, date,image, category,location, host ) 
+      const newEvent = new Event(1000, title, description, date, null, category.valuestringifyDate(date), {
+        profile: '',
+        name: '',
+        email: ''
+      }, {
+        latitude: location.latitude,
+        longituded: location.longitude
+      });
       dispatch(eventActions.createEvent(newEvent));
       event.navigation.navigate('Home');
     } else {
@@ -138,49 +147,64 @@ const MapScreen = event => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-      <View style={{padding: 12}}>
-        <View style={{ justifyContent: 'flex-end', alignItems: 'flex-end', flexDirection: 'row', flex: 1 }}>
+        <View style={{ padding: 12 }}>
+          <View style={{ justifyContent: 'flex-end', alignItems: 'flex-end', flexDirection: 'row', flex: 1 }}>
+          </View>
+          <Text style={styles.text}>Title</Text>
+          <Item rounded>
+            <Input
+              style={styles.titleStyle}
+              onChangeText={text => setTitle(text)}
+              value={title}
+              placeholder={'Add a title...'}
+            />
+          </Item>
+          <Text></Text>
+          <Text style={styles.text}>Description</Text>
+          <Item rounded>
+            <Textarea
+              style={styles.descriptionStyle}
+              onChangeText={text => setDescription(text)}
+              value={description}
+              placeholder={'Add a description...'}
+              multiline
+              numberOfLines={5}
+            />
+          </Item>
         </View>
-        <Text>Title</Text>
-        <TextInput
-          style={styles.titleStyle}
-          onChangeText={text => setTitle(text)}
-          value={title}
-          placeholder={'Add a title...'}
-        />
-        <Text>Description</Text>
-        <TextInput
-          style={styles.descriptionStyle}
-          onChangeText={text => setDescription(text)}
-          value={description}
-          placeholder={'Add a description...'}
-          multiline
-          numberOfLines={5}
-        />
+        <Text></Text>
+        <View style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          paddingBottom: 10,
+          zIndex: 100
+        }}>
+          <Text style={styles.text}>Category</Text>
+          <DropDownPicker
+            items={[
+              { label: 'Music', value: 'music' },
+              { label: 'Sports', value: 'sports' },
+              { label: 'Meeting', value: 'meeting' },
+              { label: 'Party', value: 'party' },
+              { label: 'Protest', value: 'protest' },
+              { label: 'Food', value: 'food' },
+              { label: 'Market', value: 'market' },
+              { label: 'Discussion', value: 'discussion' },
+              { label: 'Political', value: 'political' },
+              { label: 'Other', value: 'other' }
+            ]}
+            defaultValue={initCategory}
+            placeholder="Select a category"
+            containerStyle={{ height: 50, width: 300, justifyContent: 'center', alignItems: 'center' }}
+            style={{ borderColor: 'gray', borderWidth: 1, }}
+            dropdownStyle={{ borderColor: 'gray', height: 300 }}
+            itemStyle={{ alignItems: 'center' }}
+            onChangeItem={category => setCategory(category)}
+          />
         </View>
-        <Text>Category</Text>
-        <DropDownPicker
-          items={[
-            { label: 'Music', value: 'music' },
-            { label: 'Sports', value: 'sports' },
-            { label: 'Meeting', value: 'meeting' },
-            { label: 'Party', value: 'party' },
-            { label: 'Protest', value: 'protest' },
-            { label: 'Food', value: 'food' },
-            { label: 'Market', value: 'market' },
-            { label: 'Discussion', value: 'discussion'},
-            { label: 'Political', value: 'political' },
-          ]}
-          defaultValue={initCategory}
-          placeholder="Select a category"
-          containerStyle={{ height: 40 }}
-          style={{ backgroundColor: '#fafafa', zIndex: 2,  }}
-          dropDownStyle={{ backgroundColor: '#fafafa' }}
-          onChangeItem={category => setCategory(category)}
-        />
         <View style={styles.container}>
-        <Text>Location:</Text>
-        {/*<GooglePlacesAutocomplete
+          <Text>Location:</Text>
+          {/*<GooglePlacesAutocomplete
           placeholder='Enter Location'
           minLength={2}
           autoFocus={false}
@@ -210,67 +234,73 @@ const MapScreen = event => {
             },
           }}
         />*/}
-        <TouchableOpacity onPress={toggleShowMap} title="Drop a pin..." style={styles.buttonStyle}>
-        <Text style={styles.textInButtonStyle}>lat: {location.latitude}, long: {location.longitude}</Text>
-        </TouchableOpacity>
+          <Button iconRight light onPress={toggleShowMap} style={styles.buttonStyle}>
+            <Text>Drop a pin...</Text>
+            <Icon name='pin' />
+          </Button>
         </View>
-          {showMap && (
-          <View style={styles.centeredView}>
-          <Modal
-            onSwipeComplete={toggleShowMap}
-            swipeDirection={"down"}
-            backdropOpacity={.3}
-            onBackdropPress={toggleShowMap}
-            swipeThreshold={100}
-            TransitionOutTiming={0}
-            style={styles.modal}
-            borderRadius={10}
-            propagateSwipe
-          >{location && (
-            <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={{color: 'white', padding: 10, fontSize: 15}}>Hold the pin down for a second before dragging...</Text>
-            <MapView
-              initialRegion={{
-                latitude: location.latitude,
-                latitudeDelta: LATITUDE_DELTA,
-                longitude: location.longitude,
-                longitudeDelta: LONGITUDE_DELTA
-              }}
-              style={styles.mapStyle}
-              provider={PROVIDER_GOOGLE}
-              showsUserLocation
-              showsMyLocationButton
-              rotateEnabled={false}
-              showsTraffic={false}
-              toolbarEnabled={true}
-              ref={mapRef}
-              customMapStyle={MapStyle}
-              clusterColor="#341f97"
+        {showMap && (
+          <View style={styles.container}>
+            <Modal
+              onSwipeComplete={toggleShowMap}
+              swipeDirection={"down"}
+              backdropOpacity={.3}
+              onBackdropPress={toggleShowMap}
+              swipeThreshold={100}
+              TransitionOutTiming={0}
+              borderRadius={10}
+              propagateSwipe
             >
-              <Marker
-                ref={markerRef}
-                coordinate={location}
-                pinColor="#341f97"
-                tracksViewChanges={false}
-                draggable
-                onDragEnd={handleDragEnd}
-              />
-            </MapView>
-              <Text> </Text>
-            <TouchableOpacity style={styles.modalButton} onPress={toggleShowMap}>
-              <Text style={{color: 'white'}}>Ok</Text>
-            </TouchableOpacity>
-            </View>
-            </View>
-          )}
-          </Modal>
+              <Header style={{backgroundColor: '#2d3436'}}>
+              <Left>
+              </Left>
+              <Body>
+                <Title style={{color: '#fff'}}>Select location</Title>
+              </Body>
+              <Right>
+                <Button transparent onPress={toggleShowMap}>
+                  <Icon name='md-checkmark' />
+                </Button>
+              </Right>
+            </Header>
+              <View style={{backgroundColor: '#2d3436', zIndex: 100, borderColor: '#2d3436'}}>
+                <Text style={{ color: 'white', padding: 10, fontSize: 15 }}>Hold the pin down for a second before dragging...</Text>
+                </View>
+                <MapView
+                  initialRegion={{
+                    latitude: location.latitude,
+                    latitudeDelta: LATITUDE_DELTA,
+                    longitude: location.longitude,
+                    longitudeDelta: LONGITUDE_DELTA
+                  }}
+                  style={styles.mapStyle}
+                  provider={PROVIDER_GOOGLE}
+                  showsUserLocation
+                  showsMyLocationButton
+                  rotateEnabled={false}
+                  showsTraffic={false}
+                  toolbarEnabled={true}
+                  ref={mapRef}
+                  customMapStyle={MapStyle}
+                  clusterColor="#341f97"
+                >
+                  <Marker
+                    ref={markerRef}
+                    coordinate={location}
+                    pinColor="#341f97"
+                    tracksViewChanges={false}
+                    draggable
+                    onDragEnd={handleDragEnd}
+                  />
+                </MapView>
+            </Modal>
           </View>)}
         <View style={styles.container}>
-        <Text>Date:</Text>
-          <TouchableOpacity onPress={toggleShowDate} title={dateTitle()} style={styles.buttonStyle}>
-            <Text style={styles.textInButtonStyle}>{stringifyDate(date)}</Text>
-          </TouchableOpacity>
+          <Text>Date:</Text>
+          <Button iconRight light onPress={toggleShowDate} style={styles.buttonStyle}>
+            <Text>{stringifyDate(date)}</Text>
+            <Icon name='calendar' />
+          </Button>
         </View>
         {showDate && (
           <DateTimePicker
@@ -281,10 +311,11 @@ const MapScreen = event => {
           />
         )}
         <View style={styles.container}>
-        <Text>Time:</Text>
-          <TouchableOpacity onPress={toggleShowTime} title='Select a time...' style={styles.buttonStyle}>
-            <Text style={styles.textInButtonStyle}>Select a time...</Text>
-          </TouchableOpacity>
+          <Text>Time:</Text>
+          <Button iconRight light onPress={toggleShowTime} style={styles.buttonStyle}>
+            <Text>Select a time...</Text>
+            <Icon name='clock' />
+          </Button>
         </View>
         {showTime && (
           <DateTimePicker
@@ -294,21 +325,29 @@ const MapScreen = event => {
             onChange={onChangeTime}
           />
         )}
-        <TouchableOpacity
-          onPress={saveEvent}
-        >
-          <Text style={{
-            textAlign: 'right',
-            fontSize: 22,
-            color: 'gray',
-            paddingRight: 30
-          }}>Submit</Text>
-        </TouchableOpacity>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 10 }}>
+          <Text></Text>
+          <Button round light onPress={saveEvent} style={{
+            borderWidth: 1,
+            borderColor: "gray",
+            alignContent: 'center',
+            justifyContent: 'center',
+            width: 125,
+            height: 50,
+            backgroundColor: '#fff',
+          }}>
+            <Text style={{
+              fontSize: 22,
+              color: "#2f3640",
+              textAlign: 'center'
+            }}>Submit</Text>
+          </Button>
+        </View>
         <View style={styles.container}>
-        <Text style={{color:'gray'}}>Note: If you are hosting this event at a private location, we recommend not using the exact 
+          <Text style={{ color: 'gray' }}>Note: If you are hosting this event at a private location, we recommend not using the exact
           location of your address but somewhere nearby. Include a contact where people can ask you directly
           for the address.</Text>
-          </View>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -319,14 +358,13 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-start',
-    width: SCREEN_WIDTH - 10,
-    padding: 15,
+    width: SCREEN_WIDTH,
+    padding: 10,
+    backgroundColor: '#fff'
   },
-  textStyle: {
-    textAlign: 'left',
-    fontSize: 22,
-    color: 'white',
-
+  text: {
+    fontFamily: 'Sinhala Sangam MN',
+    fontSize: 16,
   },
   dropdownStyle: {
     width: 100
@@ -334,14 +372,18 @@ const styles = StyleSheet.create({
   titleStyle: {
     height: 50,
     borderColor: 'gray',
-    borderWidth: 1,
-    width: 350
+    //borderWidth: 1,
+    width: 350,
+    fontFamily: 'Sinhala Sangam MN',
+    fontSize: 16
   },
   descriptionStyle: {
     borderColor: 'gray',
-    borderWidth: 1,
+    //borderWidth: 1,
     width: 350,
     height: 120,
+    fontFamily: 'Sinhala Sangam MN',
+    fontSize: 16
   },
   modal: {
     flex: 1,
@@ -349,25 +391,26 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginLeft: 0,
     marginRight: 0,
-    maxHeight: SCREEN_HEIGHT*0.6,
+    maxHeight: SCREEN_HEIGHT * 0.6,
     backgroundColor: '#2d3436',
   },
   mapStyle: {
     zIndex: -1,
-    width: SCREEN_WIDTH*.85,
-    height: SCREEN_HEIGHT * .7,
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT * 0.85,
   },
   buttonStyle: {
     height: 50,
     width: 200,
     color: 'black',
-    borderColor: 'blue',
+    borderColor: 'gray',
+    borderWidth: 1,
     backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
   },
   textInButtonStyle: {
-    
+
   },
   centeredView: {
     flex: 1,
