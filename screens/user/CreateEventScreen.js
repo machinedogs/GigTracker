@@ -79,7 +79,7 @@ const MapScreen = event => {
 
   const onChangeDate = (e, selectedDate) => {
     const currentDate = selectedDate || date;
-    setShowDate(Platform.OS === 'ios');
+    //setShowDate(Platform.OS === 'ios');
     setDate(currentDate);
   };
 
@@ -363,7 +363,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff'
   },
   text: {
-    fontFamily: 'Sinhala Sangam MN',
+    fontFamily: Platform.OS === 'ios' ? 'Sinhala Sangam MN' : '',
     fontSize: 16,
   },
   dropdownStyle: {
@@ -374,7 +374,7 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     //borderWidth: 1,
     width: 350,
-    fontFamily: 'Sinhala Sangam MN',
+    fontFamily: Platform.OS === 'ios' ? 'Sinhala Sangam MN' : '',
     fontSize: 16
   },
   descriptionStyle: {
@@ -382,7 +382,7 @@ const styles = StyleSheet.create({
     //borderWidth: 1,
     width: 350,
     height: 120,
-    fontFamily: 'Sinhala Sangam MN',
+    fontFamily: Platform.OS === 'ios' ? 'Sinhala Sangam MN' : '',
     fontSize: 16
   },
   modal: {
