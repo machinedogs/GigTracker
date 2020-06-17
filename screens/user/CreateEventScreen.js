@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { StyleSheet, Text, View, Dimensions, TextInput, Platform, ScrollView, SafeAreaView, Alert, TouchableOpacity, Modal } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, TextInput, Platform, ScrollView, SafeAreaView, Alert, TouchableOpacity, Modal, Vibration } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -43,6 +43,39 @@ async function getCurrentLocation() {
 }
 
 const curLoc = getCurrentLocation();
+
+combineDateAndTime = function(date, time) {
+  timeString = time.getHours() + ':' + time.getMinutes() + ':00';
+
+  var year = date.getFullYear();
+  var month = date.getMonth() + 1; // Jan is 0, dec is 11
+  var day = date.getDate();
+  var dateString = '' + year + '-' + month + '-' + day;
+  var combined = new Date(dateString + ' ' + timeString);
+
+  return combined;
+};
+
+const stringifyDate = (date) => {
+  var dd = date.getDate();
+  var mm = date.getMonth() + 1;
+  var yyyy = date.getFullYear();
+  if (dd < 10) {
+    dd = '0' + dd;
+  }
+  if (mm < 10) {
+    mm = '0' + mm;
+  }
+  var wkday = date.getDay();
+    if(wkday === 0) wkday = 'Sunday';
+    else if(wkday === 1) wkday = 'Monday';
+    else if(wkday === 2) wkday = 'Tuesday';
+    else if(wkday === 3) wkday = 'Wednesday';
+    else if(wkday === 4) wkday = 'Thursday';
+    else if(wkday === 5) wkday = 'Friday';
+    else if(wkday === 6) wkday = 'Saturday';
+  return wkday + ', ' + mm + '/' + dd + '/' + yyyy;
+}
 
 const MapScreen = event => {
 
@@ -94,20 +127,6 @@ const MapScreen = event => {
   const toggleShowTime = () => {
     showTime ? setShowTime(false) : setShowTime(true);
   };
-
-  const stringifyDate = (date) => {
-    var dd = date.getDate();
-    var mm = date.getMonth() + 1;
-
-    var yyyy = date.getFullYear();
-    if (dd < 10) {
-      dd = '0' + dd;
-    }
-    if (mm < 10) {
-      mm = '0' + mm;
-    }
-    return mm + '/' + dd + '/' + yyyy;
-  }
 
   const saveEvent = () => {
     if (title && description && location && date && category) {
@@ -192,14 +211,14 @@ const MapScreen = event => {
             defaultValue={initCategory}
             placeholder="Select a category"
             containerStyle={{ height: 50, width: 300, justifyContent: 'center', alignItems: 'center' }}
-            style={{ borderColor: 'gray', borderWidth: 1, }}
+            style={{ borderColor: 'gray', borderWidth: 1 }}
             dropdownStyle={{ borderColor: 'gray', height: 300 }}
             itemStyle={{ alignItems: 'center' }}
             onChangeItem={category => setCategory(category)}
           />
         </View>
         <View style={styles.container}>
-          <Text>Location:</Text>
+          <Text style={{fontFamily: Platform.OS === 'ios' ? 'Sinhala Sangam MN' : '',}}>Location:</Text>
           {/*<GooglePlacesAutocomplete
           placeholder='Enter Location'
           minLength={2}
@@ -231,7 +250,7 @@ const MapScreen = event => {
           }}
         />*/}
           <Button iconRight light onPress={toggleShowMap} style={styles.buttonStyle}>
-            <Text>Drop a pin...</Text>
+            <Text style={{fontFamily: Platform.OS === 'ios' ? 'Sinhala Sangam MN' : '',}}>Drop a pin...</Text>
             <Icon name='pin' />
           </Button>
         </View>
@@ -251,7 +270,7 @@ const MapScreen = event => {
               <Left>
               </Left>
               <Body>
-                <Title style={{color: '#fff'}}>Select location</Title>
+                <Title style={{color: '#fff', fontFamily: Platform.OS === 'ios' ? 'Sinhala Sangam MN' : '', fontSize: 20}}>Select location</Title>
               </Body>
               <Right>
                 <Button transparent onPress={toggleShowMap}>
@@ -260,7 +279,7 @@ const MapScreen = event => {
               </Right>
             </Header>
               <View style={{backgroundColor: '#2d3436', zIndex: 100, borderColor: '#2d3436'}}>
-                <Text style={{ color: 'white', padding: 10, fontSize: 15 }}>Hold the pin down for a second before dragging...</Text>
+                <Text style={{ color: 'white', padding: 10, fontSize: 15, fontFamily: Platform.OS === 'ios' ? 'Sinhala Sangam MN' : '', }}>Hold the pin down for a second before dragging...</Text>
                 </View>
                 <MapView
                   initialRegion={{
@@ -292,9 +311,9 @@ const MapScreen = event => {
             </Modal>
           </View>)}
         <View style={styles.container}>
-          <Text>Date:</Text>
+          <Text style={{fontFamily: Platform.OS === 'ios' ? 'Sinhala Sangam MN' : '',}}>Date:</Text>
           <Button iconRight light onPress={toggleShowDate} style={styles.buttonStyle}>
-            <Text>{stringifyDate(date)}</Text>
+            <Text style={{textAlign: 'center', fontFamily: Platform.OS === 'ios' ? 'Sinhala Sangam MN' : '',}}>{stringifyDate(date)}</Text>
             <Icon name='calendar' />
           </Button>
         </View>
@@ -307,7 +326,7 @@ const MapScreen = event => {
           />
         )}
         <View style={styles.container}>
-          <Text>Time:</Text>
+          <Text style={{fontFamily: Platform.OS === 'ios' ? 'Sinhala Sangam MN' : '',}}>Time:</Text>
           <Button iconRight light onPress={toggleShowTime} style={styles.buttonStyle}>
             <Text>Select a time...</Text>
             <Icon name='clock' />
@@ -335,12 +354,13 @@ const MapScreen = event => {
             <Text style={{
               fontSize: 22,
               color: "#2f3640",
-              textAlign: 'center'
+              textAlign: 'center',
+              fontFamily: Platform.OS === 'ios' ? 'Sinhala Sangam MN' : '',
             }}>Submit</Text>
           </Button>
         </View>
         <View style={styles.container}>
-          <Text style={{ color: 'gray' }}>Note: If you are hosting this event at a private location, we recommend not using the exact
+          <Text style={{ color: 'gray', fontFamily: Platform.OS === 'ios' ? 'Sinhala Sangam MN' : '', }}>Note: If you are hosting this event at a private location, we recommend not using the exact
           location of your address but somewhere nearby. Include a contact where people can ask you directly
           for the address.</Text>
         </View>
@@ -359,7 +379,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff'
   },
   text: {
-    fontFamily: 'Sinhala Sangam MN',
+    fontFamily: Platform.OS === 'ios' ? 'Sinhala Sangam MN' : '',
     fontSize: 16,
   },
   dropdownStyle: {
@@ -370,7 +390,7 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     //borderWidth: 1,
     width: 350,
-    fontFamily: 'Sinhala Sangam MN',
+    fontFamily: Platform.OS === 'ios' ? 'Sinhala Sangam MN' : '',
     fontSize: 16
   },
   descriptionStyle: {
@@ -378,7 +398,7 @@ const styles = StyleSheet.create({
     //borderWidth: 1,
     width: 350,
     height: 120,
-    fontFamily: 'Sinhala Sangam MN',
+    fontFamily: Platform.OS === 'ios' ? 'Sinhala Sangam MN' : '',
     fontSize: 16
   },
   modal: {
@@ -405,9 +425,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  textInButtonStyle: {
-
-  },
   centeredView: {
     flex: 1,
     justifyContent: "center",
@@ -430,16 +447,6 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-  modalButton: {
-    height: 50,
-    width: 50,
-    borderRadius: 20,
-    color: 'black',
-    borderColor: 'blue',
-    backgroundColor: '#84817a',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }
 });
 
 export default MapScreen;
