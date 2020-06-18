@@ -228,7 +228,7 @@ const CreateEventScreen = event => {
           alignContent: 'center',
           paddingBottom: 10,
           zIndex: 10,
-          width: 250,
+          width: SCREEN_WIDTH,
         }}>
           <Text style={styles.text}>Category</Text>
           {Platform.OS==='ios' ? (
