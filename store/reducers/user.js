@@ -1,4 +1,4 @@
-import { LOGIN, SIGNUP, AUTHENTICATE, LOGOUT, UPDATE_PROFILE, UPDATE_WALLPAPER } from "../actions/user";
+import { SAVED_EVENTS, UPDATE_HOSTED_EVENTS, AUTHENTICATE, LOGOUT, UPDATE_PROFILE, UPDATE_WALLPAPER } from "../actions/user";
 
 const initialState = {
     //userId: null,
@@ -35,6 +35,16 @@ export default (state = initialState, action) => {
             }
         case LOGOUT:
             return initialState;
+        case UPDATE_HOSTED_EVENTS:
+            return {
+            ...state,
+            createdEvents: action.createdEvents
+            }
+        case SAVED_EVENTS:
+            return {
+            ...state,
+            savedEvents: action.savedEvents
+            }
         default:
             return state;
     }

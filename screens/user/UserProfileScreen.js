@@ -72,14 +72,21 @@ const UserProfileScreen = (props) => {
 			<View style={styles.content}>
 				<Tabs>
 					<Tab heading="Saved Events">
-						<FlatList
+						{/* <FlatList
 							data={DATA}
 							renderItem={({ item }) => <EventCard event={item} />}
 							keyExtractor={(item) => item.id}
 							scrollEnabled={false}
+						/> */}
+					</Tab>
+					<Tab heading="Hosted Events">
+					<FlatList
+							data={user.createdEvents}
+							renderItem={({ item }) => <EventCard event={item} />}
+							keyExtractor={(item) => item.event}
+							scrollEnabled={false}
 						/>
 					</Tab>
-					<Tab heading="Hosted Events"></Tab>
 				</Tabs>
 			</View>
 			<View style={styles.ButtonContainer}>

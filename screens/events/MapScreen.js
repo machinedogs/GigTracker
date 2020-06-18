@@ -17,13 +17,13 @@ import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import FlashOnIcon from '@material-ui/icons/FlashOn';
 import { Icon } from 'react-native-elements';
-
 import { EVENTS } from '../../data/dummy-data';
 import MapStyle from '../../constants/MapStyle';
 import EventModal from '../../components/EventModal';
 import Event from '../../models/event';
 import HeaderButton from '../../components/HeaderButton';
 import Colors from '../../constants/Colors';
+import {GetHostedEvents} from '../../store/actions/user';
 
 const { width, height } = Dimensions.get('window')
 
@@ -57,10 +57,19 @@ const MapScreen = props => {
   let mapRef = useRef(null);
   let menuRef = useRef(null);
   const [date, setDate] = useState(todaysDate());
+  //Redux
+  const dispatch = useDispatch();
+	var user = useSelector((state) => state.user);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
+  const getHostedEvents = async (user) =>{
+  
+    console.log('Dispatching get hosted events from mapscreen')
+    console.log(user.accessToken)
+    dispatch(GetHostedEvents(user))
+  }
 
   const closeControlPanel = () => {
     menuRef.current._drawer.close()
@@ -71,6 +80,7 @@ const MapScreen = props => {
   //  get initial location then animate to that location
   // only do this on mount and unmount of map component 
   useEffect(() => {
+    getHostedEvents(user)
     navigator.geolocation.getCurrentPosition(
       (position) => {
         coords = { latitude: position.coords.latitude, longitude: position.coords.longitude, latitudeDelta: .009, longitudeDelta: .009 };
@@ -120,7 +130,7 @@ const MapScreen = props => {
     setEvents(EVENTS.filter(event => event.date === selectedDate))
     console.log(selectedDate)
   }
-
+  //Get hosted events on map screen behind the scenes
   return (
     //add a dropdown to choose map style? -> what if we put it in user settings? could incentivize people to become users
     //add dropdown calendar

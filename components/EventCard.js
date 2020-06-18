@@ -37,7 +37,7 @@ export const EventCard = (props) => {
 			<CardItem>
 				<Left>
 					<Entypo name="location-pin" size={20} color="black" />
-					<Text>{props.event.address}</Text>
+					<Text>{props.event.location.address.substring(0,50)}....</Text>
 				</Left>
 				<Right>
 					<Text>{props.event.date}</Text>
