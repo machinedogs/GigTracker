@@ -82,12 +82,17 @@ const stringifyDate = (date) => {
   return wkday + ', ' + mm + '/' + dd + '/' + yyyy;
 }
 
-const stringifyTime = (time) => {
-  console.log('time === ' + time.toISOString());
+const stringifyTime = (time) => {;
   const str = time.toLocaleTimeString();
-  const s1 = str.substr(0, 5);
+  console.log('local time === ' + str);
+  let s1 = '';
+  if(str[1] === ':') { 
+    s1 = str.substr(0, 4);
+  }else {
+    s1 = str.substr(0, 5);
+  }
   const s2 = str.substr(8);
-  const res = s1.concat(s2);
+  const res = s1.concat(' ', s2);
   return res;
 }
 
