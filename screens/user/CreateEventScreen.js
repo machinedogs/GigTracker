@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Dimensions, TextInput, Platform, ScrollView, Sa
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DropDownPicker from 'react-native-dropdown-picker';
+import RNPickerSelect from 'react-native-picker-select';
 import { Textarea, Input, Item, Button, Icon, Header, Left, Body, Right, Title } from "native-base";
 //import Modal from 'react-native-modal';
 import Mapview, { PROVIDER_GOOGLE, Marker, } from 'react-native-maps';
@@ -49,19 +50,18 @@ async function getCurrentLocation() {
 
 const curLoc = getCurrentLocation();
 
-combineDateAndTime = function (date, time) {
-  timeString = time.getHours() + ':' + time.getMinutes() + ':00';
-
-  var year = date.getFullYear();
-  var month = date.getMonth() + 1; // Jan is 0, dec is 11
-  var day = date.getDate();
-  var dateString = '' + year + '-' + month + '-' + day;
-  var combined = new Date(dateString + ' ' + timeString);
-
-  return combined;
+combineDateAndTime = (date, time) => {
+  let d = date.toISOString();
+  let t = time.toISOString();
+  d = d.substr(0, 10);
+  t = t.substr(10);
+  const dateTime = d.concat(t);
+  console.log(dateTime);
+  return dateTime;
 };
 
 const stringifyDate = (date) => {
+  console.log('date === ' + date.toISOString())
   var dd = date.getDate();
   var mm = date.getMonth() + 1;
   var yyyy = date.getFullYear();
@@ -83,8 +83,12 @@ const stringifyDate = (date) => {
 }
 
 const stringifyTime = (time) => {
-  var str = time.toTimeString();
-
+  console.log('time === ' + time.toISOString());
+  const str = time.toLocaleTimeString();
+  const s1 = str.substr(0, 5);
+  const s2 = str.substr(8);
+  const res = s1.concat(s2);
+  return res;
 }
 
 const CreateEventScreen = event => {
@@ -95,7 +99,7 @@ const CreateEventScreen = event => {
   const initCategory = event.category ? event.category : '';
   const initDate = event.date ? event.date : new Date();
   const initTime = event.date ? event.date : new Date();
-  const initImage = event.image ? event.image : "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+  const initImage = event.image ? event.image : "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
   const [title, setTitle] = useState(initTitle);
   const [description, setDescription] = useState(initDescription);
   const [location, setLocation] = useState(initLocation);
@@ -147,7 +151,7 @@ const CreateEventScreen = event => {
   const saveEvent = () => {
     if (title && description && location && date && category) {
       // constructor(id, title, description, date,image, category,location, host ) 
-      const newEvent = new Event(1000, title, description, date, null, category.value,
+      const newEvent = new Event(1000, title, description, combineDateAndTime(date, time), null, category.value,
         new Location(location.latitude, location.longitude), new Host('', '', ''));
       dispatch(eventActions.createEvent(newEvent));
       event.navigation.navigate('Home');
@@ -189,12 +193,12 @@ const CreateEventScreen = event => {
       <ScrollView>
         <View style={{ padding: 12, alignItems: 'center', justifyContent: 'center' }}>
         <Text style={styles.text}>Photo</Text>
-          <TouchableOpacity
+          <Button iconLeft transparent light
             onPress={updateEventPhoto}
             style={styles.eventImageContainer}
           >
             <Image source={{ uri: image }} style={styles.eventImage} />
-          </TouchableOpacity>
+          </Button>
           <Text style={styles.text}>Title</Text>
           <Item rounded>
             <Input
@@ -221,11 +225,14 @@ const CreateEventScreen = event => {
         <View style={{
           justifyContent: 'center',
           alignItems: 'center',
+          alignContent: 'center',
           paddingBottom: 10,
-          zIndex: 100
+          zIndex: 10,
+          width: 250,
         }}>
           <Text style={styles.text}>Category</Text>
-          <DropDownPicker
+          {Platform.OS==='ios' ? (
+            <DropDownPicker
             items={[
               { label: 'Music', value: 'music' },
               { label: 'Sports', value: 'sports' },
@@ -246,6 +253,28 @@ const CreateEventScreen = event => {
             itemStyle={{ alignItems: 'center' }}
             onChangeItem={category => setCategory(category)}
           />
+          ) : (<RNPickerSelect
+            items={[
+              { label: 'Music', value: 'music' },
+              { label: 'Sports', value: 'sports' },
+              { label: 'Art', value: 'art' },
+              { label: 'Meeting', value: 'meeting' },
+              { label: 'Party', value: 'party' },
+              { label: 'Protest', value: 'protest' },
+              { label: 'Food', value: 'food' },
+              { label: 'Market', value: 'market' },
+              { label: 'Discussion', value: 'discussion' },
+              { label: 'Political', value: 'political' },
+              { label: 'Other', value: 'other' }
+            ]}
+            style={{ borderColor: 'gray', borderWidth: 1,   }}
+            /*defaultValue={initCategory}
+            placeholder="Select a category"
+            containerStyle={{ height: 50, width: 300, justifyContent: 'center', alignItems: 'center', }}
+            dropdownStyle={{ height: 300,  }}
+            itemStyle={{ alignItems: 'center',}}*/
+            onValueChange={value => setCategory(value)}
+          />)}
         </View>
         <View style={styles.container}>
           <Text style={{ fontFamily: Platform.OS === 'ios' ? 'Sinhala Sangam MN' : '', }}>Location:</Text>
