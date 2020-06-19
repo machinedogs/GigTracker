@@ -26,7 +26,7 @@ export const CustomCallout = (props) => {
             <View>
                 <CardItem>
                     <Left>
-                    <WebView style={{ height: 70, width: 70, paddingRight:100 }} source={{
+                    <WebView style={{ height: 80, width: 80, paddingRight:100 }} source={{
                         html: UserImage(props)
                     }} />
                         <Body>
@@ -36,7 +36,7 @@ export const CustomCallout = (props) => {
                     </Left>
                 </CardItem>
                 <CardItem cardBody>
-                    <WebView style={{ height: 100, width: 300, }} source={{
+                    <WebView style={{ height: 200, width: 300 }} source={{
                         html: EventImage(props.event)
                     }} />
                 </CardItem>

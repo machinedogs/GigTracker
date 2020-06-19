@@ -152,7 +152,7 @@ const MapScreen = props => {
             key={event.id}
           >
                 {Platform.OS === 'ios' ? (<EventCard event={event} />) : (
-                  <CustomCallout event={event} />
+                  <CustomCallout style ={{height:400}} event={event} />
                 )}
             </Callout>
           </Marker>
