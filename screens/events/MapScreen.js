@@ -2,11 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   StyleSheet,
   Text,
-  View,
   Button,
-  FlatList,
+  View,
   Dimensions,
-  Image,
   Platform,
   SafeAreaView,
   TouchableOpacity,
@@ -17,13 +15,19 @@ import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import FlashOnIcon from '@material-ui/icons/FlashOn';
 import { Icon } from 'react-native-elements';
-
+import { EventCard } from "../../components/EventCard";
 import { EVENTS } from '../../data/dummy-data';
 import MapStyle from '../../constants/MapStyle';
 import EventModal from '../../components/EventModal';
 import Event from '../../models/event';
 import HeaderButton from '../../components/HeaderButton';
 import Colors from '../../constants/Colors';
+import { CustomCallout } from '../../components/CustomCallout';
+/* import { CustomWeb } from '../../components/testWebView' */
+import { WebView } from 'react-native-webview'
+
+import { ScrollView } from 'react-native-gesture-handler';
+
 
 const { width, height } = Dimensions.get('window')
 
@@ -57,17 +61,18 @@ const MapScreen = props => {
   let mapRef = useRef(null);
   let menuRef = useRef(null);
   const [date, setDate] = useState(todaysDate());
+  const [extraData, setExtraData] = useState(false);
+  const useForceUpdate = () => useState()[1];
+  const forceUpdate = useForceUpdate();
 
+
+
+  var calloutID = 10;
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
 
-  const closeControlPanel = () => {
-    menuRef.current._drawer.close()
-  };
-  const openControlPanel = () => {
-    menuRef.current._drawer.open()
-  };
+
   //  get initial location then animate to that location
   // only do this on mount and unmount of map component 
   useEffect(() => {
@@ -78,7 +83,7 @@ const MapScreen = props => {
         mapRef.current.animateToRegion(coords, 0);
       }, (error) => console.log(error));
   }, []);
-
+  useEffect(() => { setExtraData(true); }, []);
   let categories = [{ value: 'All events' }];
   EVENTS.map(event => {
     var count = 0;
@@ -109,11 +114,18 @@ const MapScreen = props => {
     toggleModal();
   }
 
+
+  const onMapRender = () => {
+
+    console.log("do nothing");
+  }
   const onPinPress = (event) => {
+    setExtraData(true); forceUpdate();
     setSelectedEvent({ id: event.id, title: event.title, description: event.description, hostName: event.hostName });
     console.log("pressing pin");
     console.log(event)
   }
+
 
   const filterDate = (selectedDate) => {
     setDate(selectedDate);
@@ -126,8 +138,6 @@ const MapScreen = props => {
     //add dropdown calendar
     <View style={styles.container}>
       <StatusBar backgroundColor={Colors.darkGrey} barStyle='light-content' />
-
-
       <MapView
         style={styles.map}
         provider={PROVIDER_GOOGLE}
@@ -135,6 +145,7 @@ const MapScreen = props => {
         showsMyLocationButton
         rotateEnabled={false}
         showsTraffic={false}
+        onMapReady={onMapRender()}
         toolbarEnabled={true}
         ref={mapRef}
         customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
@@ -144,19 +155,23 @@ const MapScreen = props => {
             coordinate={{ latitude: event.latitude, longitude: event.longitude }}
             title={event.title}
             pinColor="#341f97"
-            //image={require('../../assets/splash.png')}
             icon={FlashOnIcon}
             description={event.description}
             key={event.id}
-            tracksViewChanges={false}
             onPress={onPinPress.bind(this, event)}
           ><Callout
             style={styles.plainView}
             onPress={onEventCalloutPress}
+            tooltip={true}
+            key={event.id}
           >
-              <View>
-                <Text style={{ fontWeight: 'bold' }}>{event.title}</Text>
-              </View>
+              <ScrollView>
+                {Platform.OS === 'ios' ? (<EventCard props={event} />) : (
+                  <CustomCallout event={event} />
+                )}
+
+              </ScrollView>
+
             </Callout>
           </Marker>
         ))
@@ -247,15 +262,15 @@ MapScreen.navigationOptions = navData => {
           />
         </HeaderButtons>
       ),
-      headerRight: () => (
-        <HeaderButtons HeaderButtonComponent={HeaderButton}>
-          <Item
-            title='Menu'
-            iconName={Platform.OS === 'android' ? 'md-calendar' : 'ios-calendar'}
-            onPress={() => { }}
-          />
-        </HeaderButtons>
-      )
+    headerRight: () => (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item
+          title='Menu'
+          iconName={Platform.OS === 'android' ? 'md-calendar' : 'ios-calendar'}
+          onPress={() => { }}
+        />
+      </HeaderButtons>
+    )
   }
 }
 
@@ -265,6 +280,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingTop: 0,
+
     //width: Dimensions.get('window').width,
   },
   top: {
@@ -314,7 +330,9 @@ const styles = StyleSheet.create({
   },
   plainView: {
     flex: 1,
-    width: 'auto'
+    width: 'auto',
+
+
   },
 });
 

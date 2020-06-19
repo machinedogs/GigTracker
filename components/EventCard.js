@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import { Image, StyleSheet } from "react-native";
 import { Container, Header, Content, Accordion } from "native-base";
 import {
@@ -15,6 +15,10 @@ import {
 import { Entypo } from "@expo/vector-icons";
 
 export const EventCard = (props) => {
+	const [extraData, setExtraData] = useState(false);
+	const useForceUpdate = () => useState()[1];
+	const forceUpdate = useForceUpdate();
+	useEffect(() => { setExtraData(true); forceUpdate(); }, []);
 	return (
 		<Card>
 			<CardItem>
@@ -28,12 +32,15 @@ export const EventCard = (props) => {
 			</CardItem>
 			<CardItem cardBody>
 				<Image
+					tracksViewChanges={true}
 					source={{ uri: props.event.image }}
 					style={{ height: 200, width: null, flex: 1 }}
+					key={`${extraData}`}
+
 				/>
 			</CardItem>
-				<Text style={styles.titleText}>{props.event.title}</Text>
-				<Text>{props.event.description}</Text>
+			<Text style={styles.titleText}>{props.event.title}</Text>
+			<Text>{props.event.description}</Text>
 			<CardItem>
 				<Left>
 					<Entypo name="location-pin" size={20} color="black" />
