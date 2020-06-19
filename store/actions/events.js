@@ -45,7 +45,6 @@ export const createEvent = (event) => {
             "category": event.category, //e.g. "music", "sports"
             "latitude": event.location.latitude,
             "longitude": event.location.longitude,
-            //"image": event.image,
             //"hostName": event.host.hostName,
             //"hostEmail": event.host.hostEmail
         });
@@ -76,7 +75,6 @@ export const createEvent = (event) => {
             });
             alert("Successfully created event.")
         } catch (err) {
-            console.log('Error posting event: ' + err);
             alert(err)
         }
     }
