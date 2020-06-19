@@ -22,7 +22,6 @@ import {
 } from "../../screens/helper/ImageHelpers";
 
 const { width, height } = Dimensions.get('window')
-
 const SCREEN_HEIGHT = height
 const SCREEN_WIDTH = width
 const ASPECT_RATIO = width / height
@@ -155,7 +154,6 @@ const CreateEventScreen = event => {
 
   const saveEvent = () => {
     if (title && description && location && date && category) {
-      // constructor(id, title, description, date,image, category,location, host ) 
       const newEvent = new Event(1000, title, description, combineDateAndTime(date, time), image, category.value,
         new Location(location.latitude, location.longitude), new Host('', '', ''));
       dispatch(eventActions.createEvent(newEvent));

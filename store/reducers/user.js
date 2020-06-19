@@ -7,12 +7,9 @@ import {
 const initialState = {
 	userName: "",
 	userEmail: "",
-	createdEvents: [],
-	savedEvents: [],
 	accessToken: "",
 	refreshToken: "",
-	profileImage: "",
-	wallpaperImage: "",
+	profileImage: ""
 };
 
 export default (state = initialState, action) => {

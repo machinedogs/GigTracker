@@ -22,7 +22,6 @@ import {
 } from "../../screens/helper/ImageHelpers";
 import { saveProfileDataToStorage } from "../../screens/helper/secureStorageHelpers";
 import * as authActions from "../../store/actions/user";
-import { events } from "../../data/dummy-data";
 import { EventCard } from "../../components/EventCard";
 import {constructEvents} from "../../screens/helper/dataTransformation";
 
@@ -46,7 +45,9 @@ const UserProfileScreen = (props) => {
 			console.log(
 			`Dispatching update user profile with this image url ${imageUrl} and this user ${user}`
 			);
+			
 			dispatch(updateUserProfile(imageUrl, user));
+			saveProfileDataToStorage(imageUrl)
 		}
 	};
 
