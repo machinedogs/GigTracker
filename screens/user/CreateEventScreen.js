@@ -92,7 +92,7 @@ const stringifyTime = (time) => {;
     s1 = str.substr(0, 5);
   }
   const s2 = str.substr(8);
-  const res = s1.concat(' ', s2);
+  const res = s1.concat(' ', s2, ' ');
   return res;
 }
 
@@ -156,20 +156,15 @@ const CreateEventScreen = event => {
   const saveEvent = () => {
     if (title && description && location && date && category) {
       // constructor(id, title, description, date,image, category,location, host ) 
-      const newEvent = new Event(1000, title, description, combineDateAndTime(date, time), null, category.value,
+      const newEvent = new Event(1000, title, description, combineDateAndTime(date, time), event.image, category.value,
         new Location(location.latitude, location.longitude), new Host('', '', ''));
-      dispatch(eventActions.createEvent(newEvent));
-      event.navigation.navigate('Home');
+      if(dispatch(eventActions.createEvent(newEvent))) {
+        event.navigation.navigate('Home');
+      }
     } else {
       //alert that event is not valid
       Alert.alert('Incomplete form', 'Fill out all event info before submitting.', [{ text: 'OK' }]);
     }
-  }
-
-  const dateTitle = () => {
-    return (
-      date.toString() ? date.toString() : 'Select date...'
-    )
   }
 
   const handleDragEnd = (e) => {
@@ -314,7 +309,7 @@ const CreateEventScreen = event => {
           }}
         />*/}
           <Button iconRight light onPress={toggleShowMap} style={styles.buttonStyle}>
-            <Text style={{ fontFamily: Platform.OS === 'ios' ? 'Sinhala Sangam MN' : '', }}>Drop a pin...</Text>
+            <Text style={{ fontFamily: Platform.OS === 'ios' ? 'Sinhala Sangam MN' : '', }}>Drop a pin... </Text>
             <Icon name='pin' />
           </Button>
         </View>

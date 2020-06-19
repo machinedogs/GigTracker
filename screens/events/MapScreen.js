@@ -37,7 +37,6 @@ const ASPECT_RATIO = width / height
 const LATITUDE_DELTA = 0.0922
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
 
-
 const todaysDate = () => {
   var today = new Date();
   var dd = today.getDate();
