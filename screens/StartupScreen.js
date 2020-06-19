@@ -6,18 +6,21 @@ import {
 } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateUserProfile } from '../store/actions/user';
 import * as authActions from '../store/actions/user';
+import * as eventActions from '../store/actions/events';
 import { getProfileDataStorage  } from '../screens/helper/secureStorageHelpers';
 
 const StartupScreen = props => {
+    const events = useSelector(state => state.events.events)
     const dispatch = useDispatch();
+
     useEffect(() => {
         const tryLogin = async () => {
-            // SecureStore.deleteItemAsync('userData')
+            //SecureStore.deleteItemAsync('userData')
             // SecureStore.deleteItemAsync('images')
-
+            await dispatch(eventActions.getEvents());
             // change this to secure store function
             const userData = await SecureStore.getItemAsync('userData');
 
@@ -26,10 +29,6 @@ const StartupScreen = props => {
                 props.navigation.navigate('Home');
                 return;
             }
-            //get profile data from storage and save to store
-            var profileImage = await getProfileDataStorage();
-            //Dispatch action to update profile image state in store 
-            dispatch(updateUserProfile(profileImage))
 
             const transformedData = JSON.parse(userData);
             console.log(userData)
@@ -37,6 +36,9 @@ const StartupScreen = props => {
             const { userName, userEmail, accessToken, refreshToken, accessExpiration, refreshExpiration } = transformedData;
             const refreshTokenExpiryDate = new Date(refreshExpiration)
             const accessTokenExpiryDate = new Date(accessExpiration)
+
+            //get profile data from storage
+            var profileImage = await getProfileDataStorage();
 
             // check if refresh token expired, then user must manually log in again in home screen
             if (refreshTokenExpiryDate <= new Date() || !refreshToken || !userName || !userEmail || !accessToken) {
@@ -46,12 +48,23 @@ const StartupScreen = props => {
             // check if access token expired, then make refresh endpoint call
             if (accessTokenExpiryDate <= new Date()) {
                 console.log('refreshing tokens')
-                await dispatch(authActions.refresh(userEmail, userName, refreshToken))
+                try {
+                    await dispatch(authActions.refresh(userEmail, userName, refreshToken));
+                } catch (error) {
+                    props.navigation.navigate('Home');
+                    return;
+                }
+
+                //Dispatch action to update profile image state in store 
+                await dispatch(updateUserProfile(profileImage, transformedData))
                 props.navigation.navigate('Home');
                 return;
             }
+
             // pass user data to state and navigate to home
             await dispatch(authActions.authenticate(userName, userEmail, accessToken, refreshToken));
+            //Dispatch action to update profile image state in store 
+            await dispatch(updateUserProfile(profileImage, transformedData));
             props.navigation.navigate('Home');
         };
 

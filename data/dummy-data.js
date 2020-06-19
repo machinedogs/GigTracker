@@ -13,7 +13,7 @@ export const Host_Person2 =
             "fake2",
             "fake2@gmail.com"
             )
-export const location = new Location('39.952461','-75.163714','Temple University')
+export const location = new Location(39.952461,-75.163714, 'Temple University' )
 
 export const EVENTS = [
     new Event(

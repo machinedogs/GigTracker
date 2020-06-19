@@ -1,10 +1,11 @@
-import { UPDATE_SAVED_EVENTS,
+import { CREATE_EVENT, GET_EVENTS, UPDATE_SAVED_EVENTS,
 	UPDATE_HOSTED_EVENTS } from '../actions/events';
 
 const initialState = {
 	createdEvents: [],
-	savedEvents: []
-};
+    savedEvents: [],
+    events: []
+}
 
 export default (state = initialState, action) => {
     switch (action.type) {
@@ -18,6 +19,16 @@ export default (state = initialState, action) => {
 				...state,
 				savedEvents: action.savedEvents,
 			};
+        case CREATE_EVENT:
+            return {
+                ...state,
+                events: state.events.concat(action.event)
+            };
+        case GET_EVENTS:
+            return {
+                ...state,
+                events: action.events
+            };
         default:
             return state;
     }

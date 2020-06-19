@@ -12,8 +12,10 @@ import {
   TouchableOpacity,
   StatusBar
 } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
-import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
+import { useSelector, useDispatch, useCallback } from 'react-redux';
+import { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
+import MapView from 'react-native-map-clustering';
+import { Dropdown } from 'react-native-material-dropdown';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import FlashOnIcon from '@material-ui/icons/FlashOn';
 import { Icon } from 'react-native-elements';
@@ -25,6 +27,8 @@ import HeaderButton from '../../components/HeaderButton';
 import Colors from '../../constants/Colors';
 import {GetHostedEvents} from '../../store/actions/events';
 import {GetSavedEvents} from '../../store/actions/events';
+import * as eventActions from '../../store/actions/events';
+
 
 const { width, height } = Dimensions.get('window')
 
@@ -50,9 +54,37 @@ const todaysDate = () => {
   return mm + '/' + dd + '/' + yyyy;
 }
 
+/*function getCurrentLocation() {
+  navigator.geolocation.getCurrentPosition(
+       async position => {
+      let region = {
+              latitude: parseFloat(position.coords.latitude),
+              longitude: parseFloat(position.coords.longitude),
+              latitudeDelta: LATITUDE_DELTA,
+              longitudeDelta: LONGITUDE_DELTA
+          };
+          return region;
+      },
+      error => console.log(error),
+      {
+          enableHighAccuracy: true,
+          timeout: 20000,
+          maximumAge: 1000
+      }
+  );
+}*/
+
+const INITIAL_REGION = {
+  latitude: 52.5,
+  longitude: 19.2,
+  latitudeDelta: 8.5,
+  longitudeDelta: 8.5,
+};
+
 const MapScreen = props => {
+
   const userAccessToken = useSelector(state => state.user.accessToken);
-  const [events, setEvents] = useState(EVENTS);
+  const events = useSelector(state => state.events.events);
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(new Event)
   let mapRef = useRef(null);
@@ -91,14 +123,26 @@ const MapScreen = props => {
     getSavedEvents(user)
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        coords = { latitude: position.coords.latitude, longitude: position.coords.longitude, latitudeDelta: .009, longitudeDelta: .009 };
-        console.log(coords);
+        coords = { latitude: position.coords.latitude, longitude: position.coords.longitude, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA };
+        console.log("Got the coords: " + coords);
         mapRef.current.animateToRegion(coords, 0);
       }, (error) => console.log(error));
   }, []);
 
-  let categories = [{ value: 'All events' }];
-  EVENTS.map(event => {
+  const refreshEvents = () => {
+    console.log("Refreshing events")
+    dispatch(eventActions.getEvents());
+  }
+
+  /*
+  useEffect(() => {
+    console.log("Map screen is pulling events");
+    dispatch(eventActions.getEvents());
+  }, [events]);
+  */
+
+  /*let categories = [{ value: 'All events' }];
+  theEvents.map(event => {
     var count = 0;
     categories.forEach(function (category) {
       if (event.category === category.value) {
@@ -109,14 +153,13 @@ const MapScreen = props => {
       let category = { value: event.category }
       categories.push(category)
     }
-  });
-  // console.log(categories);
+  });*/
 
   const filterCategory = (category) => {
     if (category === 'All events') {
-      setEvents(EVENTS)
+      //setEvents(theEvents)
     } else {
-      setEvents(EVENTS.filter(event => event.category === category))
+      //setEvents(theEvents.filter(event => event.category === category))
     }
   };
 
@@ -132,21 +175,22 @@ const MapScreen = props => {
     console.log("pressing pin");
     console.log(event)
   }
-
+  /*
   const filterDate = (selectedDate) => {
     setDate(selectedDate);
-    setEvents(EVENTS.filter(event => event.date === selectedDate))
-    console.log(selectedDate)
+    //setEvents(events.filter(event => event.date === selectedDate))
+    console.log(selectedDate + '\n' + events.map((event) => {event.toString()}))
   }
-  //Get hosted events on map screen behind the scenes
+  */
+
   return (
     //add a dropdown to choose map style? -> what if we put it in user settings? could incentivize people to become users
     //add dropdown calendar
     <View style={styles.container}>
       <StatusBar backgroundColor={Colors.darkGrey} barStyle='light-content' />
 
-
       <MapView
+        initialRegion={INITIAL_REGION}
         style={styles.map}
         provider={PROVIDER_GOOGLE}
         showsUserLocation
@@ -156,10 +200,11 @@ const MapScreen = props => {
         toolbarEnabled={true}
         ref={mapRef}
         customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
+        clusterColor="#341f97"
       >
         {events.map(event => (
           <Marker
-            coordinate={{ latitude: event.latitude, longitude: event.longitude }}
+            coordinate={{ latitude: parseFloat(event.location.latitude), longitude: parseFloat(event.location.longitude) }}
             title={event.title}
             pinColor="#341f97"
             //image={require('../../assets/splash.png')}
@@ -188,6 +233,26 @@ const MapScreen = props => {
         visible={isModalVisible}
         toggleModal={toggleModal}
       />
+      <SafeAreaView
+        style={{
+          position: 'absolute',//use absolute position to show button on top of the map
+          topBarStyle: '0.5%',
+          alignSelf: 'flex-end' //for align to right
+        }}
+      >
+        <TouchableOpacity>
+          <Icon
+            reverse
+            raised
+            name='refresh'
+            type='font-awesome'
+            color={Colors.darkGrey}
+            size={28}
+            reverseColor='white'
+            onPress={refreshEvents}
+          />
+        </TouchableOpacity>
+      </SafeAreaView>
       {!userAccessToken ?
         (
           <SafeAreaView
@@ -221,7 +286,7 @@ const MapScreen = props => {
                 type='font-awesome'
                 color={Colors.darkGrey}
                 size={28}
-                onPress={() => { props.navigation.navigate('Profile') }}
+                onPress={() => { props.navigation.navigate('UserProfile') }}
               />
             </TouchableOpacity>
             <TouchableOpacity>
@@ -265,15 +330,15 @@ MapScreen.navigationOptions = navData => {
           />
         </HeaderButtons>
       ),
-      headerRight: () => (
-        <HeaderButtons HeaderButtonComponent={HeaderButton}>
-          <Item
-            title='Menu'
-            iconName={Platform.OS === 'android' ? 'md-calendar' : 'ios-calendar'}
-            onPress={() => { }}
-          />
-        </HeaderButtons>
-      )
+    headerRight: () => (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item
+          title='Menu'
+          iconName={Platform.OS === 'android' ? 'md-calendar' : 'ios-calendar'}
+          onPress={() => { }}
+        />
+      </HeaderButtons>
+    )
   }
 }
 
@@ -282,22 +347,23 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    width: SCREEN_WIDTH,
     paddingTop: 0,
-    //width: Dimensions.get('window').width,
   },
   top: {
-    backgroundColor: '#130f40',
+    backgroundColor: '#2d3436',
     flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
+    width: SCREEN_WIDTH,
     //justifyContent: 'center',
-    width: Dimensions.get('window').width,
   }
   ,
   map: {
     flex: 1,
     zIndex: -1,
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT //* .86,
   },
   titleStyle: {
     textAlign: 'left',
@@ -319,13 +385,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center' //for align to right
   },
   topBarStyle: {
+    width: SCREEN_WIDTH,
     flex: 2,
-    width: Dimensions.get('window').width,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
     paddingBottom: 10,
-    backgroundColor: '#130f40'
+    backgroundColor: '#2d3436'
   },
   dropdownStyle: {
     width: 100

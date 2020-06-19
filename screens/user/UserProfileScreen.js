@@ -36,15 +36,18 @@ const UserProfileScreen = (props) => {
 		console.log("Inside update profile photo ");
 		//Get image from camera library
 		var file = await openImagePickerAsync();
-		//Get image from firebase
-		var imageUrl = await getImage(file);
-		//dispatch action
-		console.log("Dispatching update user profile with ");
-		console.log(user);
-		console.log(
+		//Only update if they picked image
+		if(file){
+			//Get image from firebase
+			var imageUrl = await getImage(file);
+			//dispatch action
+			console.log("Dispatching update user profile with ");
+			console.log(user);
+			console.log(
 			`Dispatching update user profile with this image url ${imageUrl} and this user ${user}`
-		);
-		dispatch(updateUserProfile(imageUrl, user));
+			);
+			dispatch(updateUserProfile(imageUrl, user));
+		}
 	};
 
 	return (
