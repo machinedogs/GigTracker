@@ -150,7 +150,7 @@ const MapScreen = props => {
             key={event.id}
           >
                 {Platform.OS === 'ios' ? (<EventCard event={event} />) : (
-                  <CustomCallout style ={{height:400}} event={event} />
+                  <CustomCallout style ={{height:400, margin:10}} event={event} />
                 )}
             </Callout>
           </Marker>
@@ -310,8 +310,7 @@ const styles = StyleSheet.create({
   },
   plainView: {
     flex: 1,
-    width: 'auto',
-
+    width: 'auto'
 
   },
 });

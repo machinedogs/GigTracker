@@ -8,7 +8,7 @@ export const EventImage = (event) => {
    </head>
    <body>
       <div style=' font-size: 70px '>
-         <img  style=' margin: 10 ; width: 100% 'src="` + event.image + `" /> 
+         <img  style=' margin: 10 ; width: 100%  ;  overflow: hidden;'src="` + event.image + `" /> 
       </div>
    </body>
 </html> `
