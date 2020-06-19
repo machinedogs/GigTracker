@@ -23,11 +23,6 @@ import Event from '../../models/event';
 import HeaderButton from '../../components/HeaderButton';
 import Colors from '../../constants/Colors';
 import { CustomCallout } from '../../components/CustomCallout';
-/* import { CustomWeb } from '../../components/testWebView' */
-import { WebView } from 'react-native-webview'
-
-import { ScrollView } from 'react-native-gesture-handler';
-
 
 const { width, height } = Dimensions.get('window')
 
@@ -61,12 +56,7 @@ const MapScreen = props => {
   let mapRef = useRef(null);
   let menuRef = useRef(null);
   const [date, setDate] = useState(todaysDate());
-  const [extraData, setExtraData] = useState(false);
-  const useForceUpdate = () => useState()[1];
-  const forceUpdate = useForceUpdate();
-
-
-
+ 
   var calloutID = 10;
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -83,7 +73,7 @@ const MapScreen = props => {
         mapRef.current.animateToRegion(coords, 0);
       }, (error) => console.log(error));
   }, []);
-  useEffect(() => { setExtraData(true); }, []);
+  
   let categories = [{ value: 'All events' }];
   EVENTS.map(event => {
     var count = 0;
@@ -115,12 +105,9 @@ const MapScreen = props => {
   }
 
 
-  const onMapRender = () => {
-
-    console.log("do nothing");
-  }
+ 
   const onPinPress = (event) => {
-    setExtraData(true); forceUpdate();
+    
     setSelectedEvent({ id: event.id, title: event.title, description: event.description, hostName: event.hostName });
     console.log("pressing pin");
     console.log(event)
@@ -145,7 +132,6 @@ const MapScreen = props => {
         showsMyLocationButton
         rotateEnabled={false}
         showsTraffic={false}
-        onMapReady={onMapRender()}
         toolbarEnabled={true}
         ref={mapRef}
         customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
@@ -165,13 +151,9 @@ const MapScreen = props => {
             tooltip={true}
             key={event.id}
           >
-              <ScrollView>
-                {Platform.OS === 'ios' ? (<EventCard props={event} />) : (
+                {Platform.OS === 'ios' ? (<EventCard event={event} />) : (
                   <CustomCallout event={event} />
                 )}
-
-              </ScrollView>
-
             </Callout>
           </Marker>
         ))

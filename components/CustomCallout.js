@@ -18,14 +18,9 @@ import { EventImage } from './calloutEventImage';
 import { UserImage } from './calloutUserImage';
 import { WebView } from 'react-native-webview'
 
-const doNothing = () => {
-
-    console.log("do nothing");
-}
 
 export const CustomCallout = (props) => {
-    const [extraData, setExtraData] = useState(false);
-    useEffect(() => { setExtraData(true); }, []);
+   
     return (
         <Card>
             <View>
@@ -41,7 +36,6 @@ export const CustomCallout = (props) => {
                     </Left>
                 </CardItem>
                 <CardItem cardBody>
-
                     <WebView style={{ height: 100, width: 300, }} source={{
                         html: EventImage(props.event)
                     }} />
