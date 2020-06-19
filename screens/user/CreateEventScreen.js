@@ -156,7 +156,7 @@ const CreateEventScreen = event => {
   const saveEvent = () => {
     if (title && description && location && date && category) {
       // constructor(id, title, description, date,image, category,location, host ) 
-      const newEvent = new Event(1000, title, description, combineDateAndTime(date, time), null, category.value,
+      const newEvent = new Event(1000, title, description, combineDateAndTime(date, time), image, category.value,
         new Location(location.latitude, location.longitude), new Host('', '', ''));
       dispatch(eventActions.createEvent(newEvent));
       event.navigation.navigate('Home');
@@ -233,7 +233,7 @@ const CreateEventScreen = event => {
           alignContent: 'center',
           paddingBottom: 10,
           zIndex: 10,
-          width: 250,
+          width: SCREEN_WIDTH,
         }}>
           <Text style={styles.text}>Category</Text>
           {Platform.OS==='ios' ? (

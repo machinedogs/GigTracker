@@ -29,7 +29,6 @@ export const getEvents = () => {
 }
 
 export const createEvent = (event) => {
-    console.log('Event to be created: ' + event);
     return async (dispatch, getState) => {
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
@@ -43,12 +42,13 @@ export const createEvent = (event) => {
             "description": event.description,
             "date": event.date,
             "category": event.category, //e.g. "music", "sports"
+            "image": event.image,
             "latitude": event.location.latitude,
             "longitude": event.location.longitude,
             //"hostName": event.host.hostName,
             //"hostEmail": event.host.hostEmail
         });
-        console.log(raw);
+        console.log('Event: ' + raw.toString);
 
         var requestOptions = {
             method: 'POST',
@@ -59,7 +59,7 @@ export const createEvent = (event) => {
 
         try {
             const access_token = getState().user.accessToken;
-            const response = await fetch(`https://gigservice.herokuapp.com/api/v1/events?auth_token=${access_token}`, requestOptions);
+            const response = await fetch(`https://gigservice.herokuapp.com/api/v1/host/events?auth_token=${access_token}`, requestOptions);
             const resData = await response.json();
 
             if (resData.status === 'ERROR') {
