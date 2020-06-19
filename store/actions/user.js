@@ -4,8 +4,6 @@ export const AUTHENTICATE = 'AUTHENTICATE';
 export const UPDATE_PROFILE = 'UPDATE_PROFILE';
 export const UPDATE_WALLPAPER = 'UPDATE_WALLPAPER';
 export const LOGOUT = 'LOGOUT';
-export const UPDATE_HOSTED_EVENTS = 'UPDATE_HOSTED_EVENTS';
-export const UPDATE_SAVED_EVENTS = 'UPDATE_SAVED_EVENTS';
 
 export const authenticate = (userName, userEmail, accessToken, refreshToken) => {
     return {
@@ -17,39 +15,6 @@ export const authenticate = (userName, userEmail, accessToken, refreshToken) => 
     };
 };
 
-//Get a person's hosted/created events
-export const UpdateHostedEvents = (createdEvents) =>{
-    return { 
-        type: UPDATE_HOSTED_EVENTS, 
-        createdEvents: createdEvents
-    };
-}
-
-export const GetHostedEvents = (user) => {
-    return async (dispatch) => {
-        console.log('Getting hosted events...making api call..');
-        const accessToken = user.accessToken
-        console.log('access token....')
-        console.log(accessToken)
-        var raw = '';
-
-        var requestOptions = {
-            method: 'GET',
-            body: raw,
-            redirect: 'follow'
-        };
-        console.log('request options')
-        console.log(requestOptions)
-        console.log(`https://gigservice.herokuapp.com/api/v1/host/events?auth_token=${accessToken}`)
-        const response = await fetch(
-            `https://gigservice.herokuapp.com/api/v1/host/events?auth_token=${accessToken}`,
-            requestOptions)
-        const resData = await response.json();
-        console.log('Got response for getting the host events ')
-        console.log(resData)
-        dispatch(UpdateHostedEvents(resData))
-    }
-}
 //updates service
 export const updateDatabaseProfile = (profileImage, user) =>{
     return async () => {
@@ -95,13 +60,6 @@ export const UpdateProfile = (profileImage) =>{
         profileImage: profileImage
     };
 }
-
-export const updateWallpaper = (wallpaperImage) => {
-    return { 
-        type: UPDATE_WALLPAPER, 
-        wallpaperImage: wallpaperImage
-    };
-};
 export const logout = () => {
     return async (dispatch) => {
         console.log("Removing user data from storage and memory")

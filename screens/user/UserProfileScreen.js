@@ -24,12 +24,37 @@ import { saveProfileDataToStorage } from "../../screens/helper/secureStorageHelp
 import * as authActions from "../../store/actions/user";
 import { events } from "../../data/dummy-data";
 import { EventCard } from "../../components/EventCard";
+import Event from "../../models/event";
+import host from "../../models/host";
+import location from "../../models/location";
+
 const UserProfileScreen = (props) => {
 	const dispatch = useDispatch();
 	var profileImage = useSelector((state) => state.user.profileImage);
 	var user = useSelector((state) => state.user);
+	var event = useSelector((state) => state.events);
 
-	const DATA = events;
+	let constructHostedEvents = () => {
+		console.log("constructing events");
+		var hosted = event.createdEvents.map((item) => {
+			return new Event(
+				item.event,
+				item.title,
+				item.description,
+				item.date,
+				item.image,
+				item.category,
+				new location(
+					item.location.latitude,
+					item.location.longitude,
+					item.location.address
+				),
+				new host(item.host.profile, item.host.name, item.host.email)
+			);
+		});
+		console.log(hosted);
+		return hosted;
+	};
 
 	let updateProfilePhoto = async () => {
 		console.log("Inside update profile photo ");
@@ -40,71 +65,76 @@ const UserProfileScreen = (props) => {
 		//dispatch action
 		console.log("Dispatching update user profile with ");
 		console.log(user);
-		console.log(`Dispatching update user profile with this image url ${imageUrl} and this user ${user}`)
+		console.log(
+			`Dispatching update user profile with this image url ${imageUrl} and this user ${user}`
+		);
 		dispatch(updateUserProfile(imageUrl, user));
 	};
 
 	return (
 		<ScrollView>
-		<View style={styles.container}>
-			<View style={styles.headerContainer}>
-				<ImageBackground
-					style={styles.headerBackgroundImage}
-					blurRadius={10}
-					source={{
-						uri:
-							"https://visme.co/blog/wp-content/uploads/2017/07/50-Beautiful-and-Minimalist-Presentation-Backgrounds-018.jpg",
-					}}
-				>
-					<View style={styles.headerColumn}>
-						<TouchableOpacity
-							onPress={updateProfilePhoto}
-							style={styles.userImageContainer}
-						>
-							<Image style={styles.userImage} source={{ uri: profileImage }} />
-						</TouchableOpacity>
-						<Text style={styles.userNameText}>{user.userName}</Text>
-						<Text style={styles.emailText}>{user.userEmail}</Text>
-					</View>
-				</ImageBackground>
-			</View>
-			<View style={styles.content}>
-				<Tabs>
-					<Tab heading="Saved Events">
-						{/* <FlatList
+			<View style={styles.container}>
+				<View style={styles.headerContainer}>
+					<ImageBackground
+						style={styles.headerBackgroundImage}
+						blurRadius={10}
+						source={{
+							uri:
+								"https://visme.co/blog/wp-content/uploads/2017/07/50-Beautiful-and-Minimalist-Presentation-Backgrounds-018.jpg",
+						}}
+					>
+						<View style={styles.headerColumn}>
+							<TouchableOpacity
+								onPress={updateProfilePhoto}
+								style={styles.userImageContainer}
+							>
+								<Image
+									style={styles.userImage}
+									source={{ uri: profileImage }}
+								/>
+							</TouchableOpacity>
+							<Text style={styles.userNameText}>{user.userName}</Text>
+							<Text style={styles.emailText}>{user.userEmail}</Text>
+						</View>
+					</ImageBackground>
+				</View>
+				<View style={styles.content}>
+					<Tabs>
+						<Tab heading="Saved Events">
+							{/* <FlatList
 							data={DATA}
 							renderItem={({ item }) => <EventCard event={item} />}
 							keyExtractor={(item) => item.id}
 							scrollEnabled={false}
 						/> */}
-					</Tab>
-					<Tab heading="Hosted Events">
-					<FlatList
-							data={user.createdEvents}
-							renderItem={({ item }) => <EventCard event={item} />}
-							keyExtractor={(item) => item.event}
-							scrollEnabled={false}
-						/>
-					</Tab>
-				</Tabs>
+						</Tab>
+						<Tab heading="Hosted Events">
+							<FlatList
+								data={constructHostedEvents()}
+								renderItem={({ item }) => <EventCard event={item} />}
+								keyExtractor={(item) => item.id}
+								scrollEnabled={false}
+							/>
+						</Tab>
+					</Tabs>
+				</View>
+				<View style={styles.ButtonContainer}>
+					<Button
+						title="Logout"
+						onPress={() => {
+							dispatch(authActions.logout());
+							props.navigation.navigate("Home");
+						}}
+					/>
+					<Button
+						title="Delete Account"
+						onPress={() => {
+							// Take user to delete account screen and let them delete
+							props.navigation.navigate("Delete");
+						}}
+					/>
+				</View>
 			</View>
-			<View style={styles.ButtonContainer}>
-				<Button
-					title="Logout"
-					onPress={() => {
-						dispatch(authActions.logout());
-						props.navigation.navigate("Home");
-					}}
-				/>
-				<Button
-					title="Delete Account"
-					onPress={() => {
-						// Take user to delete account screen and let them delete
-						props.navigation.navigate("Delete");
-					}}
-				/>
-			</View>
-		</View>
 		</ScrollView>
 	);
 };
@@ -148,7 +178,7 @@ const styles = StyleSheet.create({
 				marginTop: -1,
 			},
 			android: {
-				alignItems: "center"
+				alignItems: "center",
 			},
 		}),
 	},

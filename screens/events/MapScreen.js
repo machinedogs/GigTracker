@@ -23,7 +23,7 @@ import EventModal from '../../components/EventModal';
 import Event from '../../models/event';
 import HeaderButton from '../../components/HeaderButton';
 import Colors from '../../constants/Colors';
-import {GetHostedEvents} from '../../store/actions/user';
+import {GetHostedEvents} from '../../store/actions/events';
 
 const { width, height } = Dimensions.get('window')
 

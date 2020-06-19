@@ -1,22 +1,18 @@
 import {
-	UPDATE_SAVED_EVENTS,
-	UPDATE_HOSTED_EVENTS,
 	AUTHENTICATE,
 	LOGOUT,
-	UPDATE_PROFILE,
-	UPDATE_WALLPAPER,
+	UPDATE_PROFILE
 } from "../actions/user";
 
 const initialState = {
-	//userId: null,
-	userName: null,
-	userEmail: null,
+	userName: "",
+	userEmail: "",
 	createdEvents: [],
 	savedEvents: [],
-	accessToken: null,
-	refreshToken: null,
-	profileImage: null,
-	wallpaperImage: null,
+	accessToken: "",
+	refreshToken: "",
+	profileImage: "",
+	wallpaperImage: "",
 };
 
 export default (state = initialState, action) => {
@@ -34,16 +30,6 @@ export default (state = initialState, action) => {
 			return {
 				...state,
 				profileImage: action.profileImage,
-			};
-		case UPDATE_HOSTED_EVENTS:
-			return {
-				...state,
-				createdEvents: action.createdEvents,
-			};
-		case UPDATE_SAVED_EVENTS:
-			return {
-				...state,
-				savedEvents: action.savedEvents,
 			};
 		case LOGOUT:
 			return initialState;
