@@ -45,7 +45,15 @@ const StartupScreen = props => {
             // check if access token expired, then make refresh endpoint call
             if (accessTokenExpiryDate <= new Date()) {
                 console.log('refreshing tokens')
-                await dispatch(authActions.refresh(userEmail, userName, refreshToken));
+                try {
+                    await dispatch(authActions.refresh(userEmail, userName, refreshToken));
+                } catch (error) {
+                    // Delete the invalid user data
+                    SecureStore.deleteItemAsync('userData'); // user will have to login again
+                    props.navigation.navigate('Home');
+                    return;
+                }
+
                 //Dispatch action to update profile image state in store 
                 await dispatch(updateUserProfile(profileImage, transformedData))
                 props.navigation.navigate('Home');
