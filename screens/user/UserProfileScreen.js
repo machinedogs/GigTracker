@@ -84,7 +84,7 @@ const UserProfileScreen = (props) => {
 						<FlatList
 								data={constructEvents(event.savedEvents)}
 								renderItem={({ item }) => <EventCard event={item} />}
-								keyExtractor={(item) => item.id}
+								keyExtractor={(item) => item.id.toString()}
 								scrollEnabled={false}
 							/>
 						</Tab>
@@ -92,7 +92,7 @@ const UserProfileScreen = (props) => {
 							<FlatList
 								data={constructEvents(event.createdEvents)}
 								renderItem={({ item }) => <EventCard event={item} />}
-								keyExtractor={(item) => item.id}
+								keyExtractor={(item) => item.id.toString()}
 								scrollEnabled={false}
 							/>
 						</Tab>

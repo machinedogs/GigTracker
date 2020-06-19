@@ -210,7 +210,7 @@ const MapScreen = props => {
             //image={require('../../assets/splash.png')}
             icon={FlashOnIcon}
             description={event.description}
-            key={event.id}
+            key={event.event}
             tracksViewChanges={false}
             onPress={onPinPress.bind(this, event)}
           ><Callout

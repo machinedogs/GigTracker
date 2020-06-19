@@ -123,12 +123,12 @@ const CreateEventScreen = event => {
   //  get initial location then animate to that location
   // only do this on mount and unmount of map component 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        coords = { latitude: position.coords.latitude, longitude: position.coords.longitude, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA };
-        setLocation(coords);
-        mapRef.current.animateToRegion(coords, 1000);
-      }, (error) => console.log(error));
+    // navigator.geolocation.getCurrentPosition(
+    //   (position) => {
+    //     coords = { latitude: position.coords.latitude, longitude: position.coords.longitude, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA };
+    //     setLocation(coords);
+    //     mapRef.current.animateToRegion(coords, 1000);
+    //   }, (error) => console.log(error));
   }, []);
 
 
