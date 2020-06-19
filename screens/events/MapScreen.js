@@ -24,6 +24,7 @@ import Event from '../../models/event';
 import HeaderButton from '../../components/HeaderButton';
 import Colors from '../../constants/Colors';
 import {GetHostedEvents} from '../../store/actions/events';
+import {GetSavedEvents} from '../../store/actions/events';
 
 const { width, height } = Dimensions.get('window')
 
@@ -66,9 +67,15 @@ const MapScreen = props => {
   };
   const getHostedEvents = async (user) =>{
   
-    console.log('Dispatching get hosted events from mapscreen')
+    console.log('Dispatching get hosted events action from mapscreen')
     console.log(user.accessToken)
     dispatch(GetHostedEvents(user))
+  }
+  const getSavedEvents = async (user) =>{
+  
+    console.log('Dispatching get saved events action from mapscreen')
+    console.log(user.accessToken)
+    dispatch(GetSavedEvents(user))
   }
 
   const closeControlPanel = () => {
@@ -81,6 +88,7 @@ const MapScreen = props => {
   // only do this on mount and unmount of map component 
   useEffect(() => {
     getHostedEvents(user)
+    getSavedEvents(user)
     navigator.geolocation.getCurrentPosition(
       (position) => {
         coords = { latitude: position.coords.latitude, longitude: position.coords.longitude, latitudeDelta: .009, longitudeDelta: .009 };
