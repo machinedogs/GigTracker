@@ -54,10 +54,8 @@ const MapScreen = props => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(new Event)
   let mapRef = useRef(null);
-  let menuRef = useRef(null);
   const [date, setDate] = useState(todaysDate());
  
-  var calloutID = 10;
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
