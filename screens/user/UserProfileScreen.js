@@ -40,9 +40,8 @@ const UserProfileScreen = (props) => {
 		//dispatch action
 		console.log("Dispatching update user profile with ");
 		console.log(user);
+		console.log(`Dispatching update user profile with this image url ${imageUrl} and this user ${user}`)
 		dispatch(updateUserProfile(imageUrl, user));
-		//Save uri to storage
-		saveProfileDataToStorage(imageUrl);
 	};
 
 	return (
