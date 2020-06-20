@@ -62,6 +62,7 @@ export const logout = () => {
     return async (dispatch) => {
         console.log("Removing user data from storage and memory")
         deleteFromStorage('userData'); // remove the user saved data
+        deleteFromStorage('images');
         dispatch({ type: LOGOUT });
     }
 }
@@ -90,6 +91,7 @@ export const deleteAccount = () => {
         }
         console.log("Deleting User")
         deleteFromStorage('userData'); // remove the user saved data
+        deleteFromStorage('images');
         dispatch({ type: LOGOUT });
     }
 }

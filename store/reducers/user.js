@@ -9,7 +9,7 @@ const initialState = {
 	userEmail: "",
 	accessToken: "",
 	refreshToken: "",
-	profileImage: ""
+	profileImage: "https://images.unsplash.com/photo-1582266255765-fa5cf1a1d501?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80"
 };
 
 export default (state = initialState, action) => {

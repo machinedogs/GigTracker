@@ -11,6 +11,7 @@ import MapView from 'react-native-maps';
 import MapStyle from '../../constants/MapStyle';
 import { useDispatch } from 'react-redux';
 import Event from '../../models/event';
+import eventBuilder from '../../models/createEvent';
 import Location from '../../models/location';
 import Host from '../../models/host';
 import * as eventActions from '../../store/actions/events';
@@ -29,14 +30,14 @@ const LATITUDE_DELTA = 0.0922
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
 
 
-const CreateEventScreen = (event, props) => {
+const CreateEventScreen = (props) => {
   //Initial states of event screen
-  const initTitle = event.title ? event.title : '';
-  const initDescription = event.description ? event.description : '';
-  const initCategory = event.category ? event.category : '';
-  const initDate = event.date ? event.date : new Date();
-  const initTime = event.date ? event.date : new Date();
-  const initImage = event.image ? event.image : "https://miro.medium.com/max/7680/1*1DK11-yKohzFA9gI-l1glA.jpeg";
+  const initTitle = props.event? props.event.title : '';
+  const initDescription = props.event ? props.event.description : '';
+  const initCategory = props.event ? props.event.category : '';
+  const initDate = props.event ? props.event.date : new Date();
+  const initTime = props.event ? props.event.date : new Date();
+  const initImage = props.event ? props.event.image : "https://miro.medium.com/max/7680/1*1DK11-yKohzFA9gI-l1glA.jpeg";
 
 
   //These states updated as user interacts with the screen
@@ -89,15 +90,15 @@ const CreateEventScreen = (event, props) => {
     showTime ? setShowTime(false) : setShowTime(true);
   };
 
-  const saveEvent = () => {
+  const saveEvent = async() => {
     console.log('saving event')
-    if (title && description && location && date && category) {
-      const newEvent = new Event(1000, title, description, combineDateAndTime(date, time), image, category.value,
-        new Location(location.latitude, location.longitude), new Host('', '', ''));
-
+    if (title && description && location && location.latitude && location.longitude && date && category && image) {
+      const newEvent = new eventBuilder(title, description, combineDateAndTime(date, time), image, category,location.latitude, location.longitude);
       console.log(`Dispatching event ${newEvent.title}`)
-      dispatch(eventActions.createEvent(newEvent));
-      event.navigation.navigate('Home');
+      await dispatch(eventActions.createEvent(newEvent));
+      console.log('dispatching getEvents from create page')
+      dispatch(eventActions.getEvents());
+      props.navigation.navigate('Home');
     } else {
       //alert that event is not valid
       Alert.alert('Incomplete form', 'Fill out all event info before submitting.', [{ text: 'OK' }]);

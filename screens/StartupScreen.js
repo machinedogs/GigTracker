@@ -20,7 +20,8 @@ const StartupScreen = props => {
         const tryLogin = async () => {
             //SecureStore.deleteItemAsync('userData')
             // SecureStore.deleteItemAsync('images')
-            await dispatch(eventActions.getEvents());
+            console.log('dispatching getEvents from startup page')
+            dispatch(eventActions.getEvents());
             // change this to secure store function
             const userData = await SecureStore.getItemAsync('userData');
 
@@ -53,6 +54,7 @@ const StartupScreen = props => {
                 } catch (error) {
                     // Delete the invalid user data
                     SecureStore.deleteItemAsync('userData'); // user will have to login again
+                    SecureStore.deleteItemAsync('images');
                     props.navigation.navigate('Home');
                     return;
                 }

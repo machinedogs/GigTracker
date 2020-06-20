@@ -24,7 +24,7 @@ import { saveProfileDataToStorage } from "../../screens/helper/secureStorageHelp
 import * as authActions from "../../store/actions/user";
 import { EventCard } from "../../components/EventCard";
 import {constructEvents} from "../../screens/helper/dataTransformation";
-
+import {GetHostedEvents, GetSavedEvents} from '../../store/actions/events';
 const UserProfileScreen = (props) => {
 	const dispatch = useDispatch();
 	var profileImage = useSelector((state) => state.user.profileImage);
@@ -50,6 +50,23 @@ const UserProfileScreen = (props) => {
 			saveProfileDataToStorage(imageUrl)
 		}
 	};
+	const getHostedEvents = async (user) =>{
+  
+		console.log('Dispatching get hosted events action from mapscreen')
+		console.log(user.accessToken)
+		dispatch(GetHostedEvents(user))
+	  }
+	  const getSavedEvents = async (user) =>{
+	  
+		console.log('Dispatching get saved events action from mapscreen')
+		console.log(user.accessToken)
+		dispatch(GetSavedEvents(user))
+	  }
+	  
+	useEffect(() => {
+		getHostedEvents(user)
+		getSavedEvents(user)
+	  }, []);
 
 	return (
 		<ScrollView>

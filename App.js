@@ -5,7 +5,8 @@ import { Provider } from 'react-redux';
 import ReduxThunk from 'redux-thunk';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
-
+import { YellowBox } from 'react-native';
+import _ from 'lodash';
 import eventsReducer from './store/reducers/events'
 import userReducer from './store/reducers/user';
 import { composeWithDevTools } from 'redux-devtools-extension';
@@ -16,11 +17,21 @@ const rootReducer = combineReducers({
 });
 
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(ReduxThunk)));
+//Look into, andriod issue where you get warnings when communicating with firebase/api
+YellowBox.ignoreWarnings(['Setting a timer']);
+const _console = _.clone(console);
+console.warn = message => {
+  if (message.indexOf('Setting a timer') <= -1) {
+    _console.warn(message);
+  }
+};
 
-const fetchFonts = () => {
-  return Font.loadAsync({
+const fetchFonts = async() => {
+  await Font.loadAsync({
     'jack-silver': require('./assets/fonts/Jacksilver.ttf'),
-    'dumbledor': require('./assets/fonts/dumbledor.3-cut-up.ttf')
+    'dumbledor': require('./assets/fonts/dumbledor.3-cut-up.ttf'),
+    Roboto: require("native-base/Fonts/Roboto.ttf"),
+    Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
   });
 };
 

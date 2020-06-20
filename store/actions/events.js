@@ -38,31 +38,33 @@ export const GetSavedEvents = (user) => {
 			`https://gigservice.herokuapp.com/api/v1/host/saved_events?auth_token=${accessToken}`,
 			requestOptions
 		);
-		const resData = await response.json();
-		console.log("Got response for getting the saved events ");
-		console.log(resData);
-		//ToDo:Eventually improve this filter event
-		var filteredEvents = resData.filter((event) => {
-			console.log(`event is here ${event.title}`);
-			if (
-				event.event != null &&
-				event.title != null &&
-				event.description != null &&
-				event.date != null &&
-				event.category != null &&
-				event.image != null &&
-				event.image.length > 8
-			) {
-				console.log(`returns true for event ${event.event}`);
-				return true;
-			} else {
-				return false;
-			}
-		});
-		console.log(`filtered Events ${filteredEvents}`);
+		if (response.ok) {
+			const resData = await response.json();
+			console.log("Got response for getting the saved events ");
+			console.log(resData);
+			//ToDo:Eventually improve this filter event
+			var filteredEvents = resData.filter((event) => {
+				console.log(`event is here ${event.title}`);
+				if (
+					event.event != null &&
+					event.title != null &&
+					event.description != null &&
+					event.date != null &&
+					event.category != null &&
+					event.image != null &&
+					event.image.length > 8
+				) {
+					console.log(`returns true for event ${event.event}`);
+					return true;
+				} else {
+					return false;
+				}
+			});
+			console.log(`filtered Events ${filteredEvents}`);
 
-		//Filter the data for bad events, meaning any null values or something
-		dispatch(UpdateSavedEvents(filteredEvents));
+			//Filter the data for bad events, meaning any null values or something
+			dispatch(UpdateSavedEvents(filteredEvents));
+		}
 	};
 };
 
@@ -102,8 +104,8 @@ export const updateMapEvents = (mapEvents) => {
 
 export const createEvent = (event) => {
 	return async (dispatch, getState) => {
-		console.log(event)
-		console.log('IN creating event action')
+		console.log(event);
+		console.log("IN creating event action");
 		var myHeaders = new Headers();
 		myHeaders.append("Content-Type", "application/json");
 
@@ -113,8 +115,8 @@ export const createEvent = (event) => {
 			date: event.date,
 			category: event.category, //e.g. "music", "sports"
 			image: event.image,
-			latitude: event.location.latitude,
-			longitude: event.location.longitude,
+			latitude: event.latitude,
+			longitude: event.longitude,
 		});
 		console.log("Event: " + raw.toString);
 
@@ -176,30 +178,32 @@ export const GetHostedEvents = (user) => {
 			`https://gigservice.herokuapp.com/api/v1/host/events?auth_token=${accessToken}`,
 			requestOptions
 		);
-		const resData = await response.json();
-		console.log("Got response for getting the host events ");
-		console.log(resData);
-		//ToDo:Eventually improve this filter event
-		var filteredEvents = resData.filter((event) => {
-			console.log(`event is here ${event.title}`);
-			if (
-				event.event != null &&
-				event.title != null &&
-				event.description != null &&
-				event.date != null &&
-				event.category != null &&
-				event.image != null &&
-				event.image.length > 8
-			) {
-				console.log(`returns true for event ${event.event}`);
-				return true;
-			} else {
-				return false;
-			}
-		});
-		console.log(`filtered Events ${filteredEvents}`);
+		if (response.ok) {
+			const resData = await response.json();
+			console.log("Got response for getting the host events ");
+			console.log(resData);
+			//ToDo:Eventually improve this filter event
+			var filteredEvents = resData.filter((event) => {
+				console.log(`event is here ${event.title}`);
+				if (
+					event.event != null &&
+					event.title != null &&
+					event.description != null &&
+					event.date != null &&
+					event.category != null &&
+					event.image != null &&
+					event.image.length > 8
+				) {
+					console.log(`returns true for event ${event.event}`);
+					return true;
+				} else {
+					return false;
+				}
+			});
+			console.log(`filtered Events ${filteredEvents}`);
 
-		//Filter the data for bad events, meaning any null values or something
-		dispatch(UpdateHostedEvents(filteredEvents));
+			//Filter the data for bad events, meaning any null values or something
+			dispatch(UpdateHostedEvents(filteredEvents));
+		}
 	};
 };
