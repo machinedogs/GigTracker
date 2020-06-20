@@ -55,7 +55,7 @@ const MapScreen = props => {
   const [selectedEvent, setSelectedEvent] = useState(new Event)
   let mapRef = useRef(null);
   const [date, setDate] = useState(todaysDate());
- 
+
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
@@ -71,7 +71,7 @@ const MapScreen = props => {
         mapRef.current.animateToRegion(coords, 0);
       }, (error) => console.log(error));
   }, []);
-  
+
   let categories = [{ value: 'All events' }];
   EVENTS.map(event => {
     var count = 0;
@@ -103,9 +103,9 @@ const MapScreen = props => {
   }
 
 
- 
+
   const onPinPress = (event) => {
-    
+
     setSelectedEvent({ id: event.id, title: event.title, description: event.description, hostName: event.hostName });
     console.log("pressing pin");
     console.log(event)
@@ -149,9 +149,35 @@ const MapScreen = props => {
             tooltip={true}
             key={event.id}
           >
-                {Platform.OS === 'ios' ? (<EventCard event={event} />) : (
-                  <CustomCallout style ={{height:400, margin:10}} event={event} />
-                )}
+              {Platform.OS === 'ios' ? (<EventCard event={event} />) : (
+                <CustomCallout style={{ height: 400, margin: 10 }} event={event} />
+              )}
+              <View flexDirection='row'>
+                <TouchableOpacity>
+                  <Icon
+                    reverse
+                    raised
+                    name='save'
+                    type='font-awesome'
+                    color={Colors.darkGrey}
+                    size={28}
+                    reverseColor='white'
+                    onPress={() => { props.navigation.navigate('Auth') }}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Icon
+                    reverse
+                    raised
+                    name='share-alt'
+                    type='font-awesome'
+                    color={Colors.darkGrey}
+                    size={28}
+                    reverseColor='white'
+                    onPress={() => { props.navigation.navigate('Auth') }}
+                  />
+                </TouchableOpacity>
+              </View>
             </Callout>
           </Marker>
         ))

@@ -13,7 +13,6 @@ import {
     Right,
 } from "native-base";
 import { Entypo } from "@expo/vector-icons";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { EventImage } from './calloutEventImage';
 import { UserImage } from './calloutUserImage';
 import { WebView } from 'react-native-webview'
