@@ -51,6 +51,8 @@ const StartupScreen = props => {
                 try {
                     await dispatch(authActions.refresh(userEmail, userName, refreshToken));
                 } catch (error) {
+                    // Delete the invalid user data
+                    SecureStore.deleteItemAsync('userData'); // user will have to login again
                     props.navigation.navigate('Home');
                     return;
                 }
