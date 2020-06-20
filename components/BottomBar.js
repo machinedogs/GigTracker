@@ -14,7 +14,7 @@ const BottomBar = (props) => {
                 />
                 <Button
                     title="Create Event"
-                    onPress={() => { props.navigation.navigate('CreateEvent', {event: null})}
+                    onPress={() => { props.navigation.navigate('CreateEvent', {event: null})}}
                 />
             </View>
         </View>

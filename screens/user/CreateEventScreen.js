@@ -93,7 +93,7 @@ const CreateEventScreen = (props) => {
   const saveEvent = async() => {
     console.log('saving event')
     if (title && description && location && location.latitude && location.longitude && date && category && image) {
-      const newEvent = new eventBuilder(title, description, combineDateAndTime(date, time), image, category,location.latitude, location.longitude);
+      const newEvent = new eventBuilder(title, description, combineDateAndTime(date, time), image, category.value,location.latitude, location.longitude);
       console.log(`Dispatching event ${newEvent.title}`)
       await dispatch(eventActions.createEvent(newEvent));
       console.log('dispatching getEvents from create page')

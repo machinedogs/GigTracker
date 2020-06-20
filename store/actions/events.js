@@ -133,6 +133,9 @@ export const createEvent = (event) => {
 				`https://gigservice.herokuapp.com/api/v1/host/events?auth_token=${access_token}`,
 				requestOptions
 			);
+			if(response.ok){
+				alert("Successfully created event.");
+			}
 			const resData = await response.json();
 
 			if (resData.status === "ERROR") {
@@ -140,10 +143,8 @@ export const createEvent = (event) => {
 				alert(message);
 				throw new Error(message);
 			}
-
 			console.log("Response: " + resData);
-			dispatch(updateEventMaps);
-			alert("Successfully created event.");
+			dispatch(getEvents);
 		} catch (err) {
 			alert(err);
 		}
