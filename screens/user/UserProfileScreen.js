@@ -35,70 +35,73 @@ const UserProfileScreen = (props) => {
 		console.log("Inside update profile photo ");
 		//Get image from camera library
 		var file = await openImagePickerAsync();
-		//Get image from firebase
-		var imageUrl = await getImage(file);
-		//dispatch action
-		console.log("Dispatching update user profile with ");
-		console.log(user);
-		dispatch(updateUserProfile(imageUrl, user));
-		//Save uri to storage
-		saveProfileDataToStorage(imageUrl);
+		//Get image from firebase only if user selected one
+		if (file) {
+			var imageUrl = await getImage(file);
+			//dispatch action
+			console.log("Dispatching update user profile with ");
+			console.log(user);
+			dispatch(updateUserProfile(imageUrl, user));
+			//Save uri to storage
+			saveProfileDataToStorage(imageUrl);
+		}
+
 	};
 
 	return (
 		<ScrollView>
-		<View style={styles.container}>
-			<View style={styles.headerContainer}>
-				<ImageBackground
-					style={styles.headerBackgroundImage}
-					blurRadius={10}
-					source={{
-						uri:
-							"https://visme.co/blog/wp-content/uploads/2017/07/50-Beautiful-and-Minimalist-Presentation-Backgrounds-018.jpg",
-					}}
-				>
-					<View style={styles.headerColumn}>
-						<TouchableOpacity
-							onPress={updateProfilePhoto}
-							style={styles.userImageContainer}
-						>
-							<Image style={styles.userImage} source={{ uri: profileImage }} />
-						</TouchableOpacity>
-						<Text style={styles.userNameText}>{user.userName}</Text>
-						<Text style={styles.emailText}>{user.userEmail}</Text>
-					</View>
-				</ImageBackground>
+			<View style={styles.container}>
+				<View style={styles.headerContainer}>
+					<ImageBackground
+						style={styles.headerBackgroundImage}
+						blurRadius={10}
+						source={{
+							uri:
+								"https://visme.co/blog/wp-content/uploads/2017/07/50-Beautiful-and-Minimalist-Presentation-Backgrounds-018.jpg",
+						}}
+					>
+						<View style={styles.headerColumn}>
+							<TouchableOpacity
+								onPress={updateProfilePhoto}
+								style={styles.userImageContainer}
+							>
+								<Image style={styles.userImage} source={{ uri: profileImage }} />
+							</TouchableOpacity>
+							<Text style={styles.userNameText}>{user.userName}</Text>
+							<Text style={styles.emailText}>{user.userEmail}</Text>
+						</View>
+					</ImageBackground>
+				</View>
+				<View style={styles.content}>
+					<Tabs>
+						<Tab heading="Saved Events">
+							<FlatList
+								data={DATA}
+								renderItem={({ item }) => <EventCard event={item} />}
+								keyExtractor={(item) => item.id}
+								scrollEnabled={false}
+							/>
+						</Tab>
+						<Tab heading="Hosted Events"></Tab>
+					</Tabs>
+				</View>
+				<View style={styles.ButtonContainer}>
+					<Button
+						title="Logout"
+						onPress={() => {
+							dispatch(authActions.logout());
+							props.navigation.navigate("Home");
+						}}
+					/>
+					<Button
+						title="Delete Account"
+						onPress={() => {
+							// Take user to delete account screen and let them delete
+							props.navigation.navigate("Delete");
+						}}
+					/>
+				</View>
 			</View>
-			<View style={styles.content}>
-				<Tabs>
-					<Tab heading="Saved Events">
-						<FlatList
-							data={DATA}
-							renderItem={({ item }) => <EventCard event={item} />}
-							keyExtractor={(item) => item.id}
-							scrollEnabled={false}
-						/>
-					</Tab>
-					<Tab heading="Hosted Events"></Tab>
-				</Tabs>
-			</View>
-			<View style={styles.ButtonContainer}>
-				<Button
-					title="Logout"
-					onPress={() => {
-						dispatch(authActions.logout());
-						props.navigation.navigate("Home");
-					}}
-				/>
-				<Button
-					title="Delete Account"
-					onPress={() => {
-						// Take user to delete account screen and let them delete
-						props.navigation.navigate("Delete");
-					}}
-				/>
-			</View>
-		</View>
 		</ScrollView>
 	);
 };

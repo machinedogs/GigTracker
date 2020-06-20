@@ -13,7 +13,6 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
-import FlashOnIcon from '@material-ui/icons/FlashOn';
 import { Icon } from 'react-native-elements';
 import { EventCard } from "../../components/EventCard";
 import { EVENTS } from '../../data/dummy-data';
@@ -23,9 +22,9 @@ import Event from '../../models/event';
 import HeaderButton from '../../components/HeaderButton';
 import Colors from '../../constants/Colors';
 import { CustomCallout } from '../../components/CustomCallout';
+import * as iconHelpers from '../helper/iconHelpers';
 
 const { width, height } = Dimensions.get('window')
-
 const SCREEN_HEIGHT = height
 const SCREEN_WIDTH = width
 const ASPECT_RATIO = width / height
@@ -139,10 +138,10 @@ const MapScreen = props => {
             coordinate={{ latitude: event.latitude, longitude: event.longitude }}
             title={event.title}
             pinColor="#341f97"
-            icon={FlashOnIcon}
             description={event.description}
             key={event.id}
             onPress={onPinPress.bind(this, event)}
+            icon={iconHelpers.iconPicker(event.category)}
           ><Callout
             style={styles.plainView}
             onPress={onEventCalloutPress}
