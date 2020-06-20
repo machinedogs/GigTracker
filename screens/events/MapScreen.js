@@ -152,7 +152,7 @@ const MapScreen = props => {
               {Platform.OS === 'ios' ? (<EventCard event={event} />) : (
                 <CustomCallout style={{ height: 400, margin: 10 }} event={event} />
               )}
-              <View flexDirection='row'>
+              {/* <View flexDirection='row'>
                 <TouchableOpacity>
                   <Icon
                     reverse
@@ -177,7 +177,7 @@ const MapScreen = props => {
                     onPress={() => { props.navigation.navigate('Auth') }}
                   />
                 </TouchableOpacity>
-              </View>
+              </View> */}
             </Callout>
           </Marker>
         ))
