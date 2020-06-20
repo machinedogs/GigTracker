@@ -29,10 +29,8 @@ const LATITUDE_DELTA = 0.0922
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
 
 
-const CreateEventScreen = (props) => {
+const CreateEventScreen = (event, props) => {
   //Initial states of event screen
-
-  const event = {}
   const initTitle = event.title ? event.title : '';
   const initDescription = event.description ? event.description : '';
   const initCategory = event.category ? event.category : '';
@@ -92,9 +90,12 @@ const CreateEventScreen = (props) => {
   };
 
   const saveEvent = () => {
+    console.log('saving event')
     if (title && description && location && date && category) {
       const newEvent = new Event(1000, title, description, combineDateAndTime(date, time), image, category.value,
         new Location(location.latitude, location.longitude), new Host('', '', ''));
+
+      console.log(`Dispatching event ${newEvent.title}`)
       dispatch(eventActions.createEvent(newEvent));
       event.navigation.navigate('Home');
     } else {

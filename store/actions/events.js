@@ -102,6 +102,8 @@ export const updateMapEvents = (mapEvents) => {
 
 export const createEvent = (event) => {
 	return async (dispatch, getState) => {
+		console.log(event)
+		console.log('IN creating event action')
 		var myHeaders = new Headers();
 		myHeaders.append("Content-Type", "application/json");
 
