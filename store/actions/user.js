@@ -1,4 +1,5 @@
 import * as SecureStore from 'expo-secure-store';
+import {saveProfileDataToStorage} from '../../screens/helper/secureStorageHelpers';
 //TODO: Move to a constant file 
 export const AUTHENTICATE = 'AUTHENTICATE';
 export const UPDATE_PROFILE = 'UPDATE_PROFILE';
@@ -48,7 +49,8 @@ export const updateUserProfile = (profileImage, user) => {
         dispatch(updateDatabaseProfile(profileImage, user))
         //updates store
         dispatch(UpdateProfile(profileImage))
-
+        //Update device storage
+        saveProfileDataToStorage(profileImage)
         console.log('updating profile')
     }
 }
@@ -186,6 +188,9 @@ export const signup = (email, password, username, passwordConfirmation) => {
         dispatch(authenticate(resData.data.host.name, resData.data.host.email, resData.data.authorization.auth_token.token, resData.data.authorization.refresh_token.token))
         //Get profile pic from service and save to store 
         dispatch(UpdateProfile(resData.data.host.profile))
+
+        //Update device storage
+        saveProfileDataToStorage(resData.data.host.profile)
         let accessExpiration = new Date(resData.data.authorization.auth_token.expires);
         let refreshExpiration = new Date(resData.data.authorization.refresh_token.expires);
         saveDataToStorage(
@@ -233,6 +238,8 @@ export const login = (email, password) => {
         dispatch(authenticate(resData.data.host.name, resData.data.host.email, resData.data.authorization.auth_token.token, resData.data.authorization.refresh_token.token))
         //save profile image response from service to screen
         console.log(`Logging in..${resData.data.host.profile}`)
+        //Update device storage
+        saveProfileDataToStorage(resData.data.host.profile)
         dispatch(UpdateProfile(resData.data.host.profile))
         let accessExpiration = new Date(resData.data.authorization.auth_token.expires);
         let refreshExpiration = new Date(resData.data.authorization.refresh_token.expires);

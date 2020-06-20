@@ -99,6 +99,9 @@ const MapScreen = props => {
   //  get initial location then animate to that location
   // only do this on mount and unmount of map component 
   useEffect(() => {
+    //TODO: Improve service call placements
+    getHostedEvents(user);
+    getSavedEvents(user);
     navigator.geolocation.getCurrentPosition(
       (position) => {
         coords = { latitude: position.coords.latitude, longitude: position.coords.longitude, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA };

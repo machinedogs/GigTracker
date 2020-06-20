@@ -120,6 +120,7 @@ const CreateEventScreen = (props) => {
 	};
 
 	const saveEvent = async () => {
+		console.log(`Category is here.... ${category} and ${category.value}`)
 		if (
 			title &&
 			description &&
@@ -130,17 +131,18 @@ const CreateEventScreen = (props) => {
 			category &&
 			image
 		) {
+			console.log(category)
 			const newEvent = new eventBuilder(
 				title,
 				description,
 				combineDateAndTime(date, time),
 				image,
-				category.value,
+				category,
 				location.latitude,
 				location.longitude
 			);
 			console.log(`Dispatching event ${newEvent.title}`);
-			dispatch(eventActions.createEvent(newEvent));
+			await dispatch(eventActions.createEvent(newEvent));
 			console.log("dispatching getEvents from create page");
 			dispatch(eventActions.getEvents());
 			props.navigation.navigate("Home");
@@ -151,6 +153,7 @@ const CreateEventScreen = (props) => {
 				"Fill out all event info before submitting.",
 				[{ text: "OK" }]
 			);
+			console.log(`Category is here.... ${category} and ${category.value}`)
 		}
 	};
 

@@ -23,50 +23,56 @@ import {
 import { saveProfileDataToStorage } from "../../screens/helper/secureStorageHelpers";
 import * as authActions from "../../store/actions/user";
 import { EventCard } from "../../components/EventCard";
-import {constructEvents} from "../../screens/helper/dataTransformation";
-import {GetHostedEvents, GetSavedEvents} from '../../store/actions/events';
+import { constructEvents } from "../../screens/helper/dataTransformation";
+import { GetHostedEvents, GetSavedEvents } from "../../store/actions/events";
+import { ActivityIndicator } from "react-native";
+
 const UserProfileScreen = (props) => {
 	const dispatch = useDispatch();
 	var profileImage = useSelector((state) => state.user.profileImage);
 	var user = useSelector((state) => state.user);
 	var event = useSelector((state) => state.events);
+	//state specific to component
+	const [loading, setLoading] = useState(false);
 
 	let updateProfilePhoto = async () => {
 		console.log("Inside update profile photo ");
 		//Get image from camera library
+		setLoading(true);
 		var file = await openImagePickerAsync();
 		//Only update if they picked image
-		if(file){
+		if (file) {
+			//Set loading to true because we are uploading and retrieving new image
+			setLoading(true);
 			//Get image from firebase
 			var imageUrl = await getImage(file);
 			//dispatch action
 			console.log("Dispatching update user profile with ");
 			console.log(user);
 			console.log(
-			`Dispatching update user profile with this image url ${imageUrl} and this user ${user}`
+				`Dispatching update user profile with this image url ${imageUrl} and this user ${user}`
 			);
-			
-			dispatch(updateUserProfile(imageUrl, user));
-			saveProfileDataToStorage(imageUrl)
+			saveProfileDataToStorage(imageUrl);
+			await dispatch(updateUserProfile(imageUrl, user));
+			setLoading(false);
 		}
+		setLoading(false);
 	};
-	const getHostedEvents = async (user) =>{
-  
-		console.log('Dispatching get hosted events action from mapscreen')
-		console.log(user.accessToken)
-		dispatch(GetHostedEvents(user))
-	  }
-	  const getSavedEvents = async (user) =>{
-	  
-		console.log('Dispatching get saved events action from mapscreen')
-		console.log(user.accessToken)
-		dispatch(GetSavedEvents(user))
-	  }
-	  
+	const getHostedEvents = async (user) => {
+		console.log("Dispatching get hosted events action from mapscreen");
+		console.log(user.accessToken);
+		dispatch(GetHostedEvents(user));
+	};
+	const getSavedEvents = async (user) => {
+		console.log("Dispatching get saved events action from mapscreen");
+		console.log(user.accessToken);
+		dispatch(GetSavedEvents(user));
+	};
+
 	useEffect(() => {
-		getHostedEvents(user)
-		getSavedEvents(user)
-	  }, []);
+		getHostedEvents(user);
+		getSavedEvents(user);
+	}, [loading, profileImage]);
 
 	return (
 		<ScrollView>
@@ -85,10 +91,14 @@ const UserProfileScreen = (props) => {
 								onPress={updateProfilePhoto}
 								style={styles.userImageContainer}
 							>
-								<Image
-									style={styles.userImage}
-									source={{ uri: profileImage }}
-								/>
+								{loading ? (
+									<ActivityIndicator style={styles.userImage} size="large" />
+								) : (
+									<Image
+										style={styles.userImage}
+										source={{ uri: profileImage }}
+									/>
+								)}
 							</TouchableOpacity>
 							<Text style={styles.userNameText}>{user.userName}</Text>
 							<Text style={styles.emailText}>{user.userEmail}</Text>
@@ -98,7 +108,7 @@ const UserProfileScreen = (props) => {
 				<View style={styles.content}>
 					<Tabs>
 						<Tab heading="Saved Events">
-						<FlatList
+							<FlatList
 								data={constructEvents(event.savedEvents)}
 								renderItem={({ item }) => <EventCard event={item} />}
 								keyExtractor={(item) => item.id.toString()}
