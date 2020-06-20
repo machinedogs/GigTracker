@@ -54,26 +54,6 @@ const todaysDate = () => {
   return mm + '/' + dd + '/' + yyyy;
 }
 
-/*function getCurrentLocation() {
-  navigator.geolocation.getCurrentPosition(
-       async position => {
-      let region = {
-              latitude: parseFloat(position.coords.latitude),
-              longitude: parseFloat(position.coords.longitude),
-              latitudeDelta: LATITUDE_DELTA,
-              longitudeDelta: LONGITUDE_DELTA
-          };
-          return region;
-      },
-      error => console.log(error),
-      {
-          enableHighAccuracy: true,
-          timeout: 20000,
-          maximumAge: 1000
-      }
-  );
-}*/
-
 const INITIAL_REGION = {
   latitude: 52.5,
   longitude: 19.2,
@@ -133,27 +113,6 @@ const MapScreen = props => {
     console.log("Refreshing events")
     dispatch(eventActions.getEvents());
   }
-
-  /*
-  useEffect(() => {
-    console.log("Map screen is pulling events");
-    dispatch(eventActions.getEvents());
-  }, [events]);
-  */
-
-  /*let categories = [{ value: 'All events' }];
-  theEvents.map(event => {
-    var count = 0;
-    categories.forEach(function (category) {
-      if (event.category === category.value) {
-        count = count + 1;
-      }
-    });
-    if (count === 0) {
-      let category = { value: event.category }
-      categories.push(category)
-    }
-  });*/
 
   const filterCategory = (category) => {
     if (category === 'All events') {
@@ -294,17 +253,6 @@ const MapScreen = props => {
                 reverse
                 raised
                 name='plus'
-                type='font-awesome'
-                color={Colors.darkGrey}
-                size={28}
-                onPress={() => { props.navigation.navigate('CreateEvent') }}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Icon
-                reverse
-                raised
-                name='bookmark'
                 type='font-awesome'
                 color={Colors.darkGrey}
                 size={28}

@@ -6,20 +6,20 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import RNPickerSelect from 'react-native-picker-select';
 import { Textarea, Input, Item, Button, Icon, Header, Left, Body, Right, Title } from "native-base";
 //import Modal from 'react-native-modal';
-import Mapview, { PROVIDER_GOOGLE, Marker, } from 'react-native-maps';
+import { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import MapView from 'react-native-maps';
 import MapStyle from '../../constants/MapStyle';
 import { useDispatch } from 'react-redux';
-
 import Event from '../../models/event';
 import Location from '../../models/location';
 import Host from '../../models/host';
-import MapView from 'react-native-maps';
 import * as eventActions from '../../store/actions/events';
 import {
   openImagePickerAsync,
   uploadImage,
   getImage,
 } from "../../screens/helper/ImageHelpers";
+import { getCurrentLocation, combineDateAndTime, stringifyDate, stringifyTime } from '../helper/createEventHelper';
 
 const { width, height } = Dimensions.get('window')
 const SCREEN_HEIGHT = height
@@ -28,85 +28,23 @@ const ASPECT_RATIO = width / height
 const LATITUDE_DELTA = 0.0922
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
 
-async function getCurrentLocation() {
-  navigator.geolocation.getCurrentPosition(
-    position => {
-      let region = {
-        latitude: parseFloat(position.coords.latitude),
-        //latitudeDelta: LATITUDE_DELTA,
-        longitude: parseFloat(position.coords.longitude),
-        //longitudeDelta: LONGITUDE_DELTA
-      };
-    },
-    error => console.log(error),
-    {
-      enableHighAccuracy: true,
-      timeout: 20000,
-      maximumAge: 1000
-    }
-  );
-}
 
-const curLoc = getCurrentLocation();
+const CreateEventScreen = (props) => {
+  //Initial states of event screen
 
-combineDateAndTime = (date, time) => {
-  let d = date.toISOString();
-  let t = time.toISOString();
-  d = d.substr(0, 10);
-  t = t.substr(10);
-  const dateTime = d.concat(t);
-  console.log(dateTime);
-  return dateTime;
-};
-
-const stringifyDate = (date) => {
-  console.log('date === ' + date.toISOString())
-  var dd = date.getDate();
-  var mm = date.getMonth() + 1;
-  var yyyy = date.getFullYear();
-  if (dd < 10) {
-    dd = '0' + dd;
-  }
-  if (mm < 10) {
-    mm = '0' + mm;
-  }
-  var wkday = date.getDay();
-  if (wkday === 0) wkday = 'Sunday';
-  else if (wkday === 1) wkday = 'Monday';
-  else if (wkday === 2) wkday = 'Tuesday';
-  else if (wkday === 3) wkday = 'Wednesday';
-  else if (wkday === 4) wkday = 'Thursday';
-  else if (wkday === 5) wkday = 'Friday';
-  else if (wkday === 6) wkday = 'Saturday';
-  return wkday + ', ' + mm + '/' + dd + '/' + yyyy;
-}
-
-const stringifyTime = (time) => {;
-  const str = time.toLocaleTimeString();
-  console.log('local time === ' + str);
-  let s1 = '';
-  if(str[1] === ':') { 
-    s1 = str.substr(0, 4);
-  }else {
-    s1 = str.substr(0, 5);
-  }
-  const s2 = str.substr(8);
-  const res = s1.concat(' ', s2);
-  return res;
-}
-
-const CreateEventScreen = event => {
-
+  const event = {}
   const initTitle = event.title ? event.title : '';
   const initDescription = event.description ? event.description : '';
-  const initLocation = event.latitude ? { latitude: event.latitude, longitude: event.longitude } : curLoc;
   const initCategory = event.category ? event.category : '';
   const initDate = event.date ? event.date : new Date();
   const initTime = event.date ? event.date : new Date();
-  const initImage = event.image ? event.image : "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
+  const initImage = event.image ? event.image : "https://miro.medium.com/max/7680/1*1DK11-yKohzFA9gI-l1glA.jpeg";
+
+
+  //These states updated as user interacts with the screen
   const [title, setTitle] = useState(initTitle);
   const [description, setDescription] = useState(initDescription);
-  const [location, setLocation] = useState(initLocation);
+  const [location, setLocation] = useState("");
   const [date, setDate] = useState(initDate);
   const [time, setTime] = useState(initTime);
   const [showDate, setShowDate] = useState(false);
@@ -120,18 +58,19 @@ const CreateEventScreen = event => {
   let mapRef = useRef(null);
   let markerRef = useRef(null);
 
-  //  get initial location then animate to that location
-  // only do this on mount and unmount of map component 
   useEffect(() => {
-    // navigator.geolocation.getCurrentPosition(
-    //   (position) => {
-    //     coords = { latitude: position.coords.latitude, longitude: position.coords.longitude, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA };
-    //     setLocation(coords);
-    //     mapRef.current.animateToRegion(coords, 1000);
-    //   }, (error) => console.log(error));
+    getLocation();
   }, []);
 
-
+  const getLocation = async () => {
+    const position= await getCurrentLocation();
+    const currentLocation = {latitude: parseFloat(position.coords.latitude),
+      longitude: parseFloat(position.coords.longitude)}
+      console.log('Current Location')
+    console.log(currentLocation)
+    setLocation(currentLocation)
+    return currentLocation
+  }
   const onChangeDate = (e, selectedDate) => {
     const currentDate = selectedDate || date;
     setShowDate(Platform.OS === 'ios');
@@ -316,7 +255,8 @@ const CreateEventScreen = event => {
             <Icon name='pin' />
           </Button>
         </View>
-        {showMap && (
+        {console.log(`Here ${location.latitude}`)}
+        {showMap && location.latitude && (
           <View style={styles.container}>
             <Modal
               onSwipeComplete={toggleShowMap}
