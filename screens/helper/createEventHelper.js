@@ -60,8 +60,10 @@ export const stringifyTime = (time) => {
 export const uploadEventPhoto = async () => {
     console.log("Inside update event photo ");
     //Get image from camera library
-    var file = await openImagePickerAsync();
-    //Get image from firebase
-	var imageUrl = await getImage(file);
-	return imageUrl
+	var file = await openImagePickerAsync();
+	//Only do if  file was chosen
+	if(file){
+		var imageUrl =  await getImage(file);
+		return imageUrl;
+	}
   };
