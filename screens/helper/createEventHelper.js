@@ -1,3 +1,10 @@
+import {
+	openImagePickerAsync,
+	uploadImage,
+	getImage,
+  } from "../../screens/helper/ImageHelpers";
+
+
 export const getCurrentLocation = function (options) {
 	return new Promise(function (resolve, reject) {
 		navigator.geolocation.getCurrentPosition(resolve, reject, options);
@@ -49,3 +56,12 @@ export const stringifyTime = (time) => {
 	const res = s1.concat(" ", s2);
 	return res;
 };
+
+export const uploadEventPhoto = async () => {
+    console.log("Inside update event photo ");
+    //Get image from camera library
+    var file = await openImagePickerAsync();
+    //Get image from firebase
+	var imageUrl = await getImage(file);
+	return imageUrl
+  };
