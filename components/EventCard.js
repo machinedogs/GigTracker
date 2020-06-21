@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import { Image, StyleSheet } from "react-native";
 import { Container, Header, Content, Accordion } from "native-base";
 import {

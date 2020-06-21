@@ -2,11 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   StyleSheet,
   Text,
-  View,
   Button,
-  FlatList,
+  View,
   Dimensions,
-  Image,
   Platform,
   SafeAreaView,
   TouchableOpacity,
@@ -16,13 +14,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import { Icon } from 'react-native-elements';
-
+import { EventCard } from "../../components/EventCard";
 import { EVENTS } from '../../data/dummy-data';
 import MapStyle from '../../constants/MapStyle';
 import EventModal from '../../components/EventModal';
 import Event from '../../models/event';
 import HeaderButton from '../../components/HeaderButton';
 import Colors from '../../constants/Colors';
+import { CustomCallout } from '../../components/CustomCallout';
 import * as iconHelpers from '../helper/iconHelpers';
 
 const { width, height } = Dimensions.get('window')
@@ -54,19 +53,13 @@ const MapScreen = props => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(new Event)
   let mapRef = useRef(null);
-  let menuRef = useRef(null);
   const [date, setDate] = useState(todaysDate());
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
 
-  const closeControlPanel = () => {
-    menuRef.current._drawer.close()
-  };
-  const openControlPanel = () => {
-    menuRef.current._drawer.open()
-  };
+
   //  get initial location then animate to that location
   // only do this on mount and unmount of map component 
   useEffect(() => {
@@ -108,11 +101,15 @@ const MapScreen = props => {
     toggleModal();
   }
 
+
+
   const onPinPress = (event) => {
+
     setSelectedEvent({ id: event.id, title: event.title, description: event.description, hostName: event.hostName });
     console.log("pressing pin");
     console.log(event)
   }
+
 
   const filterDate = (selectedDate) => {
     setDate(selectedDate);
@@ -125,8 +122,6 @@ const MapScreen = props => {
     //add dropdown calendar
     <View style={styles.container}>
       <StatusBar backgroundColor={Colors.darkGrey} barStyle='light-content' />
-
-
       <MapView
         style={styles.map}
         provider={PROVIDER_GOOGLE}
@@ -145,14 +140,43 @@ const MapScreen = props => {
             pinColor="#341f97"
             description={event.description}
             key={event.id}
-            tracksViewChanges={false}
             onPress={onPinPress.bind(this, event)}
             icon={iconHelpers.iconPicker(event.category)}
+          ><Callout
+            style={styles.plainView}
+            onPress={onEventCalloutPress}
+            tooltip={true}
+            key={event.id}
           >
-            <Callout style={styles.plainView} onPress={onEventCalloutPress}>
-              <View>
-                <Text style={{ fontWeight: 'bold' }}>{event.title}</Text>
-              </View>
+              {Platform.OS === 'ios' ? (<EventCard event={event} />) : (
+                <CustomCallout style={{ height: 400, margin: 10 }} event={event} />
+              )}
+              {/* <View flexDirection='row'>
+                <TouchableOpacity>
+                  <Icon
+                    reverse
+                    raised
+                    name='save'
+                    type='font-awesome'
+                    color={Colors.darkGrey}
+                    size={28}
+                    reverseColor='white'
+                    onPress={() => { props.navigation.navigate('Auth') }}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Icon
+                    reverse
+                    raised
+                    name='share-alt'
+                    type='font-awesome'
+                    color={Colors.darkGrey}
+                    size={28}
+                    reverseColor='white'
+                    onPress={() => { props.navigation.navigate('Auth') }}
+                  />
+                </TouchableOpacity>
+              </View> */}
             </Callout>
           </Marker>
         ))
@@ -261,6 +285,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingTop: 0,
+
     //width: Dimensions.get('window').width,
   },
   top: {
@@ -311,6 +336,7 @@ const styles = StyleSheet.create({
   plainView: {
     flex: 1,
     width: 'auto'
+
   },
 });
 
