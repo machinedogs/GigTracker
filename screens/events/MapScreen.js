@@ -2,11 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   StyleSheet,
   Text,
-  View,
   Button,
-  FlatList,
+  View,
   Dimensions,
-  Image,
   Platform,
   SafeAreaView,
   TouchableOpacity,
@@ -17,8 +15,8 @@ import { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 import MapView from 'react-native-map-clustering';
 import { Dropdown } from 'react-native-material-dropdown';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
-import FlashOnIcon from '@material-ui/icons/FlashOn';
 import { Icon } from 'react-native-elements';
+import { EventCard } from "../../components/EventCard";
 import { EVENTS } from '../../data/dummy-data';
 import MapStyle from '../../constants/MapStyle';
 import EventModal from '../../components/EventModal';
@@ -28,10 +26,10 @@ import Colors from '../../constants/Colors';
 import {GetHostedEvents} from '../../store/actions/events';
 import {GetSavedEvents} from '../../store/actions/events';
 import * as eventActions from '../../store/actions/events';
-
+import { CustomCallout } from '../../components/CustomCallout';
+import * as iconHelpers from '../helper/iconHelpers';
 
 const { width, height } = Dimensions.get('window')
-
 const SCREEN_HEIGHT = height
 const SCREEN_WIDTH = width
 const ASPECT_RATIO = width / height
@@ -68,7 +66,6 @@ const MapScreen = props => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(new Event)
   let mapRef = useRef(null);
-  let menuRef = useRef(null);
   const [date, setDate] = useState(todaysDate());
   //Redux
   const dispatch = useDispatch();
@@ -90,12 +87,7 @@ const MapScreen = props => {
     dispatch(GetSavedEvents(user))
   }
 
-  const closeControlPanel = () => {
-    menuRef.current._drawer.close()
-  };
-  const openControlPanel = () => {
-    menuRef.current._drawer.open()
-  };
+
   //  get initial location then animate to that location
   // only do this on mount and unmount of map component 
   useEffect(() => {
@@ -130,7 +122,10 @@ const MapScreen = props => {
     toggleModal();
   }
 
+
+
   const onPinPress = (event) => {
+
     setSelectedEvent({ id: event.id, title: event.title, description: event.description, hostName: event.hostName });
     console.log("pressing pin");
     console.log(event)
@@ -148,7 +143,6 @@ const MapScreen = props => {
     //add dropdown calendar
     <View style={styles.container}>
       <StatusBar backgroundColor={Colors.darkGrey} barStyle='light-content' />
-
       <MapView
         initialRegion={INITIAL_REGION}
         style={styles.map}
@@ -167,19 +161,46 @@ const MapScreen = props => {
             coordinate={{ latitude: parseFloat(event.location.latitude), longitude: parseFloat(event.location.longitude) }}
             title={event.title}
             pinColor="#341f97"
-            //image={require('../../assets/splash.png')}
-            icon={FlashOnIcon}
             description={event.description}
             key={event.event}
             tracksViewChanges={false}
             onPress={onPinPress.bind(this, event)}
+            icon={iconHelpers.iconPicker(event.category)}
           ><Callout
             style={styles.plainView}
             onPress={onEventCalloutPress}
+            tooltip={true}
+            key={event.id}
           >
-              <View>
-                <Text style={{ fontWeight: 'bold' }}>{event.title}</Text>
-              </View>
+              {Platform.OS === 'ios' ? (<EventCard event={event} />) : (
+                <CustomCallout style={{ height: 400, margin: 10 }} event={event} />
+              )}
+              {/* <View flexDirection='row'>
+                <TouchableOpacity>
+                  <Icon
+                    reverse
+                    raised
+                    name='save'
+                    type='font-awesome'
+                    color={Colors.darkGrey}
+                    size={28}
+                    reverseColor='white'
+                    onPress={() => { props.navigation.navigate('Auth') }}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Icon
+                    reverse
+                    raised
+                    name='share-alt'
+                    type='font-awesome'
+                    color={Colors.darkGrey}
+                    size={28}
+                    reverseColor='white'
+                    onPress={() => { props.navigation.navigate('Auth') }}
+                  />
+                </TouchableOpacity>
+              </View> */}
             </Callout>
           </Marker>
         ))
@@ -298,6 +319,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: SCREEN_WIDTH,
     paddingTop: 0,
+    //width: Dimensions.get('window').width,
   },
   top: {
     backgroundColor: '#2d3436',
@@ -348,6 +370,7 @@ const styles = StyleSheet.create({
   plainView: {
     flex: 1,
     width: 'auto'
+
   },
 });
 

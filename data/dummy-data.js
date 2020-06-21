@@ -25,6 +25,18 @@ export const EVENTS = [
         'party',
         location,
         Host_Person
+    ),
+    new Event(
+        'e2',
+        'Partyy at my crib',
+        'Its a party man, bring the booze',
+        '6-14-2020',
+        'https://images.pexels.com/photos/1190298/pexels-photo-1190298.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+        'music',
+        40.952461,
+        -75.163714,
+        'Temple University',
+        Host_Person
     )
 ];
 
