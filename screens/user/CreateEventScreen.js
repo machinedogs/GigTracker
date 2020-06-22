@@ -120,7 +120,7 @@ const CreateEventScreen = (props) => {
 	};
 
 	const saveEvent = async () => {
-		console.log(`Category is here.... ${category} and ${category.value}`)
+		console.log(`Category is here.... ${category}`);
 		if (
 			title &&
 			description &&
@@ -129,9 +129,9 @@ const CreateEventScreen = (props) => {
 			location.longitude &&
 			date &&
 			category &&
-			image
+			image.length > 3
 		) {
-			console.log(category)
+			console.log(category);
 			const newEvent = new eventBuilder(
 				title,
 				description,
@@ -153,7 +153,7 @@ const CreateEventScreen = (props) => {
 				"Fill out all event info before submitting.",
 				[{ text: "OK" }]
 			);
-			console.log(`Category is here.... ${category} and ${category.value}`)
+			console.log(`Category is here.... ${category} and ${category.value}`);
 		}
 	};
 
@@ -250,7 +250,7 @@ const CreateEventScreen = (props) => {
 							style={{ borderColor: "gray", borderWidth: 1 }}
 							dropdownStyle={{ borderColor: "gray", height: 300 }}
 							itemStyle={{ alignItems: "center" }}
-							onChangeItem={(category) => setCategory(category)}
+							onChangeItem={(category) => setCategory(category.value)}
 						/>
 					) : (
 						<RNPickerSelect
