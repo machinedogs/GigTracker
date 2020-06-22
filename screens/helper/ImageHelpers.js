@@ -11,7 +11,12 @@ export const openImagePickerAsync = async () => {
         return;
     }
 
-    let pickerResult = await ImagePicker.launchImageLibraryAsync();
+    let pickerResult = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        // this creates a sqaure. if we change this we must change the aspect ratio
+        // for images that are picked with this component.
+        aspect: [4, 4],
+        });
     if (!pickerResult.cancelled) {
         //generate random file name
         var fileName = Math.random().toString(36).substring(7);
