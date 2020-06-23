@@ -23,8 +23,8 @@ import EventModal from '../../components/EventModal';
 import Event from '../../models/event';
 import HeaderButton from '../../components/HeaderButton';
 import Colors from '../../constants/Colors';
-import {GetHostedEvents} from '../../store/actions/events';
-import {GetSavedEvents} from '../../store/actions/events';
+import { GetHostedEvents } from '../../store/actions/events';
+import { GetSavedEvents } from '../../store/actions/events';
 import * as eventActions from '../../store/actions/events';
 import { CustomCallout } from '../../components/CustomCallout';
 import * as iconHelpers from '../helper/iconHelpers';
@@ -69,19 +69,19 @@ const MapScreen = props => {
   const [date, setDate] = useState(todaysDate());
   //Redux
   const dispatch = useDispatch();
-	var user = useSelector((state) => state.user);
+  var user = useSelector((state) => state.user);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
-  const getHostedEvents = async (user) =>{
-  
+  const getHostedEvents = async (user) => {
+
     console.log('Dispatching get hosted events action from mapscreen')
     console.log(user.accessToken)
     dispatch(GetHostedEvents(user))
   }
-  const getSavedEvents = async (user) =>{
-  
+  const getSavedEvents = async (user) => {
+
     console.log('Dispatching get saved events action from mapscreen')
     console.log(user.accessToken)
     dispatch(GetSavedEvents(user))
@@ -172,9 +172,16 @@ const MapScreen = props => {
             tooltip={true}
             key={event.id}
           >
-              {Platform.OS === 'ios' ? (<EventCard event={event} />) : (
-                <CustomCallout style={{ height: 400, margin: 10 }} event={event} />
-              )}
+              {Platform.OS === 'ios' ?
+                (
+                  <EventCard event={event} style={{ width: 300 }} />
+                ) :
+                (
+                  <CustomCallout
+                    style={{ height: 400, margin: 10 }}
+                    event={event} />
+                )
+              }
               {/* <View flexDirection='row'>
                 <TouchableOpacity>
                   <Icon

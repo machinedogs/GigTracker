@@ -16,7 +16,7 @@ import { Entypo } from "@expo/vector-icons";
 
 export const EventCard = (props) => {
 	return (
-		<Card>
+		<Card style={{...styles.card, ...props.style}} >
 			<CardItem>
 				<Left>
 					<Thumbnail source={{ uri: props.event.host.profile }} />
@@ -48,6 +48,9 @@ export const EventCard = (props) => {
 };
 
 const styles = StyleSheet.create({
+	card: {
+
+	},
 	// baseText: {
 	//   fontFamily: "Cochin"
 	// },
