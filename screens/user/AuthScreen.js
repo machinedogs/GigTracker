@@ -91,7 +91,7 @@ const AuthScreen = props => {
         setIsLoading(true);
         try {
             await dispatch(action);
-            props.navigation.navigate('Home');
+            props.navigation.replace('Home');
         } catch (err) {
             setError(err.message);
             // set it back to false here because we only need to reload app state if we

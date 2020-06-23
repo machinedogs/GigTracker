@@ -9,14 +9,14 @@ export const UserImage = (event) => {
    <body>
       <div style = '
       display: inline-block;
-      position: relative;
+      position: absolute;
       width: 300px;
       height: 300px;
       overflow: hidden;
       border-radius: 50%;'>
-         <img  style='   width: auto;
-         height: 100%;
-         margin-left: -50px'src="` + event.event.host.profile + `" /> 
+         <img  style='   
+         width: 100%; border-radius: 50%;
+        'src="` + event.event.host.profile + `" /> 
       </div>
    </body>
 </html> `

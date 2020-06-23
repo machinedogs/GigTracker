@@ -5,25 +5,29 @@ import {
     StyleSheet
 } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
-import { useDispatch } from 'react-redux';
 
+import { useDispatch, useSelector } from 'react-redux';
 import { updateUserProfile } from '../store/actions/user';
 import * as authActions from '../store/actions/user';
-import { getProfileDataStorage } from '../screens/helper/secureStorageHelpers';
+import * as eventActions from '../store/actions/events';
+import { getProfileDataStorage  } from '../screens/helper/secureStorageHelpers';
 
 const StartupScreen = props => {
+    const events = useSelector(state => state.events.events)
     const dispatch = useDispatch();
+
     useEffect(() => {
         const tryLogin = async () => {
-            // SecureStore.deleteItemAsync('userData')
+            //SecureStore.deleteItemAsync('userData')
             // SecureStore.deleteItemAsync('images')
-
+            console.log('dispatching getEvents from startup page')
+            dispatch(eventActions.getEvents());
             // change this to secure store function
             const userData = await SecureStore.getItemAsync('userData');
 
             if (!userData) {
                 // Go to home screen if no userData saved to storage
-                props.navigation.navigate('Home');
+                props.navigation.replace('Home');
                 return;
             }
 
@@ -39,7 +43,7 @@ const StartupScreen = props => {
 
             // check if refresh token expired, then user must manually log in again in home screen
             if (refreshTokenExpiryDate <= new Date() || !refreshToken || !userName || !userEmail || !accessToken) {
-                props.navigation.navigate('Home');
+                props.navigation.replace('Home');
                 return;
             }
             // check if access token expired, then make refresh endpoint call
@@ -50,13 +54,14 @@ const StartupScreen = props => {
                 } catch (error) {
                     // Delete the invalid user data
                     SecureStore.deleteItemAsync('userData'); // user will have to login again
-                    props.navigation.navigate('Home');
+                    SecureStore.deleteItemAsync('images');
+                    props.navigation.replace('Home');
                     return;
                 }
 
                 //Dispatch action to update profile image state in store 
                 await dispatch(updateUserProfile(profileImage, transformedData))
-                props.navigation.navigate('Home');
+                props.navigation.replace('Home');
                 return;
             }
 
@@ -64,7 +69,7 @@ const StartupScreen = props => {
             await dispatch(authActions.authenticate(userName, userEmail, accessToken, refreshToken));
             //Dispatch action to update profile image state in store 
             await dispatch(updateUserProfile(profileImage, transformedData));
-            props.navigation.navigate('Home');
+            props.navigation.replace('Home');
         };
 
         tryLogin();

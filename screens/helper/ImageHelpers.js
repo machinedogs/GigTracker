@@ -1,8 +1,8 @@
 import * as firebase from 'firebase';
 import { firebaseConfig } from '../../firebase/index';
 import * as ImagePicker from "expo-image-picker";
-
 //Function that lets you pick the image from your library, and uploads it to firebase and returns the name of the file
+// If null returned then picking image was unsuccessful and do nothing
 export const openImagePickerAsync = async () => {
     let permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
 
@@ -11,13 +11,21 @@ export const openImagePickerAsync = async () => {
         return;
     }
 
-    let pickerResult = await ImagePicker.launchImageLibraryAsync();
+    let pickerResult = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        // this creates a sqaure. if we change this we must change the aspect ratio
+        // for images that are picked with this component.
+        aspect: [4, 4],
+        });
     if (!pickerResult.cancelled) {
         //generate random file name
         var fileName = Math.random().toString(36).substring(7);
         console.log(`Random File Name ${fileName}`);
         var response = await uploadImage(pickerResult.uri, fileName);
         return fileName
+        //Returns null if the user did not choose an image
+    }else{
+        return null
     }
 };
 

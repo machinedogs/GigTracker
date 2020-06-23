@@ -1,3 +1,5 @@
+import React from 'react';
+import {Button} from 'react-native';
 import { Platform } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
@@ -31,8 +33,13 @@ const EventNavigator = createStackNavigator(
                 gestureEnabled: false, // this stops us from swiping back to startup screen
             },
         },
-        CreateEvent: CreateEventScreen,
-        Profile: UserProfileScreen,
+        CreateEvent: {
+            screen: CreateEventScreen,
+            navigationOptions: {
+                title: "Create Event",
+            }
+        },
+        UserProfile: UserProfileScreen,
         ManageEvent: ManageEventScreen,
         Auth: AuthScreen,
         Delete: DeleteScreen
