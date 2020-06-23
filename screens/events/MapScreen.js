@@ -166,12 +166,13 @@ const MapScreen = props => {
             tracksViewChanges={false}
             onPress={onPinPress.bind(this, event)}
             icon={iconHelpers.iconPicker(event.category)}
-          ><Callout
-            style={styles.plainView}
-            onPress={onEventCalloutPress}
-            tooltip={true}
-            key={event.id}
           >
+            <Callout
+              style={styles.plainView}
+              onPress={onEventCalloutPress}
+              tooltip={true}
+              key={event.id}
+            >
               {Platform.OS === 'ios' ?
                 (
                   <EventCard event={event} style={{ width: 300 }} />
@@ -221,26 +222,6 @@ const MapScreen = props => {
         visible={isModalVisible}
         toggleModal={toggleModal}
       />
-      <SafeAreaView
-        style={{
-          position: 'absolute',//use absolute position to show button on top of the map
-          topBarStyle: '0.5%',
-          alignSelf: 'flex-end' //for align to right
-        }}
-      >
-        <TouchableOpacity>
-          <Icon
-            reverse
-            raised
-            name='refresh'
-            type='font-awesome'
-            color={Colors.darkGrey}
-            size={28}
-            reverseColor='white'
-            onPress={refreshEvents}
-          />
-        </TouchableOpacity>
-      </SafeAreaView>
       {!userAccessToken ?
         (
           <SafeAreaView
@@ -288,7 +269,20 @@ const MapScreen = props => {
                 onPress={() => { props.navigation.navigate('CreateEvent') }}
               />
             </TouchableOpacity>
+            <TouchableOpacity>
+              <Icon
+                reverse
+                raised
+                name='refresh'
+                type='font-awesome'
+                color={Colors.darkGrey}
+                size={28}
+                reverseColor='white'
+                onPress={refreshEvents}
+              />
+            </TouchableOpacity>
           </SafeAreaView>
+
         )
       }
     </View>
