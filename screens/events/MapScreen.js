@@ -100,7 +100,7 @@ const MapScreen = props => {
         console.log("Got the coords: " + coords);
         mapRef.current.animateToRegion(coords, 0);
       }, (error) => console.log(error));
-  }, [events]);
+  }, []);
 
   const refreshEvents = () => {
     console.log("Refreshing events")
