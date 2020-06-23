@@ -173,7 +173,7 @@ const MapScreen = props => {
             >
               {Platform.OS === 'ios' ?
                 (
-                  <EventCard event={event} style={{ width: 300 }} />
+                  <EventCard event={event} style={{ width: 300 }} streetAddress />
                 ) :
                 (
                   <CustomCallout

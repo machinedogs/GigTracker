@@ -14,6 +14,12 @@ import {
 } from "native-base";
 import { Entypo } from "@expo/vector-icons";
 
+const makeStreetAddress = (address) => {
+	var tokens = address.split(", ");
+	var result = tokens[0] + " " + tokens[1]
+	return result;
+}
+
 export const EventCard = (props) => {
 	return (
 		<Card style={{...styles.card, ...props.style}} >
@@ -37,7 +43,12 @@ export const EventCard = (props) => {
 			<CardItem>
 				<Left>
 					<Entypo name="location-pin" size={20} color="black" />
-					<Text>{props.event.location.address.substring(0,50)}....</Text>
+					{props.streetAddress ? 
+					<Text>{makeStreetAddress(props.event.location.address)}</Text>
+					: 
+					<Text>{props.event.location.address}</Text>
+					}
+					
 				</Left>
 				<Right>
 					<Text>{props.event.date}</Text>
