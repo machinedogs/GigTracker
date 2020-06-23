@@ -27,7 +27,7 @@ const StartupScreen = props => {
 
             if (!userData) {
                 // Go to home screen if no userData saved to storage
-                props.navigation.navigate('Home');
+                props.navigation.replace('Home');
                 return;
             }
 
@@ -43,7 +43,7 @@ const StartupScreen = props => {
 
             // check if refresh token expired, then user must manually log in again in home screen
             if (refreshTokenExpiryDate <= new Date() || !refreshToken || !userName || !userEmail || !accessToken) {
-                props.navigation.navigate('Home');
+                props.navigation.replace('Home');
                 return;
             }
             // check if access token expired, then make refresh endpoint call
@@ -55,13 +55,13 @@ const StartupScreen = props => {
                     // Delete the invalid user data
                     SecureStore.deleteItemAsync('userData'); // user will have to login again
                     SecureStore.deleteItemAsync('images');
-                    props.navigation.navigate('Home');
+                    props.navigation.replace('Home');
                     return;
                 }
 
                 //Dispatch action to update profile image state in store 
                 await dispatch(updateUserProfile(profileImage, transformedData))
-                props.navigation.navigate('Home');
+                props.navigation.replace('Home');
                 return;
             }
 
@@ -69,7 +69,7 @@ const StartupScreen = props => {
             await dispatch(authActions.authenticate(userName, userEmail, accessToken, refreshToken));
             //Dispatch action to update profile image state in store 
             await dispatch(updateUserProfile(profileImage, transformedData));
-            props.navigation.navigate('Home');
+            props.navigation.replace('Home');
         };
 
         tryLogin();
