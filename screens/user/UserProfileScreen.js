@@ -74,6 +74,10 @@ const UserProfileScreen = (props) => {
 		getSavedEvents(user);
 	}, [loading, profileImage]);
 
+	const editEvent = (event) => {
+		
+	}
+
 	return (
 		<ScrollView>
 			<View style={styles.container}>
@@ -118,7 +122,7 @@ const UserProfileScreen = (props) => {
 						<Tab heading="Hosted Events">
 							<FlatList
 								data={constructEvents(event.createdEvents)}
-								renderItem={({ item }) => <EventCard event={item} />}
+								renderItem={({ item }) => <EventCard event={item} hosting={true} onPress={editEvent}/>}
 								keyExtractor={(item) => item.id.toString()}
 								scrollEnabled={false}
 							/>

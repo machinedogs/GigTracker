@@ -16,7 +16,7 @@ import { Entypo } from "@expo/vector-icons";
 
 export const EventCard = (props) => {
 	return (
-		<Card style={{...styles.card, ...props.style}} >
+		<Card style={{ ...styles.card, ...props.style }} >
 			<CardItem>
 				<Left>
 					<Thumbnail source={{ uri: props.event.host.profile }} />
@@ -25,6 +25,11 @@ export const EventCard = (props) => {
 						<Text note>{props.event.host.email}</Text>
 					</Body>
 				</Left>
+				<Right>
+					{props.hosting &&
+						(<Icon name='md-settings' onPress={props.editEvent} />)
+					}
+				</Right>
 			</CardItem>
 			<CardItem cardBody>
 				<Image
@@ -32,12 +37,12 @@ export const EventCard = (props) => {
 					style={{ height: 200, width: null, flex: 1 }}
 				/>
 			</CardItem>
-				<Text style={styles.titleText}>{props.event.title}</Text>
-				<Text>{props.event.description}</Text>
+			<Text style={styles.titleText}>{props.event.title}</Text>
+			<Text>{props.event.description}</Text>
 			<CardItem>
 				<Left>
 					<Entypo name="location-pin" size={20} color="black" />
-					<Text>{props.event.location.address.substring(0,50)}....</Text>
+					<Text>{props.event.location.address.substring(0, 50)}....</Text>
 				</Left>
 				<Right>
 					<Text>{props.event.date}</Text>
