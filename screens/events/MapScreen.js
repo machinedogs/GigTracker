@@ -10,14 +10,12 @@ import {
   TouchableOpacity,
   StatusBar
 } from 'react-native';
-import { useSelector, useDispatch, useCallback } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 import MapView from 'react-native-map-clustering';
-import { Dropdown } from 'react-native-material-dropdown';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import { Icon } from 'react-native-elements';
 import { EventCard } from "../../components/EventCard";
-import { EVENTS } from '../../data/dummy-data';
 import MapStyle from '../../constants/MapStyle';
 import EventModal from '../../components/EventModal';
 import Event from '../../models/event';
@@ -53,10 +51,10 @@ const todaysDate = () => {
 }
 
 const INITIAL_REGION = {
-  latitude: 52.5,
-  longitude: 19.2,
-  latitudeDelta: 8.5,
-  longitudeDelta: 8.5,
+  latitude: 39.9,
+  longitude: -75.1,
+  latitudeDelta: 1,
+  longitudeDelta: 1,
 };
 
 const MapScreen = props => {
