@@ -69,11 +69,12 @@ const CreateEventScreen = (props) => {
 	const initDate = initEvent ? new Date(initEvent.date) : new Date();
 	const initTime = initEvent ? new Date(initEvent.date) : new Date();
   const initImage = initEvent ? initEvent.image : "";
+  const initLocation = initEvent ? initEvent.location : false;
 
 	//These states updated as user interacts with the screen
 	const [title, setTitle] = useState(initTitle);
 	const [description, setDescription] = useState(initDescription);
-	const [location, setLocation] = useState("");
+	const [location, setLocation] = useState(initLocation);
 	const [date, setDate] = useState(initDate);
 	const [time, setTime] = useState(initTime);
 	const [category, setCategory] = useState(initCategory);
@@ -108,9 +109,9 @@ const CreateEventScreen = (props) => {
 			latitude: parseFloat(position.coords.latitude),
 			longitude: parseFloat(position.coords.longitude),
 		};
-		console.log("Current Location");
-		console.log(currentLocation);
-		setLocation(currentLocation);
+		//console.log("Current Location");
+		//console.log(currentLocation);
+		if(!location) {setLocation(currentLocation)};
 		return currentLocation;
 	};
 	const onChangeDate = (e, selectedDate) => {
