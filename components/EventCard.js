@@ -27,7 +27,11 @@ export const EventCard = (props) => {
 				</Left>
 				<Right>
 					{props.hosting &&
-						(<Icon name='md-settings' onPress={props.editEvent} />)
+						(
+							<Button iconRight transparent light>
+							<Icon name='md-settings' />
+							</Button>
+						)
 					}
 				</Right>
 			</CardItem>

@@ -29,8 +29,8 @@ export const GetSavedEvents = (user) => {
 			body: raw,
 			redirect: "follow",
 		};
-		console.log("request options");
-		console.log(requestOptions);
+		//console.log("request options");
+		//console.log(requestOptions);
 		console.log(
 			`https://gigservice.herokuapp.com/api/v1/host/saved_events?auth_token=${accessToken}`
 		);
@@ -41,7 +41,7 @@ export const GetSavedEvents = (user) => {
 		if (response.ok) {
 			const resData = await response.json();
 			console.log("Got response for getting the saved events ");
-			console.log(resData);
+			//console.log(resData);
 			//ToDo:Eventually improve this filter event
 			var filteredEvents = resData.filter((event) => {
 				console.log(`event is here ${event.title}`);
@@ -60,7 +60,7 @@ export const GetSavedEvents = (user) => {
 					return false;
 				}
 			});
-			console.log(`filtered Events ${filteredEvents}`);
+			//console.log(`filtered Events ${filteredEvents}`);
 
 			//Filter the data for bad events, meaning any null values or something
 			dispatch(UpdateSavedEvents(filteredEvents));
@@ -89,7 +89,7 @@ export const getEvents = () => {
 			requestOptions
 		);
 		const mapEvents = await response.json();
-		console.log(`Map Events ${mapEvents}`);
+		//console.log(`Map Events ${mapEvents}`);
 		dispatch(updateMapEvents(mapEvents));
 	};
 };
@@ -170,8 +170,8 @@ export const GetHostedEvents = (user) => {
 			body: raw,
 			redirect: "follow",
 		};
-		console.log("request options");
-		console.log(requestOptions);
+		//console.log("request options");
+		//console.log(requestOptions);
 		console.log(
 			`https://gigservice.herokuapp.com/api/v1/host/events?auth_token=${accessToken}`
 		);
@@ -182,7 +182,7 @@ export const GetHostedEvents = (user) => {
 		if (response.ok) {
 			const resData = await response.json();
 			console.log("Got response for getting the host events ");
-			console.log(resData);
+			//console.log(resData);
 			//ToDo:Eventually improve this filter event
 			var filteredEvents = resData.filter((event) => {
 				console.log(`event is here ${event.title}`);
@@ -201,7 +201,7 @@ export const GetHostedEvents = (user) => {
 					return false;
 				}
 			});
-			console.log(`filtered Events ${filteredEvents}`);
+			//console.log(`filtered Events ${filteredEvents}`);
 
 			//Filter the data for bad events, meaning any null values or something
 			dispatch(UpdateHostedEvents(filteredEvents));

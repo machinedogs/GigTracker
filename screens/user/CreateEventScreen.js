@@ -52,13 +52,23 @@ const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const CreateEventScreen = (props) => {
+
+  console.log('EVENTIS: ' + props.navigation.getParam('event').title);
+
+  console.log(props.navigation.state.params.event.title);
+  var initEvent = {};
+  if(props.navigation.state.params.event) {
+    console.log('initial event was passed');
+    initEvent = props.navigation.getParam('event');
+  }
+
 	//Initial states of event screen
-	const initTitle = props.event ? props.event.title : "";
-	const initDescription = props.event ? props.event.description : "";
-	const initCategory = props.event ? props.event.category : "";
-	const initDate = props.event ? props.event.date : new Date();
-	const initTime = props.event ? props.event.date : new Date();
-	const initImage = props.event ? props.event.image : "";
+	const initTitle = initEvent ? initEvent.title : "";
+	const initDescription = initEvent ? initEvent.description : "";
+	const initCategory = initEvent ? initEvent.category : "";
+	const initDate = initEvent ? new Date(initEvent.date) : new Date();
+	const initTime = initEvent ? new Date(initEvent.date) : new Date();
+  const initImage = initEvent ? initEvent.image : "";
 
 	//These states updated as user interacts with the screen
 	const [title, setTitle] = useState(initTitle);
@@ -66,11 +76,15 @@ const CreateEventScreen = (props) => {
 	const [location, setLocation] = useState("");
 	const [date, setDate] = useState(initDate);
 	const [time, setTime] = useState(initTime);
+	const [category, setCategory] = useState(initCategory);
+  const [image, setImage] = useState(initImage);
+
 	const [showDate, setShowDate] = useState(false);
 	const [showTime, setShowTime] = useState(false);
-	const [category, setCategory] = useState(initCategory);
 	const [showMap, setShowMap] = useState(false);
-	const [image, setImage] = useState(initImage);
+  
+  console.log("description: " + date);
+  console.log('init date: ' + initDate)
 
 	const dispatch = useDispatch();
 
