@@ -33,8 +33,8 @@ const makeFullAddress = (address) => {
 export const EventCard = (props) => {
 	return (
 		<Card style={{ ...props.style }} >
-			<View style={{ flexDirection: 'row', paddingHorizontal: 15, paddingTop: 15, alignItems: 'space-between' }}>
-				<View style={{ justifyContent: 'center', flex: 5, alignSelf: 'center' }}>
+			<View style={styles.header}>
+				<View style={styles.titleDescriptionContainer}>
 					<Text style={styles.titleText}>{props.event.title}</Text>
 					{
 						props.event.description.length > 50 ?
@@ -42,14 +42,14 @@ export const EventCard = (props) => {
 							<Text>{props.event.description}</Text>
 					}
 				</View>
-				<Right style={{ alignSelf: 'flex-end', flex: 3 }}>
-					<View style={{ alignItems: 'center' }}>
+				<Right style={styles.hostContainer}>
+					<View style={styles.hostContent}>
 						<Thumbnail source={{ uri: props.event.host.profile }} />
 						<Text style={{ paddingTop: 5, fontSize: 13 }}>{props.event.host.name}</Text>
 					</View>
 				</Right>
 			</View>
-			<View style={{ height: 200, paddingHorizontal: 15, paddingVertical: 10 }}>
+			<View style={styles.imageContainer}>
 				<InsetShadow elevation={5} shadowRadius={3}>
 					<Image
 						source={{ uri: props.event.image }}
@@ -57,21 +57,53 @@ export const EventCard = (props) => {
 					/>
 				</InsetShadow>
 			</View >
-			<View style={{ paddingHorizontal: 15, paddingBottom: 15 }}>
+			<View style={styles.footer}>
 				{props.streetAddress ?
 					<Text >{makeStreetAddress(props.event.location.address)}</Text>
 					:
 					<Text>{makeFullAddress(props.event.location.address)}</Text>
 				}
-				<Text style={{ color: 'grey' }} >{new Date(props.event.date).toLocaleDateString()}{", "}{new Date(props.event.date).toLocaleTimeString()}</Text>
+				<Text style={styles.dateTimeText} >
+					{new Date(props.event.date).toLocaleDateString()}{", "}
+					{new Date(props.event.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+				</Text>
 			</View>
 		</Card>
 	);
 };
 
 const styles = StyleSheet.create({
+	header: {
+		flexDirection: 'row',
+		paddingHorizontal: 15,
+		paddingTop: 15
+	},
+	titleDescriptionContainer: {
+		justifyContent: 'center',
+		flex: 5,
+		alignSelf: 'center'
+	},
+	hostContainer: {
+		alignSelf: 'flex-end',
+		flex: 3
+	},
+	hostContent: {
+		alignItems: 'center'
+	},
+	imageContainer: {
+		height: 200,
+		paddingHorizontal: 15,
+		paddingVertical: 10
+	},
+	footer: {
+		paddingHorizontal: 15,
+		paddingBottom: 15
+	},
 	titleText: {
 		fontSize: 20,
 		fontWeight: "bold",
+	},
+	dateTimeText: {
+		color: 'grey'
 	},
 });
