@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, View } from "react-native";
+import { Image, StyleSheet, View, Dimensions } from "react-native";
 import { Container, Header, Content, Accordion } from "native-base";
 import {
 	Card,
@@ -12,9 +12,8 @@ import {
 	Body,
 	Right,
 } from "native-base";
+import InsetShadow from 'react-native-inset-shadow'
 import { Entypo } from "@expo/vector-icons";
-
-import { stringifyDate, stringifyTime } from '../screens/helper/createEventHelper';
 
 const makeStreetAddress = (address) => {
 	var tokens = address.split(", ");
@@ -33,50 +32,44 @@ const makeFullAddress = (address) => {
 
 export const EventCard = (props) => {
 	return (
-		<Card style={{ ...styles.card, ...props.style }} >
-			<CardItem>
-				<Left>
-					<View>
-						<Text style={styles.titleText}>{props.event.title}</Text>
-					</View>
-				</Left>
-				<Right>
-					<View style={{ alignItems: 'center' }} >
+		<Card style={{ ...props.style }} >
+			<View style={{ flexDirection: 'row', paddingHorizontal: 15, paddingTop: 15 }}>
+				<View style={{ width: '70%', justifyContent: 'center' }}>
+					<Text style={styles.titleText}>{props.event.title}</Text>
+					{
+						props.event.description.length > 50 ?
+							<Text>{props.event.description.substring(0, 50)}...</Text> :
+							<Text>{props.event.description}</Text>
+					}
+				</View>
+				<Right style={{ alignSelf: 'flex-end' }}>
+					<View style={{alignItems: 'center'}}>
 						<Thumbnail source={{ uri: props.event.host.profile }} />
-						<Text>By {props.event.host.name}</Text>
+						<Text style={{ paddingTop: 5 }}>{props.event.host.name}</Text>
 					</View>
 				</Right>
-			</CardItem>
-			<CardItem cardBody>
-				<Image
-					source={{ uri: props.event.image }}
-					style={{ height: 200, width: null, flex: 1 }}
-				/>
-			</CardItem>
-			<View style={{padding: 10}}>
-					<View style={{ flexDirection: 'row' }} >
-						<Entypo name="location-pin" size={20} color="black" />
-						{props.streetAddress ?
-							<Text style={{paddingLeft: 10}} >{makeStreetAddress(props.event.location.address)}</Text>
-							:
-							<Text style={{paddingLeft: 10}} >{makeFullAddress(props.event.location.address)}</Text>
-						}
-					</View>
-					<View style={{ flexDirection: 'row' }} >
-						<Text style={{paddingLeft: 30, color: 'grey'}} >{new Date(props.event.date).toLocaleDateString()}{", "}{new Date(props.event.date).toLocaleTimeString()}</Text>
-					</View>
+			</View>
+			<View style={{ height: 200, paddingHorizontal: 15, paddingVertical: 10 }}>
+				<InsetShadow elevation={5} shadowRadius={3}>
+					<Image
+						source={{ uri: props.event.image }}
+						style={{ height: 200, width: null, flex: 1 }}
+					/>
+				</InsetShadow>
+			</View >
+			<View style={{ paddingHorizontal: 15, paddingBottom: 15 }}>
+				{props.streetAddress ?
+					<Text >{makeStreetAddress(props.event.location.address)}</Text>
+					:
+					<Text>{makeFullAddress(props.event.location.address)}</Text>
+				}
+				<Text style={{ color: 'grey' }} >{new Date(props.event.date).toLocaleDateString()}{", "}{new Date(props.event.date).toLocaleTimeString()}</Text>
 			</View>
 		</Card>
 	);
 };
 
 const styles = StyleSheet.create({
-	card: {
-
-	},
-	// baseText: {
-	//   fontFamily: "Cochin"
-	// },
 	titleText: {
 		fontSize: 20,
 		fontWeight: "bold",
