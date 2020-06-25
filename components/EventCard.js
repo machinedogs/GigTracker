@@ -33,8 +33,8 @@ const makeFullAddress = (address) => {
 export const EventCard = (props) => {
 	return (
 		<Card style={{ ...props.style }} >
-			<View style={{ flexDirection: 'row', paddingHorizontal: 15, paddingTop: 15 }}>
-				<View style={{ width: '70%', justifyContent: 'center' }}>
+			<View style={{ flexDirection: 'row', paddingHorizontal: 15, paddingTop: 15, alignItems: 'space-between' }}>
+				<View style={{ justifyContent: 'center', flex: 5, alignSelf: 'center' }}>
 					<Text style={styles.titleText}>{props.event.title}</Text>
 					{
 						props.event.description.length > 50 ?
@@ -42,10 +42,10 @@ export const EventCard = (props) => {
 							<Text>{props.event.description}</Text>
 					}
 				</View>
-				<Right style={{ alignSelf: 'flex-end' }}>
-					<View style={{alignItems: 'center'}}>
+				<Right style={{ alignSelf: 'flex-end', flex: 3 }}>
+					<View style={{ alignItems: 'center' }}>
 						<Thumbnail source={{ uri: props.event.host.profile }} />
-						<Text style={{ paddingTop: 5 }}>{props.event.host.name}</Text>
+						<Text style={{ paddingTop: 5, fontSize: 13 }}>{props.event.host.name}</Text>
 					</View>
 				</Right>
 			</View>
