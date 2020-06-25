@@ -53,21 +53,19 @@ export const EventCard = (props) => {
 					style={{ height: 200, width: null, flex: 1 }}
 				/>
 			</CardItem>
-			<CardItem>
-				<View style={{ paddingHorizontal: 10, flexDirection: 'row' }}>
-					<Left>
+			<View style={{padding: 10}}>
+					<View style={{ flexDirection: 'row' }} >
 						<Entypo name="location-pin" size={20} color="black" />
 						{props.streetAddress ?
-							<Text>{makeStreetAddress(props.event.location.address)}</Text>
+							<Text style={{paddingLeft: 10}} >{makeStreetAddress(props.event.location.address)}</Text>
 							:
-							<Text>{makeFullAddress(props.event.location.address)}</Text>
+							<Text style={{paddingLeft: 10}} >{makeFullAddress(props.event.location.address)}</Text>
 						}
-					</Left>
-					<Right  >
-						<Text>{new Date(props.event.date).toLocaleDateString()}{"\n"}{new Date(props.event.date).toLocaleTimeString()}</Text>
-					</Right>
-				</View>
-			</CardItem>
+					</View>
+					<View style={{ flexDirection: 'row' }} >
+						<Text style={{paddingLeft: 30, color: 'grey'}} >{new Date(props.event.date).toLocaleDateString()}{", "}{new Date(props.event.date).toLocaleTimeString()}</Text>
+					</View>
+			</View>
 		</Card>
 	);
 };
