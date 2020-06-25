@@ -3,6 +3,7 @@ export const ADD_TO_MY_EVENTS = "ADD_TO_MY_EVENTS";
 export const UPDATE_HOSTED_EVENTS = "UPDATE_HOSTED_EVENTS";
 export const UPDATE_SAVED_EVENTS = "UPDATE_SAVED_EVENTS";
 export const GET_EVENTS = "GET_EVENTS";
+export const EDIT_EVENT = "EDIT_EVENT";
 
 export const addToMyEvents = (event) => {
 	return { type: ADD_TO_MY_EVENTS, event: event };
@@ -150,6 +151,56 @@ export const createEvent = (event) => {
 		}
 	};
 };
+
+export const editEvent = (event, id) => {
+	return async (dispatch, getState) => {
+		console.log(`In editing event action for event ${id}`);
+		var myHeaders = new Headers();
+		myHeaders.append("Content-Type", "application/json");
+
+		var raw = JSON.stringify({
+			title: event.title,
+			description: event.description,
+			date: event.date,
+			category: event.category,
+			image: event.image,
+			latitude: event.latitude,
+			longitude: event.longitude,
+		});
+		console.log("Event: " + raw.toString());
+
+		var requestOptions = {
+			method: "PUT",
+			headers: myHeaders,
+			body: raw,
+			redirect: "follow",
+		};
+
+		try {
+			const access_token = getState().user.accessToken;
+			const response = await fetch(
+				`https://gigservice.herokuapp.com/api/v1/host/events/${id}?auth_token=${access_token}`,
+				requestOptions
+            );
+            console.log(`RESPONSE: ${response.status}`);
+			if(response.ok){
+				alert("Successfully replaced event.");
+			}
+			const resData = await response.json();
+
+			if (response.status === "ERROR") {
+				let message = "There was an error editing this event.";
+				alert(message);
+				throw new Error(message);
+			}
+			console.log("Response: " + resData);
+			dispatch(getEvents);
+		} catch (err) {
+			alert(err);
+		}
+	};
+};
+
 export const updateEventMaps = () => {
 	return {
 		type: CREATE_EVENT,

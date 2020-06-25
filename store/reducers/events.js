@@ -1,5 +1,5 @@
 import { CREATE_EVENT, GET_EVENTS, UPDATE_SAVED_EVENTS,
-	UPDATE_HOSTED_EVENTS } from '../actions/events';
+	UPDATE_HOSTED_EVENTS, EDIT_EVENT } from '../actions/events';
 
 const initialState = {
 	createdEvents: [],
@@ -29,6 +29,11 @@ export default (state = initialState, action) => {
                 ...state,
                 events: action.events
             };
+        case EDIT_EVENT:
+            return {
+                ...state,
+                events: action.events
+            }
         default:
             return state;
     }

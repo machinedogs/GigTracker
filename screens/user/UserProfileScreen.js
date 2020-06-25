@@ -130,7 +130,8 @@ const UserProfileScreen = (props) => {
 										<Button iconRight transparent light title='Edit this event' 
 										onPress={() => {
 											props.navigation.navigate('CreateEvent', { event: item })
-										}} />
+										}} 
+										/>
 									</View>
 								}
 								keyExtractor={(item) => item.id.toString()}
