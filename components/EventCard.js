@@ -45,7 +45,7 @@ export const EventCard = (props) => {
 				<Right style={styles.hostContainer}>
 					<View style={styles.hostContent}>
 						<Thumbnail source={{ uri: props.event.host.profile }} />
-						<Text style={{ paddingTop: 5, fontSize: 13 }}>{props.event.host.name}</Text>
+						<Text style={styles.hostNameText}>{props.event.host.name}</Text>
 					</View>
 				</Right>
 			</View>
@@ -53,15 +53,16 @@ export const EventCard = (props) => {
 				<InsetShadow elevation={5} shadowRadius={3}>
 					<Image
 						source={{ uri: props.event.image }}
-						style={{ height: 200, width: null, flex: 1 }}
+						style={styles.image}
 					/>
 				</InsetShadow>
 			</View >
 			<View style={styles.footer}>
-				{props.streetAddress ?
-					<Text >{makeStreetAddress(props.event.location.address)}</Text>
-					:
-					<Text>{makeFullAddress(props.event.location.address)}</Text>
+				{
+					props.streetAddress ?
+						<Text>{makeStreetAddress(props.event.location.address)}</Text>
+						:
+						<Text>{makeFullAddress(props.event.location.address)}</Text>
 				}
 				<Text style={styles.dateTimeText} >
 					{new Date(props.event.date).toLocaleDateString()}{", "}
@@ -90,10 +91,19 @@ const styles = StyleSheet.create({
 	hostContent: {
 		alignItems: 'center'
 	},
+	hostNameText: {
+		paddingTop: 5,
+		fontSize: 13
+	},
 	imageContainer: {
 		height: 200,
 		paddingHorizontal: 15,
 		paddingVertical: 10
+	},
+	image: {
+		height: 200,
+		width: null,
+		flex: 1
 	},
 	footer: {
 		paddingHorizontal: 15,
