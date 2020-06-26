@@ -114,74 +114,75 @@ const MapScreen = props => {
   };
 
   // gets called when callout is pressed i.e. pin must be pressed first
-  const onEventCalloutPress = () => {
+  const onEventCalloutPress = (event) => {
     console.log("pressing event callout");
     console.log(selectedEvent)
-    toggleModal();
+    //toggleModal();
+    props.navigation.navigate('EventScreen', {props: event})
   }
 
 
 
-  const onPinPress = (event) => {
 
-    setSelectedEvent({ id: event.id, title: event.title, description: event.description, hostName: event.hostName });
-    console.log("pressing pin");
-    console.log(event)
-  }
-  /*
-  const filterDate = (selectedDate) => {
-    setDate(selectedDate);
-    //setEvents(events.filter(event => event.date === selectedDate))
-    console.log(selectedDate + '\n' + events.map((event) => {event.toString()}))
-  }
-  */
+const onPinPress = (event) => {
+  setSelectedEvent({ id: event.id, title: event.title, description: event.description, hostName: event.hostName });
+  console.log("pressing pin");
+  console.log(event)
+}
+/*
+const filterDate = (selectedDate) => {
+  setDate(selectedDate);
+  //setEvents(events.filter(event => event.date === selectedDate))
+  console.log(selectedDate + '\n' + events.map((event) => {event.toString()}))
+}
+*/
 
-  return (
-    //add a dropdown to choose map style? -> what if we put it in user settings? could incentivize people to become users
-    //add dropdown calendar
-    <View style={styles.container}>
-      <StatusBar backgroundColor={Colors.darkGrey} barStyle='light-content' />
-      <MapView
-        initialRegion={INITIAL_REGION}
-        style={styles.map}
-        provider={PROVIDER_GOOGLE}
-        showsUserLocation
-        showsMyLocationButton
-        rotateEnabled={false}
-        showsTraffic={false}
-        toolbarEnabled={true}
-        ref={mapRef}
-        customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
-        clusterColor="#341f97"
-      >
-        {events.map(event => (
-          <Marker
-            coordinate={{ latitude: parseFloat(event.location.latitude), longitude: parseFloat(event.location.longitude) }}
-            title={event.title}
-            pinColor="#341f97"
-            description={event.description}
-            key={event.event}
-            tracksViewChanges={false}
-            onPress={onPinPress.bind(this, event)}
-            icon={iconHelpers.iconPicker(event.category)}
+return (
+  //add a dropdown to choose map style? -> what if we put it in user settings? could incentivize people to become users
+  //add dropdown calendar
+  <View style={styles.container}>
+    <StatusBar backgroundColor={Colors.darkGrey} barStyle='light-content' />
+    <MapView
+      initialRegion={INITIAL_REGION}
+      style={styles.map}
+      provider={PROVIDER_GOOGLE}
+      showsUserLocation
+      showsMyLocationButton
+      rotateEnabled={false}
+      showsTraffic={false}
+      toolbarEnabled={true}
+      ref={mapRef}
+      customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
+      clusterColor="#341f97"
+    >
+      {events.map(event => (
+        <Marker
+          coordinate={{ latitude: parseFloat(event.location.latitude), longitude: parseFloat(event.location.longitude) }}
+          title={event.title}
+          pinColor="#341f97"
+          description={event.description}
+          key={event.event}
+          tracksViewChanges={false}
+          onPress={onPinPress.bind(this, event)}
+          icon={iconHelpers.iconPicker(event.category)}
+        >
+          <Callout
+            style={styles.plainView}
+            onPress={onEventCalloutPress}
+            tooltip={true}
+            key={event.id}
           >
-            <Callout
-              style={styles.plainView}
-              onPress={onEventCalloutPress}
-              tooltip={true}
-              key={event.id}
-            >
-              {Platform.OS === 'ios' ?
-                (
-                  <EventCard event={event} style={{ width: 300 }} />
-                ) :
-                (
-                  <CustomCallout
-                    style={{ height: 400, margin: 10 }}
-                    event={event} />
-                )
-              }
-              {/* <View flexDirection='row'>
+            {Platform.OS === 'ios' ?
+              (
+                <EventCard event={event} style={{ width: 300 }} />
+              ) :
+              (
+                <CustomCallout
+                  style={{ height: 400, margin: 10 }}
+                  event={event} />
+              )
+            }
+            {/* <View flexDirection='row'>
                 <TouchableOpacity>
                   <Icon
                     reverse
@@ -207,84 +208,84 @@ const MapScreen = props => {
                   />
                 </TouchableOpacity>
               </View> */}
-            </Callout>
-          </Marker>
-        ))
-        }
-
-      </MapView>
-      <EventModal
-        title={selectedEvent.title}
-        description={selectedEvent.description}
-        hostName={selectedEvent.hostName}
-        visible={isModalVisible}
-        toggleModal={toggleModal}
-      />
-      {!userAccessToken ?
-        (
-          <SafeAreaView
-            style={{
-              position: 'absolute',//use absolute position to show button on top of the map
-              bottom: '0.5%',
-              alignSelf: 'center' //for align to right
-            }}
-          >
-            <TouchableOpacity>
-              <Icon
-                reverse
-                raised
-                name='user'
-                type='font-awesome'
-                color={Colors.darkGrey}
-                size={28}
-                reverseColor='white'
-                onPress={() => { props.navigation.navigate('Auth') }}
-              />
-            </TouchableOpacity>
-          </SafeAreaView>
-        ) :
-        (
-          <SafeAreaView style={styles.row}>
-            <TouchableOpacity>
-              <Icon
-                reverse
-                raised
-                name='user'
-                type='font-awesome'
-                color={Colors.darkGrey}
-                size={28}
-                onPress={() => { props.navigation.navigate('UserProfile') }}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Icon
-                reverse
-                raised
-                name='plus'
-                type='font-awesome'
-                color={Colors.darkGrey}
-                size={28}
-                onPress={() => { props.navigation.navigate('CreateEvent') }}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Icon
-                reverse
-                raised
-                name='refresh'
-                type='font-awesome'
-                color={Colors.darkGrey}
-                size={28}
-                reverseColor='white'
-                onPress={refreshEvents}
-              />
-            </TouchableOpacity>
-          </SafeAreaView>
-
-        )
+          </Callout>
+        </Marker>
+      ))
       }
-    </View>
-  );
+
+    </MapView>
+    <EventModal
+      title={selectedEvent.title}
+      description={selectedEvent.description}
+      hostName={selectedEvent.hostName}
+      visible={isModalVisible}
+      toggleModal={toggleModal}
+    />
+    {!userAccessToken ?
+      (
+        <SafeAreaView
+          style={{
+            position: 'absolute',//use absolute position to show button on top of the map
+            bottom: '0.5%',
+            alignSelf: 'center' //for align to right
+          }}
+        >
+          <TouchableOpacity>
+            <Icon
+              reverse
+              raised
+              name='user'
+              type='font-awesome'
+              color={Colors.darkGrey}
+              size={28}
+              reverseColor='white'
+              onPress={() => { props.navigation.navigate('Auth') }}
+            />
+          </TouchableOpacity>
+        </SafeAreaView>
+      ) :
+      (
+        <SafeAreaView style={styles.row}>
+          <TouchableOpacity>
+            <Icon
+              reverse
+              raised
+              name='user'
+              type='font-awesome'
+              color={Colors.darkGrey}
+              size={28}
+              onPress={() => { props.navigation.navigate('UserProfile') }}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Icon
+              reverse
+              raised
+              name='plus'
+              type='font-awesome'
+              color={Colors.darkGrey}
+              size={28}
+              onPress={() => { props.navigation.navigate('CreateEvent') }}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Icon
+              reverse
+              raised
+              name='refresh'
+              type='font-awesome'
+              color={Colors.darkGrey}
+              size={28}
+              reverseColor='white'
+              onPress={refreshEvents}
+            />
+          </TouchableOpacity>
+        </SafeAreaView>
+
+      )
+    }
+  </View>
+);
 }
 
 MapScreen.navigationOptions = navData => {

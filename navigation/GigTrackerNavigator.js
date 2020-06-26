@@ -9,6 +9,7 @@ import MapScreen from '../screens/events/MapScreen';
 import CreateEventScreen from '../screens/user/CreateEventScreen';
 import UserProfileScreen from '../screens/user/UserProfileScreen';
 import ManageEventScreen from '../screens/user/ManageEventScreen';
+import EventScreen from '../screens/events/EventScreen'
 import AuthScreen from '../screens/user/AuthScreen';
 import StartupScreen from '../screens/StartupScreen';
 import DeleteScreen from '../screens/user/DeleteScreen';
@@ -41,6 +42,7 @@ const EventNavigator = createStackNavigator(
         },
         UserProfile: UserProfileScreen,
         ManageEvent: ManageEventScreen,
+        EventScreen: EventScreen,
         Auth: AuthScreen,
         Delete: DeleteScreen
     }
