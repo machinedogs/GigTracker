@@ -62,6 +62,8 @@ const MapScreen = props => {
   const userAccessToken = useSelector(state => state.user.accessToken);
   const events = useSelector(state => state.events.events);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isEventButtonsVisible, setEventButtonsVisible] = useState(false);
+  const [isCalloutVisible, setCalloutVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(new Event)
   let mapRef = useRef(null);
   const [date, setDate] = useState(todaysDate());
@@ -120,13 +122,24 @@ const MapScreen = props => {
     toggleModal();
   }
 
-
+  const closeCallout = () => {
+    if (isCalloutVisible) {
+      setEventButtonsVisible(false);
+      setCalloutVisible(false);
+    }
+  }
 
   const onPinPress = (event) => {
-
     setSelectedEvent({ id: event.id, title: event.title, description: event.description, hostName: event.hostName });
     console.log("pressing pin");
     console.log(event)
+    setCalloutVisible(true);
+    setEventButtonsVisible(true);
+    /*
+    console.log(isCalloutVisible);
+    let coords = { latitude: event.location.latitude, longitude: event.location.longitude, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA };
+    mapRef.current.animateToRegion(coords, 0);
+    */
   }
   /*
   const filterDate = (selectedDate) => {
@@ -150,6 +163,7 @@ const MapScreen = props => {
         rotateEnabled={false}
         showsTraffic={false}
         toolbarEnabled={true}
+        onPress={closeCallout}
         ref={mapRef}
         customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
         clusterColor="#341f97"
@@ -173,7 +187,7 @@ const MapScreen = props => {
             >
               {Platform.OS === 'ios' ?
                 (
-                  <EventCard event={event} style={{ width: SCREEN_WIDTH*0.75 }} streetAddress />
+                  <EventCard event={event} style={{ width: SCREEN_WIDTH * 0.75 }} streetAddress />
                 ) :
                 (
                   <CustomCallout
@@ -181,38 +195,47 @@ const MapScreen = props => {
                     event={event} />
                 )
               }
-              {/* <View flexDirection='row'>
-                <TouchableOpacity>
-                  <Icon
-                    reverse
-                    raised
-                    name='save'
-                    type='font-awesome'
-                    color={Colors.darkGrey}
-                    size={28}
-                    reverseColor='white'
-                    onPress={() => { props.navigation.navigate('Auth') }}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Icon
-                    reverse
-                    raised
-                    name='share-alt'
-                    type='font-awesome'
-                    color={Colors.darkGrey}
-                    size={28}
-                    reverseColor='white'
-                    onPress={() => { props.navigation.navigate('Auth') }}
-                  />
-                </TouchableOpacity>
-              </View> */}
             </Callout>
           </Marker>
         ))
         }
-
       </MapView>
+      {
+        isEventButtonsVisible ?
+          (
+            <SafeAreaView style={{
+              position: 'absolute',//use absolute position to show button on top of the map
+              left: '1%',
+              alignSelf: 'flex-end', //for align to right
+            }}
+            >
+              <TouchableOpacity>
+                <Icon
+                  reverse
+                  raised
+                  name='save'
+                  type='font-awesome'
+                  color={Colors.darkGrey}
+                  size={20}
+                  reverseColor='white'
+                  onPress={() => { props.navigation.navigate('Auth') }}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Icon
+                  reverse
+                  raised
+                  name='share-alt'
+                  type='font-awesome'
+                  color={Colors.darkGrey}
+                  size={20}
+                  reverseColor='white'
+                  onPress={() => { props.navigation.navigate('Auth') }}
+                />
+              </TouchableOpacity>
+            </SafeAreaView>
+          ) : null
+      }
       <EventModal
         title={selectedEvent.title}
         description={selectedEvent.description}

@@ -115,5 +115,5 @@ const styles = StyleSheet.create({
 	},
 	dateTimeText: {
 		color: 'grey'
-	},
+	}
 });
