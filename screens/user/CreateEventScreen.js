@@ -52,10 +52,6 @@ const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const CreateEventScreen = (props) => {
-
-  console.log('EVENTIS: ' + props.navigation.getParam('event').title);
-
-  console.log(props.navigation.state.params.event.title);
   var initEvent = {};
   if (props.navigation.state.params.event) {
     console.log('initial event was passed');
@@ -375,9 +371,9 @@ const CreateEventScreen = (props) => {
               </View>
               <MapView
                 initialRegion={{
-                  latitude: location.latitude,
+                  latitude: parseFloat(location.latitude),
                   latitudeDelta: LATITUDE_DELTA,
-                  longitude: location.longitude,
+                  longitude: parseFloat(location.longitude),
                   longitudeDelta: LONGITUDE_DELTA,
                 }}
                 style={styles.mapStyle}
