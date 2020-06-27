@@ -190,7 +190,6 @@ const MapScreen = props => {
                             color={Colors.darkGrey}
                             size={20}
                             reverseColor='white'
-                            onPress={() => { props.navigation.navigate('Auth') }}
                           />
                         </TouchableOpacity>
                       </CalloutSubview>
@@ -204,7 +203,6 @@ const MapScreen = props => {
                             color={Colors.darkGrey}
                             size={20}
                             reverseColor='white'
-                            onPress={() => { props.navigation.navigate('Auth') }}
                           />
                         </TouchableOpacity>
                       </CalloutSubview>

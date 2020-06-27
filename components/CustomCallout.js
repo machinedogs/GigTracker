@@ -34,13 +34,17 @@ export const CustomCallout = (props) => {
                     <Left>
                         <View>
                             <Text style={styles.titleText}>{props.event.title}</Text>
-                            <Text>{props.event.description}</Text>
+                            {
+                                props.event.description.length > 50 ?
+                                    <Text>{props.event.description.substring(0, 50)}...</Text> :
+                                    <Text>{props.event.description}</Text>
+                            }
                         </View>
                     </Left>
                     <Right>
-                        <View style={{ flex: 1, alignItems: 'center', alignSelf: 'flex-end' }}>
+                        <View style={{ flex: 1, alignItems: 'center', alignSelf: 'flex-end', justifyContent: 'flex-end' }}>
                             <WebView
-                                style={{ height: 80, width: 80 }}
+                                style={{ height: 80, width: 80, }}
                                 source={{ html: UserImage(props) }}
                             />
                             <Text>{props.event.host.name}</Text>
