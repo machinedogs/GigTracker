@@ -4,29 +4,21 @@ import { Thumbnail } from 'native-base';
 import { Icon } from 'react-native-elements';
 import { StyleSheet, Text, View, Dimensions, ScrollView, TouchableOpacity, Image } from 'react-native';
 
-import { Col, Row, Grid } from 'react-native-easy-grid';
+import { Col, Grid } from 'react-native-easy-grid';
 
-
-const { width, height } = Dimensions.get('window');
-const SCREEN_HEIGHT = height;
-const SCREEN_WIDTH = width;
-const ASPECT_RATIO = width / height;
-
+// this function returns the screen elements for the event screen
+// this should take the event or event id as a prop. we should also
+// save the isEventSaved in a redux store for persistance.  
 const EventScreen = (props) => {
+
     const [isEventSaved, setEventSaved] = useState(false);
-    var saveIconColor = "black";
 
-    useEffect(() => {
-        if (isEventSaved) {
-            saveIconColor = "yellow";
-        } else { saveIconColor = "black" }
-        console.log(saveIconColor);
-    }, [isEventSaved])
-
+    //  for icon color selection
     const toggleSaveButton = () => {
         setEventSaved(!isEventSaved);
         console.log(isEventSaved);
     };
+
     return (
 
         <ScrollView style={{ backgroundColor: 'black' }}>
@@ -42,9 +34,9 @@ const EventScreen = (props) => {
                     </Col>
                 </Grid>
                 <Grid>
-                    <Col size={1} style={{ backgroundColor: 'black', height: 95 }}>
-                        <Thumbnail style={{ marginLeft: 10, marginTop: 5 }} source={{ uri: 'https://pixinvent.com/materialize-material-design-admin-template/app-assets/images/user/12.jpg' }} />
-                        <Text style={{ color: 'white' }}>
+                    <Col size={1} style={{ backgroundColor: 'black', height: 'auto' }}>
+                        <Thumbnail style={{ marginLeft: 10, marginTop: 10 ,marginBottom:5, padding:0}} source={{ uri: 'https://pixinvent.com/materialize-material-design-admin-template/app-assets/images/user/12.jpg' }} />
+                        <Text style={{ color: 'white',marginBottom:5, marginLeft: 10 }}>
                             HostName
                         </Text>
                     </Col>
@@ -57,7 +49,7 @@ const EventScreen = (props) => {
                     </Col>
                 </Grid>
                 <Grid>
-                    <Col size={1} style={{ backgroundColor: 'white', height: 'auto' }}>
+                    <Col size={1} style={{ backgroundColor: '#403e3a', height: 'auto' }}>
                         <Text style={styles.Description}>
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit,
                             sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
@@ -68,13 +60,13 @@ const EventScreen = (props) => {
                 </Grid>
                 <Grid>
                     <Col size={1} style={{ backgroundColor: 'black', width: 80 }}>
-                        <TouchableOpacity style={{ marginTop: 10 }} activeOpacity={1}>
+                        <TouchableOpacity onPress={toggleSaveButton} style={{ marginTop: 10 }} >
                             <Icon
                                 name='save'
                                 type='font-awesome'
                                 size={40}
-                                color={isEventSaved ? 'yellow' : 'white'}
-                                onPress={toggleSaveButton}
+                                color={isEventSaved ? '#f5b800' : 'white'}
+
                             />
                             <Text style={styles.ButtonText}>{isEventSaved ? 'Unsave Event' : 'Save Event'}</Text>
                         </TouchableOpacity>
@@ -90,7 +82,7 @@ const EventScreen = (props) => {
                             <Text style={styles.ButtonText}>Share Event</Text>
                         </TouchableOpacity>
                     </Col>
-                    
+
                 </Grid>
             </View>
         </ScrollView>
@@ -98,31 +90,22 @@ const EventScreen = (props) => {
     );
 }
 
+// settings for header
 EventScreen.navigationOptions = navData => {
     return {
         headerTitle: 'Title',
         headerTitleStyle: {
             fontSize: 22,
-
         },
         headerStyle: {
-
             backgroundColor: 'black'
 
         },
         headerTintColor: 'white',
     }
 }
+
 const styles = StyleSheet.create({
-    Title: {
-        flex: 1,
-        backgroundColor: 'black',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: 30,
-        textAlign: 'center',
-        padding: ' 4%'
-    },
     ButtonText: {
         margin: 10,
         color: 'white',
@@ -132,10 +115,9 @@ const styles = StyleSheet.create({
         color: 'white',
         backgroundColor: 'black',
         margin: 2,
-        padding: 10,
         marginLeft: 0,
         marginRight: 0,
-        fontSize: 15
+        padding: 10
     }
 });
 
