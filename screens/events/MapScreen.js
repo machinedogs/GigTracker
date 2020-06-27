@@ -11,7 +11,7 @@ import {
   StatusBar
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
+import { PROVIDER_GOOGLE, Marker, Callout, CalloutSubview } from 'react-native-maps';
 import MapView from 'react-native-map-clustering';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import { Icon } from 'react-native-elements';
@@ -26,6 +26,7 @@ import { GetSavedEvents } from '../../store/actions/events';
 import * as eventActions from '../../store/actions/events';
 import { CustomCallout } from '../../components/CustomCallout';
 import * as iconHelpers from '../helper/iconHelpers';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 const { width, height } = Dimensions.get('window')
 const SCREEN_HEIGHT = height
@@ -122,24 +123,13 @@ const MapScreen = props => {
     toggleModal();
   }
 
-  const closeCallout = () => {
-    if (isCalloutVisible) {
-      setEventButtonsVisible(false);
-      setCalloutVisible(false);
-    }
-  }
-
   const onPinPress = (event) => {
     setSelectedEvent({ id: event.id, title: event.title, description: event.description, hostName: event.hostName });
     console.log("pressing pin");
     console.log(event)
-    setCalloutVisible(true);
-    setEventButtonsVisible(true);
-    /*
-    console.log(isCalloutVisible);
-    let coords = { latitude: event.location.latitude, longitude: event.location.longitude, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA };
-    mapRef.current.animateToRegion(coords, 0);
-    */
+
+    //let coords = { latitude: parseFloat(event.location.latitude), longitude: parseFloat(event.location.longitude), latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA };
+    //mapRef.current.animateToRegion(coords, 0);
   }
   /*
   const filterDate = (selectedDate) => {
@@ -163,7 +153,6 @@ const MapScreen = props => {
         rotateEnabled={false}
         showsTraffic={false}
         toolbarEnabled={true}
-        onPress={closeCallout}
         ref={mapRef}
         customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
         clusterColor="#341f97"
@@ -181,18 +170,53 @@ const MapScreen = props => {
           >
             <Callout
               style={styles.plainView}
-              onPress={onEventCalloutPress}
+              //onPress={onEventCalloutPress}
               tooltip={true}
               key={event.id}
             >
               {Platform.OS === 'ios' ?
                 (
-                  <EventCard event={event} style={{ width: SCREEN_WIDTH * 0.75 }} streetAddress />
+                  <View>
+                    <CalloutSubview onPress={onEventCalloutPress}>
+                      <EventCard event={event} style={{ width: SCREEN_WIDTH * 0.75 }} streetAddress />
+                    </CalloutSubview>
+                    <View style={{ flexDirection: 'row' }}>
+                      <CalloutSubview onPress={() => { props.navigation.navigate('Auth') }}>
+                        <TouchableOpacity>
+                          <Icon
+                            reverse
+                            raised
+                            name='save'
+                            type='font-awesome'
+                            color={Colors.darkGrey}
+                            size={20}
+                            reverseColor='white'
+                            onPress={() => { props.navigation.navigate('Auth') }}
+                          />
+                        </TouchableOpacity>
+                      </CalloutSubview>
+                      <CalloutSubview onPress={() => { props.navigation.navigate('Auth') }}>
+                        <TouchableOpacity>
+                          <Icon
+                            reverse
+                            raised
+                            name='share-alt'
+                            type='font-awesome'
+                            color={Colors.darkGrey}
+                            size={20}
+                            reverseColor='white'
+                            onPress={() => { props.navigation.navigate('Auth') }}
+                          />
+                        </TouchableOpacity>
+                      </CalloutSubview>
+                    </View>
+                  </View>
                 ) :
                 (
                   <CustomCallout
                     style={{ height: 400, margin: 10 }}
-                    event={event} />
+                    event={event}
+                  />
                 )
               }
             </Callout>
@@ -200,42 +224,7 @@ const MapScreen = props => {
         ))
         }
       </MapView>
-      {
-        isEventButtonsVisible ?
-          (
-            <SafeAreaView style={{
-              position: 'absolute',//use absolute position to show button on top of the map
-              left: '1%',
-              alignSelf: 'flex-end', //for align to right
-            }}
-            >
-              <TouchableOpacity>
-                <Icon
-                  reverse
-                  raised
-                  name='save'
-                  type='font-awesome'
-                  color={Colors.darkGrey}
-                  size={20}
-                  reverseColor='white'
-                  onPress={() => { props.navigation.navigate('Auth') }}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <Icon
-                  reverse
-                  raised
-                  name='share-alt'
-                  type='font-awesome'
-                  color={Colors.darkGrey}
-                  size={20}
-                  reverseColor='white'
-                  onPress={() => { props.navigation.navigate('Auth') }}
-                />
-              </TouchableOpacity>
-            </SafeAreaView>
-          ) : null
-      }
+
       <EventModal
         title={selectedEvent.title}
         description={selectedEvent.description}
@@ -243,70 +232,71 @@ const MapScreen = props => {
         visible={isModalVisible}
         toggleModal={toggleModal}
       />
-      {!userAccessToken ?
-        (
-          <SafeAreaView
-            style={{
-              position: 'absolute',//use absolute position to show button on top of the map
-              bottom: '0.5%',
-              alignSelf: 'center' //for align to right
-            }}
-          >
-            <TouchableOpacity>
-              <Icon
-                reverse
-                raised
-                name='user'
-                type='font-awesome'
-                color={Colors.darkGrey}
-                size={28}
-                reverseColor='white'
-                onPress={() => { props.navigation.navigate('Auth') }}
-              />
-            </TouchableOpacity>
-          </SafeAreaView>
-        ) :
-        (
-          <SafeAreaView style={styles.row}>
-            <TouchableOpacity>
-              <Icon
-                reverse
-                raised
-                name='user'
-                type='font-awesome'
-                color={Colors.darkGrey}
-                size={28}
-                onPress={() => { props.navigation.navigate('UserProfile') }}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Icon
-                reverse
-                raised
-                name='plus'
-                type='font-awesome'
-                color={Colors.darkGrey}
-                size={28}
-                onPress={() => { props.navigation.navigate('CreateEvent') }}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Icon
-                reverse
-                raised
-                name='refresh'
-                type='font-awesome'
-                color={Colors.darkGrey}
-                size={28}
-                reverseColor='white'
-                onPress={refreshEvents}
-              />
-            </TouchableOpacity>
-          </SafeAreaView>
+      {
+        !userAccessToken ?
+          (
+            <SafeAreaView
+              style={{
+                position: 'absolute',//use absolute position to show button on top of the map
+                bottom: '0.5%',
+                alignSelf: 'center' //for align to right
+              }}
+            >
+              <TouchableOpacity>
+                <Icon
+                  reverse
+                  raised
+                  name='user'
+                  type='font-awesome'
+                  color={Colors.darkGrey}
+                  size={28}
+                  reverseColor='white'
+                  onPress={() => { props.navigation.navigate('Auth') }}
+                />
+              </TouchableOpacity>
+            </SafeAreaView>
+          ) :
+          (
+            <SafeAreaView style={styles.row}>
+              <TouchableOpacity>
+                <Icon
+                  reverse
+                  raised
+                  name='user'
+                  type='font-awesome'
+                  color={Colors.darkGrey}
+                  size={28}
+                  onPress={() => { props.navigation.navigate('UserProfile') }}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Icon
+                  reverse
+                  raised
+                  name='plus'
+                  type='font-awesome'
+                  color={Colors.darkGrey}
+                  size={28}
+                  onPress={() => { props.navigation.navigate('CreateEvent') }}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Icon
+                  reverse
+                  raised
+                  name='refresh'
+                  type='font-awesome'
+                  color={Colors.darkGrey}
+                  size={28}
+                  reverseColor='white'
+                  onPress={refreshEvents}
+                />
+              </TouchableOpacity>
+            </SafeAreaView>
 
-        )
+          )
       }
-    </View>
+    </View >
   );
 }
 
