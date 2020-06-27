@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button} from 'react-native';
+import { Button } from 'react-native';
 import { Platform } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
@@ -18,7 +18,7 @@ const EventNavigator = createStackNavigator(
     {
         Startup: StartupScreen,
         Home: {
-            screen: MapScreen, 
+            screen: MapScreen,
             navigationOptions: {
                 headerTitle: 'Conjure',
                 headerTitleStyle: {
@@ -28,7 +28,7 @@ const EventNavigator = createStackNavigator(
                 },
                 headerStyle: {
                     backgroundColor: Colors.darkGrey,
-                    height: 110
+
                 },
                 headerTintColor: Colors.lightText,
                 gestureEnabled: false, // this stops us from swiping back to startup screen
@@ -42,7 +42,10 @@ const EventNavigator = createStackNavigator(
         },
         UserProfile: UserProfileScreen,
         ManageEvent: ManageEventScreen,
-        EventScreen: EventScreen,
+        EventScreen: {
+            screen: EventScreen,
+           
+        },
         Auth: AuthScreen,
         Delete: DeleteScreen
     }

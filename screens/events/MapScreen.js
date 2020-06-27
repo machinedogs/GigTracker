@@ -116,9 +116,10 @@ const MapScreen = props => {
   // gets called when callout is pressed i.e. pin must be pressed first
   const onEventCalloutPress = (event) => {
     console.log("pressing event callout");
-    console.log(selectedEvent)
+    console.log(selectedEvent);
     //toggleModal();
-    props.navigation.navigate('EventScreen', {props: event})
+    console.log(event);
+    props.navigation.navigate('EventScreen', {event: event});
   }
 
 
