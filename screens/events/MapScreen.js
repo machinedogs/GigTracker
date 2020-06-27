@@ -246,7 +246,7 @@ const MapScreen = props => {
                 alignSelf: 'center' //for align to right
               }}
             >
-              <TouchableOpacity>
+              <TouchableOpacity title = 'user'>
                 <Icon
                   reverse
                   raised
