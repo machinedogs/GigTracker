@@ -37,13 +37,14 @@ export const CustomCallout = (props) => {
                             <Text>{props.event.description}</Text>
                         </View>
                     </Left>
-
                     <Right>
-                        <WebView
-                            style={{ height: 80, width: 80, }}
-                            source={{ html: UserImage(props) }}
-                        />
-                        <Text>{props.event.host.name}</Text>
+                        <View style={{ flex: 1, alignItems: 'center', alignSelf: 'flex-end' }}>
+                            <WebView
+                                style={{ height: 80, width: 80 }}
+                                source={{ html: UserImage(props) }}
+                            />
+                            <Text>{props.event.host.name}</Text>
+                        </View>
                     </Right>
                 </CardItem>
                 <CardItem cardBody paddingHorizontal={15}>
@@ -59,7 +60,7 @@ export const CustomCallout = (props) => {
                         </Text>
                         <Text style={styles.dateTimeText}>
                             {new Date(props.event.date).toLocaleDateString()}{", "}
-                            {new Date(props.event.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true  }).replace(/(:\d{2}| [AP]M)$/, "")}
+                            {new Date(props.event.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }).replace(/(:\d{2}| [AP]M)$/, "")}
                         </Text>
                     </View>
                 </CardItem>

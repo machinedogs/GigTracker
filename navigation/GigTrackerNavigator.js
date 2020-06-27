@@ -27,7 +27,7 @@ const EventNavigator = createStackNavigator(
                 },
                 headerStyle: {
                     backgroundColor: Colors.darkGrey,
-                    height: 110
+                    //height: Platform.OS === 'ios' ? 110
                 },
                 headerTintColor: Colors.lightText,
                 gestureEnabled: false, // this stops us from swiping back to startup screen
