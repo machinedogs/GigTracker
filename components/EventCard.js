@@ -49,9 +49,9 @@ export const EventCard = (props) => {
 							(
 								<Thumbnail source={{ uri: props.event.host.profile }} />
 							) :
-							( // dispaly webview for android
+							( // display webview for android
 								<WebView
-									style={{ height: 80, width: 80, paddingRight: 100 }}
+									style={{ height: 80, width: 80 }}
 									source={{
 										html: UserImage(props)
 									}}
@@ -65,16 +65,20 @@ export const EventCard = (props) => {
 			<View style={styles.imageContainer}>
 				<InsetShadow elevation={5} shadowRadius={3}>
 					{Platform.OS === 'ios' ?
-						(<Image
-							source={{ uri: props.event.image }}
-							style={styles.image}
-						/>) :
-						(<WebView
-							style={{ height: 200, width: 300 }}
-							source={{
-								html: EventImage(props.event)
-							}}
-						/>)
+						(
+							<Image
+								source={{ uri: props.event.image }}
+								style={styles.image}
+							/>
+						) :
+						( // display webview for android
+							<WebView
+								style={{ height: 200, width: 300 }}
+								source={{
+									html: EventImage(props.event)
+								}}
+							/>
+						)
 					}
 				</InsetShadow>
 			</View >
