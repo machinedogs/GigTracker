@@ -168,14 +168,13 @@ const MapScreen = props => {
             onPress={onPinPress.bind(this, event)}
             icon={iconHelpers.iconPicker(event.category)}
           >
-            <Callout
-              style={styles.plainView}
-              //onPress={onEventCalloutPress}
-              tooltip={true}
-              key={event.id}
-            >
-              {Platform.OS === 'ios' ?
-                (
+            {Platform.OS === 'ios' ?
+              (
+                <Callout
+                  style={styles.plainView}
+                  tooltip={true}
+                  key={event.id}
+                >
                   <View>
                     <CalloutSubview onPress={onEventCalloutPress}>
                       <EventCard event={event} style={{ width: SCREEN_WIDTH * 0.75 }} streetAddress />
@@ -211,15 +210,22 @@ const MapScreen = props => {
                       </CalloutSubview>
                     </View>
                   </View>
-                ) :
-                (
+                </Callout>
+              ) :
+              ( // Android
+                <Callout
+                  style={styles.plainView}
+                  onPress={onEventCalloutPress}
+                  tooltip={true}
+                  key={event.id}
+                >
                   <CustomCallout
-                    style={{ height: 400, margin: 10 }}
+                    style={{ width: SCREEN_WIDTH * 0.75 }}
                     event={event}
                   />
-                )
-              }
-            </Callout>
+                </Callout>
+              )
+            }
           </Marker>
         ))
         }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, View, Dimensions, Platform } from "react-native";
+import { Image, StyleSheet, View, Dimensions } from "react-native";
 import { Container, Header, Content, Accordion } from "native-base";
 import {
 	Card,
@@ -12,7 +12,6 @@ import {
 	Body,
 	Right,
 } from "native-base";
-import { WebView } from 'react-native-webview'
 import InsetShadow from 'react-native-inset-shadow'
 import { Entypo } from "@expo/vector-icons";
 
@@ -45,41 +44,17 @@ export const EventCard = (props) => {
 				</View>
 				<Right style={styles.hostContainer}>
 					<View style={styles.hostContent}>
-						{Platform.OS === 'ios' ?
-							(
-								<Thumbnail source={{ uri: props.event.host.profile }} />
-							) :
-							( // display webview for android
-								<WebView
-									style={{ height: 80, width: 80 }}
-									source={{
-										html: UserImage(props)
-									}}
-								/>
-							)
-						}
+						<Thumbnail source={{ uri: props.event.host.profile }} />
 						<Text style={styles.hostNameText}>{props.event.host.name}</Text>
 					</View>
 				</Right>
 			</View>
 			<View style={styles.imageContainer}>
 				<InsetShadow elevation={5} shadowRadius={3}>
-					{Platform.OS === 'ios' ?
-						(
-							<Image
-								source={{ uri: props.event.image }}
-								style={styles.image}
-							/>
-						) :
-						( // display webview for android
-							<WebView
-								style={{ height: 200, width: 300 }}
-								source={{
-									html: EventImage(props.event)
-								}}
-							/>
-						)
-					}
+					<Image
+						source={{ uri: props.event.image }}
+						style={styles.image}
+					/>
 				</InsetShadow>
 			</View >
 			<View style={styles.footer}>

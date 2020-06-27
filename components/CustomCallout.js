@@ -13,42 +13,55 @@ import {
     Right,
 } from "native-base";
 import { Entypo } from "@expo/vector-icons";
+import InsetShadow from 'react-native-inset-shadow'
+
 import { EventImage } from './calloutEventImage';
 import { UserImage } from './calloutUserImage';
 import { WebView } from 'react-native-webview'
 
+const makeStreetAddress = (address) => {
+    var tokens = address.split(", ");
+    var result = tokens[0] + " " + tokens[1]
+    return result;
+}
 
 export const CustomCallout = (props) => {
-   
+
     return (
-        <Card>
+        <Card style={{ ...props.style }}>
             <View>
                 <CardItem>
                     <Left>
-                    <WebView style={{ height: 80, width: 80, paddingRight:100 }} source={{
-                        html: UserImage(props)
-                    }} />
-                        <Body>
-                            <Text>{props.event.host.name}</Text>
-                            <Text note>{props.event.host.email}</Text>
-                        </Body>
+                        <View>
+                            <Text style={styles.titleText}>{props.event.title}</Text>
+                            <Text>{props.event.description}</Text>
+                        </View>
                     </Left>
-                </CardItem>
-                <CardItem cardBody>
-                    <WebView style={{ height: 200, width: 300 }} source={{
-                        html: EventImage(props.event)
-                    }} />
-                </CardItem>
-                <Text style={styles.titleText}>{props.event.title}</Text>
-                <Text>{props.event.description}</Text>
-                <CardItem>
-                    <Left>
-                        <Entypo name="location-pin" size={20} color="black" />
-                        <Text>{props.event.address}</Text>
-                    </Left>
+
                     <Right>
-                        <Text>{props.event.date}</Text>
+                        <WebView
+                            style={{ height: 80, width: 80, }}
+                            source={{ html: UserImage(props) }}
+                        />
+                        <Text>{props.event.host.name}</Text>
                     </Right>
+                </CardItem>
+                <CardItem cardBody paddingHorizontal={15}>
+                    <WebView
+                        style={{ height: 200, width: props.style.width }}
+                        source={{ html: EventImage(props.event) }}
+                    />
+                </CardItem>
+                <CardItem>
+                    <View style={{ flexDirection: 'column' }}>
+                        <Text>
+                            {makeStreetAddress(props.event.location.address)}
+                        </Text>
+                        <Text style={styles.dateTimeText}>
+                            {new Date(props.event.date).toLocaleDateString()}{", "}
+                            {new Date(props.event.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true  }).replace(/(:\d{2}| [AP]M)$/, "")}
+                        </Text>
+                    </View>
                 </CardItem>
             </View>
 
@@ -58,9 +71,11 @@ export const CustomCallout = (props) => {
 
 
 const styles = StyleSheet.create({
-
     titleText: {
         fontSize: 20,
         fontWeight: "bold",
     },
+    dateTimeText: {
+        color: 'grey'
+    }
 });
