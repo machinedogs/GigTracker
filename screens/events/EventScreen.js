@@ -1,9 +1,9 @@
 import { useSelector, useDispatch } from 'react-redux';
 import React, { useState, useEffect } from 'react'
-import { Container, Header, Thumbnail, Left, Body, Right, Button, Title } from 'native-base';
-import { Icon, Tile } from 'react-native-elements';
+import { Thumbnail } from 'native-base';
+import { Icon } from 'react-native-elements';
 import { StyleSheet, Text, View, Dimensions, ScrollView, TouchableOpacity, Image } from 'react-native';
-import { HeaderButtons, Item } from 'react-navigation-header-buttons'
+
 import { Col, Row, Grid } from 'react-native-easy-grid';
 
 
@@ -29,7 +29,7 @@ const EventScreen = (props) => {
     };
     return (
 
-        <ScrollView>
+        <ScrollView style={{ backgroundColor: 'black' }}>
             <View >
 
                 <Grid>
@@ -42,48 +42,55 @@ const EventScreen = (props) => {
                     </Col>
                 </Grid>
                 <Grid>
-                    <Col size={1} style={{ backgroundColor: '#00CE9F', height: 75 }}>
+                    <Col size={1} style={{ backgroundColor: 'black', height: 95 }}>
                         <Thumbnail style={{ marginLeft: 10, marginTop: 5 }} source={{ uri: 'https://pixinvent.com/materialize-material-design-admin-template/app-assets/images/user/12.jpg' }} />
-                        <Text>
+                        <Text style={{ color: 'white' }}>
                             HostName
                         </Text>
                     </Col>
-                    <Col size={4} style={{ backgroundColor: '#fcba03', height: 75 }}>
-                        <Text>Location and Time</Text>
+                    <Col size={2} style={{ backgroundColor: 'black', height: 80 }}>
+                        <Text style={{ fontSize: 15, color: 'white', marginTop: 10 }}>Mt.Airy Philadelphia PA</Text>
+                    </Col>
+                    <Col size={2} style={{ backgroundColor: 'black', height: 80 }}>
+                        <Text style={{ fontSize: 35, marginTop: 10, color: 'white' }}>8:00 PM</Text>
+                        <Text style={{ fontSize: 25, color: 'white' }}>6/28/2020</Text>
                     </Col>
                 </Grid>
                 <Grid>
-                    <Col size={1} style={{ backgroundColor: '#f0548b', height: 'auto' }}>
-                        <Text>description</Text>
+                    <Col size={1} style={{ backgroundColor: 'white', height: 'auto' }}>
+                        <Text style={styles.Description}>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                            Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                            laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+                        </Text>
                     </Col>
                 </Grid>
                 <Grid>
-                    <Col size={1} style={{ backgroundColor: '#f0548b', width: 75 }}>
-                        <TouchableOpacity>
+                    <Col size={1} style={{ backgroundColor: 'black', width: 80 }}>
+                        <TouchableOpacity style={{ marginTop: 10 }} activeOpacity={1}>
                             <Icon
                                 name='save'
                                 type='font-awesome'
                                 size={40}
-                                color={isEventSaved ? 'yellow' : 'black'}
+                                color={isEventSaved ? 'yellow' : 'white'}
                                 onPress={toggleSaveButton}
                             />
-                            <Text>Save Event</Text>
+                            <Text style={styles.ButtonText}>{isEventSaved ? 'Unsave Event' : 'Save Event'}</Text>
                         </TouchableOpacity>
                     </Col>
-                    <Col size={1} style={{ backgroundColor: '#f0548b', width: 75 }}>
-                        <TouchableOpacity>
+                    <Col size={1} style={{ backgroundColor: 'black', width: 75 }}>
+                        <TouchableOpacity style={{ marginTop: 10 }}>
                             <Icon
                                 name='share-alt'
                                 type='font-awesome'
                                 size={40}
-                                color={'black'}
+                                color={'white'}
                             />
-                            <Text>Share Event</Text>
+                            <Text style={styles.ButtonText}>Share Event</Text>
                         </TouchableOpacity>
                     </Col>
-                    <Col size={4} style={{ backgroundColor: '#fcba03' }}>
-
-                    </Col>
+                    
                 </Grid>
             </View>
         </ScrollView>
@@ -96,18 +103,39 @@ EventScreen.navigationOptions = navData => {
         headerTitle: 'Title',
         headerTitleStyle: {
             fontSize: 22,
+
         },
+        headerStyle: {
+
+            backgroundColor: 'black'
+
+        },
+        headerTintColor: 'white',
     }
 }
 const styles = StyleSheet.create({
     Title: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: 'black',
         alignItems: 'center',
         justifyContent: 'center',
         fontSize: 30,
         textAlign: 'center',
         padding: ' 4%'
+    },
+    ButtonText: {
+        margin: 10,
+        color: 'white',
+        textAlign: 'center',
+    },
+    Description: {
+        color: 'white',
+        backgroundColor: 'black',
+        margin: 2,
+        padding: 10,
+        marginLeft: 0,
+        marginRight: 0,
+        fontSize: 15
     }
 });
 
