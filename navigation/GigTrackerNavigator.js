@@ -15,9 +15,6 @@ import DeleteScreen from '../screens/user/DeleteScreen';
 
 
 const EventNavigator = createStackNavigator(
-
-
-
     {
         Startup: StartupScreen,
         Home: {

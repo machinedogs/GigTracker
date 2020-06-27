@@ -15,6 +15,7 @@ import { PROVIDER_GOOGLE, Marker, Callout, CalloutSubview } from 'react-native-m
 import MapView from 'react-native-map-clustering';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import { Icon } from 'react-native-elements';
+
 import { EventCard } from "../../components/EventCard";
 import MapStyle from '../../constants/MapStyle';
 import EventModal from '../../components/EventModal';
@@ -26,7 +27,6 @@ import { GetSavedEvents } from '../../store/actions/events';
 import * as eventActions from '../../store/actions/events';
 import { CustomCallout } from '../../components/CustomCallout';
 import * as iconHelpers from '../helper/iconHelpers';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 const { width, height } = Dimensions.get('window')
 const SCREEN_HEIGHT = height
@@ -127,10 +127,16 @@ const MapScreen = props => {
     setSelectedEvent({ id: event.id, title: event.title, description: event.description, hostName: event.hostName });
     console.log("pressing pin");
     console.log(event)
-
-    //let coords = { latitude: parseFloat(event.location.latitude), longitude: parseFloat(event.location.longitude), latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA };
-    //mapRef.current.animateToRegion(coords, 0);
+    /*
+    let coords = {
+      latitude: parseFloat(event.location.latitude), // mapRef.current.region.latitude + ((parseFloat(event.location.latitude)) - (mapRef.current.region.latitude - (mapRef.current.region.latitudeDelta / 4))), //parseFloat(event.location.latitude) + 0.035,
+      longitude: parseFloat(event.location.longitude),
+      latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA
+    };
+    mapRef.current.animateToRegion(coords, 0);
+    */
   }
+
   /*
   const filterDate = (selectedDate) => {
     setDate(selectedDate);
@@ -246,7 +252,7 @@ const MapScreen = props => {
                 alignSelf: 'center' //for align to right
               }}
             >
-              <TouchableOpacity title = 'user'>
+              <TouchableOpacity>
                 <Icon
                   reverse
                   raised
