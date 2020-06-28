@@ -15,6 +15,7 @@ import * as eventActions from '../../store/actions/events';
 // save the isEventSaved in a redux store for persistance.  
 
 const EventScreen = (props) => {
+    const hostName = useSelector(state => state.user.userName);
     const savedEvents = useSelector(state => state.events.savedEvents);
     const event = props.navigation.getParam('event');
     console.log("this is the event " + JSON.stringify(event));
@@ -103,17 +104,19 @@ const EventScreen = (props) => {
                 </Col>
             </Grid>
             <Grid>
-                <Col>
-                    <TouchableOpacity onPress={toggleSaveButton} style={{ marginTop: 10 }} >
-                        <Icon
-                            name='save'
-                            type='font-awesome'
-                            size={40}
-                            color={isEventSaved ? '#f5b800' : 'white'}
-                        />
-                        <Text style={styles.ButtonText}>{isEventSaved ? 'Unsave Event' : 'Save Event'}</Text>
-                    </TouchableOpacity>
-                </Col>
+                {hostName != event.host.name ?
+                    (<Col>
+                        <TouchableOpacity onPress={toggleSaveButton} style={{ marginTop: 10 }} >
+                            <Icon
+                                name='save'
+                                type='font-awesome'
+                                size={40}
+                                color={isEventSaved ? '#f5b800' : 'white'}
+                            />
+                            <Text style={styles.ButtonText}>{isEventSaved ? 'Unsave Event' : 'Save Event'}</Text>
+                        </TouchableOpacity>
+                    </Col>) : null
+                }
                 <Col size={1} style={{ width: 75 }}>
                     <TouchableOpacity style={{ marginTop: 10 }}>
                         <Icon
