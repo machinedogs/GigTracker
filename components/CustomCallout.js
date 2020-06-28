@@ -12,18 +12,12 @@ import {
     Body,
     Right,
 } from "native-base";
-import { Entypo } from "@expo/vector-icons";
-import InsetShadow from 'react-native-inset-shadow'
+import { makeStreetAddress } from "../screens/helper/calloutHelper";
+
 
 import { EventImage } from './calloutEventImage';
 import { UserImage } from './calloutUserImage';
 import { WebView } from 'react-native-webview'
-
-const makeStreetAddress = (address) => {
-    var tokens = address.split(", ");
-    var result = tokens[0] + " " + tokens[1]
-    return result;
-}
 
 export const CustomCallout = (props) => {
 
