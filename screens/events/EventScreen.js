@@ -13,10 +13,20 @@ import * as eventActions from '../../store/actions/events';
 // this function returns the screen elements for the event screen
 // this should take the event or event id as a prop. we should also
 // save the isEventSaved in a redux store for persistance.  
+
 const EventScreen = (props) => {
-    const [isEventSaved, setEventSaved] = useState(false);
+    const savedEvents = useSelector(state => state.events.savedEvents);
     const event = props.navigation.getParam('event');
     console.log("this is the event " + JSON.stringify(event));
+    var initialEventSaveState;
+    const existingIndex = savedEvents.findIndex(myEvent => myEvent.event === event.event)
+    if (existingIndex >= 0) { // check if index exists
+        initialEventSaveState = true;
+    } else {
+        initialEventSaveState = false;
+    }
+    const [isEventSaved, setEventSaved] = useState(initialEventSaveState);
+
     const dispatch = useDispatch();
 
     //  for icon color selection
