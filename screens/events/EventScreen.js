@@ -52,7 +52,7 @@ const EventScreen = (props) => {
                         {Platform.OS === 'ios' ?
                             (
                                 <Text style={{ fontSize: 35, color: 'white' }}>
-                                    {new Date(props.event.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }).replace(/(:\d{2}| [AP]M)$/, "")}
+                                    {new Date(event.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}
                                 </Text>
 
                             ) :
