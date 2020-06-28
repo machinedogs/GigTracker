@@ -13,22 +13,7 @@ import {
 	Right,
 } from "native-base";
 import InsetShadow from 'react-native-inset-shadow'
-import { Entypo } from "@expo/vector-icons";
-
-const makeStreetAddress = (address) => {
-	var tokens = address.split(", ");
-	var result = tokens[0] + " " + tokens[1]
-	return result;
-}
-
-const makeFullAddress = (address) => {
-	var tokens = address.split(", ");
-	tokens.pop()
-	tokens.pop()
-	tokens.pop()
-	var result = tokens.join(", ")
-	return result;
-}
+import { makeStreetAddress, makeFullAddress } from "../screens/helper/calloutHelper";
 
 export const EventCard = (props) => {
 	return (
