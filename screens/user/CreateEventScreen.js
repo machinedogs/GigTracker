@@ -53,7 +53,7 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const CreateEventScreen = (props) => {
   var initEvent = {};
-  if (props.navigation.state.params.event) {
+  if (props.navigation.getParam('event', 0)) {
     console.log('initial event was passed');
     initEvent = props.navigation.getParam('event');
   }
