@@ -184,7 +184,7 @@ export const editEvent = (event, id) => {
             );
             console.log(`RESPONSE: ${response.status}`);
 			if(response.ok){
-				alert("Successfully saved changes.");
+				alert("Successfully replaced event.");
 			}
 			const resData = await response.json();
 
