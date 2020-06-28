@@ -51,7 +51,6 @@ const EventNavigator = createStackNavigator(
                     height: Platform.OS === 'ios' ? 110 : Header.height
                 },
             }
-           
         },
         Auth: AuthScreen,
         Delete: DeleteScreen
