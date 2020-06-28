@@ -5,7 +5,8 @@ import { Icon } from 'react-native-elements';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { Col, Grid } from 'react-native-easy-grid';
 
-import formatStandardTime from '../helper/TimeFormater'
+import formatStandardTime from '../helper/timeFormater'
+import Colors from '../../constants/Colors';
 
 // this function returns the screen elements for the event screen
 // this should take the event or event id as a prop. we should also
@@ -115,11 +116,7 @@ EventScreen.navigationOptions = (props) => {
         headerTitleStyle: {
             fontSize: 22,
         },
-
-        headerStyle: {
-            backgroundColor: 'black',
-        },
-
+        headerBackTitleVisible: false,
         headerTintColor: 'white',
     }
 }

@@ -45,6 +45,12 @@ const EventNavigator = createStackNavigator(
         ManageEvent: ManageEventScreen,
         EventScreen: {
             screen: EventScreen,
+            navigationOptions: {
+                headerStyle: {
+                    backgroundColor: Colors.darkGrey,
+                    height: Platform.OS === 'ios' ? 110 : Header.height
+                },
+            }
            
         },
         Auth: AuthScreen,
