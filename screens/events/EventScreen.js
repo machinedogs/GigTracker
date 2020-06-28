@@ -1,8 +1,8 @@
 import { useSelector, useDispatch } from 'react-redux';
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Thumbnail } from 'native-base';
 import { Icon } from 'react-native-elements';
-import { StyleSheet, Text, View, Dimensions, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image } from 'react-native';
 
 import { Col, Grid } from 'react-native-easy-grid';
 
@@ -12,6 +12,10 @@ import { Col, Grid } from 'react-native-easy-grid';
 const EventScreen = (props) => {
 
     const [isEventSaved, setEventSaved] = useState(false);
+
+    const event = props.navigation.getParam('event');
+    console.log("this is the event " + JSON.stringify(event));
+
 
     //  for icon color selection
     const toggleSaveButton = () => {
@@ -29,32 +33,28 @@ const EventScreen = (props) => {
                     <Col size={1} style={{ backgroundColor: '#609ae0', height: 275 }}>
                         <Image
                             style={{ flex: 1 }}
-                            source={{ uri: 'https://billypenn.com/wp-content/uploads/2019/11/warehouseonwatts-party-1024x576.jpg?resize=994,559' }}
+                            source={{ uri: event.image }}
                         />
                     </Col>
                 </Grid>
                 <Grid>
                     <Col size={1} style={{ backgroundColor: 'black', height: 'auto' }}>
-                        <Thumbnail style={{ marginLeft: 10, marginTop: 10 ,marginBottom:5, padding:0}} source={{ uri: 'https://pixinvent.com/materialize-material-design-admin-template/app-assets/images/user/12.jpg' }} />
-                        <Text style={{ color: 'white',marginBottom:5, marginLeft: 10 }}>
-                            HostName
+                        <Thumbnail style={{ marginLeft: 10, marginTop: 10, marginBottom: 5, padding: 0 }} source={{ uri: event.host.profile }} />
+                        <Text style={{ color: 'white', marginBottom: 5, marginLeft: 10 }}>
+                            {event.host.name}
                         </Text>
                     </Col>
-                    <Col size={2} style={{ backgroundColor: 'black', height: 80 }}>
-                        <Text style={{ fontSize: 15, color: 'white', marginTop: 10 }}>Mt.Airy Philadelphia PA</Text>
+                    <Col size={2} style={{ backgroundColor: 'black', height: 'auto' }}>
+                        <Text style={{ fontSize: 15, color: 'white', marginTop: 10 }}>{event.location.address.substring(0, 50)}</Text>
                     </Col>
-                    <Col size={2} style={{ backgroundColor: 'black', height: 80 }}>
-                        <Text style={{ fontSize: 35, marginTop: 10, color: 'white' }}>8:00 PM</Text>
-                        <Text style={{ fontSize: 25, color: 'white' }}>6/28/2020</Text>
+                    <Col size={2} style={{ backgroundColor: 'black', height: 'auto' }}>
+                        <Text style={{ fontSize: 25, color: 'white' }}>{event.date}</Text>
                     </Col>
                 </Grid>
                 <Grid>
                     <Col size={1} style={{ backgroundColor: '#403e3a', height: 'auto' }}>
                         <Text style={styles.Description}>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                            laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+                            {event.description}
                         </Text>
                     </Col>
                 </Grid>
@@ -66,7 +66,6 @@ const EventScreen = (props) => {
                                 type='font-awesome'
                                 size={40}
                                 color={isEventSaved ? '#f5b800' : 'white'}
-
                             />
                             <Text style={styles.ButtonText}>{isEventSaved ? 'Unsave Event' : 'Save Event'}</Text>
                         </TouchableOpacity>
@@ -91,9 +90,11 @@ const EventScreen = (props) => {
 }
 
 // settings for header
-EventScreen.navigationOptions = navData => {
+EventScreen.navigationOptions = (props) => {
+
+    var event = props.navigation.getParam('event');
     return {
-        headerTitle: 'Title',
+        headerTitle: event.title,
         headerTitleStyle: {
             fontSize: 22,
         },

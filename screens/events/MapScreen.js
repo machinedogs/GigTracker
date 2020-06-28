@@ -118,12 +118,8 @@ const MapScreen = props => {
     console.log("pressing event callout");
     console.log(selectedEvent);
     //toggleModal();
-    console.log(event);
     props.navigation.navigate('EventScreen', {event: event});
   }
-
-
-
 
 const onPinPress = (event) => {
   setSelectedEvent({ id: event.id, title: event.title, description: event.description, hostName: event.hostName });
@@ -169,7 +165,7 @@ return (
         >
           <Callout
             style={styles.plainView}
-            onPress={onEventCalloutPress}
+            onPress={onEventCalloutPress.bind(this, event)}
             tooltip={true}
             key={event.id}
           >
