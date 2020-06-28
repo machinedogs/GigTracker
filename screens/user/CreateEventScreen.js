@@ -52,12 +52,8 @@ const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const CreateEventScreen = (props) => {
-
-  console.log('EVENTIS: ' + props.navigation.getParam('event').title);
-
-  console.log(props.navigation.state.params.event.title);
   var initEvent = {};
-  if (props.navigation.state.params.event) {
+  if (props.navigation.getParam('event', 0)) {
     console.log('initial event was passed');
     initEvent = props.navigation.getParam('event');
   }
@@ -69,12 +65,12 @@ const CreateEventScreen = (props) => {
   const initDate = initEvent ? new Date(initEvent.date) : new Date();
   const initTime = initEvent ? new Date(initEvent.date) : new Date();
   const initImage = initEvent ? initEvent.image : "";
-  const initLocation = initEvent ? initEvent.location : false;
+  //const initLocation = initEvent ? initEvent.location : false;
 
   //These states updated as user interacts with the screen
   const [title, setTitle] = useState(initTitle);
   const [description, setDescription] = useState(initDescription);
-  const [location, setLocation] = useState(initLocation);
+  const [location, setLocation] = useState("");
   const [date, setDate] = useState(initDate);
   const [time, setTime] = useState(initTime);
   const [category, setCategory] = useState(initCategory);
@@ -83,9 +79,6 @@ const CreateEventScreen = (props) => {
   const [showDate, setShowDate] = useState(false);
   const [showTime, setShowTime] = useState(false);
   const [showMap, setShowMap] = useState(false);
-
-  console.log("description: " + date);
-  console.log('init date: ' + initDate)
 
   const dispatch = useDispatch();
 
@@ -98,9 +91,11 @@ const CreateEventScreen = (props) => {
   };
 
   useEffect(() => {
-    //We want the user  to pick the photo first then add descriptions and stuff
     getLocation();
-    updateEventPhoto();
+    if (props.navigation.getParam('event', 0)) {
+      console.log('load initital location');
+      setLocation(initEvent.location);
+    }
   }, []);
 
   const getLocation = async () => {
