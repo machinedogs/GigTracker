@@ -18,7 +18,7 @@ export const removeFromSavedEvents = (event) => {
 
 export const saveEvent = (event) => {
 	return async (dispatch, getState) => {
-		/*
+		
 		var requestOptions = {
 			method: 'GET',
 			redirect: 'follow'
@@ -26,15 +26,17 @@ export const saveEvent = (event) => {
 		const accessToken = getState().user.accessToken;
 
 		try {
-			fetch(
-				`https://gigservice.herokuapp.com/api/v1/host/save_event?auth_token=${accessToken}&event=${event.id}`,
+			const response = await fetch(
+				`https://gigservice.herokuapp.com/api/v1/host/save_event?auth_token=${accessToken}&event=${event.event}`,
 				requestOptions
 			)
+			const resData = await response.json();
+			console.log("Saved Event in DB");
+			console.log(resData);
 		} catch (err) { // could not save event for user
 			alert(err);
 		}
-		console.log("Event saved in DB")
-		*/
+		
 		// Add saved event to redux store
 		dispatch(addToSavedEvents(event));
 	}
