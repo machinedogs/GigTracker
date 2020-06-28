@@ -28,7 +28,7 @@ const EventScreen = (props) => {
 
     return (
 
-        <ScrollView style={{ backgroundColor: Colors.darkGrey }}>
+        <ScrollView style={{ backgroundColor: Colors.darkGrey }} showsVerticalScrollIndicator={false}>
             <View style={{ flexDirection: 'row', padding: 15 }}>
                 <View style={styles.titleDescriptionContainer}>
                     <Text style={styles.titleText}>{event.title}</Text>
@@ -79,13 +79,10 @@ const EventScreen = (props) => {
                 </Right>
             </View>
             <Grid>
-                <Col size={1} style={{ backgroundColor: '#403e3a', height: 'auto' }}>
-                    <InsetShadow>
+                <Col size={1} style={{ height: 'auto' }}>
+                    <InsetShadow shadowRadius={1} shadowColor='white' left={false} right={false} shadowOpacity={1}>
                         <Text style={styles.Description}>
-                        Hello all,
-We've recently had a large influx of people that don't seem to quite get the house show etiquette, so just a friendly reminder:
-
-If you're only showing up to get trashed and talk over the bands, don't bother coming at all. We're hosting shows. Not parties. Please act accordingly. ❤️
+                            {event.description}
                         </Text>
                     </InsetShadow>
                 </Col>
@@ -166,12 +163,13 @@ const styles = StyleSheet.create({
     },
     Description: {
         color: 'white',
-        backgroundColor: 'black',
-        margin: 2,
+        backgroundColor: Colors.darkGrey,
+        marginVertical: 2,
         marginLeft: 0,
         marginRight: 0,
-        padding: 15,
-        fontSize: 15
+        paddingHorizontal: 20,
+        paddingVertical: 17,
+        fontSize: 17
     }
 });
 
