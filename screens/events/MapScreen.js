@@ -59,7 +59,7 @@ const INITIAL_REGION = {
 };
 
 const MapScreen = props => {
-
+  const userName = useSelector(state => state.user.userName);
   const userAccessToken = useSelector(state => state.user.accessToken);
   const events = useSelector(state => state.events.events);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -121,7 +121,7 @@ const MapScreen = props => {
     console.log("pressing event callout");
     console.log(selectedEvent);
     //toggleModal();
-    props.navigation.navigate('EventScreen', {event: event});
+    props.navigation.navigate('EventScreen', { event: event });
   }
 
   const onPinPress = (event) => {
@@ -187,19 +187,21 @@ const MapScreen = props => {
                       <EventCard event={event} style={{ width: SCREEN_WIDTH * 0.75 }} streetAddress />
                     </CalloutSubview>
                     <View style={{ flexDirection: 'row' }}>
-                      <CalloutSubview onPress={() => { props.navigation.navigate('Auth') }}>
-                        <TouchableOpacity>
-                          <Icon
-                            reverse
-                            raised
-                            name='save'
-                            type='font-awesome'
-                            color={Colors.darkGrey}
-                            size={20}
-                            reverseColor='white'
-                          />
-                        </TouchableOpacity>
-                      </CalloutSubview>
+                      {userName != event.host.name ?
+                        (<CalloutSubview onPress={() => { props.navigation.navigate('Auth') }}>
+                          <TouchableOpacity>
+                            <Icon
+                              reverse
+                              raised
+                              name='save'
+                              type='font-awesome'
+                              color={Colors.darkGrey}
+                              size={20}
+                              reverseColor='white'
+                            />
+                          </TouchableOpacity>
+                        </CalloutSubview>) : null
+                      }
                       <CalloutSubview onPress={() => { props.navigation.navigate('Auth') }}>
                         <TouchableOpacity>
                           <Icon
