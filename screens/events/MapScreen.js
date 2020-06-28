@@ -179,32 +179,6 @@ return (
                   event={event} />
               )
             }
-            {/* <View flexDirection='row'>
-                <TouchableOpacity>
-                  <Icon
-                    reverse
-                    raised
-                    name='save'
-                    type='font-awesome'
-                    color={Colors.darkGrey}
-                    size={28}
-                    reverseColor='white'
-                    onPress={() => { props.navigation.navigate('Auth') }}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Icon
-                    reverse
-                    raised
-                    name='share-alt'
-                    type='font-awesome'
-                    color={Colors.darkGrey}
-                    size={28}
-                    reverseColor='white'
-                    onPress={() => { props.navigation.navigate('Auth') }}
-                  />
-                </TouchableOpacity>
-              </View> */}
           </Callout>
         </Marker>
       ))

@@ -3,8 +3,9 @@ import React, { useState } from 'react'
 import { Thumbnail } from 'native-base';
 import { Icon } from 'react-native-elements';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image } from 'react-native';
-
 import { Col, Grid } from 'react-native-easy-grid';
+
+import formatStandardTime from '../helper/TimeFormater'
 
 // this function returns the screen elements for the event screen
 // this should take the event or event id as a prop. we should also
@@ -45,10 +46,26 @@ const EventScreen = (props) => {
                         </Text>
                     </Col>
                     <Col size={2} style={{ backgroundColor: 'black', height: 'auto' }}>
-                        <Text style={{ fontSize: 15, color: 'white', marginTop: 10 }}>{event.location.address.substring(0, 50)}</Text>
+                        <Text style={{ fontSize: 15, color: 'white', marginTop: 10, margin: 5 }}>{event.location.address.substring(0, 50)}</Text>
                     </Col>
                     <Col size={2} style={{ backgroundColor: 'black', height: 'auto' }}>
-                        <Text style={{ fontSize: 25, color: 'white' }}>{event.date}</Text>
+                        {Platform.OS === 'ios' ?
+                            (
+                                <Text style={{ fontSize: 35, color: 'white' }}>
+                                    {new Date(props.event.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }).replace(/(:\d{2}| [AP]M)$/, "")}
+                                </Text>
+
+                            ) :
+                            (
+                                // format time for android
+                                <Text style={{ fontSize: 35, color: 'white' }}>
+                                    {formatStandardTime(event.date)}
+                                </Text>
+                            )}
+
+                        <Text style={{ fontSize: 20, color: 'white', paddingLeft: 10 }}>
+                            {new Date(event.date).toLocaleDateString()}
+                        </Text>
                     </Col>
                 </Grid>
                 <Grid>
@@ -81,10 +98,9 @@ const EventScreen = (props) => {
                             <Text style={styles.ButtonText}>Share Event</Text>
                         </TouchableOpacity>
                     </Col>
-
                 </Grid>
             </View>
-        </ScrollView>
+        </ScrollView >
 
     );
 }
@@ -93,15 +109,17 @@ const EventScreen = (props) => {
 EventScreen.navigationOptions = (props) => {
 
     var event = props.navigation.getParam('event');
+
     return {
         headerTitle: event.title,
         headerTitleStyle: {
             fontSize: 22,
         },
-        headerStyle: {
-            backgroundColor: 'black'
 
+        headerStyle: {
+            backgroundColor: 'black',
         },
+
         headerTintColor: 'white',
     }
 }
