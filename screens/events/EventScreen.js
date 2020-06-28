@@ -9,19 +9,24 @@ import InsetShadow from 'react-native-inset-shadow';
 import formatStandardTime from '../helper/timeFormater'
 import { makeFullAddress } from '../helper/calloutHelper';
 import Colors from '../../constants/Colors';
+import * as eventActions from '../../store/actions/events';
 // this function returns the screen elements for the event screen
 // this should take the event or event id as a prop. we should also
 // save the isEventSaved in a redux store for persistance.  
 const EventScreen = (props) => {
-
     const [isEventSaved, setEventSaved] = useState(false);
-
     const event = props.navigation.getParam('event');
     console.log("this is the event " + JSON.stringify(event));
-
+    const dispatch = useDispatch();
 
     //  for icon color selection
     const toggleSaveButton = () => {
+        // dispatch action
+        if (!isEventSaved) {
+            dispatch(eventActions.saveEvent(event))
+        } else { // indicating user unsaved the event
+            dispatch(eventActions.unsaveEvent(event))
+        }
         setEventSaved(!isEventSaved);
         console.log(isEventSaved);
     };
