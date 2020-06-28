@@ -117,10 +117,11 @@ const MapScreen = props => {
   };
 
   // gets called when callout is pressed i.e. pin must be pressed first
-  const onEventCalloutPress = () => {
+  const onEventCalloutPress = (event) => {
     console.log("pressing event callout");
-    console.log(selectedEvent)
-    toggleModal();
+    console.log(selectedEvent);
+    //toggleModal();
+    props.navigation.navigate('EventScreen', {event: event});
   }
 
   const onPinPress = (event) => {
@@ -182,7 +183,7 @@ const MapScreen = props => {
                   key={event.id}
                 >
                   <View>
-                    <CalloutSubview onPress={onEventCalloutPress}>
+                    <CalloutSubview onPress={onEventCalloutPress.bind(this, event)}>
                       <EventCard event={event} style={{ width: SCREEN_WIDTH * 0.75 }} streetAddress />
                     </CalloutSubview>
                     <View style={{ flexDirection: 'row' }}>
@@ -219,7 +220,7 @@ const MapScreen = props => {
               ( // Android
                 <Callout
                   style={styles.plainView}
-                  onPress={onEventCalloutPress}
+                  onPress={onEventCalloutPress.bind(this, event)}
                   tooltip={true}
                   key={event.id}
                 >

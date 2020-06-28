@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button} from 'react-native';
+import { Button } from 'react-native';
 import { Platform } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator, Header } from 'react-navigation-stack';
@@ -9,6 +9,7 @@ import MapScreen from '../screens/events/MapScreen';
 import CreateEventScreen from '../screens/user/CreateEventScreen';
 import UserProfileScreen from '../screens/user/UserProfileScreen';
 import ManageEventScreen from '../screens/user/ManageEventScreen';
+import EventScreen from '../screens/events/EventScreen'
 import AuthScreen from '../screens/user/AuthScreen';
 import StartupScreen from '../screens/StartupScreen';
 import DeleteScreen from '../screens/user/DeleteScreen';
@@ -18,7 +19,7 @@ const EventNavigator = createStackNavigator(
     {
         Startup: StartupScreen,
         Home: {
-            screen: MapScreen, 
+            screen: MapScreen,
             navigationOptions: {
                 headerTitle: 'Conjure',
                 headerTitleStyle: {
@@ -42,6 +43,10 @@ const EventNavigator = createStackNavigator(
         },
         UserProfile: UserProfileScreen,
         ManageEvent: ManageEventScreen,
+        EventScreen: {
+            screen: EventScreen,
+           
+        },
         Auth: AuthScreen,
         Delete: DeleteScreen
     }
