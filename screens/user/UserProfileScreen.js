@@ -71,6 +71,27 @@ const UserProfileScreen = (props) => {
 		dispatch(GetSavedEvents(user));
 	};
 
+	const handleDelete = async (event) => {
+		Alert.alert(
+			"Delete Event",
+			"Are you sure you want to delete this event?",
+			[
+				{
+					text: "Yes",
+					onPress: () => dispatch(eventActions.deleteEvent(event)),
+					style: 'destructive'
+				},
+				{
+					text: "No",
+					onPress: () => console.log("Delete Event Canceled"),
+					style: "cancel"
+				}
+			],
+			{ cancelable: false }
+		);
+		getHostedEvents(user);
+	}
+
 	useEffect(() => {
 		getHostedEvents(user);
 		getSavedEvents(user);
@@ -137,7 +158,7 @@ const UserProfileScreen = (props) => {
 											/>
 											<Button iconRight transparent light title='Delete'
 												onPress={() => {
-													dispatch(eventActions.deleteEvent(item))
+													handleDelete(item)
 												}}
 											/>
 										</View>
