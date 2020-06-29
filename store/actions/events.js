@@ -1,11 +1,67 @@
 export const CREATE_EVENT = "CREATE_EVENT";
-export const ADD_TO_MY_EVENTS = "ADD_TO_MY_EVENTS";
 export const UPDATE_HOSTED_EVENTS = "UPDATE_HOSTED_EVENTS";
 export const UPDATE_SAVED_EVENTS = "UPDATE_SAVED_EVENTS";
 export const GET_EVENTS = "GET_EVENTS";
+export const SAVE_EVENT = "SAVE_EVENT";
+export const UNSAVE_EVENT = "UNSAVE_EVENT";
 
-export const addToMyEvents = (event) => {
-	return { type: ADD_TO_MY_EVENTS, event: event };
+export const unsaveEvent = (event) => {
+	return async (dispatch, getState) => {
+		// put fetch in here when deployed
+		var requestOptions = {
+			method: 'DELETE',
+			redirect: 'follow'
+		};
+		const accessToken = getState().user.accessToken;
+
+		try {
+			const response = await fetch(
+				`https://gigservice.herokuapp.com/api/v1/host/save_event?auth_token=${accessToken}&event=${event.event}`,
+				requestOptions
+			)
+			const resData = await response.json();
+			console.log("Removed Saved Event for User in DB");
+			console.log(resData);
+		} catch (err) { // could not save event for user
+			alert(err);
+		}
+
+		dispatch(removeFromSavedEvents(event))
+	}
+}
+
+export const removeFromSavedEvents = (event) => {
+	return { type: UNSAVE_EVENT, eventId: event.event };
+}
+
+export const saveEvent = (event) => {
+	return async (dispatch, getState) => {
+		
+		var requestOptions = {
+			method: 'GET',
+			redirect: 'follow'
+		};
+		const accessToken = getState().user.accessToken;
+
+		try {
+			const response = await fetch(
+				`https://gigservice.herokuapp.com/api/v1/host/save_event?auth_token=${accessToken}&event=${event.event}`,
+				requestOptions
+			)
+			const resData = await response.json();
+			console.log("Saved Event in DB");
+			console.log(resData);
+		} catch (err) { // could not save event for user
+			alert(err);
+		}
+		
+		// Add saved event to redux store
+		dispatch(addToSavedEvents(event));
+	}
+}
+
+export const addToSavedEvents = (event) => {
+	return { type: SAVE_EVENT, event: event };
 };
 
 //Get a person's hosted/created events
@@ -133,7 +189,7 @@ export const createEvent = (event) => {
 				`https://gigservice.herokuapp.com/api/v1/host/events?auth_token=${access_token}`,
 				requestOptions
 			);
-			if(response.ok){
+			if (response.ok) {
 				alert("Successfully created event.");
 			}
 			const resData = await response.json();

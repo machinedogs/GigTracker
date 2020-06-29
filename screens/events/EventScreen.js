@@ -6,29 +6,45 @@ import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Dimensions
 import { Col, Grid } from 'react-native-easy-grid';
 import InsetShadow from 'react-native-inset-shadow';
 
-import formatStandardTime from '../helper/timeFormater'
+import { formatStandardTime } from '../helper/timeFormater'
 import { makeFullAddress } from '../helper/calloutHelper';
 import Colors from '../../constants/Colors';
+import * as eventActions from '../../store/actions/events';
 // this function returns the screen elements for the event screen
 // this should take the event or event id as a prop. we should also
 // save the isEventSaved in a redux store for persistance.  
+
 const EventScreen = (props) => {
-
-    const [isEventSaved, setEventSaved] = useState(false);
-
+    const userName = useSelector(state => state.user.userName);
+    const savedEvents = useSelector(state => state.events.savedEvents);
     const event = props.navigation.getParam('event');
     console.log("this is the event " + JSON.stringify(event));
+    var initialEventSaveState;
+    const existingIndex = savedEvents.findIndex(myEvent => myEvent.event === event.event)
+    if (existingIndex >= 0) { // check if index exists
+        initialEventSaveState = true;
+    } else {
+        initialEventSaveState = false;
+    }
+    const [isEventSaved, setEventSaved] = useState(initialEventSaveState);
 
+    const dispatch = useDispatch();
 
     //  for icon color selection
     const toggleSaveButton = () => {
+        // dispatch action
+        if (!isEventSaved) {
+            dispatch(eventActions.saveEvent(event))
+        } else { // indicating user unsaved the event
+            dispatch(eventActions.unsaveEvent(event))
+        }
         setEventSaved(!isEventSaved);
         console.log(isEventSaved);
     };
 
     return (
 
-        <ScrollView style={{ backgroundColor: Colors.darkGrey }} showsVerticalScrollIndicator={false}>
+        <ScrollView style={{ backgroundColor: 'white' }} showsVerticalScrollIndicator={false}>
             <View style={{ flexDirection: 'row', padding: 15 }}>
                 <View style={styles.titleDescriptionContainer}>
                     <Text style={styles.titleText}>{event.title}</Text>
@@ -54,33 +70,33 @@ const EventScreen = (props) => {
             </Grid>
             <View style={{ flexDirection: 'row', paddingHorizontal: 15, paddingTop: 10, paddingBottom: 15 }}>
                 <Left size={2} style={{ height: 'auto' }}>
-                    <Text style={{ fontSize: 17, color: 'white', marginTop: 10, margin: 5 }}>
+                    <Text style={{ fontSize: 15, color: 'black', marginTop: 10, margin: 5 }}>
                         {makeFullAddress(event.location.address)}
                     </Text>
                 </Left>
                 <Right size={2} style={{ height: 'auto' }}>
                     {Platform.OS === 'ios' ?
                         (
-                            <Text style={{ fontSize: 35, color: 'white' }}>
+                            <Text style={{ fontSize: 35, color: 'black' }}>
                                 {new Date(event.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}
                             </Text>
 
                         ) :
                         (
                             // format time for android
-                            <Text style={{ fontSize: 35, color: 'white' }}>
+                            <Text style={{ fontSize: 35, color: 'black' }}>
                                 {formatStandardTime(event.date)}
                             </Text>
                         )}
 
-                    <Text style={{ fontSize: 20, color: 'white', paddingLeft: 10 }}>
+                    <Text style={{ fontSize: 20, color: 'black', paddingLeft: 10 }}>
                         {new Date(event.date).toLocaleDateString()}
                     </Text>
                 </Right>
             </View>
             <Grid>
                 <Col size={1} style={{ height: 'auto' }}>
-                    <InsetShadow shadowRadius={1} shadowColor='white' left={false} right={false} shadowOpacity={1}>
+                    <InsetShadow shadowRadius={1} shadowColor='black' left={false} right={false} shadowOpacity={1}>
                         <Text style={styles.Description}>
                             {event.description}
                         </Text>
@@ -88,24 +104,26 @@ const EventScreen = (props) => {
                 </Col>
             </Grid>
             <Grid>
-                <Col>
-                    <TouchableOpacity onPress={toggleSaveButton} style={{ marginTop: 10 }} >
-                        <Icon
-                            name='save'
-                            type='font-awesome'
-                            size={40}
-                            color={isEventSaved ? '#f5b800' : 'white'}
-                        />
-                        <Text style={styles.ButtonText}>{isEventSaved ? 'Unsave Event' : 'Save Event'}</Text>
-                    </TouchableOpacity>
-                </Col>
+                {(userName != event.host.name && userName) ? // make sure user is not the host and is logged in
+                    (<Col>
+                        <TouchableOpacity onPress={toggleSaveButton} style={{ marginTop: 10 }} >
+                            <Icon
+                                name='save'
+                                type='font-awesome'
+                                size={40}
+                                color={isEventSaved ? '#f5b800' : 'black'}
+                            />
+                            <Text style={styles.ButtonText}>{isEventSaved ? 'Unsave Event' : 'Save Event'}</Text>
+                        </TouchableOpacity>
+                    </Col>) : null
+                }
                 <Col size={1} style={{ width: 75 }}>
                     <TouchableOpacity style={{ marginTop: 10 }}>
                         <Icon
                             name='share-alt'
                             type='font-awesome'
                             size={40}
-                            color={'white'}
+                            color={'black'}
                         />
                         <Text style={styles.ButtonText}>Share Event</Text>
                     </TouchableOpacity>
@@ -150,20 +168,20 @@ const styles = StyleSheet.create({
     hostNameText: {
         paddingTop: 5,
         fontSize: 13,
-        color: 'white'
+        color: 'black'
     },
     titleText: {
-        color: 'white',
+        color: 'black',
         fontSize: 32
     },
     ButtonText: {
         margin: 10,
-        color: 'white',
+        color: 'black',
         textAlign: 'center',
     },
     Description: {
-        color: 'white',
-        backgroundColor: Colors.darkGrey,
+        color: 'black',
+        backgroundColor: 'white',
         marginVertical: 2,
         marginLeft: 0,
         marginRight: 0,
