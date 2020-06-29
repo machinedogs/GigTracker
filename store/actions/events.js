@@ -5,6 +5,34 @@ export const GET_EVENTS = "GET_EVENTS";
 export const EDIT_EVENT = "EDIT_EVENT";
 export const SAVE_EVENT = "SAVE_EVENT";
 export const UNSAVE_EVENT = "UNSAVE_EVENT";
+export const DELETE_EVENT = "DELETE_EVENT";
+
+export const deleteEvent = (event) => {
+	return async (dispatch, getState) => {
+		const accessToken = getState().user.accessToken;
+		var requestOptions = {
+			method: 'DELETE',
+			redirect: 'follow'
+		};
+
+		try {
+			const response = await fetch(
+				`https://gigservice.herokuapp.com/api/v1/host/events/${event.id}?auth_token=${accessToken}`,
+				requestOptions
+			)
+			const resData = await response.json();
+			console.log("Deleted Event from DB");
+			console.log(resData);
+		} catch (err) {
+			alert(err)
+		}
+		dispatch(removeFromCreatedEvents(event))
+	}
+}
+
+export const removeFromCreatedEvents = (event) => {
+	return { type: DELETE_EVENT, eventId: event.id };
+}
 
 export const unsaveEvent = (event) => {
 	return async (dispatch, getState) => {
@@ -37,7 +65,7 @@ export const removeFromSavedEvents = (event) => {
 
 export const saveEvent = (event) => {
 	return async (dispatch, getState) => {
-		
+
 		var requestOptions = {
 			method: 'GET',
 			redirect: 'follow'
@@ -55,7 +83,7 @@ export const saveEvent = (event) => {
 		} catch (err) { // could not save event for user
 			alert(err);
 		}
-		
+
 		// Add saved event to redux store
 		dispatch(addToSavedEvents(event));
 	}
@@ -237,9 +265,9 @@ export const editEvent = (event, id) => {
 			const response = await fetch(
 				`https://gigservice.herokuapp.com/api/v1/host/events/${id}?auth_token=${access_token}`,
 				requestOptions
-            );
-            console.log(`RESPONSE: ${response.status}`);
-			if(response.ok){
+			);
+			console.log(`RESPONSE: ${response.status}`);
+			if (response.ok) {
 				alert("Successfully replaced event.");
 			}
 			const resData = await response.json();

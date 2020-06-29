@@ -11,9 +11,11 @@ import {
 	TouchableOpacity,
 	Button,
 	Alert,
+	ActivityIndicator
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Container, Header, Tab, Tabs, TabHeading, Icon } from "native-base";
+
 import { updateUserProfile } from "../../store/actions/user";
 import {
 	openImagePickerAsync,
@@ -22,10 +24,10 @@ import {
 } from "../../screens/helper/ImageHelpers";
 import { saveProfileDataToStorage } from "../../screens/helper/secureStorageHelpers";
 import * as authActions from "../../store/actions/user";
+import * as eventActions from "../../store/actions/events";
 import { EventCard } from "../../components/EventCard";
 import { constructEvents } from "../../screens/helper/dataTransformation";
 import { GetHostedEvents, GetSavedEvents } from "../../store/actions/events";
-import { ActivityIndicator } from "react-native";
 
 const UserProfileScreen = (props) => {
 	const dispatch = useDispatch();
@@ -126,12 +128,19 @@ const UserProfileScreen = (props) => {
 								data={constructEvents(event.createdEvents)}
 								renderItem={({ item }) =>
 									<View>
-										<EventCard event={item} hosting={false}/>
-										<Button iconRight transparent light title='Edit this event' 
-										onPress={() => {
-											props.navigation.navigate('CreateEvent', { event: item })
-										}} 
-										/>
+										<EventCard event={item} hosting={false} />
+										<View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingHorizontal: 15 }}>
+											<Button iconRight transparent light title='Edit'
+												onPress={() => {
+													props.navigation.navigate('CreateEvent', { event: item })
+												}}
+											/>
+											<Button iconRight transparent light title='Delete'
+												onPress={() => {
+													dispatch(eventActions.deleteEvent(item))
+												}}
+											/>
+										</View>
 									</View>
 								}
 								keyExtractor={(item) => item.id.toString()}
