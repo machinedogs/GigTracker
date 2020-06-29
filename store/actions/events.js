@@ -8,6 +8,24 @@ export const UNSAVE_EVENT = "UNSAVE_EVENT";
 export const unsaveEvent = (event) => {
 	return async (dispatch, getState) => {
 		// put fetch in here when deployed
+		var requestOptions = {
+			method: 'DELETE',
+			redirect: 'follow'
+		};
+		const accessToken = getState().user.accessToken;
+
+		try {
+			const response = await fetch(
+				`https://gigservice.herokuapp.com/api/v1/host/save_event?auth_token=${accessToken}&event=${event.event}`,
+				requestOptions
+			)
+			const resData = await response.json();
+			console.log("Removed Saved Event for User in DB");
+			console.log(resData);
+		} catch (err) { // could not save event for user
+			alert(err);
+		}
+
 		dispatch(removeFromSavedEvents(event))
 	}
 }

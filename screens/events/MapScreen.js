@@ -8,7 +8,8 @@ import {
   Platform,
   SafeAreaView,
   TouchableOpacity,
-  StatusBar
+  StatusBar,
+  Alert
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { PROVIDER_GOOGLE, Marker, Callout, CalloutSubview } from 'react-native-maps';
@@ -61,10 +62,10 @@ const INITIAL_REGION = {
 const MapScreen = props => {
   const userName = useSelector(state => state.user.userName);
   const userAccessToken = useSelector(state => state.user.accessToken);
+  const savedEvents = useSelector(state => state.events.savedEvents);
+  const [isEventSaved, setEventSaved] = useState(false);
   const events = useSelector(state => state.events.events);
   const [isModalVisible, setModalVisible] = useState(false);
-  const [isEventButtonsVisible, setEventButtonsVisible] = useState(false);
-  const [isCalloutVisible, setCalloutVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(new Event)
   let mapRef = useRef(null);
   const [date, setDate] = useState(todaysDate());
@@ -125,9 +126,17 @@ const MapScreen = props => {
   }
 
   const onPinPress = (event) => {
-    setSelectedEvent({ id: event.id, title: event.title, description: event.description, hostName: event.hostName });
+    setSelectedEvent(event);
     console.log("pressing pin");
     console.log(event)
+    // Determine if selected event has already been saved
+    var existingIndex = savedEvents.findIndex(myEvent => myEvent.event === event.event)
+    if (existingIndex >= 0) { // check if index exists
+      setEventSaved(true);
+    } else {
+      setEventSaved(false);
+    }
+    console.log("Selected Event Save status: " + isEventSaved);
     /*
     let coords = {
       latitude: parseFloat(event.location.latitude), // mapRef.current.region.latitude + ((parseFloat(event.location.latitude)) - (mapRef.current.region.latitude - (mapRef.current.region.latitudeDelta / 4))), //parseFloat(event.location.latitude) + 0.035,
@@ -137,7 +146,6 @@ const MapScreen = props => {
     mapRef.current.animateToRegion(coords, 0);
     */
   }
-
   /*
   const filterDate = (selectedDate) => {
     setDate(selectedDate);
@@ -145,6 +153,19 @@ const MapScreen = props => {
     console.log(selectedDate + '\n' + events.map((event) => {event.toString()}))
   }
   */
+
+ const toggleSaveButton = () => {
+  // dispatch action
+  if (!isEventSaved) {
+      dispatch(eventActions.saveEvent(selectedEvent))
+      Alert.alert("Event Saved")
+  } else { // indicating user unsaved the event
+      dispatch(eventActions.unsaveEvent(selectedEvent))
+      Alert.alert("Event No Longer Saved")
+  }
+  setEventSaved(!isEventSaved);
+  console.log(isEventSaved);
+};
 
   return (
     //add a dropdown to choose map style? -> what if we put it in user settings? could incentivize people to become users
@@ -188,7 +209,7 @@ const MapScreen = props => {
                     </CalloutSubview>
                     <View style={{ flexDirection: 'row' }}>
                       {userName != event.host.name ?
-                        (<CalloutSubview onPress={() => { props.navigation.navigate('Auth') }}>
+                        (<CalloutSubview onPress={toggleSaveButton}>
                           <TouchableOpacity>
                             <Icon
                               reverse
