@@ -55,6 +55,7 @@ export default (state = initialState, action) => {
                 return { ...state, savedEvents: updatedSavedEvents };
             }
         case DELETE_EVENT:
+            // Delete from created Events
             const hostedIndex = state.createdEvents.findIndex(event => event.event === action.eventId)
             if (hostedIndex >= 0) { // splice out event to unsave
                 const updatedCreatedEvents = [...state.createdEvents];
