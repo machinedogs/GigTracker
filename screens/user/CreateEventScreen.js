@@ -66,12 +66,12 @@ const CreateEventScreen = (props) => {
   const initDate = initEvent ? new Date(initEvent.date) : new Date();
   const initTime = initEvent ? new Date(initEvent.date) : new Date();
   const initImage = initEvent ? initEvent.image : "";
-  //const initLocation = initEvent ? initEvent.location : false;
+  const initLocation = initEvent ? {latitude: parseFloat(initEvent.location.latitude), longitude: parseFloat(initEvent.location.latitude)} : "";
 
   //These states updated as user interacts with the screen
   const [title, setTitle] = useState(initTitle);
   const [description, setDescription] = useState(initDescription);
-  const [location, setLocation] = useState("");
+  const [location, setLocation] = useState(initLocation);
   const [date, setDate] = useState(initDate);
   const [time, setTime] = useState(initTime);
   const [category, setCategory] = useState(initCategory);
@@ -181,8 +181,8 @@ const CreateEventScreen = (props) => {
   //Sets location as user moves the marker on map
   const handleDragEnd = (e) => {
     setLocation({
-      latitude: e.nativeEvent.coordinate.latitude,
-      longitude: e.nativeEvent.coordinate.longitude,
+      latitude: parseFloat(e.nativeEvent.coordinate.latitude),
+      longitude: parseFloat(e.nativeEvent.coordinate.longitude),
     });
     console.log("lat: " + location.latitude + " long: " + location.longitude);
   };
@@ -377,9 +377,9 @@ const CreateEventScreen = (props) => {
               <View style={styles.mapContainer}>
                 <MapView
                   initialRegion={{
-                    latitude: location.latitude,
+                    latitude: parseFloat(location.latitude),
                     latitudeDelta: LATITUDE_DELTA,
-                    longitude: location.longitude,
+                    longitude: parseFloat(location.longitude),
                     longitudeDelta: LONGITUDE_DELTA,
                   }}
                   style={styles.mapStyle}
@@ -395,7 +395,7 @@ const CreateEventScreen = (props) => {
                 >
                   <Marker
                     ref={markerRef}
-                    coordinate={location}
+                    coordinate={{latitude: parseFloat(location.latitude), longitude: parseFloat(location.longitude)}}
                     pinColor="#341f97"
                     tracksViewChanges={false}
                     draggable
