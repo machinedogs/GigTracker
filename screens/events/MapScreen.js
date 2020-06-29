@@ -282,7 +282,7 @@ const MapScreen = props => {
                   type='font-awesome'
                   color={Colors.darkGrey}
                   size={28}
-                  reverseColor={Colors.lightPurple}
+                  reverseColor={Colors.lightText}
                   onPress={() => { props.navigation.navigate('Auth') }}
                 />
               </TouchableOpacity>
@@ -298,7 +298,7 @@ const MapScreen = props => {
                   type='font-awesome'
                   color={Colors.darkGrey}
                   size={28}
-                  reverseColor={Colors.lightPurple}
+                  reverseColor={Colors.lightText}
                   onPress={() => { props.navigation.navigate('UserProfile') }}
                 />
               </TouchableOpacity>
@@ -310,7 +310,7 @@ const MapScreen = props => {
                   type='font-awesome'
                   color={Colors.darkGrey}
                   size={28}
-                  reverseColor={Colors.lightPurple}
+                  reverseColor={Colors.lightText}
                   onPress={() => { props.navigation.navigate('CreateEvent') }}
                 />
               </TouchableOpacity>
@@ -322,7 +322,7 @@ const MapScreen = props => {
                   type='font-awesome'
                   color={Colors.darkGrey}
                   size={28}
-                  reverseColor={Colors.lightPurple}
+                  reverseColor={Colors.lightText}
                   onPress={refreshEvents}
                 />
               </TouchableOpacity>
