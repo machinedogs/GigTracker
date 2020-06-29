@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   Modal,
   Image,
+  Vibration
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -185,6 +186,11 @@ const CreateEventScreen = (props) => {
     });
     console.log("lat: " + location.latitude + " long: " + location.longitude);
   };
+
+  const handleDragStart = () => {
+    Vibration.vibrate()
+  }
+
   //This determines whether to show the map or not for user to pick location
   const toggleShowMap = () => {
     showMap ? setShowMap(false) : setShowMap(true);
@@ -331,7 +337,7 @@ const CreateEventScreen = (props) => {
             >
               <Header style={{ backgroundColor: "#2d3436" }}>
                 <Left></Left>
-                <Body>
+                <View>
                   <Title
                     style={{
                       color: "#fff",
@@ -342,7 +348,7 @@ const CreateEventScreen = (props) => {
                   >
                     Select location
 									</Title>
-                </Body>
+                </View>
                 <Right>
                   <Button transparent onPress={toggleShowMap}>
                     <Icon name="md-checkmark" />
@@ -365,36 +371,39 @@ const CreateEventScreen = (props) => {
                       Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
                   }}
                 >
-                  Hold the pin down for a second before dragging...
+                  Hold pin to drag
 								</Text>
               </View>
-              <MapView
-                initialRegion={{
-                  latitude: location.latitude,
-                  latitudeDelta: LATITUDE_DELTA,
-                  longitude: location.longitude,
-                  longitudeDelta: LONGITUDE_DELTA,
-                }}
-                style={styles.mapStyle}
-                provider={PROVIDER_GOOGLE}
-                showsUserLocation
-                showsMyLocationButton
-                rotateEnabled={false}
-                showsTraffic={false}
-                toolbarEnabled={true}
-                ref={mapRef}
-                customMapStyle={MapStyle}
-                clusterColor="#341f97"
-              >
-                <Marker
-                  ref={markerRef}
-                  coordinate={location}
-                  pinColor="#341f97"
-                  tracksViewChanges={false}
-                  draggable
-                  onDragEnd={handleDragEnd}
-                />
-              </MapView>
+              <View style={styles.mapContainer}>
+                <MapView
+                  initialRegion={{
+                    latitude: location.latitude,
+                    latitudeDelta: LATITUDE_DELTA,
+                    longitude: location.longitude,
+                    longitudeDelta: LONGITUDE_DELTA,
+                  }}
+                  style={styles.mapStyle}
+                  provider={PROVIDER_GOOGLE}
+                  showsUserLocation
+                  showsMyLocationButton
+                  rotateEnabled={false}
+                  showsTraffic={false}
+                  toolbarEnabled={true}
+                  ref={mapRef}
+                  customMapStyle={MapStyle}
+                  clusterColor="#341f97"
+                >
+                  <Marker
+                    ref={markerRef}
+                    coordinate={location}
+                    pinColor="#341f97"
+                    tracksViewChanges={false}
+                    draggable
+                    onDragEnd={handleDragEnd}
+                    onDragStart={handleDragStart}
+                  />
+                </MapView>
+              </View>
             </Modal>
           </View>
         )}
@@ -505,6 +514,15 @@ const CreateEventScreen = (props) => {
 };
 
 const styles = StyleSheet.create({
+  mapContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: SCREEN_WIDTH,
+    paddingTop: 0,
+    marginBottom: '3%'
+    //width: Dimensions.get('window').width,
+  },
   container: {
     flex: 1,
     alignItems: "center",

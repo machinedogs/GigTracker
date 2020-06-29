@@ -284,7 +284,7 @@ const MapScreen = props => {
                   type='font-awesome'
                   color={Colors.darkGrey}
                   size={28}
-                  reverseColor='white'
+                  reverseColor={Colors.lightPurple}
                   onPress={() => { props.navigation.navigate('Auth') }}
                 />
               </TouchableOpacity>
@@ -300,6 +300,7 @@ const MapScreen = props => {
                   type='font-awesome'
                   color={Colors.darkGrey}
                   size={28}
+                  reverseColor={Colors.lightPurple}
                   onPress={() => { props.navigation.navigate('UserProfile') }}
                 />
               </TouchableOpacity>
@@ -311,6 +312,7 @@ const MapScreen = props => {
                   type='font-awesome'
                   color={Colors.darkGrey}
                   size={28}
+                  reverseColor={Colors.lightPurple}
                   onPress={() => { props.navigation.navigate('CreateEvent') }}
                 />
               </TouchableOpacity>
@@ -322,7 +324,7 @@ const MapScreen = props => {
                   type='font-awesome'
                   color={Colors.darkGrey}
                   size={28}
-                  reverseColor='white'
+                  reverseColor={Colors.lightPurple}
                   onPress={refreshEvents}
                 />
               </TouchableOpacity>
@@ -365,6 +367,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: SCREEN_WIDTH,
     paddingTop: 0,
+    paddingBottom: 0
     //width: Dimensions.get('window').width,
   },
   top: {

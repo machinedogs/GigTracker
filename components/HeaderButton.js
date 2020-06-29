@@ -10,7 +10,7 @@ const CustomHeaderButton = props => {
             {...props}
             IconComponent={Ionicons}
             iconSize={30}
-            color={Colors.lightText}
+            color={Colors.lightPurple}
             style={{paddingHorizontal: 10}}
         />
     );
