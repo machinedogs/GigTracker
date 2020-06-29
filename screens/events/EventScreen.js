@@ -137,9 +137,9 @@ const EventScreen = (props) => {
 // settings for header
 EventScreen.navigationOptions = (props) => {
     return {
-        headerTitle: "Event Details",
+        headerTitle: "event details",
         headerTitleStyle: {
-            fontSize: 28,
+            fontSize: 30,
             fontFamily: 'jack-silver',
         },
         headerBackTitleVisible: false,
