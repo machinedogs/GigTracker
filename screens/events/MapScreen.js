@@ -208,7 +208,7 @@ const MapScreen = props => {
                       <EventCard event={event} style={{ width: SCREEN_WIDTH * 0.75 }} streetAddress />
                     </CalloutSubview>
                     <View style={{ flexDirection: 'row' }}>
-                      {userName != event.host.name ?
+                      {(userName != event.host.name && userName) ?
                         (<CalloutSubview onPress={toggleSaveButton}>
                           <TouchableOpacity>
                             <Icon

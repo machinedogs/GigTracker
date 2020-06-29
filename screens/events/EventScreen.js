@@ -15,7 +15,7 @@ import * as eventActions from '../../store/actions/events';
 // save the isEventSaved in a redux store for persistance.  
 
 const EventScreen = (props) => {
-    const hostName = useSelector(state => state.user.userName);
+    const userName = useSelector(state => state.user.userName);
     const savedEvents = useSelector(state => state.events.savedEvents);
     const event = props.navigation.getParam('event');
     console.log("this is the event " + JSON.stringify(event));
@@ -104,7 +104,7 @@ const EventScreen = (props) => {
                 </Col>
             </Grid>
             <Grid>
-                {hostName != event.host.name ?
+                {(userName != event.host.name && userName) ? // make sure user is not the host and is logged in
                     (<Col>
                         <TouchableOpacity onPress={toggleSaveButton} style={{ marginTop: 10 }} >
                             <Icon
