@@ -188,9 +188,7 @@ const MapScreen = props => {
         {events.map(event => (
           <Marker
             coordinate={{ latitude: parseFloat(event.location.latitude), longitude: parseFloat(event.location.longitude) }}
-            title={event.title}
             pinColor="#341f97"
-            description={event.description}
             key={event.event}
             tracksViewChanges={false}
             onPress={onPinPress.bind(this, event)}
