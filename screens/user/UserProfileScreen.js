@@ -74,6 +74,12 @@ const UserProfileScreen = (props) => {
 		getSavedEvents(user);
 	}, [loading, profileImage]);
 
+	const editEvent = (event) => {
+		console.log('\nthe title of the event is ' + event.title + '\n');
+		console.log('blah Blah ' + event);
+		props.navigation.navigate('CreateEvent', { event: event });
+	}
+
 	return (
 		<ScrollView>
 			<View style={styles.container}>
@@ -94,11 +100,11 @@ const UserProfileScreen = (props) => {
 								{loading ? (
 									<ActivityIndicator style={styles.userImage} size="large" />
 								) : (
-									<Image
-										style={styles.userImage}
-										source={{ uri: profileImage }}
-									/>
-								)}
+										<Image
+											style={styles.userImage}
+											source={{ uri: profileImage }}
+										/>
+									)}
 							</TouchableOpacity>
 							<Text style={styles.userNameText}>{user.userName}</Text>
 							<Text style={styles.emailText}>{user.userEmail}</Text>
@@ -118,7 +124,16 @@ const UserProfileScreen = (props) => {
 						<Tab heading="Hosted Events">
 							<FlatList
 								data={constructEvents(event.createdEvents)}
-								renderItem={({ item }) => <EventCard event={item} />}
+								renderItem={({ item }) =>
+									<View>
+										<EventCard event={item} hosting={false}/>
+										<Button iconRight transparent light title='Edit this event' 
+										onPress={() => {
+											props.navigation.navigate('CreateEvent', { event: item })
+										}} 
+										/>
+									</View>
+								}
 								keyExtractor={(item) => item.id.toString()}
 								scrollEnabled={false}
 							/>

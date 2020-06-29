@@ -4,7 +4,8 @@ import {
     UPDATE_SAVED_EVENTS,
     UPDATE_HOSTED_EVENTS,
     SAVE_EVENT,
-    UNSAVE_EVENT
+    UNSAVE_EVENT,
+    EDIT_EVENT
 } from '../actions/events';
 
 const initialState = {
@@ -31,6 +32,11 @@ export default (state = initialState, action) => {
                 events: state.events.concat(action.event)
             };
         case GET_EVENTS:
+            return {
+                ...state,
+                events: action.events
+            };
+        case EDIT_EVENT:
             return {
                 ...state,
                 events: action.events
