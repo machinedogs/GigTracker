@@ -19,7 +19,6 @@ import { Icon } from 'react-native-elements';
 
 import { EventCard } from "../../components/EventCard";
 import MapStyle from '../../constants/MapStyle';
-import EventModal from '../../components/EventModal';
 import Event from '../../models/event';
 import HeaderButton from '../../components/HeaderButton';
 import Colors from '../../constants/Colors';
@@ -256,14 +255,6 @@ const MapScreen = props => {
         ))
         }
       </MapView>
-
-      <EventModal
-        title={selectedEvent.title}
-        description={selectedEvent.description}
-        hostName={selectedEvent.hostName}
-        visible={isModalVisible}
-        toggleModal={toggleModal}
-      />
       {
         !userAccessToken ?
           (
