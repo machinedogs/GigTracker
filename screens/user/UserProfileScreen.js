@@ -11,9 +11,11 @@ import {
 	TouchableOpacity,
 	Button,
 	Alert,
+	ActivityIndicator
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Container, Header, Tab, Tabs, TabHeading, Icon } from "native-base";
+
 import { updateUserProfile } from "../../store/actions/user";
 import {
 	openImagePickerAsync,
@@ -22,10 +24,10 @@ import {
 } from "../../screens/helper/ImageHelpers";
 import { saveProfileDataToStorage } from "../../screens/helper/secureStorageHelpers";
 import * as authActions from "../../store/actions/user";
+import * as eventActions from "../../store/actions/events";
 import { EventCard } from "../../components/EventCard";
 import { constructEvents } from "../../screens/helper/dataTransformation";
 import { GetHostedEvents, GetSavedEvents } from "../../store/actions/events";
-import { ActivityIndicator } from "react-native";
 
 const UserProfileScreen = (props) => {
 	const dispatch = useDispatch();
@@ -69,10 +71,37 @@ const UserProfileScreen = (props) => {
 		dispatch(GetSavedEvents(user));
 	};
 
+	const handleDelete = async (event) => {
+		Alert.alert(
+			"Delete Event",
+			"Are you sure you want to delete this event?",
+			[
+				{
+					text: "Yes",
+					onPress: () => dispatch(eventActions.deleteEvent(event)),
+					style: 'destructive'
+				},
+				{
+					text: "No",
+					onPress: () => console.log("Delete Event Canceled"),
+					style: "cancel"
+				}
+			],
+			{ cancelable: false }
+		);
+		getHostedEvents(user);
+	}
+
 	useEffect(() => {
 		getHostedEvents(user);
 		getSavedEvents(user);
 	}, [loading, profileImage]);
+
+	const editEvent = (event) => {
+		console.log('\nthe title of the event is ' + event.title + '\n');
+		console.log('blah Blah ' + event);
+		props.navigation.navigate('CreateEvent', { event: event });
+	}
 
 	return (
 		<ScrollView>
@@ -94,11 +123,11 @@ const UserProfileScreen = (props) => {
 								{loading ? (
 									<ActivityIndicator style={styles.userImage} size="large" />
 								) : (
-									<Image
-										style={styles.userImage}
-										source={{ uri: profileImage }}
-									/>
-								)}
+										<Image
+											style={styles.userImage}
+											source={{ uri: profileImage }}
+										/>
+									)}
 							</TouchableOpacity>
 							<Text style={styles.userNameText}>{user.userName}</Text>
 							<Text style={styles.emailText}>{user.userEmail}</Text>
@@ -118,7 +147,23 @@ const UserProfileScreen = (props) => {
 						<Tab heading="Hosted Events">
 							<FlatList
 								data={constructEvents(event.createdEvents)}
-								renderItem={({ item }) => <EventCard event={item} />}
+								renderItem={({ item }) =>
+									<View>
+										<EventCard event={item} hosting={false} />
+										<View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingHorizontal: 15 }}>
+											<Button iconRight transparent light title='Edit'
+												onPress={() => {
+													props.navigation.navigate('CreateEvent', { event: item })
+												}}
+											/>
+											<Button iconRight transparent light title='Delete'
+												onPress={() => {
+													handleDelete(item)
+												}}
+											/>
+										</View>
+									</View>
+								}
 								keyExtractor={(item) => item.id.toString()}
 								scrollEnabled={false}
 							/>

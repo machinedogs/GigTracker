@@ -1,11 +1,96 @@
 export const CREATE_EVENT = "CREATE_EVENT";
-export const ADD_TO_MY_EVENTS = "ADD_TO_MY_EVENTS";
 export const UPDATE_HOSTED_EVENTS = "UPDATE_HOSTED_EVENTS";
 export const UPDATE_SAVED_EVENTS = "UPDATE_SAVED_EVENTS";
 export const GET_EVENTS = "GET_EVENTS";
+export const EDIT_EVENT = "EDIT_EVENT";
+export const SAVE_EVENT = "SAVE_EVENT";
+export const UNSAVE_EVENT = "UNSAVE_EVENT";
+export const DELETE_EVENT = "DELETE_EVENT";
 
-export const addToMyEvents = (event) => {
-	return { type: ADD_TO_MY_EVENTS, event: event };
+export const deleteEvent = (event) => {
+	return async (dispatch, getState) => {
+		const accessToken = getState().user.accessToken;
+		var requestOptions = {
+			method: 'DELETE',
+			redirect: 'follow'
+		};
+
+		try {
+			const response = await fetch(
+				`https://gigservice.herokuapp.com/api/v1/host/events/${event.id}?auth_token=${accessToken}`,
+				requestOptions
+			)
+			const resData = await response.json();
+			console.log("Deleted Event from DB");
+			console.log(resData);
+		} catch (err) {
+			alert(err)
+		}
+		dispatch(removeFromCreatedEvents(event))
+	}
+}
+
+export const removeFromCreatedEvents = (event) => {
+	return { type: DELETE_EVENT, eventId: event.id };
+}
+
+export const unsaveEvent = (event) => {
+	return async (dispatch, getState) => {
+		// put fetch in here when deployed
+		var requestOptions = {
+			method: 'DELETE',
+			redirect: 'follow'
+		};
+		const accessToken = getState().user.accessToken;
+
+		try {
+			const response = await fetch(
+				`https://gigservice.herokuapp.com/api/v1/host/save_event?auth_token=${accessToken}&event=${event.event}`,
+				requestOptions
+			)
+			const resData = await response.json();
+			console.log("Removed Saved Event for User in DB");
+			console.log(resData);
+		} catch (err) { // could not save event for user
+			alert(err);
+		}
+
+		dispatch(removeFromSavedEvents(event))
+	}
+}
+
+export const removeFromSavedEvents = (event) => {
+	return { type: UNSAVE_EVENT, eventId: event.event };
+}
+
+export const saveEvent = (event) => {
+	return async (dispatch, getState) => {
+
+		var requestOptions = {
+			method: 'GET',
+			redirect: 'follow'
+		};
+		const accessToken = getState().user.accessToken;
+
+		try {
+			const response = await fetch(
+				`https://gigservice.herokuapp.com/api/v1/host/save_event?auth_token=${accessToken}&event=${event.event}`,
+				requestOptions
+			)
+			const resData = await response.json();
+			console.log("Saved Event in DB");
+			console.log(resData);
+		} catch (err) { // could not save event for user
+			alert(err);
+		}
+
+		// Add saved event to redux store
+		dispatch(addToSavedEvents(event));
+	}
+}
+
+export const addToSavedEvents = (event) => {
+	return { type: SAVE_EVENT, event: event };
 };
 
 //Get a person's hosted/created events
@@ -29,8 +114,8 @@ export const GetSavedEvents = (user) => {
 			body: raw,
 			redirect: "follow",
 		};
-		console.log("request options");
-		console.log(requestOptions);
+		//console.log("request options");
+		//console.log(requestOptions);
 		console.log(
 			`https://gigservice.herokuapp.com/api/v1/host/saved_events?auth_token=${accessToken}`
 		);
@@ -41,7 +126,7 @@ export const GetSavedEvents = (user) => {
 		if (response.ok) {
 			const resData = await response.json();
 			console.log("Got response for getting the saved events ");
-			console.log(resData);
+			//console.log(resData);
 			//ToDo:Eventually improve this filter event
 			var filteredEvents = resData.filter((event) => {
 				console.log(`event is here ${event.title}`);
@@ -60,7 +145,7 @@ export const GetSavedEvents = (user) => {
 					return false;
 				}
 			});
-			console.log(`filtered Events ${filteredEvents}`);
+			//console.log(`filtered Events ${filteredEvents}`);
 
 			//Filter the data for bad events, meaning any null values or something
 			dispatch(UpdateSavedEvents(filteredEvents));
@@ -89,7 +174,7 @@ export const getEvents = () => {
 			requestOptions
 		);
 		const mapEvents = await response.json();
-		console.log(`Map Events ${mapEvents}`);
+		//console.log(`Map Events ${mapEvents}`);
 		dispatch(updateMapEvents(mapEvents));
 	};
 };
@@ -133,7 +218,7 @@ export const createEvent = (event) => {
 				`https://gigservice.herokuapp.com/api/v1/host/events?auth_token=${access_token}`,
 				requestOptions
 			);
-			if(response.ok){
+			if (response.ok) {
 				alert("Successfully created event.");
 			}
 			const resData = await response.json();
@@ -150,6 +235,56 @@ export const createEvent = (event) => {
 		}
 	};
 };
+
+export const editEvent = (event, id) => {
+	return async (dispatch, getState) => {
+		console.log(`In editing event action for event ${id}`);
+		var myHeaders = new Headers();
+		myHeaders.append("Content-Type", "application/json");
+
+		var raw = JSON.stringify({
+			title: event.title,
+			description: event.description,
+			date: event.date,
+			category: event.category,
+			image: event.image,
+			latitude: event.latitude,
+			longitude: event.longitude,
+		});
+		console.log("Event: " + raw.toString());
+
+		var requestOptions = {
+			method: "PUT",
+			headers: myHeaders,
+			body: raw,
+			redirect: "follow",
+		};
+
+		try {
+			const access_token = getState().user.accessToken;
+			const response = await fetch(
+				`https://gigservice.herokuapp.com/api/v1/host/events/${id}?auth_token=${access_token}`,
+				requestOptions
+			);
+			console.log(`RESPONSE: ${response.status}`);
+			if (response.ok) {
+				alert("Successfully replaced event.");
+			}
+			const resData = await response.json();
+
+			if (response.status === "ERROR") {
+				let message = "There was an error editing this event.";
+				alert(message);
+				throw new Error(message);
+			}
+			console.log("Response: " + resData);
+			dispatch(getEvents);
+		} catch (err) {
+			alert(err);
+		}
+	};
+};
+
 export const updateEventMaps = () => {
 	return {
 		type: CREATE_EVENT,
@@ -170,8 +305,8 @@ export const GetHostedEvents = (user) => {
 			body: raw,
 			redirect: "follow",
 		};
-		console.log("request options");
-		console.log(requestOptions);
+		//console.log("request options");
+		//console.log(requestOptions);
 		console.log(
 			`https://gigservice.herokuapp.com/api/v1/host/events?auth_token=${accessToken}`
 		);
@@ -182,7 +317,7 @@ export const GetHostedEvents = (user) => {
 		if (response.ok) {
 			const resData = await response.json();
 			console.log("Got response for getting the host events ");
-			console.log(resData);
+			//console.log(resData);
 			//ToDo:Eventually improve this filter event
 			var filteredEvents = resData.filter((event) => {
 				console.log(`event is here ${event.title}`);
@@ -201,7 +336,7 @@ export const GetHostedEvents = (user) => {
 					return false;
 				}
 			});
-			console.log(`filtered Events ${filteredEvents}`);
+			//console.log(`filtered Events ${filteredEvents}`);
 
 			//Filter the data for bad events, meaning any null values or something
 			dispatch(UpdateHostedEvents(filteredEvents));

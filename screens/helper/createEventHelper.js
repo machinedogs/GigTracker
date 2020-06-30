@@ -22,7 +22,6 @@ export const combineDateAndTime = (date, time) => {
 };
 
 export const stringifyDate = (date) => {
-	console.log("date === " + date.toISOString());
 	var dd = date.getDate();
 	var mm = date.getMonth() + 1;
 	var yyyy = date.getFullYear();

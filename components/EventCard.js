@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Image, StyleSheet } from "react-native";
+import { Image, StyleSheet, View, Dimensions } from "react-native";
 import { Container, Header, Content, Accordion } from "native-base";
 import {
 	Card,
@@ -12,50 +12,93 @@ import {
 	Body,
 	Right,
 } from "native-base";
-import { Entypo } from "@expo/vector-icons";
+import InsetShadow from 'react-native-inset-shadow'
+import { makeStreetAddress, makeFullAddress } from "../screens/helper/calloutHelper";
 
 export const EventCard = (props) => {
 	return (
-		<Card style={{...styles.card, ...props.style}} >
-			<CardItem>
-				<Left>
-					<Thumbnail source={{ uri: props.event.host.profile }} />
-					<Body>
-						<Text>{props.event.host.name}</Text>
-						<Text note>{props.event.host.email}</Text>
-					</Body>
-				</Left>
-			</CardItem>
-			<CardItem cardBody>
-				<Image
-					source={{ uri: props.event.image }}
-					style={{ height: 200, width: null, flex: 1 }}
-				/>
-			</CardItem>
-				<Text style={styles.titleText}>{props.event.title}</Text>
-				<Text>{props.event.description}</Text>
-			<CardItem>
-				<Left>
-					<Entypo name="location-pin" size={20} color="black" />
-					<Text>{props.event.location.address.substring(0,50)}....</Text>
-				</Left>
-				<Right>
-					<Text>{props.event.date}</Text>
+		<Card style={{ ...props.style }} >
+			<View style={styles.header}>
+				<View style={styles.titleDescriptionContainer}>
+					<Text style={styles.titleText}>{props.event.title}</Text>
+					{
+						props.event.description.length > 50 ?
+							<Text>{props.event.description.substring(0, 50)}...</Text> :
+							<Text>{props.event.description}</Text>
+					}
+				</View>
+				<Right style={styles.hostContainer}>
+					<View style={styles.hostContent}>
+						<Thumbnail source={{ uri: props.event.host.profile }} />
+						<Text style={styles.hostNameText}>{props.event.host.name}</Text>
+					</View>
 				</Right>
-			</CardItem>
+			</View>
+			<View style={styles.imageContainer}>
+				<InsetShadow elevation={5} shadowRadius={3}>
+					<Image
+						source={{ uri: props.event.image }}
+						style={styles.image}
+					/>
+				</InsetShadow>
+			</View >
+			<View style={styles.footer}>
+				{
+					props.streetAddress ?
+						<Text>{makeStreetAddress(props.event.location.address)}</Text>
+						:
+						<Text>{makeFullAddress(props.event.location.address)}</Text>
+				}
+				<Text style={styles.dateTimeText} >
+					{new Date(props.event.date).toLocaleDateString()}{", "}
+					{new Date(props.event.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+				</Text>
+			</View>
 		</Card>
 	);
 };
 
 const styles = StyleSheet.create({
-	card: {
-
+	header: {
+		flexDirection: 'row',
+		paddingHorizontal: 15,
+		paddingTop: 15
 	},
-	// baseText: {
-	//   fontFamily: "Cochin"
-	// },
+	titleDescriptionContainer: {
+		justifyContent: 'center',
+		flex: 5,
+		alignSelf: 'center'
+	},
+	hostContainer: {
+		alignSelf: 'flex-end',
+		flex: 3
+	},
+	hostContent: {
+		alignItems: 'center'
+	},
+	hostNameText: {
+		paddingTop: 5,
+		fontSize: 13
+	},
+	imageContainer: {
+		height: 200,
+		paddingHorizontal: 15,
+		paddingVertical: 10
+	},
+	image: {
+		height: 200,
+		width: null,
+		flex: 1
+	},
+	footer: {
+		paddingHorizontal: 15,
+		paddingBottom: 15
+	},
 	titleText: {
 		fontSize: 20,
 		fontWeight: "bold",
 	},
+	dateTimeText: {
+		color: 'grey'
+	}
 });
