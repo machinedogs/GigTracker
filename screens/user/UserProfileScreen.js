@@ -9,11 +9,10 @@ import {
 	Text,
 	View,
 	TouchableOpacity,
-	Button,
 	Alert,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { Container, Header, Tab, Tabs, TabHeading, Icon } from "native-base";
+import { Container, Header, Tab, Tabs, TabHeading, Icon, Button } from "native-base";
 import { updateUserProfile } from "../../store/actions/user";
 import {
 	openImagePickerAsync,
@@ -25,6 +24,7 @@ import * as authActions from "../../store/actions/user";
 import { EventCard } from "../../components/EventCard";
 import { constructEvents } from "../../screens/helper/dataTransformation";
 import { GetHostedEvents, GetSavedEvents } from "../../store/actions/events";
+import Colors from '../../constants/Colors';
 import { ActivityIndicator } from "react-native";
 
 const UserProfileScreen = (props) => {
@@ -84,15 +84,8 @@ const UserProfileScreen = (props) => {
 		<ScrollView>
 			<View style={styles.container}>
 				<View style={styles.headerContainer}>
-					<ImageBackground
-						style={styles.headerBackgroundImage}
-						blurRadius={10}
-						source={{
-							uri:
-								"https://visme.co/blog/wp-content/uploads/2017/07/50-Beautiful-and-Minimalist-Presentation-Backgrounds-018.jpg",
-						}}
-					>
-						<View style={styles.headerColumn}>
+					<View style={styles.headerColumn, {paddingLeft: 20}}>
+						<View style={{ flexDirection: 'row', paddingTop: 15, }}>
 							<TouchableOpacity
 								onPress={updateProfilePhoto}
 								style={styles.userImageContainer}
@@ -106,14 +99,16 @@ const UserProfileScreen = (props) => {
 										/>
 									)}
 							</TouchableOpacity>
-							<Text style={styles.userNameText}>{user.userName}</Text>
-							<Text style={styles.emailText}>{user.userEmail}</Text>
+							<View style={{ flexDirection: 'column', justifyContent: 'center', paddingLeft: 50}} >
+								<Text style={styles.userNameText}>{user.userName}</Text>
+								<Text style={styles.emailText}>{user.userEmail}</Text>
+							</View>
 						</View>
-					</ImageBackground>
+					</View>
 				</View>
 				<View style={styles.content}>
-					<Tabs>
-						<Tab heading="Saved Events">
+					<Tabs tabBarUnderlineStyle={{ backgroundColor: Colors.purpleButton }}>
+						<Tab heading="Saved Events" activeTextStyle={{ color: Colors.purpleButton }}>
 							<FlatList
 								data={constructEvents(event.savedEvents)}
 								renderItem={({ item }) => <EventCard event={item} />}
@@ -121,17 +116,19 @@ const UserProfileScreen = (props) => {
 								scrollEnabled={false}
 							/>
 						</Tab>
-						<Tab heading="Hosted Events">
+						<Tab heading="Hosted Events" activeTextStyle={{ color: Colors.purpleButton }}>
 							<FlatList
 								data={constructEvents(event.createdEvents)}
 								renderItem={({ item }) =>
 									<View>
-										<EventCard event={item} hosting={false}/>
-										<Button iconRight transparent light title='Edit this event' 
-										onPress={() => {
-											props.navigation.navigate('CreateEvent', { event: item })
-										}} 
-										/>
+										<EventCard event={item} hosting={false} />
+										<Button full transparent light 
+											onPress={() => {
+												props.navigation.navigate('CreateEvent', { event: item })
+											}}
+										>
+											<Text style={styles.buttonText}>Edit this event</Text>
+										</Button>
 									</View>
 								}
 								keyExtractor={(item) => item.id.toString()}
@@ -141,20 +138,24 @@ const UserProfileScreen = (props) => {
 					</Tabs>
 				</View>
 				<View style={styles.ButtonContainer}>
-					<Button
+					<Button light transparent full
 						title="Logout"
 						onPress={() => {
 							dispatch(authActions.logout());
 							props.navigation.navigate("Home");
 						}}
-					/>
-					<Button
+					>
+						<Text style={styles.buttonText}>Logout</Text>
+					</Button>
+					<Button light transparent full
 						title="Delete Account"
 						onPress={() => {
 							// Take user to delete account screen and let them delete
 							props.navigation.navigate("Delete");
 						}}
-					/>
+					>
+						<Text style={styles.buttonText}>Delete Account</Text>
+					</Button>
 				</View>
 			</View>
 		</ScrollView>
@@ -189,18 +190,19 @@ const styles = StyleSheet.create({
 		paddingTop: 35,
 	},
 	headerContainer: {
-		// height:'35%'
+		// height:'35%',
+		backgroundColor: '#2b2d2f',
 	},
 	headerColumn: {
-		backgroundColor: "transparent",
+		//backgroundColor: "transparent",
 		...Platform.select({
 			ios: {
-				alignItems: "center",
+				alignItems: "flex-start",
 				elevation: 1,
 				marginTop: -1,
 			},
 			android: {
-				alignItems: "center",
+				alignItems: "flex-start",
 			},
 		}),
 	},
@@ -223,17 +225,25 @@ const styles = StyleSheet.create({
 	},
 	userNameText: {
 		color: "#FFF",
-		fontSize: 22,
+		fontSize: 24,
 		fontWeight: "bold",
 		paddingBottom: 8,
-		textAlign: "center",
+		textAlign: "left",
+		fontFamily: "Sinhala Sangam MN",
 	},
 	emailText: {
 		color: "#FFF",
-		fontSize: 14,
+		fontSize: 16,
 		fontWeight: "bold",
 		paddingBottom: 8,
-		textAlign: "center",
+		textAlign: "left",
+		fontFamily: "Sinhala Sangam MN",
+	},
+	buttonText: {
+		color: Colors.purpleButton,
+		justifyContent: 'center',
+		alignItems: 'center',
+		fontSize: 18
 	},
 });
 export default UserProfileScreen;
