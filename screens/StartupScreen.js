@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     View,
     ActivityIndicator,
@@ -10,18 +10,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateUserProfile } from '../store/actions/user';
 import * as authActions from '../store/actions/user';
 import * as eventActions from '../store/actions/events';
-import { getProfileDataStorage  } from '../screens/helper/secureStorageHelpers';
+import { getProfileDataStorage } from '../screens/helper/secureStorageHelpers';
+import { getGeoInfo } from '../screens/helper/geoHelper';
 
 const StartupScreen = props => {
-    const events = useSelector(state => state.events.events)
     const dispatch = useDispatch();
 
     useEffect(() => {
         const tryLogin = async () => {
-            //SecureStore.deleteItemAsync('userData')
-            // SecureStore.deleteItemAsync('images')
             console.log('dispatching getEvents from startup page')
-            dispatch(eventActions.getEvents());
+            let coordinates = '';
+            await getGeoInfo().then(coords => coordinates = coords);
+            var currentDate = new Date().toISOString();
+            await dispatch(eventActions.getEvents(currentDate, coordinates.latitude, coordinates.longitude));
+
             // change this to secure store function
             const userData = await SecureStore.getItemAsync('userData');
 
@@ -71,7 +73,6 @@ const StartupScreen = props => {
             await dispatch(updateUserProfile(profileImage, transformedData));
             props.navigation.replace('Home');
         };
-
         tryLogin();
     }, [dispatch]);
 

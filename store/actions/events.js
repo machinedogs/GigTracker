@@ -161,8 +161,9 @@ export const UpdateHostedEvents = (createdEvents) => {
 	};
 };
 
-export const getEvents = () => {
-	console.log("Pulling events from microservice");
+export const getEvents = (currentDate, latitude, longitude) => {
+	console.log("Pulling events from microservice for " + currentDate);
+	console.log(latitude + "......" + longitude)
 	return async (dispatch) => {
 		var requestOptions = {
 			method: "GET",
@@ -174,8 +175,8 @@ export const getEvents = () => {
 			requestOptions
 		);
 		const mapEvents = await response.json();
-		//console.log(`Map Events ${mapEvents}`);
-		dispatch(updateMapEvents(mapEvents));
+		console.log('Received events json from db');
+		await dispatch(updateMapEvents(mapEvents));
 	};
 };
 
