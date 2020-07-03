@@ -317,31 +317,15 @@ const MapScreen = props => {
               <TouchableOpacity>
                 {isRefreshing ? // if refreshing events, show activity indicator
                   (
-                    /*<View
-                      style={{
-                        width: 56,
-                        height: 56,
-                        borderRadius: 56 / 2,
-                        backgroundColor: Colors.darkGrey,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-around',
-                        alignSelf: 'flex-start'
-                      }}
-                    >
-                      <ActivityIndicator size='small' color={Colors.lightText} />
-                    </View>
-                    */
                     <Icon
                       reverse
                       raised
+                      name='spinner'
+                      type='font-awesome'
                       color={Colors.darkGrey}
                       size={28}
                       reverseColor={Colors.lightText}
-                      onPress={refreshEvents}
-                    >
-                      <ActivityIndicator size='small' color={Colors.lightText} />
-                    </Icon>
+                    />
                   ) :
                   (
                     <Icon
