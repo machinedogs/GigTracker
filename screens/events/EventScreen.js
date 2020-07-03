@@ -10,6 +10,8 @@ import { formatStandardTime } from '../helper/timeFormater'
 import { makeFullAddress } from '../helper/calloutHelper';
 import Colors from '../../constants/Colors';
 import * as eventActions from '../../store/actions/events';
+import * as userActions from '../../store/actions/user';
+
 // this function returns the screen elements for the event screen
 // this should take the event or event id as a prop. we should also
 // save the isEventSaved in a redux store for persistance.  
@@ -17,18 +19,26 @@ import * as eventActions from '../../store/actions/events';
 const EventScreen = (props) => {
     const userName = useSelector(state => state.user.userName);
     const savedEvents = useSelector(state => state.events.savedEvents);
+    const goingEvents = useSelector(state => state.user.goingEvents);
     const event = props.navigation.getParam('event');
     console.log("this is the event " + JSON.stringify(event));
     var initialEventSaveState;
-    const existingIndex = savedEvents.findIndex(myEvent => myEvent.event === event.event)
-    if (existingIndex >= 0) { // check if index exists
+    const existingSavedIndex = savedEvents.findIndex(myEvent => myEvent.event === event.event)
+    if (existingSavedIndex >= 0) { // check if index exists
         initialEventSaveState = true;
     } else {
         initialEventSaveState = false;
     }
+    var initialEventGoingState;
+    const existingGoingIndex = goingEvents.findIndex(myEvent => myEvent.event === event.event)
+    if (existingGoingIndex >= 0) { // check if index exists
+        initialEventGoingState = true;
+    } else {
+        initialEventGoingState = false;
+    }
 
     const [isEventSaved, setEventSaved] = useState(initialEventSaveState);
-    const [isGoing, setGoing] = useState(false);
+    const [isGoing, setGoing] = useState(initialEventGoingState);
 
     const dispatch = useDispatch();
 
@@ -42,6 +52,17 @@ const EventScreen = (props) => {
         }
         setEventSaved(!isEventSaved);
         console.log(isEventSaved);
+    };
+
+    const toggleGoingButton = () => {
+        // dispatch action
+        if (!isGoing) {
+            dispatch(userActions.addToGoingEvents(event))
+        } else { // indicating user is no longer going to the event
+            dispatch(userActions.removeFromGoingEvents(event))
+        }
+        setGoing(!isGoing);
+        console.log(isGoing);
     };
 
     return (
@@ -113,7 +134,7 @@ const EventScreen = (props) => {
                                         <Button
                                             title={isGoing ? 'Going' : 'Going'}
                                             color='black'
-                                            onPress={() => { setGoing(!isGoing) }}
+                                            onPress={toggleGoingButton}
                                         />
                                     </View>
                                 </TouchableOpacity>
