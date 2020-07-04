@@ -22,6 +22,7 @@ const EventScreen = (props) => {
     const goingEvents = useSelector(state => state.user.goingEvents);
     const event = props.navigation.getParam('event');
     console.log("this is the event " + JSON.stringify(event));
+    // See if user previously saved the event
     var initialEventSaveState;
     const existingSavedIndex = savedEvents.findIndex(myEvent => myEvent.event === event.event)
     if (existingSavedIndex >= 0) { // check if index exists
@@ -29,6 +30,7 @@ const EventScreen = (props) => {
     } else {
         initialEventSaveState = false;
     }
+    // See if user has already said they are going to an event
     var initialEventGoingState;
     const existingGoingIndex = goingEvents.findIndex(myEvent => myEvent.event === event.event)
     if (existingGoingIndex >= 0) { // check if index exists
