@@ -7,6 +7,7 @@ import { Col, Grid } from 'react-native-easy-grid';
 import InsetShadow from 'react-native-inset-shadow';
 
 import { formatStandardTime } from '../helper/timeFormater'
+import ShareComponent from '../../components/ShareComponent'
 import { makeFullAddress } from '../helper/calloutHelper';
 import Colors from '../../constants/Colors';
 import * as eventActions from '../../store/actions/events';
@@ -118,15 +119,8 @@ const EventScreen = (props) => {
                     </Col>) : null
                 }
                 <Col size={1} style={{ width: 75 }}>
-                    <TouchableOpacity style={{ marginTop: 10 }}>
-                        <Icon
-                            name='share-alt'
-                            type='font-awesome'
-                            size={40}
-                            color={'black'}
-                        />
-                        <Text style={styles.ButtonText}>Share Event</Text>
-                    </TouchableOpacity>
+                    <ShareComponent
+                        event={event} />
                 </Col>
             </Grid>
         </ScrollView >
