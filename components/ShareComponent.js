@@ -1,14 +1,20 @@
 import React from 'react';
 import { Icon } from 'react-native-elements';
-import { Share, View, Button, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { Share, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { useSelector } from "react-redux";
 
-
-export default ShareComponent = () => {
+export default ShareComponent = (event) => {
+    var user = useSelector((state) => state.user);
     const onShare = async () => {
         try {
+            console.log('event passed to share message:' + event.event.title);
             const result = await Share.share({
+                // add deep link here
                 message:
-                    'GIG TRACKER: testing sharing component',
+                    `${user.userName} Shared the event: ${event.event.title}
+                     hosted by: ${event.event.host.name},
+                    located at ${event.event.location.address}
+                    `
             });
             if (result.action === Share.sharedAction) {
                 if (result.activityType) {
@@ -24,7 +30,7 @@ export default ShareComponent = () => {
         }
     };
     return (
-        <TouchableOpacity onPress={onShare} style={{ marginTop: 10 }}>
+        <TouchableOpacity onPress={onShare.bind(this, event)} style={{ marginTop: 10 }}>
             <Icon
                 name='share-alt'
                 type='font-awesome'

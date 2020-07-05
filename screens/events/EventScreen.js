@@ -119,7 +119,8 @@ const EventScreen = (props) => {
                     </Col>) : null
                 }
                 <Col size={1} style={{ width: 75 }}>
-                 <ShareComponent / >
+                    <ShareComponent
+                        event={event} />
                 </Col>
             </Grid>
         </ScrollView >
