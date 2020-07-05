@@ -39,6 +39,17 @@ const EventNavigator = createStackNavigator(
             screen: CreateEventScreen,
             navigationOptions: {
                 title: "Create Event",
+                headerStyle: {
+                    backgroundColor: Colors.darkGrey,
+                    height: Platform.OS === 'ios' ? 110 : Header.height
+                },
+                headerTitleStyle: {
+                    fontSize: 28,
+                    fontFamily: 'jack-silver',
+                    color: '#fff'
+                },
+                headerTintColor: '#fff',
+                headerBackTitleVisible: false,
             }
         },
         UserProfile: {
