@@ -43,6 +43,7 @@ import {
   stringifyTime,
 } from "../helper/createEventHelper";
 import { ActivityIndicator } from "react-native";
+import Colors from '../../constants/Colors';
 
 const { width, height } = Dimensions.get("window");
 const SCREEN_HEIGHT = height;
@@ -196,10 +197,12 @@ const CreateEventScreen = (props) => {
         <View
           style={{
             padding: 12,
-            alignItems: "center",
+            //alignItems: "center",
             justifyContent: "center",
           }}
         >
+          <Text style={styles.text}>Image</Text>
+          <View style={{alignItems: "center", paddingTop: 8}}>
           {image == "" ? (
             <TouchableOpacity
               style={styles.eventImageContainer}
@@ -215,7 +218,10 @@ const CreateEventScreen = (props) => {
                 <Image source={{ uri: image }} style={styles.eventImage} />
               </TouchableOpacity>
             )}
-          <Item rounded>
+          </View>
+          <View style={{paddingBottom: 15, paddingTop: 15}}>
+          <Text style={styles.text, {color: Colors.purpleButton, paddingBottom: 5, fontSize: 18}}>Title</Text>
+          <Item regular style={{borderColor: Colors.purpleBackground, borderRadius: 5}}>
             <Input
               style={styles.titleStyle}
               onChangeText={(text) => setTitle(text)}
@@ -223,7 +229,9 @@ const CreateEventScreen = (props) => {
               placeholder={"Add a title..."}
             />
           </Item>
-          <Item rounded>
+          <Text></Text>
+          <Text style={styles.text, {color: Colors.purpleButton, paddingBottom: 5, fontSize: 18}}>Description</Text>
+          <Item regular style={{borderColor: Colors.purpleBackground, borderRadius: 5}}>
             <Textarea
               style={styles.descriptionStyle}
               onChangeText={(text) => setDescription(text)}
@@ -233,13 +241,15 @@ const CreateEventScreen = (props) => {
               numberOfLines={5}
             />
           </Item>
+          </View>
         </View>
         <View
           style={{
             justifyContent: "center",
-            alignItems: "center",
+            //alignItems: "center",
             alignContent: "center",
-            paddingBottom: 10,
+            padding: 10,
+            paddingTop: 0,
             zIndex: 10,
             width: SCREEN_WIDTH,
           }}
@@ -263,12 +273,12 @@ const CreateEventScreen = (props) => {
               placeholder="Select a category"
               containerStyle={{
                 height: 50,
-                width: 300,
+                width: SCREEN_WIDTH*0.95,
                 justifyContent: "center",
                 alignItems: "center",
               }}
-              style={{ borderColor: "gray", borderWidth: 1 }}
-              dropdownStyle={{ borderColor: "gray", height: 300 }}
+              style={{ borderColor: Colors.purpleBackground, borderWidth: 1 }}
+              dropdownStyle={{ borderColor: Colors.purpleBackground, height: 300 }}
               itemStyle={{ alignItems: "center" }}
               onChangeItem={(category) => setCategory(category.value)}
             />
@@ -293,13 +303,7 @@ const CreateEventScreen = (props) => {
             )}
         </View>
         <View style={styles.container}>
-          <Text
-            style={{
-              fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
-            }}
-          >
-            Location:
-					</Text>
+          <Text style={styles.text}>Location:</Text>
           <Button
             iconRight
             light
@@ -399,13 +403,7 @@ const CreateEventScreen = (props) => {
           </View>
         )}
         <View style={styles.container}>
-          <Text
-            style={{
-              fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
-            }}
-          >
-            Date:
-					</Text>
+          <Text style={styles.text}>Date:</Text>
           <Button
             iconRight
             light
@@ -427,13 +425,7 @@ const CreateEventScreen = (props) => {
           <DateTimePicker value={date} mode={"date"} onChange={onChangeDate} />
         )}
         <View style={styles.container}>
-          <Text
-            style={{
-              fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
-            }}
-          >
-            Time:
-					</Text>
+          <Text style={styles.text}>Time:</Text>
           <Button
             iconRight
             light
@@ -477,7 +469,7 @@ const CreateEventScreen = (props) => {
             <Text
               style={{
                 fontSize: 22,
-                color: "#2f3640",
+                color: Colors.purpleButton,
                 textAlign: "center",
                 fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
               }}
@@ -507,7 +499,7 @@ const CreateEventScreen = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
+    //alignItems: "center",
     justifyContent: "flex-start",
     width: SCREEN_WIDTH,
     padding: 10,
@@ -515,21 +507,22 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
-    fontSize: 16,
+    fontSize: 18,
+    color: Colors.purpleButton,
   },
   dropdownStyle: {
     width: 100,
   },
   titleStyle: {
     height: 50,
-    borderColor: "gray",
+    //borderColor: "gray",
     //borderWidth: 1,
     width: 350,
     fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
     fontSize: 16,
   },
   descriptionStyle: {
-    borderColor: "gray",
+    //borderColor: "gray",
     //borderWidth: 1,
     width: 350,
     height: 120,
@@ -553,9 +546,9 @@ const styles = StyleSheet.create({
   },
   buttonStyle: {
     height: 50,
-    width: 200,
+    width: '98%',
     color: "black",
-    borderColor: "gray",
+    borderColor: Colors.purpleBackground,
     borderWidth: 1,
     backgroundColor: "white",
     alignItems: "center",
@@ -584,11 +577,11 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   eventImageContainer: {
-    borderColor: "gray",
+    borderColor: Colors.purpleBackground,
     borderWidth: 5,
-    height: 170,
+    height: 200,
     marginBottom: 15,
-    width: SCREEN_WIDTH * 0.8,
+    width: SCREEN_WIDTH * 0.9,
   },
   eventImage: {
     height: "100%",
