@@ -161,8 +161,9 @@ export const UpdateHostedEvents = (createdEvents) => {
 	};
 };
 
-export const getEvents = () => {
-	console.log("Pulling events from microservice");
+export const getEvents = (currentDate, latitude, longitude) => {
+	console.log("Pulling events from microservice for " + currentDate);
+	console.log(latitude + "......" + longitude)
 	return async (dispatch) => {
 		var requestOptions = {
 			method: "GET",
@@ -174,8 +175,8 @@ export const getEvents = () => {
 			requestOptions
 		);
 		const mapEvents = await response.json();
-		//console.log(`Map Events ${mapEvents}`);
-		dispatch(updateMapEvents(mapEvents));
+		console.log('Received events json from db');
+		await dispatch(updateMapEvents(mapEvents));
 	};
 };
 
@@ -185,6 +186,45 @@ export const updateMapEvents = (mapEvents) => {
 		type: GET_EVENTS,
 		events: mapEvents,
 	};
+};
+
+export const addFakeEvents = () => {
+	console.log('Adding Fake events, 10 seconds passed');
+	var fakeEvents = []
+	for (i = 0; i < 1000; i++) {
+		fakeEvents.push(
+			{
+				"event": i,
+				"title": "Beach Bocci Ball Game 🧠",
+				"description": "Come to tha beach 🏝 🔥🔥🔥🔥",
+				"date": "2020-06-23T23:58:20.715Z",
+				"image": "https://firebasestorage.googleapis.com/v0/b/gigg-146b7.appspot.com/o/images%2Fo2enw?alt=media&token=5c05074d-2908-41bd-b6d0-2330c6fcf85b",
+				"category": "sports",
+				"location": {
+					"longitude": `${Math.random() * 70}`,
+					"latitude":`${Math.random() * 20}`,
+					"address": "Temple University, Fontain Street, Stanton, Philadelphia, Philadelphia County, Pennsylvania, 19121, United States of America"
+				},
+				"host": {
+					"profile": "https://firebasestorage.googleapis.com/v0/b/gigg-146b7.appspot.com/o/images%2Flkko9n?alt=media&token=f44dbf3e-e644-420a-9e23-84a4e307f591",
+					"name": "john",
+					"email": "john@john.com"
+				}
+			}
+		)
+	}
+	var timeEventsMade = new Date();
+	console.log("Events dispatched to reducer @ " + timeEventsMade.toLocaleTimeString())
+	return {
+		type: GET_EVENTS,
+		events: fakeEvents
+	};
+}
+
+export const getAllEvents = () => {
+	return dispatch => {
+		setTimeout(() => {  dispatch(addFakeEvents()) }, 10000);
+	}
 };
 
 export const createEvent = (event) => {
