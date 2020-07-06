@@ -15,8 +15,16 @@ import { getProfileDataStorage } from '../screens/helper/secureStorageHelpers';
 import { getGeoInfo } from '../screens/helper/geoHelper';
 import Colors from '../constants/Colors';
 
+const startupTextOptions = [
+    "Contacting Orbital Satellite   ",
+    "Downloading Memes   ",
+    "Kicking Neighbors off Wifi   ",
+    "Carping the Diem   "
+]
+
 const StartupScreen = props => {
     const dispatch = useDispatch();
+    var startupText = startupTextOptions[Math.floor(Math.random() * startupTextOptions.length)]
 
     useEffect(() => {
         const tryLogin = async () => {
@@ -82,7 +90,7 @@ const StartupScreen = props => {
         <View style={styles.screen} >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text style={{ color: 'white', fontSize: 17 }}>
-                    {"Contacting Orbital Satellite   "}
+                    {startupText}
                 </Text>
                 <ActivityIndicator size='large' color='white' />
             </View>
