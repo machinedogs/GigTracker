@@ -51,15 +51,21 @@ export const CustomCallout = (props) => {
                         source={{ html: EventImage(props.event) }}
                     />
                 </CardItem>
-                <CardItem>
-                    <View style={{ flexDirection: 'column' }}>
-                        <Text>
-                            {makeStreetAddress(props.event.location.address)}
-                        </Text>
-                        <Text style={styles.dateTimeText}>
-                            {new Date(props.event.date).toLocaleDateString()}{", "}
-                            {new Date(props.event.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }).replace(/(:\d{2}| [AP]M)$/, "")}
-                        </Text>
+                <CardItem style={styles.footer}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <View style={{ flexDirection: 'column', width: '80%' }}>
+                            <Text>
+                                {makeStreetAddress(props.event.location.address)}
+                            </Text>
+                            <Text style={styles.dateTimeText}>
+                                {new Date(props.event.date).toLocaleDateString()}{", "}
+                                {new Date(props.event.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }).replace(/(:\d{2}| [AP]M)$/, "")}
+                            </Text>
+                        </View>
+                        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                                <Text>50</Text>
+                                <Text>Going</Text>
+                        </View>
                     </View>
                 </CardItem>
             </View>
@@ -76,5 +82,12 @@ const styles = StyleSheet.create({
     },
     dateTimeText: {
         color: 'grey'
-    }
+    },
+    footer: {
+		paddingHorizontal: 15,
+        paddingBottom: 15,
+        paddingTop: 10,
+		flexDirection: 'row',
+		justifyContent: 'space-between'
+	},
 });
