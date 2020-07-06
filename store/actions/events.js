@@ -176,7 +176,7 @@ export const getEvents = (currentDate, latitude, longitude) => {
 		);
 		const mapEvents = await response.json();
 		console.log('Received events json from db');
-		await dispatch(updateMapEvents(mapEvents));
+		dispatch(updateMapEvents(mapEvents));
 	};
 };
 
