@@ -18,8 +18,10 @@ const StartupScreen = props => {
 
     useEffect(() => {
         const tryLogin = async () => {
+            //SecureStore.deleteItemAsync('userData')
+            // SecureStore.deleteItemAsync('images')
             console.log('dispatching getEvents from startup page')
-            await dispatch(eventActions.getEvents());
+            dispatch(eventActions.getEvents());
             // change this to secure store function
             const userData = await SecureStore.getItemAsync('userData');
 

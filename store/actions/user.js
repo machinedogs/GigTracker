@@ -5,16 +5,6 @@ export const AUTHENTICATE = 'AUTHENTICATE';
 export const UPDATE_PROFILE = 'UPDATE_PROFILE';
 export const UPDATE_WALLPAPER = 'UPDATE_WALLPAPER';
 export const LOGOUT = 'LOGOUT';
-export const GOING_TO_EVENT = 'GOING_TO_EVENT';
-export const NOT_GOING_TO_EVENT = 'NOT_GOING_TO_EVENT';
-
-export const addToGoingEvents = (event) => {
-	return { type: GOING_TO_EVENT, event: event };
-};
-
-export const removeFromGoingEvents = (event) => {
-	return { type: NOT_GOING_TO_EVENT, eventId: event.event };
-}
 
 export const authenticate = (userName, userEmail, accessToken, refreshToken) => {
     return {
