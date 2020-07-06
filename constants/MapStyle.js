@@ -78,6 +78,15 @@ export default [
     ]
   },
   {
+    "featureType": "road",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#655784"
+      }
+    ]
+  },
+  {
     "featureType": "road.arterial",
     "elementType": "labels.text.fill",
     "stylers": [
@@ -109,7 +118,7 @@ export default [
     "elementType": "labels.text.fill",
     "stylers": [
       {
-        "color": "#9e9e9e"
+        "color": "#655784"
       }
     ]
   },
