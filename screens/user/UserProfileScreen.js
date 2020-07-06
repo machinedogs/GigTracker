@@ -106,7 +106,7 @@ const UserProfileScreen = (props) => {
 		<ScrollView>
 			<View style={styles.container}>
 				<View style={styles.headerContainer}>
-					<View style={styles.headerColumn, {paddingLeft: 20}}>
+					<View style={styles.headerColumn, { paddingLeft: 20 }}>
 						<View style={{ flexDirection: 'row', paddingTop: 15, }}>
 							<TouchableOpacity
 								onPress={updateProfilePhoto}
@@ -121,7 +121,7 @@ const UserProfileScreen = (props) => {
 										/>
 									)}
 							</TouchableOpacity>
-							<View style={{ flexDirection: 'column', justifyContent: 'center', paddingLeft: 50}} >
+							<View style={{ flexDirection: 'column', justifyContent: 'center', paddingLeft: 50 }} >
 								<Text style={styles.userNameText}>{user.userName}</Text>
 								<Text style={styles.emailText}>{user.userEmail}</Text>
 							</View>
@@ -145,18 +145,24 @@ const UserProfileScreen = (props) => {
 									<View>
 										<EventCard event={item} hosting={false} />
 										<View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingHorizontal: 15 }}>
-											<Button full transparent light 
-											onPress={() => {
-												props.navigation.navigate('CreateEvent', { event: item })
-											}}
-										  >
-											   <Text style={styles.buttonText}>Edit</Text>
-										  </Button>
-											<Button iconRight transparent light title='Delete'
+											<Button full transparent light
+												onPress={() => {
+													props.navigation.navigate('CreateEvent', { event: item })
+												}}
+											>
+												<Text style={styles.buttonText}>Edit</Text>
+											</Button>
+											<Button
+												iconRight
+												transparent
+												light
+												title='Delete'
 												onPress={() => {
 													handleDelete(item)
 												}}
-											/>
+											>
+												<Text style={styles.buttonText}>Delete</Text>
+											</Button>
 										</View>
 									</View>
 								}
