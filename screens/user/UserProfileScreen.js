@@ -135,12 +135,7 @@ const UserProfileScreen = (props) => {
 							<FlatList
 								data={constructEvents(event.savedEvents)}
 								renderItem={({ item }) =>
-
-									<TouchableOpacity onPress={() => {
-										props.navigation.navigate('EventScreen', { event: item });
-									}}>
-										<EventCard event={item} />
-									</TouchableOpacity>
+									<EventCard event={item} />
 								}
 								keyExtractor={(item) => item.id.toString()}
 								scrollEnabled={false}
@@ -152,11 +147,7 @@ const UserProfileScreen = (props) => {
 								data={constructEvents(event.createdEvents)}
 								renderItem={({ item }) =>
 									<View>
-										<TouchableOpacity onPress={() => {
-											props.navigation.navigate('EventScreen', { event: item });
-										}}>
-											<EventCard event={item} hosting={false} />
-										</TouchableOpacity>
+										<EventCard event={item} hosting={false} />
 										<View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingHorizontal: 15 }}>
 											<Button full transparent light
 												onPress={() => {

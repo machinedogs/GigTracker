@@ -22,12 +22,12 @@ const EventNavigator = createStackNavigator(
         Home: {
             screen: MapScreen,
             navigationOptions: {
-                headerTitle: '  Current⚡',
+                headerTitle: Platform.OS === 'ios' ? '  Current⚡' : 'Current⚡',
                 headerTitleStyle: {
                     fontFamily: 'jack-silver',
                     fontSize: 32,
                     textAlign: 'center',
-                    width: WIDTH - 75,
+                    width: WIDTH* 0.75,
                 },
                 headerStyle: {
                     backgroundColor: Colors.darkGrey,
