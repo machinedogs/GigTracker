@@ -1,6 +1,5 @@
 import React from 'react';
-import { Button } from 'react-native';
-import { Platform } from 'react-native';
+import { Platform, Dimensions } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator, Header } from 'react-navigation-stack';
 
@@ -14,6 +13,8 @@ import AuthScreen from '../screens/user/AuthScreen';
 import StartupScreen from '../screens/StartupScreen';
 import DeleteScreen from '../screens/user/DeleteScreen';
 
+const WIDTH = Dimensions.get('window').width;
+
 
 const EventNavigator = createStackNavigator(
     {
@@ -21,11 +22,12 @@ const EventNavigator = createStackNavigator(
         Home: {
             screen: MapScreen,
             navigationOptions: {
-                headerTitle: 'Conjure',
+                headerTitle: '  Current⚡',
                 headerTitleStyle: {
                     fontFamily: 'jack-silver',
                     fontSize: 32,
-                    textAlign: 'center'
+                    textAlign: 'center',
+                    width: WIDTH - 75,
                 },
                 headerStyle: {
                     backgroundColor: Colors.darkGrey,
@@ -38,10 +40,41 @@ const EventNavigator = createStackNavigator(
         CreateEvent: {
             screen: CreateEventScreen,
             navigationOptions: {
-                title: "Create Event",
+                title: "create event",
+                headerStyle: {
+                    backgroundColor: Colors.darkGrey,
+                    height: Platform.OS === 'ios' ? 110 : Header.height
+                },
+                headerTitleStyle: {
+                    fontSize: 28,
+                    fontFamily: 'jack-silver',
+                    color: '#fff',
+                    textAlign: 'center',
+                    width: WIDTH - 75,
+                },
+                headerTintColor: '#fff',
+                headerBackTitleVisible: false,
             }
         },
-        UserProfile: UserProfileScreen,
+        UserProfile: {
+            screen: UserProfileScreen,
+            navigationOptions: {
+                title: 'Profile',
+                headerStyle: {
+                    backgroundColor: Colors.darkGrey,
+                    height: Platform.OS === 'ios' ? 110 : Header.height
+                },
+                headerTitleStyle: {
+                    fontSize: 32,
+                    fontFamily: 'jack-silver',
+                    color: '#fff',
+                    textAlign: 'center',
+                    width: WIDTH - 75,
+                },
+                headerTintColor: '#fff',
+                headerBackTitleVisible: false,
+            },
+        },
         ManageEvent: ManageEventScreen,
         EventScreen: {
             screen: EventScreen,
