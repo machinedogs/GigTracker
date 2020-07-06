@@ -7,6 +7,5 @@ export default {
     purpleButton: '#341f97',
     purpleBackground: '#2c2c54',
     darkPurple: '#130f40',
-    darkGrey: '#212121',
-    yellow: '#f5b800',
+    darkGrey: '#262526'
 };
