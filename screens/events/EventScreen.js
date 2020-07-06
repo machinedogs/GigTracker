@@ -112,7 +112,7 @@ const EventScreen = (props) => {
                                 name='save'
                                 type='font-awesome'
                                 size={40}
-                                color={isEventSaved ? '#f5b800' : 'black'}
+                                color={isEventSaved ? Colors.yellow : 'black'}
                             />
                             <Text style={styles.ButtonText}>{isEventSaved ? 'Unsave Event' : 'Save Event'}</Text>
                         </TouchableOpacity>
