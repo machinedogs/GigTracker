@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     View,
     ActivityIndicator,
-    StyleSheet
+    StyleSheet,
+    Text
 } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 
@@ -10,18 +11,29 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateUserProfile } from '../store/actions/user';
 import * as authActions from '../store/actions/user';
 import * as eventActions from '../store/actions/events';
-import { getProfileDataStorage  } from '../screens/helper/secureStorageHelpers';
+import { getProfileDataStorage } from '../screens/helper/secureStorageHelpers';
+import { getGeoInfo } from '../screens/helper/geoHelper';
+import Colors from '../constants/Colors';
+
+const startupTextOptions = [
+    "Contacting Orbital Satellite   ",
+    "Downloading Memes   ",
+    "Kicking Neighbors off Wifi   ",
+    "Carping the Diem   ",
+]
 
 const StartupScreen = props => {
-    const events = useSelector(state => state.events.events)
     const dispatch = useDispatch();
+    var startupText = startupTextOptions[Math.floor(Math.random() * startupTextOptions.length)]
 
     useEffect(() => {
         const tryLogin = async () => {
-            //SecureStore.deleteItemAsync('userData')
-            // SecureStore.deleteItemAsync('images')
             console.log('dispatching getEvents from startup page')
-            dispatch(eventActions.getEvents());
+            let coordinates = '';
+            await getGeoInfo().then(coords => coordinates = coords);
+            var currentDate = new Date().toISOString();
+            await dispatch(eventActions.getEvents(currentDate, coordinates.latitude, coordinates.longitude));
+            //dispatch(eventActions.getAllEvents());
             // change this to secure store function
             const userData = await SecureStore.getItemAsync('userData');
 
@@ -71,13 +83,17 @@ const StartupScreen = props => {
             await dispatch(updateUserProfile(profileImage, transformedData));
             props.navigation.replace('Home');
         };
-
         tryLogin();
     }, [dispatch]);
 
     return (
         <View style={styles.screen} >
-            <ActivityIndicator size='large' />
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={{ color: 'white', fontSize: 17 }}>
+                    {startupText}
+                </Text>
+                <ActivityIndicator size='large' color='white' />
+            </View>
         </View>
     );
 }
@@ -86,7 +102,8 @@ const styles = StyleSheet.create({
     screen: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: Colors.darkGrey
     }
 });
 
