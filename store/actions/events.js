@@ -5,6 +5,7 @@ export const GET_EVENTS = "GET_EVENTS";
 export const EDIT_EVENT = "EDIT_EVENT";
 export const SAVE_EVENT = "SAVE_EVENT";
 export const UNSAVE_EVENT = "UNSAVE_EVENT";
+export const DELETE_CREATED_EVENT = "DELETE_CREATED_EVENT";
 export const DELETE_EVENT = "DELETE_EVENT";
 
 export const deleteEvent = (event) => {
@@ -27,10 +28,15 @@ export const deleteEvent = (event) => {
 			alert(err)
 		}
 		dispatch(removeFromCreatedEvents(event))
+		dispatch(removeFromEvents(event))
 	}
 }
 
 export const removeFromCreatedEvents = (event) => {
+	return { type: DELETE_CREATED_EVENT, eventId: event.id };
+}
+
+export const removeFromEvents = (event) => {
 	return { type: DELETE_EVENT, eventId: event.id };
 }
 
