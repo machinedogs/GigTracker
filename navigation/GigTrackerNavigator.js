@@ -22,7 +22,7 @@ const EventNavigator = createStackNavigator(
         Home: {
             screen: MapScreen,
             navigationOptions: {
-                headerTitle: 'Current⚡',
+                headerTitle: '  Current⚡',
                 headerTitleStyle: {
                     fontFamily: 'jack-silver',
                     fontSize: 32,
