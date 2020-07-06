@@ -9,7 +9,8 @@ import {
   SafeAreaView,
   TouchableOpacity,
   StatusBar,
-  Alert
+  Alert,
+  ActivityIndicator
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { PROVIDER_GOOGLE, Marker, Callout, CalloutSubview } from 'react-native-maps';
@@ -27,6 +28,7 @@ import { GetSavedEvents } from '../../store/actions/events';
 import * as eventActions from '../../store/actions/events';
 import { CustomCallout } from '../../components/CustomCallout';
 import * as iconHelpers from '../helper/iconHelpers';
+import { getGeoInfo } from '../../screens/helper/geoHelper';
 
 const { width, height } = Dimensions.get('window')
 const SCREEN_HEIGHT = height
@@ -59,6 +61,7 @@ const INITIAL_REGION = {
 };
 
 const MapScreen = props => {
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const userName = useSelector(state => state.user.userName);
   const userAccessToken = useSelector(state => state.user.accessToken);
   const savedEvents = useSelector(state => state.events.savedEvents);
@@ -98,14 +101,20 @@ const MapScreen = props => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         coords = { latitude: position.coords.latitude, longitude: position.coords.longitude, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA };
-        console.log("Got the coords: " + coords);
+        console.log("Got the coords in map screen: " + coords);
         mapRef.current.animateToRegion(coords, 0);
       }, (error) => console.log(error));
   }, []);
 
-  const refreshEvents = () => {
+  const refreshEvents = async () => {
     console.log("Refreshing events")
-    dispatch(eventActions.getEvents());
+    let coordinates = '';
+    await getGeoInfo().then(coords => coordinates = coords);
+    var currentDate = new Date().toISOString();
+    setIsRefreshing(true);
+    await dispatch(eventActions.getEvents(currentDate, coordinates.latitude, coordinates.longitude));
+    setIsRefreshing(false);
+    //dispatch(eventActions.getEvents()); pull global events here, no 
   }
 
   const filterCategory = (category) => {
@@ -153,18 +162,18 @@ const MapScreen = props => {
   }
   */
 
- const toggleSaveButton = () => {
-  // dispatch action
-  if (!isEventSaved) {
+  const toggleSaveButton = () => {
+    // dispatch action
+    if (!isEventSaved) {
       dispatch(eventActions.saveEvent(selectedEvent))
       Alert.alert("Event Saved")
-  } else { // indicating user unsaved the event
+    } else { // indicating user unsaved the event
       dispatch(eventActions.unsaveEvent(selectedEvent))
       Alert.alert("Event No Longer Saved")
-  }
-  setEventSaved(!isEventSaved);
-  console.log(isEventSaved);
-};
+    }
+    setEventSaved(!isEventSaved);
+    console.log(isEventSaved);
+  };
 
   return (
     //add a dropdown to choose map style? -> what if we put it in user settings? could incentivize people to become users
@@ -204,7 +213,8 @@ const MapScreen = props => {
                     <CalloutSubview onPress={onEventCalloutPress.bind(this, event)}>
                       <EventCard event={event} style={{ width: SCREEN_WIDTH * 0.75 }} streetAddress />
                     </CalloutSubview>
-                    <View style={{ flexDirection: 'row' }}>
+
+                    {/*<View style={{ flexDirection: 'row' }}>
                       {(userName != event.host.name && userName) ?
                         (<CalloutSubview onPress={toggleSaveButton}>
                           <TouchableOpacity>
@@ -233,7 +243,7 @@ const MapScreen = props => {
                           />
                         </TouchableOpacity>
                       </CalloutSubview>
-                    </View>
+                    </View>*/}
                   </View>
                 </Callout>
               ) :
@@ -306,16 +316,31 @@ const MapScreen = props => {
                 />
               </TouchableOpacity>
               <TouchableOpacity>
-                <Icon
-                  reverse
-                  raised
-                  name='refresh'
-                  type='font-awesome'
-                  color={Colors.darkGrey}
-                  size={28}
-                  reverseColor={Colors.lightText}
-                  onPress={refreshEvents}
-                />
+                {isRefreshing ? // if refreshing events, show activity indicator
+                  (
+                    <Icon
+                      reverse
+                      raised
+                      name='spinner'
+                      type='font-awesome'
+                      color={Colors.darkGrey}
+                      size={28}
+                      reverseColor={Colors.lightText}
+                    />
+                  ) :
+                  (
+                    <Icon
+                      reverse
+                      raised
+                      name='refresh'
+                      type='font-awesome'
+                      color={Colors.darkGrey}
+                      size={28}
+                      reverseColor={Colors.lightText}
+                      onPress={refreshEvents}
+                    />
+                  )
+                }
               </TouchableOpacity>
             </SafeAreaView>
 

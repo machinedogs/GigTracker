@@ -15,7 +15,7 @@ export const UserImage = (event) => {
       overflow: hidden;
       border-radius: 50%;'>
          <img  style='   
-         width: 100%; border-radius: 50%;
+         width: 100%; height: 100%; border-radius: 50%;
         'src="` + event.event.host.profile + `" /> 
       </div>
    </body>
