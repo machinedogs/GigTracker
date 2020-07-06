@@ -19,7 +19,7 @@ const startupTextOptions = [
     "Contacting Orbital Satellite   ",
     "Downloading Memes   ",
     "Kicking Neighbors off Wifi   ",
-    "Carping the Diem   "
+    "Carping the Diem   ",
 ]
 
 const StartupScreen = props => {

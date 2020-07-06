@@ -131,10 +131,11 @@ const UserProfileScreen = (props) => {
 				<View style={styles.content}>
 					<Tabs
 						tabBarUnderlineStyle={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}
+						tabBarUnderlineStyle={{ backgroundColor: Colors.purpleButton }}
 						tabBarActiveTextColor={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}
 						//tabBarInactiveTextColor={Platform.OS === 'ios' ? 'grey' : Colors.lightPurple}
 					>
-						<Tab heading="Saved Events">
+						<Tab heading="Saved Events" tabBarUnderlineStyle={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}>
 
 							<FlatList
 								data={constructEvents(event.savedEvents)}
@@ -146,7 +147,7 @@ const UserProfileScreen = (props) => {
 
 							/>
 						</Tab>
-						<Tab heading="Hosted Events">
+						<Tab heading="Hosted Events" tabBarUnderlineStyle={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}>
 							<FlatList
 								data={constructEvents(event.createdEvents)}
 								renderItem={({ item }) =>
