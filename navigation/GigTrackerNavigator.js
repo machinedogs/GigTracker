@@ -18,7 +18,12 @@ const WIDTH = Dimensions.get('window').width;
 
 const EventNavigator = createStackNavigator(
     {
-        Startup: StartupScreen,
+        Startup: { 
+            screen: StartupScreen,
+            navigationOptions: {
+                headerShown: false
+            }
+        },
         Home: {
             screen: MapScreen,
             navigationOptions: {

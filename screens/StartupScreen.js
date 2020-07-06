@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import {
     View,
     ActivityIndicator,
-    StyleSheet
+    StyleSheet,
+    Text
 } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 
@@ -12,6 +13,7 @@ import * as authActions from '../store/actions/user';
 import * as eventActions from '../store/actions/events';
 import { getProfileDataStorage } from '../screens/helper/secureStorageHelpers';
 import { getGeoInfo } from '../screens/helper/geoHelper';
+import Colors from '../constants/Colors';
 
 const StartupScreen = props => {
     const dispatch = useDispatch();
@@ -78,7 +80,12 @@ const StartupScreen = props => {
 
     return (
         <View style={styles.screen} >
-            <ActivityIndicator size='large' />
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={{ color: 'white', fontSize: 17 }}>
+                    {"Contacting Orbital Satellite   "}
+                </Text>
+                <ActivityIndicator size='large' color='white' />
+            </View>
         </View>
     );
 }
@@ -87,7 +94,8 @@ const styles = StyleSheet.create({
     screen: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: Colors.darkGrey
     }
 });
 
