@@ -277,7 +277,7 @@ const CreateEventScreen = (props) => {
                 justifyContent: "center",
                 alignItems: "center",
               }}
-              style={{ borderColor: Colors.purpleBackground, borderWidth: 1 }}
+              style={{ borderColor: Colors.purpleBackground, borderWidth: 0.5 }}
               dropdownStyle={{ borderColor: Colors.purpleBackground, height: 300 }}
               itemStyle={{ alignItems: "center" }}
               onChangeItem={(category) => setCategory(category.value)}
@@ -297,7 +297,7 @@ const CreateEventScreen = (props) => {
                   { label: "Political", value: "political" },
                   { label: "Other", value: "other" },
                 ]}
-                style={{ borderColor: "gray", borderWidth: 1 }}
+                style={{ borderColor: "gray", borderWidth: 0.5 }}
                 onValueChange={(value) => setCategory(value)}
               />
             )}
@@ -333,18 +333,18 @@ const CreateEventScreen = (props) => {
               borderRadius={10}
               propagateSwipe
             >
-              <Header style={{ backgroundColor: "#2d3436" }}>
+              <Header style={{ backgroundColor: Colors.darkGrey }}>
                 <Left></Left>
                 <Body>
                   <Title
                     style={{
                       color: "#fff",
-                      fontFamily:
-                        Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
-                      fontSize: 20,
+                      fontFamily: 'jack-silver',
+                      fontSize: 26,
+                      paddingBottom: 10
                     }}
                   >
-                    Select location
+                    Select Location
 									</Title>
                 </Body>
                 <Right>
@@ -355,7 +355,7 @@ const CreateEventScreen = (props) => {
               </Header>
               <View
                 style={{
-                  backgroundColor: "#2d3436",
+                  backgroundColor: Colors.darkGrey,
                   zIndex: 100,
                   borderColor: "#2d3436",
                 }}
@@ -457,19 +457,19 @@ const CreateEventScreen = (props) => {
             light
             onPress={saveEvent}
             style={{
-              borderWidth: 1,
-              borderColor: "gray",
+              borderWidth: 2,
+              borderColor: Colors.purpleButton,
               alignContent: "center",
               justifyContent: "center",
               width: 125,
               height: 50,
-              backgroundColor: "#fff",
+              backgroundColor: Colors.purpleButton,
             }}
           >
             <Text
               style={{
                 fontSize: 22,
-                color: Colors.purpleButton,
+                color: "#fff",
                 textAlign: "center",
                 fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
               }}
@@ -549,7 +549,7 @@ const styles = StyleSheet.create({
     width: '98%',
     color: "black",
     borderColor: Colors.purpleBackground,
-    borderWidth: 1,
+    borderWidth: 0.5,
     backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
@@ -578,7 +578,7 @@ const styles = StyleSheet.create({
   },
   eventImageContainer: {
     borderColor: Colors.purpleBackground,
-    borderWidth: 5,
+    borderWidth: 3,
     height: 200,
     marginBottom: 15,
     width: SCREEN_WIDTH * 0.9,
