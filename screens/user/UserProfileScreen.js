@@ -131,11 +131,20 @@ const UserProfileScreen = (props) => {
 				<View style={styles.content}>
 					<Tabs tabBarUnderlineStyle={{ backgroundColor: Colors.purpleButton }}>
 						<Tab heading="Saved Events" activeTextStyle={{ color: Colors.purpleButton }}>
+
 							<FlatList
 								data={constructEvents(event.savedEvents)}
-								renderItem={({ item }) => <EventCard event={item} />}
+								renderItem={({ item }) =>
+
+									<TouchableOpacity onPress={() => {
+										props.navigation.navigate('EventScreen', { event: item });
+									}}>
+										<EventCard event={item} />
+									</TouchableOpacity>
+								}
 								keyExtractor={(item) => item.id.toString()}
 								scrollEnabled={false}
+
 							/>
 						</Tab>
 						<Tab heading="Hosted Events" activeTextStyle={{ color: Colors.purpleButton }}>
@@ -143,7 +152,11 @@ const UserProfileScreen = (props) => {
 								data={constructEvents(event.createdEvents)}
 								renderItem={({ item }) =>
 									<View>
-										<EventCard event={item} hosting={false} />
+										<TouchableOpacity onPress={() => {
+											props.navigation.navigate('EventScreen', { event: item });
+										}}>
+											<EventCard event={item} hosting={false} />
+										</TouchableOpacity>
 										<View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingHorizontal: 15 }}>
 											<Button full transparent light
 												onPress={() => {

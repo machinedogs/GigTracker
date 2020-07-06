@@ -45,6 +45,7 @@ import {
 } from "../helper/createEventHelper";
 import { ActivityIndicator } from "react-native";
 import Colors from '../../constants/Colors';
+import { Ionicons } from "@expo/vector-icons";
 
 const { width, height } = Dimensions.get("window");
 const SCREEN_HEIGHT = height;
@@ -67,7 +68,7 @@ const CreateEventScreen = (props) => {
   const initDate = initEvent ? new Date(initEvent.date) : new Date();
   const initTime = initEvent ? new Date(initEvent.date) : new Date();
   const initImage = initEvent ? initEvent.image : "";
-  const initLocation = initEvent ? {latitude: parseFloat(initEvent.location.latitude), longitude: parseFloat(initEvent.location.latitude)} : "";
+  const initLocation = initEvent ? { latitude: parseFloat(initEvent.location.latitude), longitude: parseFloat(initEvent.location.latitude) } : "";
 
   //These states updated as user interacts with the screen
   const [title, setTitle] = useState(initTitle);
@@ -208,45 +209,45 @@ const CreateEventScreen = (props) => {
           }}
         >
           <Text style={styles.text}>Image</Text>
-          <View style={{alignItems: "center", paddingTop: 8}}>
-          {image == "" ? (
-            <TouchableOpacity
-              style={styles.eventImageContainer}
-              onPress={updateEventPhoto}
-            >
-              <ActivityIndicator style={styles.eventImage} size="large" />
-            </TouchableOpacity>
-          ) : (
+          <View style={{ alignItems: "center", paddingTop: 8 }}>
+            {image == "" ? (
               <TouchableOpacity
                 style={styles.eventImageContainer}
                 onPress={updateEventPhoto}
               >
-                <Image source={{ uri: image }} style={styles.eventImage} />
+                <ActivityIndicator style={styles.eventImage} size="large" />
               </TouchableOpacity>
-            )}
+            ) : (
+                <TouchableOpacity
+                  style={styles.eventImageContainer}
+                  onPress={updateEventPhoto}
+                >
+                  <Image source={{ uri: image }} style={styles.eventImage} />
+                </TouchableOpacity>
+              )}
           </View>
-          <View style={{paddingBottom: 15, paddingTop: 15}}>
-          <Text style={styles.text, {color: Colors.purpleButton, paddingBottom: 5, fontSize: 18}}>Title</Text>
-          <Item regular style={{borderColor: Colors.purpleBackground, borderRadius: 5}}>
-            <Input
-              style={styles.titleStyle}
-              onChangeText={(text) => setTitle(text)}
-              value={title}
-              placeholder={"Add a title..."}
-            />
-          </Item>
-          <Text></Text>
-          <Text style={styles.text, {color: Colors.purpleButton, paddingBottom: 5, fontSize: 18}}>Description</Text>
-          <Item regular style={{borderColor: Colors.purpleBackground, borderRadius: 5}}>
-            <Textarea
-              style={styles.descriptionStyle}
-              onChangeText={(text) => setDescription(text)}
-              value={description}
-              placeholder={"Add a description..."}
-              multiline
-              numberOfLines={5}
-            />
-          </Item>
+          <View style={{ paddingBottom: 15, paddingTop: 15 }}>
+            <Text style={styles.text, { color: Colors.purpleButton, paddingBottom: 5, fontSize: 18 }}>Title</Text>
+            <Item regular style={{ borderColor: Colors.purpleBackground, borderRadius: 5 }}>
+              <Input
+                style={styles.titleStyle}
+                onChangeText={(text) => setTitle(text)}
+                value={title}
+                placeholder={"Add a title..."}
+              />
+            </Item>
+            <Text></Text>
+            <Text style={styles.text, { color: Colors.purpleButton, paddingBottom: 5, fontSize: 18 }}>Description</Text>
+            <Item regular style={{ borderColor: Colors.purpleBackground, borderRadius: 5 }}>
+              <Textarea
+                style={styles.descriptionStyle}
+                onChangeText={(text) => setDescription(text)}
+                value={description}
+                placeholder={"Add a description..."}
+                multiline
+                numberOfLines={5}
+              />
+            </Item>
           </View>
         </View>
         <View
@@ -279,7 +280,7 @@ const CreateEventScreen = (props) => {
               placeholder="Select a category"
               containerStyle={{
                 height: 50,
-                width: SCREEN_WIDTH*0.95,
+                width: SCREEN_WIDTH * 0.95,
                 justifyContent: "center",
                 alignItems: "center",
               }}
@@ -347,16 +348,21 @@ const CreateEventScreen = (props) => {
                       color: "#fff",
                       fontFamily: 'jack-silver',
                       fontSize: 26,
-                      paddingBottom: 10
+                      paddingBottom: 10,
+                      width: SCREEN_WIDTH * 0.75
                     }}
                   >
                     Select Location
 									</Title>
                 </View>
                 <Right>
-                  <Button transparent onPress={toggleShowMap}>
-                    <Icon name="md-checkmark" />
-                  </Button>
+                  <Ionicons
+                    name="md-checkmark"
+                    color='white'
+                    onPress={toggleShowMap}
+                    size={28}
+                    style={{paddingRight: 10}}
+                  />
                 </Right>
               </Header>
               <View
@@ -399,7 +405,7 @@ const CreateEventScreen = (props) => {
                 >
                   <Marker
                     ref={markerRef}
-                    coordinate={{latitude: parseFloat(location.latitude), longitude: parseFloat(location.longitude)}}
+                    coordinate={{ latitude: parseFloat(location.latitude), longitude: parseFloat(location.longitude) }}
                     pinColor="#341f97"
                     tracksViewChanges={false}
                     draggable

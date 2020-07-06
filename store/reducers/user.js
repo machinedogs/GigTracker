@@ -1,7 +1,9 @@
 import {
 	AUTHENTICATE,
 	LOGOUT,
-	UPDATE_PROFILE
+	UPDATE_PROFILE,
+	GOING_TO_EVENT,
+	NOT_GOING_TO_EVENT
 } from "../actions/user";
 
 const initialState = {
@@ -9,7 +11,8 @@ const initialState = {
 	userEmail: "",
 	accessToken: "",
 	refreshToken: "",
-	profileImage: "https://images.unsplash.com/photo-1582266255765-fa5cf1a1d501?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80"
+	profileImage: "https://images.unsplash.com/photo-1582266255765-fa5cf1a1d501?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80",
+	goingEvents: []
 };
 
 export default (state = initialState, action) => {
@@ -30,6 +33,18 @@ export default (state = initialState, action) => {
 			};
 		case LOGOUT:
 			return initialState;
+		case GOING_TO_EVENT:
+			return {
+				...state,
+				goingEvents: state.goingEvents.concat(action.event)
+			};
+		case NOT_GOING_TO_EVENT:
+			const goingIndex = state.goingEvents.findIndex(event => event.event === action.eventId)
+			if (goingIndex >= 0) { // splice out event to unsave
+				const updatedGoingEvents = [...state.goingEvents];
+				updatedGoingEvents.splice(goingIndex, 1);
+				return { ...state, goingEvents: updatedGoingEvents };
+			}
 		default:
 			return state;
 	}
