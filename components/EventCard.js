@@ -43,16 +43,22 @@ export const EventCard = (props) => {
 				</InsetShadow>
 			</View >
 			<View style={styles.footer}>
-				{
-					props.streetAddress ?
-						<Text>{makeStreetAddress(props.event.location.address)}</Text>
-						:
-						<Text>{makeFullAddress(props.event.location.address)}</Text>
-				}
-				<Text style={styles.dateTimeText} >
-					{new Date(props.event.date).toLocaleDateString()}{", "}
-					{new Date(props.event.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-				</Text>
+				<View style={{width: '80%'}}>
+					{
+						props.streetAddress ?
+							<Text>{makeStreetAddress(props.event.location.address)}</Text>
+							:
+							<Text>{makeFullAddress(props.event.location.address)}</Text>
+					}
+					<Text style={styles.dateTimeText} >
+						{new Date(props.event.date).toLocaleDateString()}{", "}
+						{new Date(props.event.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+					</Text>
+				</View>
+				<View style={{justifyContent: 'center', alignItems: 'center'}}>
+					<Text>50</Text>
+					<Text>Going</Text>
+				</View>
 			</View>
 		</Card>
 	);
@@ -92,7 +98,9 @@ const styles = StyleSheet.create({
 	},
 	footer: {
 		paddingHorizontal: 15,
-		paddingBottom: 15
+		paddingBottom: 15,
+		flexDirection: 'row',
+		justifyContent: 'space-between'
 	},
 	titleText: {
 		fontSize: 20,

@@ -69,99 +69,116 @@ const EventScreen = (props) => {
     };
 
     return (
-            <ScrollView style={{ backgroundColor: 'white' }} showsVerticalScrollIndicator={false}>
-                <View style={{ flexDirection: 'row', padding: 15 }}>
-                    <View style={styles.titleDescriptionContainer}>
-                        <Text style={styles.titleText}>{event.title}</Text>
-                    </View>
-                    <View style={{ alignSelf: 'flex-end' }}>
-                        <View style={styles.hostContent}>
-                            <Thumbnail source={{ uri: event.host.profile }} />
-                            <Text style={styles.hostNameText}>{event.host.name}</Text>
-                        </View>
+        <ScrollView style={{ backgroundColor: 'white' }} showsVerticalScrollIndicator={false}>
+            <View style={{ flexDirection: 'row', padding: 15 }}>
+                <View style={styles.titleDescriptionContainer}>
+                    <Text style={styles.titleText}>{event.title}</Text>
+                </View>
+                <View style={{ alignSelf: 'flex-end' }}>
+                    <View style={styles.hostContent}>
+                        <Thumbnail source={{ uri: event.host.profile }} />
+                        <Text style={styles.hostNameText}>{event.host.name}</Text>
                     </View>
                 </View>
-                <Grid>
+            </View>
+            <Grid>
 
-                    <Col size={1} style={{ height: 275, paddingHorizontal: 15 }}>
-                        <InsetShadow>
-                            <Image
-                                style={{ flex: 1 }}
-                                source={{ uri: event.image }}
-                            />
-                        </InsetShadow>
+                <Col size={1} style={{ height: 275, paddingHorizontal: 15 }}>
+                    <InsetShadow>
+                        <Image
+                            style={{ flex: 1 }}
+                            source={{ uri: event.image }}
+                        />
+                    </InsetShadow>
 
-                    </Col>
-                </Grid>
-                <View style={{ flexDirection: 'row', paddingHorizontal: 15, paddingTop: 10, paddingBottom: 15 }}>
-                    <Left size={2} style={{ height: 'auto', justifyContent: 'center' }}>
-                        <Text style={{ fontSize: 15, color: 'black' }}>
-                            {makeFullAddress(event.location.address)}
-                        </Text>
-                    </Left>
-                    <Right size={2} style={{ height: 'auto' }}>
-                        {Platform.OS === 'ios' ?
-                            (
-                                <Text style={{ fontSize: 35, color: 'black' }}>
-                                    {new Date(event.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}
-                                </Text>
-
-                            ) :
-                            (
-                                // format time for android
-                                <Text style={{ fontSize: 35, color: 'black' }}>
-                                    {formatStandardTime(event.date)}
-                                </Text>
-                            )}
-
-                        <Text style={{ fontSize: 20, color: 'black' }}>
-                            {new Date(event.date).toLocaleDateString()}
-                        </Text>
-                    </Right>
-                </View>
-                <Grid>
-                    <Col size={1} style={{ height: 'auto', justifyContent: 'center' }}>
-                        <InsetShadow shadowRadius={1} shadowColor='black' left={false} right={false} shadowOpacity={1}>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 15, paddingHorizontal: 15 }}>
-                                <Text style={styles.goingText}>
-                                    50 People Going
-                            </Text>
-                                <TouchableOpacity>
-                                    <View style={{
-                                        backgroundColor: isGoing ? '#f5b800' : Colors.lightBackground,
-                                        borderRadius: 5,
-                                        borderColor: isGoing ? '#f5b800' : Colors.lightBackground,
-                                        borderWidth: 2,
-                                        paddingHorizontal: 10
-                                    }}>
-                                        <Button
-                                            title={isGoing ? 'Going' : 'Going'}
-                                            color='black'
-                                            onPress={toggleGoingButton}
-                                        />
-                                    </View>
-                                </TouchableOpacity>
-                            </View>
-                        </InsetShadow>
-                    </Col>
-                </Grid>
-                <View style={{ padding: 15 }}>
-                    <Text style={styles.Description}>
-                        {event.description}
+                </Col>
+            </Grid>
+            <View style={{ flexDirection: 'row', paddingHorizontal: 15, paddingTop: 10, paddingBottom: 15 }}>
+                <Left size={2} style={{ height: 'auto', justifyContent: 'center' }}>
+                    <Text style={{ fontSize: 15, color: 'black' }}>
+                        {makeFullAddress(event.location.address)}
                     </Text>
-                </View>
-                <Grid>
-                    {(userName != event.host.name && userName) ? // make sure user is not the host and is logged in
-                        (<Col>
-                            <TouchableOpacity onPress={toggleSaveButton} style={{ marginTop: 10, marginBottom: 10 }} >
-                                <Icon
-                                    name='save'
-                                    type='font-awesome'
-                                    size={40}
-                                    color={isEventSaved ? '#f5b800' : 'black'}
-                                />
-                                <Text style={styles.ButtonText}>{isEventSaved ? 'Unsave Event' : 'Save Event'}</Text>
+                </Left>
+                <Right size={2} style={{ height: 'auto' }}>
+                    {Platform.OS === 'ios' ?
+                        (
+                            <Text style={{ fontSize: 35, color: 'black' }}>
+                                {new Date(event.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}
+                            </Text>
+
+                        ) :
+                        (
+                            // format time for android
+                            <Text style={{ fontSize: 35, color: 'black' }}>
+                                {formatStandardTime(event.date)}
+                            </Text>
+                        )}
+
+                    <Text style={{ fontSize: 20, color: 'black' }}>
+                        {new Date(event.date).toLocaleDateString()}
+                    </Text>
+                </Right>
+            </View>
+            <Grid>
+                <Col size={1} style={{ height: 'auto', justifyContent: 'center' }}>
+                    <InsetShadow shadowRadius={1} shadowColor='black' left={false} right={false} shadowOpacity={1}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 15, paddingHorizontal: 15 }}>
+                            <Text style={styles.goingText}>
+                                50 People Going
+                            </Text>
+                            <TouchableOpacity onPress={toggleGoingButton}>
+                                {
+                                    Platform.OS === 'ios' ?
+                                        (
+                                            <View style={{
+                                                backgroundColor: isGoing ? '#f5b800' : Colors.lightBackground,
+                                                borderRadius: 5,
+                                                borderColor: isGoing ? '#f5b800' : Colors.lightBackground,
+                                                borderWidth: 2,
+                                                paddingHorizontal: 10
+                                            }}>
+                                                <Button
+                                                    title='Going'
+                                                    color='black'
+                                                    onPress={toggleGoingButton}
+                                                />
+                                            </View>
+                                        ) : (
+                                            <View style={{
+                                                backgroundColor: isGoing ? '#f5b800' : Colors.lightBackground,
+                                                borderRadius: 5,
+                                                borderColor: isGoing ? '#f5b800' : Colors.lightBackground,
+                                                borderWidth: 2,
+                                                paddingHorizontal: 10,
+                                                paddingVertical: 5
+                                            }}>
+                                                <Text>Going</Text>
+                                            </View>
+                                        )
+                                }
+
                             </TouchableOpacity>
+                        </View>
+                    </InsetShadow>
+                </Col>
+            </Grid>
+            <View style={{ padding: 15 }}>
+                <Text style={styles.Description}>
+                    {event.description}
+                </Text>
+            </View>
+            <Grid>
+                {(userName != event.host.name && userName) ? // make sure user is not the host and is logged in
+                    (<Col>
+                        <TouchableOpacity onPress={toggleSaveButton} style={{ marginTop: 10, marginBottom: 10 }} >
+                            <Icon
+                                name='save'
+                                type='font-awesome'
+                                size={40}
+                                color={isEventSaved ? '#f5b800' : 'black'}
+                            />
+                            <Text style={styles.ButtonText}>{isEventSaved ? 'Unsave Event' : 'Save Event'}</Text>
+                        </TouchableOpacity>
                     </Col>) : null
                 }
                 <Col size={1} style={{ width: 75 }}>
@@ -227,7 +244,7 @@ const styles = StyleSheet.create({
         color: 'black',
         backgroundColor: 'white',
         fontSize: 20
-    }
+    },
 });
 
 export default EventScreen;
