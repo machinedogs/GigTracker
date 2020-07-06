@@ -51,7 +51,7 @@ export const CustomCallout = (props) => {
                         source={{ html: EventImage(props.event) }}
                     />
                 </CardItem>
-                <View style={styles.footer}>
+                <CardItem style={styles.footer}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                         <View style={{ flexDirection: 'column', width: '80%' }}>
                             <Text>
@@ -67,7 +67,7 @@ export const CustomCallout = (props) => {
                                 <Text>Going</Text>
                         </View>
                     </View>
-                </View>
+                </CardItem>
             </View>
 
         </Card>
