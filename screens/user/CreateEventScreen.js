@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   Modal,
   Image,
+  Vibration
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -66,12 +67,12 @@ const CreateEventScreen = (props) => {
   const initDate = initEvent ? new Date(initEvent.date) : new Date();
   const initTime = initEvent ? new Date(initEvent.date) : new Date();
   const initImage = initEvent ? initEvent.image : "";
-  //const initLocation = initEvent ? initEvent.location : false;
+  const initLocation = initEvent ? {latitude: parseFloat(initEvent.location.latitude), longitude: parseFloat(initEvent.location.latitude)} : "";
 
   //These states updated as user interacts with the screen
   const [title, setTitle] = useState(initTitle);
   const [description, setDescription] = useState(initDescription);
-  const [location, setLocation] = useState("");
+  const [location, setLocation] = useState(initLocation);
   const [date, setDate] = useState(initDate);
   const [time, setTime] = useState(initTime);
   const [category, setCategory] = useState(initCategory);
@@ -181,11 +182,16 @@ const CreateEventScreen = (props) => {
   //Sets location as user moves the marker on map
   const handleDragEnd = (e) => {
     setLocation({
-      latitude: e.nativeEvent.coordinate.latitude,
-      longitude: e.nativeEvent.coordinate.longitude,
+      latitude: parseFloat(e.nativeEvent.coordinate.latitude),
+      longitude: parseFloat(e.nativeEvent.coordinate.longitude),
     });
     console.log("lat: " + location.latitude + " long: " + location.longitude);
   };
+
+  const handleDragStart = () => {
+    Vibration.vibrate()
+  }
+
   //This determines whether to show the map or not for user to pick location
   const toggleShowMap = () => {
     showMap ? setShowMap(false) : setShowMap(true);
@@ -335,7 +341,7 @@ const CreateEventScreen = (props) => {
             >
               <Header style={{ backgroundColor: Colors.darkGrey }}>
                 <Left></Left>
-                <Body>
+                <View>
                   <Title
                     style={{
                       color: "#fff",
@@ -346,7 +352,7 @@ const CreateEventScreen = (props) => {
                   >
                     Select Location
 									</Title>
-                </Body>
+                </View>
                 <Right>
                   <Button transparent onPress={toggleShowMap}>
                     <Icon name="md-checkmark" />
@@ -369,36 +375,39 @@ const CreateEventScreen = (props) => {
                       Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
                   }}
                 >
-                  Hold the pin down for a second before dragging...
+                  Hold pin to drag
 								</Text>
               </View>
-              <MapView
-                initialRegion={{
-                  latitude: location.latitude,
-                  latitudeDelta: LATITUDE_DELTA,
-                  longitude: location.longitude,
-                  longitudeDelta: LONGITUDE_DELTA,
-                }}
-                style={styles.mapStyle}
-                provider={PROVIDER_GOOGLE}
-                showsUserLocation
-                showsMyLocationButton
-                rotateEnabled={false}
-                showsTraffic={false}
-                toolbarEnabled={true}
-                ref={mapRef}
-                customMapStyle={MapStyle}
-                clusterColor="#341f97"
-              >
-                <Marker
-                  ref={markerRef}
-                  coordinate={location}
-                  pinColor="#341f97"
-                  tracksViewChanges={false}
-                  draggable
-                  onDragEnd={handleDragEnd}
-                />
-              </MapView>
+              <View style={styles.mapContainer}>
+                <MapView
+                  initialRegion={{
+                    latitude: parseFloat(location.latitude),
+                    latitudeDelta: LATITUDE_DELTA,
+                    longitude: parseFloat(location.longitude),
+                    longitudeDelta: LONGITUDE_DELTA,
+                  }}
+                  style={styles.mapStyle}
+                  provider={PROVIDER_GOOGLE}
+                  showsUserLocation
+                  showsMyLocationButton
+                  rotateEnabled={false}
+                  showsTraffic={false}
+                  toolbarEnabled={true}
+                  ref={mapRef}
+                  customMapStyle={MapStyle}
+                  clusterColor="#341f97"
+                >
+                  <Marker
+                    ref={markerRef}
+                    coordinate={{latitude: parseFloat(location.latitude), longitude: parseFloat(location.longitude)}}
+                    pinColor="#341f97"
+                    tracksViewChanges={false}
+                    draggable
+                    onDragEnd={handleDragEnd}
+                    onDragStart={handleDragStart}
+                  />
+                </MapView>
+              </View>
             </Modal>
           </View>
         )}
@@ -497,6 +506,15 @@ const CreateEventScreen = (props) => {
 };
 
 const styles = StyleSheet.create({
+  mapContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: SCREEN_WIDTH,
+    paddingTop: 0,
+    marginBottom: '3%'
+    //width: Dimensions.get('window').width,
+  },
   container: {
     flex: 1,
     //alignItems: "center",

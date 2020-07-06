@@ -19,7 +19,6 @@ import { Icon } from 'react-native-elements';
 
 import { EventCard } from "../../components/EventCard";
 import MapStyle from '../../constants/MapStyle';
-import EventModal from '../../components/EventModal';
 import Event from '../../models/event';
 import HeaderButton from '../../components/HeaderButton';
 import Colors from '../../constants/Colors';
@@ -188,9 +187,7 @@ const MapScreen = props => {
         {events.map(event => (
           <Marker
             coordinate={{ latitude: parseFloat(event.location.latitude), longitude: parseFloat(event.location.longitude) }}
-            title={event.title}
             pinColor="#341f97"
-            description={event.description}
             key={event.event}
             tracksViewChanges={false}
             onPress={onPinPress.bind(this, event)}
@@ -258,14 +255,6 @@ const MapScreen = props => {
         ))
         }
       </MapView>
-
-      <EventModal
-        title={selectedEvent.title}
-        description={selectedEvent.description}
-        hostName={selectedEvent.hostName}
-        visible={isModalVisible}
-        toggleModal={toggleModal}
-      />
       {
         !userAccessToken ?
           (
@@ -284,7 +273,7 @@ const MapScreen = props => {
                   type='font-awesome'
                   color={Colors.darkGrey}
                   size={28}
-                  reverseColor='white'
+                  reverseColor={Colors.lightText}
                   onPress={() => { props.navigation.navigate('Auth') }}
                 />
               </TouchableOpacity>
@@ -300,6 +289,7 @@ const MapScreen = props => {
                   type='font-awesome'
                   color={Colors.darkGrey}
                   size={28}
+                  reverseColor={Colors.lightText}
                   onPress={() => { props.navigation.navigate('UserProfile') }}
                 />
               </TouchableOpacity>
@@ -311,6 +301,7 @@ const MapScreen = props => {
                   type='font-awesome'
                   color={Colors.darkGrey}
                   size={28}
+                  reverseColor={Colors.lightText}
                   onPress={() => { props.navigation.navigate('CreateEvent') }}
                 />
               </TouchableOpacity>
@@ -322,7 +313,7 @@ const MapScreen = props => {
                   type='font-awesome'
                   color={Colors.darkGrey}
                   size={28}
-                  reverseColor='white'
+                  reverseColor={Colors.lightText}
                   onPress={refreshEvents}
                 />
               </TouchableOpacity>
@@ -365,6 +356,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: SCREEN_WIDTH,
     paddingTop: 0,
+    paddingBottom: 0
     //width: Dimensions.get('window').width,
   },
   top: {

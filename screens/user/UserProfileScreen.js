@@ -10,6 +10,7 @@ import {
 	View,
 	TouchableOpacity,
 	Alert,
+	ActivityIndicator
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Container, Header, Tab, Tabs, TabHeading, Icon, Button } from "native-base";
@@ -21,11 +22,11 @@ import {
 } from "../../screens/helper/ImageHelpers";
 import { saveProfileDataToStorage } from "../../screens/helper/secureStorageHelpers";
 import * as authActions from "../../store/actions/user";
+import * as eventActions from "../../store/actions/events";
 import { EventCard } from "../../components/EventCard";
 import { constructEvents } from "../../screens/helper/dataTransformation";
 import { GetHostedEvents, GetSavedEvents } from "../../store/actions/events";
 import Colors from '../../constants/Colors';
-import { ActivityIndicator } from "react-native";
 
 const UserProfileScreen = (props) => {
 	const dispatch = useDispatch();
@@ -68,6 +69,27 @@ const UserProfileScreen = (props) => {
 		console.log(user.accessToken);
 		dispatch(GetSavedEvents(user));
 	};
+
+	const handleDelete = async (event) => {
+		Alert.alert(
+			"Delete Event",
+			"Are you sure you want to delete this event?",
+			[
+				{
+					text: "Yes",
+					onPress: () => dispatch(eventActions.deleteEvent(event)),
+					style: 'destructive'
+				},
+				{
+					text: "No",
+					onPress: () => console.log("Delete Event Canceled"),
+					style: "cancel"
+				}
+			],
+			{ cancelable: false }
+		);
+		getHostedEvents(user);
+	}
 
 	useEffect(() => {
 		getHostedEvents(user);
@@ -122,13 +144,20 @@ const UserProfileScreen = (props) => {
 								renderItem={({ item }) =>
 									<View>
 										<EventCard event={item} hosting={false} />
-										<Button full transparent light 
+										<View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingHorizontal: 15 }}>
+											<Button full transparent light 
 											onPress={() => {
 												props.navigation.navigate('CreateEvent', { event: item })
 											}}
-										>
-											<Text style={styles.buttonText}>Edit this event</Text>
-										</Button>
+										  >
+											   <Text style={styles.buttonText}>Edit</Text>
+										  </Button>
+											<Button iconRight transparent light title='Delete'
+												onPress={() => {
+													handleDelete(item)
+												}}
+											/>
+										</View>
 									</View>
 								}
 								keyExtractor={(item) => item.id.toString()}

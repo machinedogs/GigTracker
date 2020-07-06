@@ -5,7 +5,8 @@ import {
     UPDATE_HOSTED_EVENTS,
     SAVE_EVENT,
     UNSAVE_EVENT,
-    EDIT_EVENT
+    EDIT_EVENT,
+    DELETE_EVENT
 } from '../actions/events';
 
 const initialState = {
@@ -47,11 +48,19 @@ export default (state = initialState, action) => {
                 savedEvents: state.savedEvents.concat(action.event)
             };
         case UNSAVE_EVENT:
-            const existingIndex = state.savedEvents.findIndex(event => event.event === action.eventId)
-            if (existingIndex >= 0) { // splice out event to unsave
+            const savedIndex = state.savedEvents.findIndex(event => event.event === action.eventId)
+            if (savedIndex >= 0) { // splice out event to unsave
                 const updatedSavedEvents = [...state.savedEvents];
-                updatedSavedEvents.splice(existingIndex, 1); 
+                updatedSavedEvents.splice(savedIndex, 1); 
                 return { ...state, savedEvents: updatedSavedEvents };
+            }
+        case DELETE_EVENT:
+            // Delete from created Events
+            const hostedIndex = state.createdEvents.findIndex(event => event.event === action.eventId)
+            if (hostedIndex >= 0) { // splice out event to unsave
+                const updatedCreatedEvents = [...state.createdEvents];
+                updatedCreatedEvents.splice(hostedIndex, 1); 
+                return { ...state, createdEvents: updatedCreatedEvents };
             }
         default:
             return state;
