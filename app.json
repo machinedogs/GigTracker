@@ -1,5 +1,6 @@
 {
   "expo": {
+    "scheme": "gigTracker",
     "name": "GigTracker",
     "slug": "GigTracker",
     "platforms": [

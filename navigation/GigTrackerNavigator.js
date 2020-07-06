@@ -20,6 +20,7 @@ const EventNavigator = createStackNavigator(
         Startup: StartupScreen,
         Home: {
             screen: MapScreen,
+            path: "/mapScreen",
             navigationOptions: {
                 headerTitle: 'Conjure',
                 headerTitleStyle: {
@@ -45,6 +46,7 @@ const EventNavigator = createStackNavigator(
         ManageEvent: ManageEventScreen,
         EventScreen: {
             screen: EventScreen,
+            path: "/eventScreen",
             navigationOptions: {
                 headerStyle: {
                     backgroundColor: Colors.darkGrey,

@@ -1,19 +1,25 @@
 import React from 'react';
 import { Icon } from 'react-native-elements';
 import { Share, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { Linking } from 'expo';
 import { useSelector } from "react-redux";
 
 export default ShareComponent = (event) => {
     var user = useSelector((state) => state.user);
+    let redirectUrl = Linking.makeUrl('mapScreen');
+
     const onShare = async () => {
         try {
+            console.log("redirect URL is: " + redirectUrl);
+            console.log(Linking.openURL(redirectUrl))
             console.log('event passed to share message:' + event.event.title);
             const result = await Share.share({
                 // add deep link here
                 message:
                     `${user.userName} Shared the event: ${event.event.title}
                      hosted by: ${event.event.host.name},
-                    located at ${event.event.location.address}
+                    located at ${event.event.location.address},
+                     ${"href:"+redirectUrl}
                     `
             });
             if (result.action === Share.sharedAction) {
