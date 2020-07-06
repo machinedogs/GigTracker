@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 		paddingBottom: 8,
 		textAlign: "left",
-		fontFamily: "Sinhala Sangam MN",
+		fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
 	},
 	emailText: {
 		color: "#FFF",
@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 		paddingBottom: 8,
 		textAlign: "left",
-		fontFamily: "Sinhala Sangam MN",
+		fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
 	},
 	buttonText: {
 		color: Colors.purpleButton,

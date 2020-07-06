@@ -340,7 +340,7 @@ const CreateEventScreen = (props) => {
               borderRadius={10}
               propagateSwipe
             >
-              <Header style={{ backgroundColor: Colors.darkGrey }}>
+              <Header style={{ backgroundColor: Colors.darkGrey,  }}>
                 <Left></Left>
                 <View>
                   <Title
@@ -349,6 +349,7 @@ const CreateEventScreen = (props) => {
                       fontFamily: 'jack-silver',
                       fontSize: 26,
                       paddingBottom: 10,
+                      paddingTop: Platform.OS === 'ios' ? 0 : 10,
                       width: SCREEN_WIDTH * 0.75
                     }}
                   >

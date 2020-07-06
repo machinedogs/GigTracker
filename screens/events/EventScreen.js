@@ -190,20 +190,6 @@ const EventScreen = (props) => {
     );
 }
 
-// settings for header
-EventScreen.navigationOptions = (props) => {
-    return {
-        headerTitle: "event details",
-        headerTitleStyle: {
-            fontSize: 30,
-            fontFamily: 'jack-silver',
-        },
-        headerBackTitleVisible: false,
-        headerTintColor: 'white',
-        headerTitleAllowFontScaling: true
-    }
-}
-
 const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',

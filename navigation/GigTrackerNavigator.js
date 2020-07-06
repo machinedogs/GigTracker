@@ -22,12 +22,12 @@ const EventNavigator = createStackNavigator(
         Home: {
             screen: MapScreen,
             navigationOptions: {
-                headerTitle: Platform.OS === 'ios' ? '  Current⚡' : 'Current⚡',
+                headerTitle: Platform.OS === 'ios' ? '  Current⚡' : 'Current⚡ ',
                 headerTitleStyle: {
                     fontFamily: 'jack-silver',
                     fontSize: 32,
                     textAlign: 'center',
-                    width: WIDTH* 0.75,
+                    width: WIDTH * 0.75,
                 },
                 headerStyle: {
                     backgroundColor: Colors.darkGrey,
@@ -49,7 +49,7 @@ const EventNavigator = createStackNavigator(
                     fontSize: 28,
                     fontFamily: 'jack-silver',
                     color: '#fff',
-                    textAlign: 'center',
+                    textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
                     width: WIDTH - 75,
                 },
                 headerTintColor: '#fff',
@@ -68,7 +68,7 @@ const EventNavigator = createStackNavigator(
                     fontSize: 32,
                     fontFamily: 'jack-silver',
                     color: '#fff',
-                    textAlign: 'center',
+                    textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
                     width: WIDTH - 75,
                 },
                 headerTintColor: '#fff',
@@ -81,8 +81,18 @@ const EventNavigator = createStackNavigator(
             navigationOptions: {
                 headerStyle: {
                     backgroundColor: Colors.darkGrey,
-                    height: Platform.OS === 'ios' ? 110 : Header.height
+                    height: Platform.OS === 'ios' ? 110 : Header.height,
                 },
+                headerTitle: "event details",
+                headerTitleStyle: {
+                    fontSize: 30,
+                    fontFamily: 'jack-silver',
+                    textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
+                    width: WIDTH - 75,
+                },
+                headerBackTitleVisible: false,
+                headerTintColor: 'white',
+                headerTitleAllowFontScaling: true
             }
         },
         Auth: AuthScreen,
