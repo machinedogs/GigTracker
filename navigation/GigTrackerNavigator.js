@@ -18,7 +18,7 @@ const WIDTH = Dimensions.get('window').width;
 
 const EventNavigator = createStackNavigator(
     {
-        Startup: { 
+        Startup: {
             screen: StartupScreen,
             navigationOptions: {
                 headerShown: false
@@ -101,7 +101,25 @@ const EventNavigator = createStackNavigator(
             }
         },
         Auth: AuthScreen,
-        Delete: DeleteScreen
+        Delete: {
+            screen: DeleteScreen,
+            navigationOptions: {
+                title: 'Delete Account',
+                headerStyle: {
+                    backgroundColor: Colors.darkGrey,
+                    height: Platform.OS === 'ios' ? 110 : Header.height
+                },
+                headerTitleStyle: {
+                    fontSize: 32,
+                    fontFamily: 'jack-silver',
+                    color: '#fff',
+                    textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
+                    width: WIDTH - 75,
+                },
+                headerTintColor: '#fff',
+                headerBackTitleVisible: false,
+            },
+        }
     }
 );
 

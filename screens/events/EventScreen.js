@@ -127,36 +127,16 @@ const EventScreen = (props) => {
                                 50 People Going
                             </Text>
                             <TouchableOpacity onPress={toggleGoingButton}>
-                                {
-                                    Platform.OS === 'ios' ?
-                                        (
-                                            <View style={{
-                                                backgroundColor: isGoing ? '#f5b800' : Colors.lightBackground,
-                                                borderRadius: 5,
-                                                borderColor: isGoing ? '#f5b800' : Colors.lightBackground,
-                                                borderWidth: 2,
-                                                paddingHorizontal: 10
-                                            }}>
-                                                <Button
-                                                    title='Going'
-                                                    color='black'
-                                                    onPress={toggleGoingButton}
-                                                />
-                                            </View>
-                                        ) : (
-                                            <View style={{
-                                                backgroundColor: isGoing ? '#f5b800' : Colors.lightBackground,
-                                                borderRadius: 5,
-                                                borderColor: isGoing ? '#f5b800' : Colors.lightBackground,
-                                                borderWidth: 2,
-                                                paddingHorizontal: 10,
-                                                paddingVertical: 5
-                                            }}>
-                                                <Text>Going</Text>
-                                            </View>
-                                        )
-                                }
-
+                                <View style={{
+                                    backgroundColor: isGoing ? '#f5b800' : Colors.lightBackground,
+                                    borderRadius: 5,
+                                    borderColor: isGoing ? '#f5b800' : Colors.lightBackground,
+                                    borderWidth: 2,
+                                    paddingHorizontal: 10,
+                                    paddingVertical: 5
+                                }}>
+                                    <Text>Going</Text>
+                                </View>
                             </TouchableOpacity>
                         </View>
                     </InsetShadow>
