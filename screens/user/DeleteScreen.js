@@ -1,9 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { Card, Button } from 'native-base';
+import { Button, Card } from 'native-base';
 import Colors from '../../constants/Colors';
 import * as authActions from '../../store/actions/user';
+import { ScrollView } from 'react-native';
 
 const DeleteScreen = props => {
     const dispatch = useDispatch();
@@ -29,7 +30,7 @@ const DeleteScreen = props => {
                     </Text>
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', paddingHorizontal: 15, paddingBottom: 15 }}>
-                    <Text style={{ fontSize: 20 }}>
+                    <Text style={{ fontSize: 20, color: Colors.purpleBackground }}>
                         Please confirm:
                     </Text>
                     <TouchableOpacity onPress={deleteAccountHandler}>
@@ -41,7 +42,7 @@ const DeleteScreen = props => {
                             paddingHorizontal: 10,
                             paddingVertical: 5
                         }}>
-                            <Text style={{ fontSize: 17 }}>Adios!</Text>
+                            <Text style={{ fontSize: 17, color: Colors.purpleBackground }}>Delete</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -56,15 +57,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'white',
-    },
-    container: {
-        width: '80%',
-        maxWidth: '95%',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minWidth: 300,
-        maxHeight: 450,
-        padding: 20
     }
 });
 
