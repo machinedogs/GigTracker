@@ -52,7 +52,7 @@ const EventNavigator = createStackNavigator(
                     height: Platform.OS === 'ios' ? 110 : Header.height
                 },
                 headerTitleStyle: {
-                    fontSize: 28,
+                    fontSize: 30,
                     fontFamily: 'jack-silver',
                     color: '#fff',
                     textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
@@ -71,7 +71,7 @@ const EventNavigator = createStackNavigator(
                     height: Platform.OS === 'ios' ? 110 : Header.height
                 },
                 headerTitleStyle: {
-                    fontSize: 32,
+                    fontSize: 30,
                     fontFamily: 'jack-silver',
                     color: '#fff',
                     textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
@@ -101,16 +101,14 @@ const EventNavigator = createStackNavigator(
                 headerTitleAllowFontScaling: true
             }
         },
-        Auth: AuthScreen,
-        Delete: DeleteScreen,
         Settings: {
             screen: SettingsScreen,
             navigationOptions: {
+                headerTitle: "Settings",
                 headerStyle: {
                     backgroundColor: Colors.darkGrey,
                     height: Platform.OS === 'ios' ? 110 : Header.height,
                 },
-                headerTitle: "Settings",
                 headerTitleStyle: {
                     fontSize: 30,
                     fontFamily: 'jack-silver',
@@ -121,6 +119,44 @@ const EventNavigator = createStackNavigator(
                 headerTintColor: 'white',
                 headerTitleAllowFontScaling: true
             }
+        },
+        Auth: {
+            screen: AuthScreen,
+            navigationOptions: {
+                headerTitle: "Account",
+                headerStyle: {
+                    backgroundColor: Colors.darkGrey,
+                    height: Platform.OS === 'ios' ? 110 : Header.height,
+                },
+                headerTitleStyle: {
+                    fontSize: 30,
+                    fontFamily: 'jack-silver',
+                    textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
+                    width: WIDTH - 75,
+                },
+                headerBackTitleVisible: false,
+                headerTintColor: 'white',
+                headerTitleAllowFontScaling: true
+            }
+        },
+        Delete: {
+            screen: DeleteScreen,
+            navigationOptions: {
+                title: 'Delete Account',
+                headerStyle: {
+                    backgroundColor: Colors.darkGrey,
+                    height: Platform.OS === 'ios' ? 110 : Header.height
+                },
+                headerTitleStyle: {
+                    fontSize: 30,
+                    fontFamily: 'jack-silver',
+                    color: '#fff',
+                    textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
+                    width: WIDTH - 75,
+                },
+                headerTintColor: '#fff',
+                headerBackTitleVisible: false,
+            },
         }
     }
 );
