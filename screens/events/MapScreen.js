@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   StyleSheet,
   Text,
-  Button,
   View,
   Dimensions,
   Platform,
@@ -10,8 +9,14 @@ import {
   TouchableOpacity,
   StatusBar,
   Alert,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native';
+import {
+  Button,
+  Picker,
+  Form,
+  Content,
+} from 'native-base';
 import { useSelector, useDispatch } from 'react-redux';
 import { PROVIDER_GOOGLE, Marker, Callout, CalloutSubview } from 'react-native-maps';
 import MapView from 'react-native-map-clustering';
@@ -68,7 +73,8 @@ const MapScreen = props => {
   const [isEventSaved, setEventSaved] = useState(false);
   const events = useSelector(state => state.events.events);
   const [isModalVisible, setModalVisible] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(new Event)
+  const [selectedEvent, setSelectedEvent] = useState(new Event);
+  const [category, setCategory] = useState("0");
   let mapRef = useRef(null);
   const [date, setDate] = useState(todaysDate());
   //Redux
@@ -180,41 +186,77 @@ const MapScreen = props => {
     //add dropdown calendar
     <View style={styles.container}>
       <StatusBar backgroundColor={Colors.darkGrey} barStyle='light-content' />
-      <MapView
-        initialRegion={INITIAL_REGION}
-        style={styles.map}
-        provider={PROVIDER_GOOGLE}
-        showsUserLocation
-        showsMyLocationButton
-        rotateEnabled={false}
-        showsTraffic={false}
-        toolbarEnabled={true}
-        ref={mapRef}
-        customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
-        clusterColor="#341f97"
-      >
-        {events.map(event => (
-          <Marker
-            coordinate={{ latitude: parseFloat(event.location.latitude), longitude: parseFloat(event.location.longitude) }}
-            pinColor="#341f97"
-            key={event.event}
-            tracksViewChanges={false}
-            onPress={onPinPress.bind(this, event)}
-            icon={iconHelpers.iconPicker(event.category)}
-          >
-            {Platform.OS === 'ios' ?
-              (
-                <Callout
-                  style={styles.plainView}
-                  tooltip={true}
-                  key={event.id}
-                >
-                  <View>
-                    <CalloutSubview onPress={onEventCalloutPress.bind(this, event)}>
-                      <EventCard event={event} style={{ width: SCREEN_WIDTH * 0.75 }} streetAddress />
-                    </CalloutSubview>
+      <View style={{
+        flexDirection: 'row',  backgroundColor: Colors.darkGrey, justifyContent: 'center',
+        height: 60, color: '#fff', alignContent: 'space-between', alignItems: 'center'
+      }}>
+        <Picker
+          mode='dropdown'
+          iosHeader="Category"
+          iosIcon={<Icon name="md-options" style={{color: "#fff", fontSize: 25}}/>}
+          style={{ width: 150, color: '#fff',  }}
+          placeholder="Category"
+          placeholderIconColor="#fff"
+          placeholderStyle={{color: "#fff",}}
+          selectedValue={category}
+          onValueChange={value => setCategory(value)}
+        >
+          <Picker.Item label="All events" value="0" />
+          <Picker.Item label="Music" value="1" />
+          <Picker.Item label="Protest" value="2" />
+          <Picker.Item label="Art" value="3" />
+          <Picker.Item label="Party" value="4" />
+        </Picker>
+        <Picker
+          mode='dropdown'
+          iosHeader="Category"
+          iosIcon={<Icon name="md-calender" />}
+          style={{ width: 150, color: '#fff', }}
+          selectedValue={category}
+          onValueChange={() => {}}
+        >
+          <Picker.Item label="All events" value="0" />
+          <Picker.Item label="Music" value="1" />
+          <Picker.Item label="Protest" value="2" />
+          <Picker.Item label="Art" value="3" />
+          <Picker.Item label="Party" value="4" />
+        </Picker>
+    </View>
+    <MapView
+      initialRegion={INITIAL_REGION}
+      style={styles.map}
+      provider={PROVIDER_GOOGLE}
+      showsUserLocation
+      showsMyLocationButton
+      rotateEnabled={false}
+      showsTraffic={false}
+      toolbarEnabled={true}
+      ref={mapRef}
+      customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
+      clusterColor="#341f97"
+    >
+      {events.map(event => (
+        <Marker
+          coordinate={{ latitude: parseFloat(event.location.latitude), longitude: parseFloat(event.location.longitude) }}
+          pinColor="#341f97"
+          key={event.event}
+          tracksViewChanges={false}
+          onPress={onPinPress.bind(this, event)}
+          icon={iconHelpers.iconPicker(event.category)}
+        >
+          {Platform.OS === 'ios' ?
+            (
+              <Callout
+                style={styles.plainView}
+                tooltip={true}
+                key={event.id}
+              >
+                <View>
+                  <CalloutSubview onPress={onEventCalloutPress.bind(this, event)}>
+                    <EventCard event={event} style={{ width: SCREEN_WIDTH * 0.75 }} streetAddress />
+                  </CalloutSubview>
 
-                    {/*<View style={{ flexDirection: 'row' }}>
+                  {/*<View style={{ flexDirection: 'row' }}>
                       {(userName != event.host.name && userName) ?
                         (<CalloutSubview onPress={toggleSaveButton}>
                           <TouchableOpacity>
@@ -244,108 +286,108 @@ const MapScreen = props => {
                         </TouchableOpacity>
                       </CalloutSubview>
                     </View>*/}
-                  </View>
-                </Callout>
+                </View>
+              </Callout>
+            ) :
+            ( // Android
+              <Callout
+                style={styles.plainView}
+                onPress={onEventCalloutPress.bind(this, event)}
+                tooltip={true}
+                key={event.id}
+              >
+                <CustomCallout
+                  style={{ width: SCREEN_WIDTH * 0.75 }}
+                  event={event}
+                />
+              </Callout>
+            )
+          }
+        </Marker>
+      ))
+      }
+    </MapView>
+      {
+    !userAccessToken ?
+      (
+        <SafeAreaView
+          style={{
+            position: 'absolute',//use absolute position to show button on top of the map
+            bottom: '0.5%',
+            alignSelf: 'center' //for align to right
+          }}
+        >
+          <TouchableOpacity>
+            <Icon
+              reverse
+              raised
+              name='user'
+              type='font-awesome'
+              color={Colors.darkGrey}
+              size={28}
+              reverseColor={Colors.lightText}
+              onPress={() => { props.navigation.navigate('Auth') }}
+            />
+          </TouchableOpacity>
+        </SafeAreaView>
+      ) :
+      (
+        <SafeAreaView style={styles.row}>
+          <TouchableOpacity>
+            <Icon
+              reverse
+              raised
+              name='user'
+              type='font-awesome'
+              color={Colors.darkGrey}
+              size={28}
+              reverseColor={Colors.lightText}
+              onPress={() => { props.navigation.navigate('UserProfile') }}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Icon
+              reverse
+              raised
+              name='plus'
+              type='font-awesome'
+              color={Colors.darkGrey}
+              size={28}
+              reverseColor={Colors.lightText}
+              onPress={() => { props.navigation.navigate('CreateEvent') }}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            {isRefreshing ? // if refreshing events, show activity indicator
+              (
+                <Icon
+                  reverse
+                  raised
+                  name='spinner'
+                  type='font-awesome'
+                  color={Colors.darkGrey}
+                  size={28}
+                  reverseColor={Colors.lightText}
+                />
               ) :
-              ( // Android
-                <Callout
-                  style={styles.plainView}
-                  onPress={onEventCalloutPress.bind(this, event)}
-                  tooltip={true}
-                  key={event.id}
-                >
-                  <CustomCallout
-                    style={{ width: SCREEN_WIDTH * 0.75 }}
-                    event={event}
-                  />
-                </Callout>
+              (
+                <Icon
+                  reverse
+                  raised
+                  name='refresh'
+                  type='font-awesome'
+                  color={Colors.darkGrey}
+                  size={28}
+                  reverseColor={Colors.lightText}
+                  onPress={refreshEvents}
+                />
               )
             }
-          </Marker>
-        ))
-        }
-      </MapView>
-      {
-        !userAccessToken ?
-          (
-            <SafeAreaView
-              style={{
-                position: 'absolute',//use absolute position to show button on top of the map
-                bottom: '0.5%',
-                alignSelf: 'center' //for align to right
-              }}
-            >
-              <TouchableOpacity>
-                <Icon
-                  reverse
-                  raised
-                  name='user'
-                  type='font-awesome'
-                  color={Colors.darkGrey}
-                  size={28}
-                  reverseColor={Colors.lightText}
-                  onPress={() => { props.navigation.navigate('Auth') }}
-                />
-              </TouchableOpacity>
-            </SafeAreaView>
-          ) :
-          (
-            <SafeAreaView style={styles.row}>
-              <TouchableOpacity>
-                <Icon
-                  reverse
-                  raised
-                  name='user'
-                  type='font-awesome'
-                  color={Colors.darkGrey}
-                  size={28}
-                  reverseColor={Colors.lightText}
-                  onPress={() => { props.navigation.navigate('UserProfile') }}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <Icon
-                  reverse
-                  raised
-                  name='plus'
-                  type='font-awesome'
-                  color={Colors.darkGrey}
-                  size={28}
-                  reverseColor={Colors.lightText}
-                  onPress={() => { props.navigation.navigate('CreateEvent') }}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity>
-                {isRefreshing ? // if refreshing events, show activity indicator
-                  (
-                    <Icon
-                      reverse
-                      raised
-                      name='spinner'
-                      type='font-awesome'
-                      color={Colors.darkGrey}
-                      size={28}
-                      reverseColor={Colors.lightText}
-                    />
-                  ) :
-                  (
-                    <Icon
-                      reverse
-                      raised
-                      name='refresh'
-                      type='font-awesome'
-                      color={Colors.darkGrey}
-                      size={28}
-                      reverseColor={Colors.lightText}
-                      onPress={refreshEvents}
-                    />
-                  )
-                }
-              </TouchableOpacity>
-            </SafeAreaView>
+          </TouchableOpacity>
+        </SafeAreaView>
 
-          )
-      }
+      )
+  }
     </View >
   );
 }
@@ -381,7 +423,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: SCREEN_WIDTH,
     paddingTop: 0,
-    paddingBottom: 0
+    paddingBottom: 0,
+    backgroundColor: Colors.darkGrey
     //width: Dimensions.get('window').width,
   },
   top: {
