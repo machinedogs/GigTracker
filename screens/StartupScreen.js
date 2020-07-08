@@ -7,8 +7,8 @@ import {
     StatusBar
 } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
-
 import { useDispatch, useSelector } from 'react-redux';
+
 import { updateUserProfile } from '../store/actions/user';
 import * as authActions from '../store/actions/user';
 import * as eventActions from '../store/actions/events';
