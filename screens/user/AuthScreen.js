@@ -9,7 +9,9 @@ import {
     Alert,
     TouchableWithoutFeedback,
     Platform,
-    Keyboard
+    Keyboard,
+    TouchableOpacity,
+    Text
 } from 'react-native';
 import { useDispatch } from 'react-redux';
 
@@ -197,24 +199,38 @@ const AuthScreen = props => {
                                         ) :
                                         (
                                             <View style={styles.buttonContainer}>
-                                                <Button
-                                                    title={isSignup ? 'Sign Up' : 'Login'}
-                                                    color={Colors.purpleButton}
-                                                    onPress={authHandler}
-                                                />
+                                                <TouchableOpacity onPress={authHandler}>
+                                                    <View style={{
+                                                        backgroundColor: Colors.purpleButton,
+                                                        borderRadius: 5,
+                                                        borderColor: Colors.purpleButton,
+                                                        borderWidth: 2,
+                                                        paddingHorizontal: 10,
+                                                        paddingVertical: 10
+                                                    }}>
+                                                        <Text style={{ color: 'white' }}>{isSignup ? 'Sign Up' : 'Login'}</Text>
+                                                    </View>
+                                                </TouchableOpacity>
                                             </View>
                                         )
                                     }
                                 </View>
                                 <View style={{ paddingBottom: 15 }}>
                                     <View style={styles.buttonContainer}>
-                                        <Button
-                                            title={`Or ${isSignup ? 'Login' : 'Sign Up'}`}
-                                            color={Colors.purpleBackground}
-                                            onPress={() => {
-                                                setIsSignup(prevState => !prevState);
-                                            }}
-                                        />
+                                        <TouchableOpacity onPress={() => {
+                                            setIsSignup(prevState => !prevState);
+                                        }}>
+                                            <View style={{
+                                                backgroundColor: Colors.purpleBackground,
+                                                borderRadius: 5,
+                                                borderColor: Colors.purpleBackground,
+                                                borderWidth: 2,
+                                                paddingHorizontal: 10,
+                                                paddingVertical: 10
+                                            }}>
+                                                <Text style={{ color: 'white' }}>{`Or ${isSignup ? 'Login' : 'Sign Up'}`}</Text>
+                                            </View>
+                                        </TouchableOpacity>
                                     </View>
                                 </View>
 
