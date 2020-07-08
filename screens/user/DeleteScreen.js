@@ -42,7 +42,7 @@ const DeleteScreen = props => {
                             paddingHorizontal: 10,
                             paddingVertical: 5
                         }}>
-                            <Text style={{ fontSize: 17, color: Colors.purpleBackground }}>Delete</Text>
+                            <Text style={{ fontSize: 17, color: "white" }}>Delete</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
