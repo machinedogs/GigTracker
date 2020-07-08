@@ -225,7 +225,7 @@ const CreateEventScreen = (props) => {
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                       <Text
                         style={{
-                          fontSize: 17,
+                          fontSize: 16,
                           textAlign: "center",
                           fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
                           paddingRight: 7,
