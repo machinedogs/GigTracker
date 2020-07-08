@@ -184,26 +184,6 @@ const UserProfileScreen = (props) => {
 						</Tab>
 					</Tabs>
 				</View>
-				<View style={styles.ButtonContainer}>
-					<Button light transparent full
-						title="Logout"
-						onPress={() => {
-							dispatch(authActions.logout());
-							props.navigation.navigate("Home");
-						}}
-					>
-						<Text style={styles.buttonText}>Logout</Text>
-					</Button>
-					<Button light transparent full
-						title="Delete Account"
-						onPress={() => {
-							// Take user to delete account screen and let them delete
-							props.navigation.navigate("Delete");
-						}}
-					>
-						<Text style={styles.buttonText}>Delete Account</Text>
-					</Button>
-				</View>
 			</View>
 		</ScrollView>
 	);
