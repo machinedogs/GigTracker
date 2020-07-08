@@ -100,7 +100,25 @@ const EventNavigator = createStackNavigator(
                 headerTitleAllowFontScaling: true
             }
         },
-        Auth: AuthScreen,
+        Auth: {
+            screen: AuthScreen,
+            navigationOptions: {
+                headerStyle: {
+                    backgroundColor: Colors.darkGrey,
+                    height: Platform.OS === 'ios' ? 110 : Header.height,
+                },
+                headerTitle: "Account",
+                headerTitleStyle: {
+                    fontSize: 30,
+                    fontFamily: 'jack-silver',
+                    textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
+                    width: WIDTH - 75,
+                },
+                headerBackTitleVisible: false,
+                headerTintColor: 'white',
+                headerTitleAllowFontScaling: true
+            }
+        },
         Delete: {
             screen: DeleteScreen,
             navigationOptions: {

@@ -3,7 +3,8 @@ import {
     View,
     ActivityIndicator,
     StyleSheet,
-    Text
+    Text,
+    StatusBar
 } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 
@@ -88,6 +89,7 @@ const StartupScreen = props => {
 
     return (
         <View style={styles.screen} >
+            <StatusBar backgroundColor={Colors.darkGrey} barStyle='light-content' />
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text style={{ color: 'white', fontSize: 17 }}>
                     {startupText}
