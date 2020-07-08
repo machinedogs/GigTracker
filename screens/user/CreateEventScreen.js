@@ -350,7 +350,7 @@ const CreateEventScreen = (props) => {
                   fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
                 }}
               >
-                {"Drop a  "}
+                {"Drop a "}
               </Text>
               <Icon name="pin" />
             </Button>
