@@ -29,7 +29,19 @@
       }
     },
     "android": {
-      "package": "com.machinedogs.current"
+      "package": "com.machinedogs.current",
+      "versionCode": 1,
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "CAMERA",
+        "WRITE_EXTERNAL_STORAGE",
+        "VIBRATE"
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDv5ieMrtNv9UAeTGPiAjisrjjV5uIx-ko"
+        }
+      }
     }
   }
 }
