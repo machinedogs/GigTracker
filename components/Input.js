@@ -1,5 +1,6 @@
 import React, { useReducer, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
+import Colors from '../constants/Colors';
 
 const INPUT_CHANGE = 'INPUT_CHANGE';
 const INPUT_BLUR = 'INPUT_BLUR';
@@ -87,13 +88,14 @@ const styles = StyleSheet.create({
   },
   label: {
     //fontFamily: 'open-sans-bold',
-    marginVertical: 8
+    marginVertical: 8,
+    color: Colors.darkPurple
   },
   input: {
     paddingHorizontal: 2,
     paddingVertical: 5,
     borderBottomColor: '#ccc',
-    borderBottomWidth: 1
+    borderBottomWidth: 1,
   },
   errorContainer: {
     marginVertical: 5
