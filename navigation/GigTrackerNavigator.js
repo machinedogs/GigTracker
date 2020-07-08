@@ -12,6 +12,7 @@ import EventScreen from '../screens/events/EventScreen'
 import AuthScreen from '../screens/user/AuthScreen';
 import StartupScreen from '../screens/StartupScreen';
 import DeleteScreen from '../screens/user/DeleteScreen';
+import SettingsScreen from '../screens/user/SettingsScreen';
 
 const WIDTH = Dimensions.get('window').width;
 
@@ -51,7 +52,7 @@ const EventNavigator = createStackNavigator(
                     height: Platform.OS === 'ios' ? 110 : Header.height
                 },
                 headerTitleStyle: {
-                    fontSize: 28,
+                    fontSize: 30,
                     fontFamily: 'jack-silver',
                     color: '#fff',
                     textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
@@ -70,7 +71,7 @@ const EventNavigator = createStackNavigator(
                     height: Platform.OS === 'ios' ? 110 : Header.height
                 },
                 headerTitleStyle: {
-                    fontSize: 32,
+                    fontSize: 30,
                     fontFamily: 'jack-silver',
                     color: '#fff',
                     textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
@@ -100,14 +101,33 @@ const EventNavigator = createStackNavigator(
                 headerTitleAllowFontScaling: true
             }
         },
-        Auth: {
-            screen: AuthScreen,
+        Settings: {
+            screen: SettingsScreen,
             navigationOptions: {
+                headerTitle: "Settings",
                 headerStyle: {
                     backgroundColor: Colors.darkGrey,
                     height: Platform.OS === 'ios' ? 110 : Header.height,
                 },
+                headerTitleStyle: {
+                    fontSize: 30,
+                    fontFamily: 'jack-silver',
+                    textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
+                    width: WIDTH - 75,
+                },
+                headerBackTitleVisible: false,
+                headerTintColor: 'white',
+                headerTitleAllowFontScaling: true
+            }
+        },
+        Auth: {
+            screen: AuthScreen,
+            navigationOptions: {
                 headerTitle: "Account",
+                headerStyle: {
+                    backgroundColor: Colors.darkGrey,
+                    height: Platform.OS === 'ios' ? 110 : Header.height,
+                },
                 headerTitleStyle: {
                     fontSize: 30,
                     fontFamily: 'jack-silver',
@@ -128,7 +148,7 @@ const EventNavigator = createStackNavigator(
                     height: Platform.OS === 'ios' ? 110 : Header.height
                 },
                 headerTitleStyle: {
-                    fontSize: 32,
+                    fontSize: 30,
                     fontFamily: 'jack-silver',
                     color: '#fff',
                     textAlign: Platform.OS === 'ios' ? 'center' : 'auto',

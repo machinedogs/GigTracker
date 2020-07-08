@@ -14,6 +14,9 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Container, Header, Tab, Tabs, TabHeading, Icon, Button } from "native-base";
+import { HeaderButtons, Item } from 'react-navigation-header-buttons';
+
+import HeaderButton from '../../components/HeaderButton';
 import { updateUserProfile } from "../../store/actions/user";
 import {
 	openImagePickerAsync,
@@ -133,7 +136,7 @@ const UserProfileScreen = (props) => {
 						tabBarUnderlineStyle={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}
 						tabBarUnderlineStyle={{ backgroundColor: Colors.purpleButton }}
 						tabBarActiveTextColor={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}
-						//tabBarInactiveTextColor={Platform.OS === 'ios' ? 'grey' : Colors.lightPurple}
+					//tabBarInactiveTextColor={Platform.OS === 'ios' ? 'grey' : Colors.lightPurple}
 					>
 						<Tab heading="Saved Events" tabBarUnderlineStyle={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}>
 
@@ -181,30 +184,26 @@ const UserProfileScreen = (props) => {
 						</Tab>
 					</Tabs>
 				</View>
-				<View style={styles.ButtonContainer}>
-					<Button light transparent full
-						title="Logout"
-						onPress={() => {
-							dispatch(authActions.logout());
-							props.navigation.navigate("Home");
-						}}
-					>
-						<Text style={styles.buttonText}>Logout</Text>
-					</Button>
-					<Button light transparent full
-						title="Delete Account"
-						onPress={() => {
-							// Take user to delete account screen and let them delete
-							props.navigation.navigate("Delete");
-						}}
-					>
-						<Text style={styles.buttonText}>Delete Account</Text>
-					</Button>
-				</View>
 			</View>
 		</ScrollView>
 	);
 };
+
+UserProfileScreen.navigationOptions = navData => {
+	return {
+		headerRight: () => (
+			<HeaderButtons HeaderButtonComponent={HeaderButton}>
+				<Item
+					title='Menu'
+					iconName='ios-cog'
+					onPress={() => {
+						navData.navigation.navigate('Settings');
+					}}
+				/>
+			</HeaderButtons>
+		)
+	}
+}
 
 const styles = StyleSheet.create({
 	cardContainer: {
