@@ -215,7 +215,7 @@ UserProfileScreen.navigationOptions = navData => {
 			<HeaderButtons HeaderButtonComponent={HeaderButton}>
 				<Item
 					title='Menu'
-					iconName={Platform.OS === 'android' ? 'md-cog' : 'ios-cog'}
+					iconName='ios-cog'
 					onPress={() => {
 						navData.navigation.navigate('Settings');
 					}}
