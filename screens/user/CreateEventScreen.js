@@ -45,7 +45,7 @@ import {
 } from "../helper/createEventHelper";
 import { ActivityIndicator } from "react-native";
 import Colors from '../../constants/Colors';
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, Fontisto } from "@expo/vector-icons";
 
 const { width, height } = Dimensions.get("window");
 const SCREEN_HEIGHT = height;
@@ -90,7 +90,8 @@ const CreateEventScreen = (props) => {
 
   //Updates event photo
   const updateEventPhoto = async () => {
-    setImage(await uploadEventPhoto());
+    var eventPhotoRatio = [4, 3];
+    setImage(await uploadEventPhoto(eventPhotoRatio));
   };
 
   useEffect(() => {
@@ -199,8 +200,9 @@ const CreateEventScreen = (props) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView>
+    <ScrollView>
+      <SafeAreaView style={styles.container}>
+
         <View
           style={{
             padding: 12,
@@ -208,15 +210,41 @@ const CreateEventScreen = (props) => {
             justifyContent: "center",
           }}
         >
-          <Text style={styles.text}>Image</Text>
+          <Text style={styles.text, { color: Colors.purpleBackground, paddingBottom: 5, fontSize: 18 }}>Image</Text>
           <View style={{ alignItems: "center", paddingTop: 8 }}>
             {image == "" ? (
-              <TouchableOpacity
-                style={styles.eventImageContainer}
-                onPress={updateEventPhoto}
-              >
-                <ActivityIndicator style={styles.eventImage} size="large" />
-              </TouchableOpacity>
+              <View style={{
+                backgroundColor: "white",
+                borderRadius: 3,
+                borderColor: Colors.lightGrey,
+                borderWidth: 1,
+                padding: 10
+              }}>
+                <TouchableOpacity onPress={updateEventPhoto}>
+
+                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                    <Text
+                      style={{
+                        fontSize: 17,
+                        textAlign: "center",
+                        fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
+                        paddingRight: 7,
+                      }}
+                    >
+                      {"Upload Image"}
+                    </Text>
+                    <Fontisto
+                      name="picture"
+                      color="black"
+                      size={28}
+                      style={{
+                        alignContent: 'center',
+                        justifyContent: 'center'
+                      }}
+                    />
+                  </View>
+                </TouchableOpacity>
+              </View>
             ) : (
                 <TouchableOpacity
                   style={styles.eventImageContainer}
@@ -227,8 +255,8 @@ const CreateEventScreen = (props) => {
               )}
           </View>
           <View style={{ paddingBottom: 15, paddingTop: 15 }}>
-            <Text style={styles.text, { color: Colors.purpleButton, paddingBottom: 5, fontSize: 18 }}>Title</Text>
-            <Item regular style={{ borderColor: Colors.purpleBackground, borderRadius: 5 }}>
+            <Text style={styles.text, { color: Colors.purpleBackground, paddingBottom: 5, fontSize: 18 }}>Title</Text>
+            <Item regular style={{ borderColor: Colors.lightGrey, borderRadius: 5 }}>
               <Input
                 style={styles.titleStyle}
                 onChangeText={(text) => setTitle(text)}
@@ -237,8 +265,8 @@ const CreateEventScreen = (props) => {
               />
             </Item>
             <Text></Text>
-            <Text style={styles.text, { color: Colors.purpleButton, paddingBottom: 5, fontSize: 18 }}>Description</Text>
-            <Item regular style={{ borderColor: Colors.purpleBackground, borderRadius: 5 }}>
+            <Text style={styles.text, { color: Colors.purpleBackground, paddingBottom: 5, fontSize: 18 }}>Description</Text>
+            <Item regular style={{ borderColor: Colors.lightGrey, borderRadius: 5 }}>
               <Textarea
                 style={styles.descriptionStyle}
                 onChangeText={(text) => setDescription(text)}
@@ -284,8 +312,8 @@ const CreateEventScreen = (props) => {
                 justifyContent: "center",
                 alignItems: "center",
               }}
-              style={{ borderColor: Colors.purpleBackground, borderWidth: 0.5 }}
-              dropdownStyle={{ borderColor: Colors.purpleBackground, height: 300 }}
+              style={{ borderColor: Colors.lightGrey, borderWidth: 0.5 }}
+              dropdownStyle={{ borderColor: Colors.lightGrey, height: 300 }}
               itemStyle={{ alignItems: "center" }}
               onChangeItem={(category) => setCategory(category.value)}
             />
@@ -310,7 +338,7 @@ const CreateEventScreen = (props) => {
             )}
         </View>
         <View style={styles.container}>
-          <Text style={styles.text}>Location:</Text>
+          <Text style={styles.text}>Location</Text>
           <Button
             iconRight
             light
@@ -322,8 +350,8 @@ const CreateEventScreen = (props) => {
                 fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
               }}
             >
-              Drop a pin...
-						</Text>
+              {"Drop a  "}
+            </Text>
             <Icon name="pin" />
           </Button>
         </View>
@@ -340,7 +368,7 @@ const CreateEventScreen = (props) => {
               borderRadius={10}
               propagateSwipe
             >
-              <Header style={{ backgroundColor: Colors.darkGrey,  }}>
+              <Header style={{ backgroundColor: Colors.darkGrey, }}>
                 <Left></Left>
                 <View>
                   <Title
@@ -362,7 +390,7 @@ const CreateEventScreen = (props) => {
                     color='white'
                     onPress={toggleShowMap}
                     size={28}
-                    style={{paddingRight: 10}}
+                    style={{ paddingRight: 10 }}
                   />
                 </Right>
               </Header>
@@ -419,7 +447,7 @@ const CreateEventScreen = (props) => {
           </View>
         )}
         <View style={styles.container}>
-          <Text style={styles.text}>Date:</Text>
+          <Text style={styles.text}>Date</Text>
           <Button
             iconRight
             light
@@ -434,14 +462,13 @@ const CreateEventScreen = (props) => {
             >
               {stringifyDate(date)}
             </Text>
-            <Icon name="calendar" />
           </Button>
         </View>
         {showDate && (
           <DateTimePicker value={date} mode={"date"} onChange={onChangeDate} />
         )}
         <View style={styles.container}>
-          <Text style={styles.text}>Time:</Text>
+          <Text style={styles.text}>Time</Text>
           <Button
             iconRight
             light
@@ -449,7 +476,6 @@ const CreateEventScreen = (props) => {
             style={styles.buttonStyle}
           >
             <Text>{stringifyTime(time)}</Text>
-            <Icon name="clock" />
           </Button>
         </View>
         {showTime && (
@@ -463,28 +489,29 @@ const CreateEventScreen = (props) => {
         <View
           style={{
             flexDirection: "row",
-            justifyContent: "space-between",
-            padding: 10,
+            alignContent: "center",
+            justifyContent: "center",
+            paddingTop: 15,
+            paddingBottom: 10
           }}
         >
-          <Text></Text>
           <Button
             round
             light
             onPress={saveEvent}
             style={{
-              borderWidth: 2,
               borderColor: Colors.purpleButton,
               alignContent: "center",
               justifyContent: "center",
-              width: 125,
-              height: 50,
               backgroundColor: Colors.purpleButton,
+              borderRadius: 5,
+              borderWidth: 2,
+              paddingHorizontal: 10
             }}
           >
             <Text
               style={{
-                fontSize: 22,
+                fontSize: 20,
                 color: "#fff",
                 textAlign: "center",
                 fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
@@ -507,8 +534,9 @@ const CreateEventScreen = (props) => {
             address.
 					</Text>
         </View>
-      </ScrollView>
-    </SafeAreaView>
+      </SafeAreaView>
+
+    </ScrollView>
   );
 };
 
@@ -533,7 +561,7 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
     fontSize: 18,
-    color: Colors.purpleButton,
+    color: Colors.purpleBackground,
   },
   dropdownStyle: {
     width: 100,
@@ -573,7 +601,7 @@ const styles = StyleSheet.create({
     height: 50,
     width: '98%',
     color: "black",
-    borderColor: Colors.purpleBackground,
+    borderColor: Colors.lightGrey,
     borderWidth: 0.5,
     backgroundColor: "white",
     alignItems: "center",
@@ -612,6 +640,11 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
   },
+  pictureUpload: {
+    height: 200,
+    marginBottom: 15,
+    width: SCREEN_WIDTH * 0.9,
+  }
 });
 
 export default CreateEventScreen;
