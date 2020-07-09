@@ -47,6 +47,10 @@ export const SettingsScreen = (props) => {
                         <Icon active name="arrow-forward" />
                     </Right>
                 </ListItem>
+                <ListItem itemDivider>
+                    <Text></Text>
+                </ListItem>
+                <Text style={{padding: 10, alignSelf: 'center'}}>Made with ❤️ and 🍺 by Machinedogs</Text>
             </Content>
         </Container>
     );
