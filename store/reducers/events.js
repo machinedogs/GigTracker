@@ -7,7 +7,8 @@ import {
     UNSAVE_EVENT,
     EDIT_EVENT,
     DELETE_EVENT,
-    DELETE_CREATED_EVENT
+    DELETE_CREATED_EVENT,
+    EDIT_CREATED_EVENT
 } from '../actions/events';
 
 const initialState = {
@@ -39,11 +40,22 @@ export default (state = initialState, action) => {
                 ...state,
                 events: action.events
             };
+        case EDIT_CREATED_EVENT:
+            const createdIndex = state.createdEvents.findIndex(event => event.event === action.event.event)
+            if (createdIndex >= 0) { // splice out event to unsave
+                const updatedCreatedEvents = [...state.createdEvents];
+                updatedCreatedEvents.splice(createdIndex, 1);
+                updatedCreatedEvents.splice(createdIndex, 0, action.event);
+                return { ...state, createdEvents: updatedCreatedEvents };
+            }
         case EDIT_EVENT:
-            return {
-                ...state,
-                events: action.events
-            };
+            const regularIndex = state.events.findIndex(event => event.event === action.event.event)
+            if (regularIndex >= 0) { // splice out event to unsave
+                const updatedEvents = [...state.events];
+                updatedEvents.splice(regularIndex, 1);
+                updatedEvents.splice(regularIndex, 0, action.event);
+                return { ...state, events: updatedEvents };
+            }
         case SAVE_EVENT:
             return {
                 ...state,
