@@ -31,7 +31,8 @@ export default (state = initialState, action) => {
         case CREATE_EVENT:
             return {
                 ...state,
-                events: state.events.concat(action.event)
+                events: state.events.concat(action.event),
+                createdEvents: state.createdEvents.concat(action.event)
             };
         case GET_EVENTS:
             return {
