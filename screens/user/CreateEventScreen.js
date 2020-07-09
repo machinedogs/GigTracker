@@ -332,7 +332,8 @@ const CreateEventScreen = (props) => {
                     { label: "Political", value: "political" },
                     { label: "Other", value: "other" },
                   ]}
-                  style={{ borderColor: "gray", borderWidth: 0.5 }}
+                  placeholder = {{ label: "Select a category", value: "placeHolder", "key": "placeholder" }}
+                  style={{ borderColor: Colors.darkGrey, borderWidth: 0.5, color: "black" }}
                   onValueChange={(value) => setCategory(value)}
                 />
               )}

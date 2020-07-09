@@ -27,7 +27,7 @@ const EventNavigator = createStackNavigator(
         Home: {
             screen: MapScreen,
             navigationOptions: {
-                headerTitle: Platform.OS === 'ios' ? '  Current⚡' : 'Current⚡  ',
+                headerTitle: Platform.OS === 'ios' ? '  Current' : 'Current   ',
                 headerTitleStyle: {
                     fontFamily: 'jack-silver',
                     fontSize: 32,
