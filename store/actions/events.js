@@ -274,8 +274,8 @@ export const createEvent = (event) => {
 				alert(message);
 				throw new Error(message);
 			}
-			console.log("Response: " + resData);
-			dispatch(getEvents);
+			//console.log("****Response event number: " + resData.event);
+			dispatch(updateEventMaps(resData.event))
 		} catch (err) {
 			alert(err);
 		}
@@ -331,7 +331,7 @@ export const editEvent = (event, id) => {
 	};
 };
 
-export const updateEventMaps = () => {
+export const updateEventMaps = (event) => {
 	return {
 		type: CREATE_EVENT,
 		event: event,
