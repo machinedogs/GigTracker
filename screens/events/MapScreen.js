@@ -16,6 +16,7 @@ import {
   Picker,
   Form,
   Content,
+  Icon as VectorIcon,
 } from 'native-base';
 import { useSelector, useDispatch } from 'react-redux';
 import { PROVIDER_GOOGLE, Marker, Callout, CalloutSubview } from 'react-native-maps';
@@ -77,6 +78,10 @@ const MapScreen = props => {
   const [category, setCategory] = useState("0");
   let mapRef = useRef(null);
   const [date, setDate] = useState(todaysDate());
+  const [filteredEvents, setFilteredEvents] = useState([]);
+  const [showCategories, setShowCategories] = useState(false);
+  const [showCalendar, setShowCalendar] = useState(false);
+
   //Redux
   const dispatch = useDispatch();
   var user = useSelector((state) => state.user);
@@ -160,13 +165,12 @@ const MapScreen = props => {
     mapRef.current.animateToRegion(coords, 0);
     */
   }
-  /*
+  
   const filterDate = (selectedDate) => {
     setDate(selectedDate);
     //setEvents(events.filter(event => event.date === selectedDate))
     console.log(selectedDate + '\n' + events.map((event) => {event.toString()}))
   }
-  */
 
   const toggleSaveButton = () => {
     // dispatch action
@@ -181,47 +185,44 @@ const MapScreen = props => {
     console.log(isEventSaved);
   };
 
+  const toggleShowCategories = () => {
+    setShowCategories(!showCategories);
+  }
+
+  const toggleShowCalendar = () => {
+    setShowCalendar(!showCalendar);
+  }
+
   return (
     //add a dropdown to choose map style? -> what if we put it in user settings? could incentivize people to become users
     //add dropdown calendar
     <View style={styles.container}>
       <StatusBar backgroundColor={Colors.darkGrey} barStyle='light-content' />
       <View style={{
-        flexDirection: 'row',  backgroundColor: Colors.darkGrey, justifyContent: 'center',
-        height: 60, color: '#fff', alignContent: 'space-between', alignItems: 'center'
+        flexDirection: 'row',  backgroundColor: Colors.darkGrey, 
+        height: 55, color: '#fff', alignItems: 'center', 
       }}>
-        <Picker
-          mode='dropdown'
-          iosHeader="Category"
-          iosIcon={<Icon name="md-options" style={{color: "#fff", fontSize: 25}}/>}
-          style={{ width: 150, color: '#fff',  }}
-          placeholder="Category"
-          placeholderIconColor="#fff"
-          placeholderStyle={{color: "#fff",}}
-          selectedValue={category}
-          onValueChange={value => setCategory(value)}
-        >
-          <Picker.Item label="All events" value="0" />
-          <Picker.Item label="Music" value="1" />
-          <Picker.Item label="Protest" value="2" />
-          <Picker.Item label="Art" value="3" />
-          <Picker.Item label="Party" value="4" />
-        </Picker>
-        <Picker
-          mode='dropdown'
-          iosHeader="Category"
-          iosIcon={<Icon name="md-calender" />}
+        <Button iconRight light transparent 
           style={{ width: 150, color: '#fff', }}
-          selectedValue={category}
-          onValueChange={() => {}}
+          //onPress={toggleShowCategories}
         >
-          <Picker.Item label="All events" value="0" />
-          <Picker.Item label="Music" value="1" />
-          <Picker.Item label="Protest" value="2" />
-          <Picker.Item label="Art" value="3" />
-          <Picker.Item label="Party" value="4" />
-        </Picker>
+          <Text style={styles.text}>Category</Text>
+          <VectorIcon name='options' color="#fff" />
+        </Button>
+        <Text>     </Text>
+        <Button iconRight transparent
+          style={{ width: 150, color: '#fff', }}
+          onPress={toggleShowCalendar}
+        >
+          <Text style={styles.text}>Date</Text>
+          <VectorIcon name="calendar" color="#fff" />
+        </Button>
     </View>
+    {showCategories && (
+      <View style={styles.modalContainer}>
+        <Modal style={styles.modal} transparent/>
+      </View>
+    )}
     <MapView
       initialRegion={INITIAL_REGION}
       style={styles.map}
@@ -392,6 +393,7 @@ const MapScreen = props => {
   );
 }
 
+/*
 MapScreen.navigationOptions = navData => {
   return {
     headerLeft: () =>
@@ -415,6 +417,7 @@ MapScreen.navigationOptions = navData => {
     )
   }
 }
+*/
 
 const styles = StyleSheet.create({
   container: {
@@ -477,6 +480,19 @@ const styles = StyleSheet.create({
     flex: 1,
     width: 'auto'
 
+  },
+  modalContainer: {
+    height: 100,
+    width: SCREEN_WIDTH * 0.95,
+    backgroundColor: Colors.lightBackground
+  },
+  modal: {
+
+  },
+  text: {
+    fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
+    fontSize: 18,
+    color: '#fff',
   },
 });
 
