@@ -3,8 +3,10 @@ export const UPDATE_HOSTED_EVENTS = "UPDATE_HOSTED_EVENTS";
 export const UPDATE_SAVED_EVENTS = "UPDATE_SAVED_EVENTS";
 export const GET_EVENTS = "GET_EVENTS";
 export const EDIT_EVENT = "EDIT_EVENT";
+export const EDIT_CREATED_EVENT = "EDIT_CREATED_EVENT";
 export const SAVE_EVENT = "SAVE_EVENT";
 export const UNSAVE_EVENT = "UNSAVE_EVENT";
+export const DELETE_CREATED_EVENT = "DELETE_CREATED_EVENT";
 export const DELETE_EVENT = "DELETE_EVENT";
 
 export const deleteEvent = (event) => {
@@ -27,10 +29,15 @@ export const deleteEvent = (event) => {
 			alert(err)
 		}
 		dispatch(removeFromCreatedEvents(event))
+		dispatch(removeFromEvents(event))
 	}
 }
 
 export const removeFromCreatedEvents = (event) => {
+	return { type: DELETE_CREATED_EVENT, eventId: event.id };
+}
+
+export const removeFromEvents = (event) => {
 	return { type: DELETE_EVENT, eventId: event.id };
 }
 
@@ -268,8 +275,8 @@ export const createEvent = (event) => {
 				alert(message);
 				throw new Error(message);
 			}
-			console.log("Response: " + resData);
-			dispatch(getEvents);
+			//console.log("****Response event number: " + resData.event);
+			dispatch(updateEventMaps(resData.event))
 		} catch (err) {
 			alert(err);
 		}
@@ -318,14 +325,29 @@ export const editEvent = (event, id) => {
 				throw new Error(message);
 			}
 			console.log("Response: " + resData);
-			dispatch(getEvents);
+			dispatch(replaceEvent(resData.event));
+			dispatch(replaceCreatedEvent(resData.event));
 		} catch (err) {
 			alert(err);
 		}
 	};
 };
 
-export const updateEventMaps = () => {
+export const replaceEvent = (event) => {
+	return {
+		type: EDIT_EVENT,
+		event: event,
+	};
+}
+
+export const replaceCreatedEvent = (event) => {
+	return {
+		type: EDIT_CREATED_EVENT,
+		event: event,
+	};
+}
+
+export const updateEventMaps = (event) => {
 	return {
 		type: CREATE_EVENT,
 		event: event,

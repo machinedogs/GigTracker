@@ -6,7 +6,9 @@ import {
     SAVE_EVENT,
     UNSAVE_EVENT,
     EDIT_EVENT,
-    DELETE_EVENT
+    DELETE_EVENT,
+    DELETE_CREATED_EVENT,
+    EDIT_CREATED_EVENT
 } from '../actions/events';
 
 const initialState = {
@@ -30,18 +32,30 @@ export default (state = initialState, action) => {
         case CREATE_EVENT:
             return {
                 ...state,
-                events: state.events.concat(action.event)
+                events: state.events.concat(action.event),
+                createdEvents: state.createdEvents.concat(action.event)
             };
         case GET_EVENTS:
             return {
                 ...state,
                 events: action.events
             };
+        case EDIT_CREATED_EVENT:
+            const createdIndex = state.createdEvents.findIndex(event => event.event === action.event.event)
+            if (createdIndex >= 0) { // splice out event to unsave
+                const updatedCreatedEvents = [...state.createdEvents];
+                updatedCreatedEvents.splice(createdIndex, 1);
+                updatedCreatedEvents.splice(createdIndex, 0, action.event);
+                return { ...state, createdEvents: updatedCreatedEvents };
+            }
         case EDIT_EVENT:
-            return {
-                ...state,
-                events: action.events
-            };
+            const regularIndex = state.events.findIndex(event => event.event === action.event.event)
+            if (regularIndex >= 0) { // splice out event to unsave
+                const updatedEvents = [...state.events];
+                updatedEvents.splice(regularIndex, 1);
+                updatedEvents.splice(regularIndex, 0, action.event);
+                return { ...state, events: updatedEvents };
+            }
         case SAVE_EVENT:
             return {
                 ...state,
@@ -51,16 +65,24 @@ export default (state = initialState, action) => {
             const savedIndex = state.savedEvents.findIndex(event => event.event === action.eventId)
             if (savedIndex >= 0) { // splice out event to unsave
                 const updatedSavedEvents = [...state.savedEvents];
-                updatedSavedEvents.splice(savedIndex, 1); 
+                updatedSavedEvents.splice(savedIndex, 1);
                 return { ...state, savedEvents: updatedSavedEvents };
             }
-        case DELETE_EVENT:
+        case DELETE_CREATED_EVENT:
             // Delete from created Events
             const hostedIndex = state.createdEvents.findIndex(event => event.event === action.eventId)
             if (hostedIndex >= 0) { // splice out event to unsave
                 const updatedCreatedEvents = [...state.createdEvents];
-                updatedCreatedEvents.splice(hostedIndex, 1); 
+                updatedCreatedEvents.splice(hostedIndex, 1);
                 return { ...state, createdEvents: updatedCreatedEvents };
+            }
+        case DELETE_EVENT:
+            // Delete from all events
+            const index = state.events.findIndex(event => event.event === action.eventId)
+            if (index >= 0) { // splice out event to unsave
+                const updatedEvents = [...state.events];
+                updatedEvents.splice(index, 1);
+                return { ...state, events: updatedEvents };
             }
         default:
             return state;
