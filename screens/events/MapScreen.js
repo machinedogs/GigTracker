@@ -69,7 +69,9 @@ const MapScreen = props => {
   const events = useSelector(state => state.events.events);
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(new Event)
+  const [clusterID, setClusterID] = useState("");
   let mapRef = useRef(null);
+  let clusterRef = useRef(null);
   const [date, setDate] = useState(todaysDate());
   //Redux
   const dispatch = useDispatch();
@@ -144,15 +146,15 @@ const MapScreen = props => {
     } else {
       setEventSaved(false);
     }
-    console.log("Selected Event Save status: " + isEventSaved);
-    /*
+
     let coords = {
-      latitude: parseFloat(event.location.latitude), // mapRef.current.region.latitude + ((parseFloat(event.location.latitude)) - (mapRef.current.region.latitude - (mapRef.current.region.latitudeDelta / 4))), //parseFloat(event.location.latitude) + 0.035,
+      latitude: parseFloat(event.location.latitude) + mapRef.current.__lastRegion.latitudeDelta*0.35,
       longitude: parseFloat(event.location.longitude),
-      latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA
+      latitudeDelta: mapRef.current.__lastRegion.latitudeDelta, 
+      longitudeDelta: mapRef.current.__lastRegion.longitudeDelta
     };
     mapRef.current.animateToRegion(coords, 0);
-    */
+
   }
   /*
   const filterDate = (selectedDate) => {
@@ -182,6 +184,9 @@ const MapScreen = props => {
       <StatusBar backgroundColor={Colors.darkGrey} barStyle='light-content' />
       <MapView
         initialRegion={INITIAL_REGION}
+        onRegionChange={() => {
+          //console.log(mapRef.current.__lastRegion)
+        }}
         style={styles.map}
         provider={PROVIDER_GOOGLE}
         showsUserLocation
@@ -189,9 +194,14 @@ const MapScreen = props => {
         rotateEnabled={false}
         showsTraffic={false}
         toolbarEnabled={true}
+        superClusterRef={clusterRef}
+        onClusterPress={(cluster) => {
+          //console.log(cluster)
+        }}
         ref={mapRef}
         customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
         clusterColor="#341f97"
+        edgePadding={{ top: 100, left: 50, bottom: 150, right: 50 }}
       >
         {events.map(event => (
           <Marker
