@@ -11,7 +11,7 @@ export default ShareComponent = (event) => {
     var user = useSelector((state) => state.user);
 
     // build the deep link
-    let redirectUrl = Linking.makeUrl('mapScreen/eventScreen', { eventID: `${event.event.event}` });
+    let redirectUrl = Linking.makeUrl('gigtracker/mapscreen/eventscreen');
 
     const onShare = async () => {
         try {
@@ -25,7 +25,7 @@ export default ShareComponent = (event) => {
                 message:
                     `${user.userName} Shared the event: ${event.event.title}
                      hosted by: ${event.event.host.name},
-                    located at ${event.event.location.address},
+                     located at ${event.event.location.address},
                      ${redirectUrl}
                     `
             });

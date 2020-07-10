@@ -77,21 +77,6 @@ const MapScreen = props => {
   const dispatch = useDispatch();
   var user = useSelector((state) => state.user);
 
-  // we check if screen is opened from deeplink
-  const { url: initialUrl, processing } = useInitialURL();
-
-  useEffect(() => {
-    Linking.getInitialURL()
-      .then((url) => {
-        if (url) {
-          Alert.alert(`Initial url is: ${url}`);
-        } else {
-          Alert.alert('No initial url');
-        }
-      })
-      .catch((err) => console.error('An error occurred', err));
-  }, []);
-
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
@@ -122,6 +107,17 @@ const MapScreen = props => {
         mapRef.current.animateToRegion(coords, 0);
       }, (error) => console.log(error));
   }, []);
+
+  // we check if screen is opened from deeplink
+  const { url: initialUrl, processing } = useInitialURL();
+
+  // debugging links
+  {
+    processing
+      ? console.log(`Processing the initial url from a deep link`)
+      : Linking.openURL(initialUrl),
+      console.log(`The deep link is: ${initialUrl || "None"}`)
+  }
 
   const refreshEvents = async () => {
     console.log("Refreshing events")
@@ -162,22 +158,9 @@ const MapScreen = props => {
       setEventSaved(false);
     }
     console.log("Selected Event Save status: " + isEventSaved);
-    /*
-    let coords = {
-      latitude: parseFloat(event.location.latitude), // mapRef.current.region.latitude + ((parseFloat(event.location.latitude)) - (mapRef.current.region.latitude - (mapRef.current.region.latitudeDelta / 4))), //parseFloat(event.location.latitude) + 0.035,
-      longitude: parseFloat(event.location.longitude),
-      latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA
-    };
-    mapRef.current.animateToRegion(coords, 0);
-    */
+
   }
-  /*
-  const filterDate = (selectedDate) => {
-    setDate(selectedDate);
-    //setEvents(events.filter(event => event.date === selectedDate))
-    console.log(selectedDate + '\n' + events.map((event) => {event.toString()}))
-  }
-  */
+
 
   const toggleSaveButton = () => {
     // dispatch action
@@ -211,9 +194,7 @@ const MapScreen = props => {
         clusterColor="#341f97"
       >
 
-        {processing
-          ? console.log(`Processing the initial url from a deep link`)
-          : console.log(`The deep link is: ${initialUrl || "None"}`)}
+
         {events.map(event => (
           <Marker
             coordinate={{ latitude: parseFloat(event.location.latitude), longitude: parseFloat(event.location.longitude) }}
@@ -235,36 +216,7 @@ const MapScreen = props => {
                       <EventCard event={event} style={{ width: SCREEN_WIDTH * 0.75 }} streetAddress />
                     </CalloutSubview>
 
-                    {/*<View style={{ flexDirection: 'row' }}>
-                      {(userName != event.host.name && userName) ?
-                        (<CalloutSubview onPress={toggleSaveButton}>
-                          <TouchableOpacity>
-                            <Icon
-                              reverse
-                              raised
-                              name='save'
-                              type='font-awesome'
-                              color={Colors.darkGrey}
-                              size={20}
-                              reverseColor='white'
-                            />
-                          </TouchableOpacity>
-                        </CalloutSubview>) : null
-                      }
-                      <CalloutSubview onPress={() => { props.navigation.navigate('Auth') }}>
-                        <TouchableOpacity>
-                          <Icon
-                            reverse
-                            raised
-                            name='share-alt'
-                            type='font-awesome'
-                            color={Colors.darkGrey}
-                            size={20}
-                            reverseColor='white'
-                          />
-                        </TouchableOpacity>
-                      </CalloutSubview>
-                    </View>*/}
+
                   </View>
                 </Callout>
               ) :

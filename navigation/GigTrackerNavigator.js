@@ -26,7 +26,7 @@ const EventNavigator = createStackNavigator(
         },
         Home: {
             screen: MapScreen,
-            path: "/mapScreen",
+            path: "mapscreen",
             navigationOptions: {
                 headerTitle: Platform.OS === 'ios' ? '  Current⚡' : 'Current⚡  ',
                 headerTitleStyle: {
@@ -84,7 +84,7 @@ const EventNavigator = createStackNavigator(
         ManageEvent: ManageEventScreen,
         EventScreen: {
             screen: EventScreen,
-            path: "eventScreen",
+            path: "eventscreen",
             navigationOptions: {
                 headerStyle: {
                     backgroundColor: Colors.darkGrey,
