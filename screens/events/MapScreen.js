@@ -69,7 +69,6 @@ const MapScreen = props => {
   const events = useSelector(state => state.events.events);
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(new Event)
-  const [clusterID, setClusterID] = useState("");
   let mapRef = useRef(null);
   let clusterRef = useRef(null);
   const [date, setDate] = useState(todaysDate());
