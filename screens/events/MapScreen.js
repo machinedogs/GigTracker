@@ -200,6 +200,7 @@ const MapScreen = props => {
       <View style={{
         flexDirection: 'row', backgroundColor: Colors.darkGrey,
         height: 55, color: '#fff', alignItems: 'center', alignContent: 'space-evenly', justifyContent: 'space-between',
+        width: SCREEN_WIDTH,
       }}>
         {Platform.OS === "ios" ? (
           <DropDownPicker
@@ -257,7 +258,7 @@ const MapScreen = props => {
           onPress={toggleShowCalendar}
         >
           <Text style={styles.text}>Date</Text>
-          <VectorIcon name="calendar" color='#fff' />
+          <VectorIcon name="calendar" color='#fff' style={{color: Colors.lightPurple}}/>
         </Button>
       </View>
       {showCalendar && (

@@ -322,9 +322,9 @@ const CreateEventScreen = (props) => {
                 fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
               }}
             >
-              Drop a pin...
+              Drop a pin...    
 						</Text>
-            <Icon name="pin" />
+            <Icon name="pin" style={{color: 'black'}}/>
           </Button>
         </View>
         {console.log(`Here ${location.latitude}`)}
@@ -432,9 +432,9 @@ const CreateEventScreen = (props) => {
                 fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
               }}
             >
-              {stringifyDate(date)}
+              {stringifyDate(date) + "   "}
             </Text>
-            <Icon name="calendar" />
+            <Icon name="calendar" style={{color: 'black'}}/>
           </Button>
         </View>
         {showDate && (
@@ -449,7 +449,7 @@ const CreateEventScreen = (props) => {
             style={styles.buttonStyle}
           >
             <Text>{stringifyTime(time)}</Text>
-            <Icon name="clock" />
+            <Icon name="clock" style={{color: 'black'}}/>
           </Button>
         </View>
         {showTime && (
