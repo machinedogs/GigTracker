@@ -6,10 +6,14 @@ import { useSelector } from "react-redux";
 
 export default ShareComponent = (event) => {
     var user = useSelector((state) => state.user);
-    let redirectUrl = Linking.makeUrl('mapScreen');
 
+
+    let redirectUrl = Linking.makeUrl('eventScreen',{ eventID: `${event.event.event}` });
     const onShare = async () => {
         try {
+            // event.event.event (this looks really bad)
+            console.log("event id passed to deep link is : "+ event.event.event)
+    
             console.log("redirect URL is: " + redirectUrl);
             console.log(Linking.openURL(redirectUrl))
             console.log('event passed to share message:' + event.event.title);
@@ -19,7 +23,7 @@ export default ShareComponent = (event) => {
                     `${user.userName} Shared the event: ${event.event.title}
                      hosted by: ${event.event.host.name},
                     located at ${event.event.location.address},
-                     ${"href:"+redirectUrl}
+                     ${redirectUrl}
                     `
             });
             if (result.action === Share.sharedAction) {
