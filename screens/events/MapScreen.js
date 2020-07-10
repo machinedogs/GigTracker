@@ -23,6 +23,9 @@ import { PROVIDER_GOOGLE, Marker, Callout, CalloutSubview } from 'react-native-m
 import MapView from 'react-native-map-clustering';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import { Icon } from 'react-native-elements';
+import RNPickerSelect from "react-native-picker-select";
+import DropDownPicker from "react-native-dropdown-picker";
+import CalendarPicker from 'react-native-calendar-picker';
 
 import { EventCard } from "../../components/EventCard";
 import MapStyle from '../../constants/MapStyle';
@@ -165,11 +168,11 @@ const MapScreen = props => {
     mapRef.current.animateToRegion(coords, 0);
     */
   }
-  
+
   const filterDate = (selectedDate) => {
     setDate(selectedDate);
     //setEvents(events.filter(event => event.date === selectedDate))
-    console.log(selectedDate + '\n' + events.map((event) => {event.toString()}))
+    console.log(selectedDate + '\n' + events.map((event) => { event.toString() }))
   }
 
   const toggleSaveButton = () => {
@@ -185,10 +188,6 @@ const MapScreen = props => {
     console.log(isEventSaved);
   };
 
-  const toggleShowCategories = () => {
-    setShowCategories(!showCategories);
-  }
-
   const toggleShowCalendar = () => {
     setShowCalendar(!showCalendar);
   }
@@ -199,65 +198,115 @@ const MapScreen = props => {
     <View style={styles.container}>
       <StatusBar backgroundColor={Colors.darkGrey} barStyle='light-content' />
       <View style={{
-        flexDirection: 'row',  backgroundColor: Colors.darkGrey, 
-        height: 55, color: '#fff', alignItems: 'center', 
+        flexDirection: 'row', backgroundColor: Colors.darkGrey,
+        height: 55, color: '#fff', alignItems: 'center', alignContent: 'space-evenly', justifyContent: 'space-between',
       }}>
-        <Button iconRight light transparent 
-          style={{ width: 150, color: '#fff', }}
-          //onPress={toggleShowCategories}
-        >
-          <Text style={styles.text}>Category</Text>
-          <VectorIcon name='options' color="#fff" />
-        </Button>
-        <Text>     </Text>
+        {Platform.OS === "ios" ? (
+          <DropDownPicker
+            multiple={true} min={0} max={15} multipleText="%d categories selected"
+            items={[
+              { label: "Music", value: "music" },
+              { label: "Sports", value: "sports" },
+              { label: "Meeting", value: "meeting" },
+              { label: "Party", value: "party" },
+              { label: "Protest", value: "protest" },
+              { label: "Food", value: "food" },
+              { label: "Market", value: "market" },
+              { label: "Discussion", value: "discussion" },
+              { label: "Political", value: "political" },
+              { label: "Other", value: "other" },
+            ]}
+            //defaultValue={category}
+            placeholder="Category"
+            containerStyle={{
+              height: 50,
+              width: SCREEN_WIDTH * 0.4,
+              justifyContent: "center",
+              alignItems: "center",
+              color: '#fff'
+            }}
+            style={{ borderColor: Colors.purpleBackground, borderWidth: 0.5, color: '#fff', backgroundColor: Colors.darkGrey }}
+            dropdownStyle={{ borderColor: Colors.purpleBackground, height: 300, color: '#fff', backgroundColor: Colors.lightBackground }}
+            itemStyle={{ alignItems: "center", color: '#fff' }}
+            onChangeItem={(category) => filterCategory(category.value)}
+          />
+        ) : (
+            <RNPickerSelect
+              items={[
+                { label: "Music", value: "music" },
+                { label: "Sports", value: "sports" },
+                { label: "Art", value: "art" },
+                { label: "Meeting", value: "meeting" },
+                { label: "Party", value: "party" },
+                { label: "Protest", value: "protest" },
+                { label: "Food", value: "food" },
+                { label: "Market", value: "market" },
+                { label: "Discussion", value: "discussion" },
+                { label: "Political", value: "political" },
+                { label: "Other", value: "other" },
+              ]}
+              style={{ borderColor: "gray", borderWidth: 0.5 }}
+              onValueChange={(value) => setCategory(value)}
+            />
+          )}
+          <Text></Text>
+          <Text></Text>
+          <Text></Text>
         <Button iconRight transparent
-          style={{ width: 150, color: '#fff', }}
+          style={{ width: 150, }}
           onPress={toggleShowCalendar}
         >
           <Text style={styles.text}>Date</Text>
-          <VectorIcon name="calendar" color="#fff" />
+          <VectorIcon name="calendar" color='#fff' />
         </Button>
-    </View>
-    {showCategories && (
-      <View style={styles.modalContainer}>
-        <Modal style={styles.modal} transparent/>
       </View>
-    )}
-    <MapView
-      initialRegion={INITIAL_REGION}
-      style={styles.map}
-      provider={PROVIDER_GOOGLE}
-      showsUserLocation
-      showsMyLocationButton
-      rotateEnabled={false}
-      showsTraffic={false}
-      toolbarEnabled={true}
-      ref={mapRef}
-      customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
-      clusterColor="#341f97"
-    >
-      {events.map(event => (
-        <Marker
-          coordinate={{ latitude: parseFloat(event.location.latitude), longitude: parseFloat(event.location.longitude) }}
-          pinColor="#341f97"
-          key={event.event}
-          tracksViewChanges={false}
-          onPress={onPinPress.bind(this, event)}
-          icon={iconHelpers.iconPicker(event.category)}
-        >
-          {Platform.OS === 'ios' ?
-            (
-              <Callout
-                style={styles.plainView}
-                tooltip={true}
-                key={event.id}
-              >
-                <View>
-                  <CalloutSubview onPress={onEventCalloutPress.bind(this, event)}>
-                    <EventCard event={event} style={{ width: SCREEN_WIDTH * 0.75 }} streetAddress />
-                  </CalloutSubview>
+      {showCalendar && (
+          <View style={styles.calendar}>
+            <CalendarPicker
+              onDateChange={filterDate}
+              textStyle={{color: '#fff'}}
+            />
 
-                  {/*<View style={{ flexDirection: 'row' }}>
+            <View>
+              <Text>SELECTED DATE:</Text>
+            </View>
+          </View>
+        )}
+      <MapView
+        initialRegion={INITIAL_REGION}
+        style={styles.map}
+        provider={PROVIDER_GOOGLE}
+        showsUserLocation
+        showsMyLocationButton
+        rotateEnabled={false}
+        showsTraffic={false}
+        toolbarEnabled={true}
+        ref={mapRef}
+        customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
+        clusterColor="#341f97"
+      >
+        {events.map(event => (
+          <Marker
+            coordinate={{ latitude: parseFloat(event.location.latitude), longitude: parseFloat(event.location.longitude) }}
+            pinColor="#341f97"
+            key={event.event}
+            tracksViewChanges={false}
+            onPress={onPinPress.bind(this, event)}
+            icon={iconHelpers.iconPicker(event.category)}
+          >
+            {Platform.OS === 'ios' ?
+              (
+                <Callout
+                  style={styles.plainView}
+                  tooltip={true}
+                  key={event.id}
+                >
+                  <View>
+                    <CalloutSubview onPress={onEventCalloutPress.bind(this, event)}>
+                      <EventCard event={event} style={{ width: SCREEN_WIDTH * 0.75 }} streetAddress />
+                    </CalloutSubview>
+
+                    {/*<View style={{ flexDirection: 'row' }}>
                       {(userName != event.host.name && userName) ?
                         (<CalloutSubview onPress={toggleSaveButton}>
                           <TouchableOpacity>
@@ -287,108 +336,108 @@ const MapScreen = props => {
                         </TouchableOpacity>
                       </CalloutSubview>
                     </View>*/}
-                </View>
-              </Callout>
-            ) :
-            ( // Android
-              <Callout
-                style={styles.plainView}
-                onPress={onEventCalloutPress.bind(this, event)}
-                tooltip={true}
-                key={event.id}
-              >
-                <CustomCallout
-                  style={{ width: SCREEN_WIDTH * 0.75 }}
-                  event={event}
-                />
-              </Callout>
-            )
-          }
-        </Marker>
-      ))
-      }
-    </MapView>
-      {
-    !userAccessToken ?
-      (
-        <SafeAreaView
-          style={{
-            position: 'absolute',//use absolute position to show button on top of the map
-            bottom: '0.5%',
-            alignSelf: 'center' //for align to right
-          }}
-        >
-          <TouchableOpacity>
-            <Icon
-              reverse
-              raised
-              name='user'
-              type='font-awesome'
-              color={Colors.darkGrey}
-              size={28}
-              reverseColor={Colors.lightText}
-              onPress={() => { props.navigation.navigate('Auth') }}
-            />
-          </TouchableOpacity>
-        </SafeAreaView>
-      ) :
-      (
-        <SafeAreaView style={styles.row}>
-          <TouchableOpacity>
-            <Icon
-              reverse
-              raised
-              name='user'
-              type='font-awesome'
-              color={Colors.darkGrey}
-              size={28}
-              reverseColor={Colors.lightText}
-              onPress={() => { props.navigation.navigate('UserProfile') }}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Icon
-              reverse
-              raised
-              name='plus'
-              type='font-awesome'
-              color={Colors.darkGrey}
-              size={28}
-              reverseColor={Colors.lightText}
-              onPress={() => { props.navigation.navigate('CreateEvent') }}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            {isRefreshing ? // if refreshing events, show activity indicator
-              (
-                <Icon
-                  reverse
-                  raised
-                  name='spinner'
-                  type='font-awesome'
-                  color={Colors.darkGrey}
-                  size={28}
-                  reverseColor={Colors.lightText}
-                />
+                  </View>
+                </Callout>
               ) :
-              (
-                <Icon
-                  reverse
-                  raised
-                  name='refresh'
-                  type='font-awesome'
-                  color={Colors.darkGrey}
-                  size={28}
-                  reverseColor={Colors.lightText}
-                  onPress={refreshEvents}
-                />
+              ( // Android
+                <Callout
+                  style={styles.plainView}
+                  onPress={onEventCalloutPress.bind(this, event)}
+                  tooltip={true}
+                  key={event.id}
+                >
+                  <CustomCallout
+                    style={{ width: SCREEN_WIDTH * 0.75 }}
+                    event={event}
+                  />
+                </Callout>
               )
             }
-          </TouchableOpacity>
-        </SafeAreaView>
+          </Marker>
+        ))
+        }
+      </MapView>
+      {
+        !userAccessToken ?
+          (
+            <SafeAreaView
+              style={{
+                position: 'absolute',//use absolute position to show button on top of the map
+                bottom: '0.5%',
+                alignSelf: 'center' //for align to right
+              }}
+            >
+              <TouchableOpacity>
+                <Icon
+                  reverse
+                  raised
+                  name='user'
+                  type='font-awesome'
+                  color={Colors.darkGrey}
+                  size={28}
+                  reverseColor={Colors.lightText}
+                  onPress={() => { props.navigation.navigate('Auth') }}
+                />
+              </TouchableOpacity>
+            </SafeAreaView>
+          ) :
+          (
+            <SafeAreaView style={styles.row}>
+              <TouchableOpacity>
+                <Icon
+                  reverse
+                  raised
+                  name='user'
+                  type='font-awesome'
+                  color={Colors.darkGrey}
+                  size={28}
+                  reverseColor={Colors.lightText}
+                  onPress={() => { props.navigation.navigate('UserProfile') }}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Icon
+                  reverse
+                  raised
+                  name='plus'
+                  type='font-awesome'
+                  color={Colors.darkGrey}
+                  size={28}
+                  reverseColor={Colors.lightText}
+                  onPress={() => { props.navigation.navigate('CreateEvent') }}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity>
+                {isRefreshing ? // if refreshing events, show activity indicator
+                  (
+                    <Icon
+                      reverse
+                      raised
+                      name='spinner'
+                      type='font-awesome'
+                      color={Colors.darkGrey}
+                      size={28}
+                      reverseColor={Colors.lightText}
+                    />
+                  ) :
+                  (
+                    <Icon
+                      reverse
+                      raised
+                      name='refresh'
+                      type='font-awesome'
+                      color={Colors.darkGrey}
+                      size={28}
+                      reverseColor={Colors.lightText}
+                      onPress={refreshEvents}
+                    />
+                  )
+                }
+              </TouchableOpacity>
+            </SafeAreaView>
 
-      )
-  }
+          )
+      }
     </View >
   );
 }
@@ -429,6 +478,12 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
     backgroundColor: Colors.darkGrey
     //width: Dimensions.get('window').width,
+  },
+  calendar: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: SCREEN_WIDTH * 0.9,
+    backgroundColor: Colors.darkGrey,  
   },
   top: {
     backgroundColor: '#2d3436',
