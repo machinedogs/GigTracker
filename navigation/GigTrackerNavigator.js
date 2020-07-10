@@ -84,7 +84,7 @@ const EventNavigator = createStackNavigator(
         ManageEvent: ManageEventScreen,
         EventScreen: {
             screen: EventScreen,
-            path: "/eventScreen",
+            path: "eventScreen",
             navigationOptions: {
                 headerStyle: {
                     backgroundColor: Colors.darkGrey,

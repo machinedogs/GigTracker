@@ -12,6 +12,7 @@ import {
   Alert,
   ActivityIndicator
 } from 'react-native';
+import { Linking } from 'expo';
 import { useSelector, useDispatch } from 'react-redux';
 import { PROVIDER_GOOGLE, Marker, Callout, CalloutSubview } from 'react-native-maps';
 import MapView from 'react-native-map-clustering';
@@ -29,6 +30,7 @@ import * as eventActions from '../../store/actions/events';
 import { CustomCallout } from '../../components/CustomCallout';
 import * as iconHelpers from '../helper/iconHelpers';
 import { getGeoInfo } from '../../screens/helper/geoHelper';
+import useInitialURL from '../../screens/helper/getDeepLink'
 
 const { width, height } = Dimensions.get('window')
 const SCREEN_HEIGHT = height
@@ -74,6 +76,21 @@ const MapScreen = props => {
   //Redux
   const dispatch = useDispatch();
   var user = useSelector((state) => state.user);
+
+  // we check if screen is opened from deeplink
+  const { url: initialUrl, processing } = useInitialURL();
+
+  useEffect(() => {
+    Linking.getInitialURL()
+      .then((url) => {
+        if (url) {
+          Alert.alert(`Initial url is: ${url}`);
+        } else {
+          Alert.alert('No initial url');
+        }
+      })
+      .catch((err) => console.error('An error occurred', err));
+  }, []);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -193,6 +210,10 @@ const MapScreen = props => {
         customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
         clusterColor="#341f97"
       >
+
+        {processing
+          ? console.log(`Processing the initial url from a deep link`)
+          : console.log(`The deep link is: ${initialUrl || "None"}`)}
         {events.map(event => (
           <Marker
             coordinate={{ latitude: parseFloat(event.location.latitude), longitude: parseFloat(event.location.longitude) }}
