@@ -45,7 +45,7 @@ export default (state = initialState, action) => {
 				goingEvents: state.goingEvents.concat(action.event)
 			};
 		case NOT_GOING_TO_EVENT:
-			const goingIndex = state.goingEvents.findIndex(event => event.event === action.eventId)
+			const goingIndex = state.goingEvents.findIndex(event => toString(event.event) === toString(action.eventId))
 			if (goingIndex >= 0) { // splice out event to unsave
 				const updatedGoingEvents = [...state.goingEvents];
 				updatedGoingEvents.splice(goingIndex, 1);

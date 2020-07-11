@@ -42,7 +42,7 @@ export const removeFromGoingEvents = (event) => {
             body: raw,
             redirect: 'follow'
         };
-        console.log("Not longer going to this event:")
+        console.log("No longer going to this event:")
         console.log(event.event)
         const response = await fetch(
             `https://gigservice.herokuapp.com/api/v1/events/${event.event}/attending/1?auth_token=${accessToken}`,
