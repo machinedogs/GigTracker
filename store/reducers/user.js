@@ -3,7 +3,8 @@ import {
 	LOGOUT,
 	UPDATE_PROFILE,
 	GOING_TO_EVENT,
-	NOT_GOING_TO_EVENT
+	NOT_GOING_TO_EVENT,
+	UPDATE_GOING_EVENTS
 } from "../actions/user";
 
 const initialState = {
@@ -33,6 +34,11 @@ export default (state = initialState, action) => {
 			};
 		case LOGOUT:
 			return initialState;
+		case UPDATE_GOING_EVENTS:
+			return {
+                ...state,
+                goingEvents: action.goingEvents
+            };
 		case GOING_TO_EVENT:
 			return {
 				...state,

@@ -12,6 +12,7 @@ export const constructEvents = (data) => {
             item.date,
             item.image,
             item.category,
+            item.attending,
             new location(
                 item.location.latitude,
                 item.location.longitude,

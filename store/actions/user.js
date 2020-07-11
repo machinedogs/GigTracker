@@ -5,8 +5,7 @@ export const AUTHENTICATE = 'AUTHENTICATE';
 export const UPDATE_PROFILE = 'UPDATE_PROFILE';
 export const UPDATE_WALLPAPER = 'UPDATE_WALLPAPER';
 export const LOGOUT = 'LOGOUT';
-export const GOING_TO_EVENT = 'GOING_TO_EVENT';
-export const NOT_GOING_TO_EVENT = 'NOT_GOING_TO_EVENT';
+export const UPDATE_GOING_EVENTS = 'UPDATE_GOING_EVENTS';
 
 export const addToGoingEvents = (event) => {
 	return { type: GOING_TO_EVENT, event: event };
@@ -262,6 +261,65 @@ export const login = (email, password) => {
             refreshExpiration
         )
     };
+};
+
+//Get a person's hosted/created events
+export const UpdateGoingEvents = (goingEvents) => {
+	return {
+		type: UPDATE_GOING_EVENTS,
+		goingEvents: goingEvents,
+	};
+};
+
+export const GetGoingEvents = (accessToken) => {
+	return async (dispatch) => {
+		console.log("Getting saved events...making api call..");
+		console.log("access token....");
+		console.log(accessToken);
+		var raw = "";
+
+		var requestOptions = {
+			method: "GET",
+			body: raw,
+			redirect: "follow",
+		};
+		//console.log("request options");
+		//console.log(requestOptions);
+		console.log(
+			`https://gigservice.herokuapp.com/api/v1/host/attending?auth_token=${accessToken}`
+		);
+		const response = await fetch(
+			`https://gigservice.herokuapp.com/api/v1/host/attending?auth_token=${accessToken}`,
+			requestOptions
+		);
+		if (response.ok) {
+			const resData = await response.json();
+			console.log("Got response for getting the saved events ");
+			//console.log(resData);
+			//ToDo:Eventually improve this filter event
+			var filteredEvents = resData.filter((event) => {
+				console.log(`event is here ${event.title}`);
+				if (
+					event.event != null &&
+					event.title != null &&
+					event.description != null &&
+					event.date != null &&
+					event.category != null &&
+					event.image != null &&
+					event.image.length > 8
+				) {
+					console.log(`returns true for event ${event.event}`);
+					return true;
+				} else {
+					return false;
+				}
+			});
+			//console.log(`filtered Events ${filteredEvents}`);
+
+			//Filter the data for bad events, meaning any null values or something
+			dispatch(UpdateGoingEvents(filteredEvents));
+		}
+	};
 };
 
 const saveDataToStorage = (userName, userEmail, accessToken, refreshToken, accessExpiration, refreshExpiration) => {

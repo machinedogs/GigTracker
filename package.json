@@ -20,7 +20,7 @@
     "axios": "^0.19.2",
     "date-fns": "^2.14.0",
     "expo": "~37.0.3",
-    "expo-cli": "^3.20.9",
+    "expo-cli": "^3.22.1",
     "expo-font": "~8.1.0",
     "expo-image-picker": "~8.1.0",
     "expo-secure-store": "~8.1.0",

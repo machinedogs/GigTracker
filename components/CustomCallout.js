@@ -63,7 +63,7 @@ export const CustomCallout = (props) => {
                             </Text>
                         </View>
                         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                <Text>50</Text>
+                                <Text>{props.event.attending}</Text>
                                 <Text>Going</Text>
                         </View>
                     </View>

@@ -56,7 +56,9 @@ export const EventCard = (props) => {
 					</Text>
 				</View>
 				<View style={{justifyContent: 'center', alignItems: 'center'}}>
-					<Text>50</Text>
+				{console.log("here")}
+					{console.log(props.event)}
+					<Text>{props.event.attending}</Text>
 					<Text>Going</Text>
 				</View>
 			</View>

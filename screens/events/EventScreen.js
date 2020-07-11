@@ -124,7 +124,7 @@ const EventScreen = (props) => {
                     <InsetShadow shadowRadius={1} shadowColor='black' left={false} right={false} shadowOpacity={1}>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 15, paddingHorizontal: 15 }}>
                             <Text style={styles.goingText}>
-                                50 People Going
+                                {event.attending} Going
                             </Text>
                             <TouchableOpacity onPress={toggleGoingButton}>
                                 <View style={{
