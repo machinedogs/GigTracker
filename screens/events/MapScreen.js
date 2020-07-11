@@ -223,21 +223,19 @@ const MapScreen = props => {
         </Right>
       </SafeAreaView>
       {showCalendar && (
-        <View style={styles.calendar}>
-          <CalendarPicker
-            disabledDates={date => {
-              var currentDate = new Date()
-              currentDate.setDate(currentDate.getDate() - 1)
-              if (date >= currentDate) {
-                return false;
-              } else {
-                return true;
-              }
-            }}
-            onDateChange={filterDate}
-            textStyle={{ color: '#fff' }}
-          />
-        </View>
+        <CalendarPicker
+          disabledDates={date => {
+            var currentDate = new Date()
+            currentDate.setDate(currentDate.getDate() - 1)
+            if (date >= currentDate) {
+              return false;
+            } else {
+              return true;
+            }
+          }}
+          onDateChange={filterDate}
+          textStyle={{ color: '#fff' }}
+        />
       )}
       {showCategories && (
         <CategorySelector style={{
@@ -246,40 +244,44 @@ const MapScreen = props => {
           maxHeight: 250
         }} />
       )}
-        <MapView
-          initialRegion={INITIAL_REGION}
-          style={styles.map}
-          provider={PROVIDER_GOOGLE}
-          showsUserLocation
-          showsMyLocationButton
-          rotateEnabled={false}
-          showsTraffic={false}
-          toolbarEnabled={true}
-          ref={mapRef}
-          customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
-          clusterColor="#341f97"
-        >
-          {filteredEvents.map(event => (
-            <Marker
-              coordinate={{ latitude: parseFloat(event.location.latitude), longitude: parseFloat(event.location.longitude) }}
-              pinColor="#341f97"
-              key={event.event}
-              tracksViewChanges={false}
-              onPress={onPinPress.bind(this, event)}
-              icon={iconHelpers.iconPicker(event.category)}
-            >
-              {Platform.OS === 'ios' ?
-                (
-                  <Callout
-                    style={styles.plainView}
-                    tooltip={true}
-                    key={event.id}
-                  >
-                    <View>
-                      <CalloutSubview onPress={onEventCalloutPress.bind(this, event)}>
-                        <EventCard event={event} style={{ width: SCREEN_WIDTH * 0.75 }} streetAddress />
-                      </CalloutSubview>
-                      {/*<View style={{ flexDirection: 'row' }}>
+      <MapView
+        initialRegion={INITIAL_REGION}
+        style={styles.map}
+        provider={PROVIDER_GOOGLE}
+        showsUserLocation
+        showsMyLocationButton
+        rotateEnabled={false}
+        showsTraffic={false}
+        toolbarEnabled={true}
+        ref={mapRef}
+        customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
+        clusterColor="#341f97"
+        onPress={() => {
+          setShowCalendar(false);
+          setShowCategories(false);
+        }}
+      >
+        {filteredEvents.map(event => (
+          <Marker
+            coordinate={{ latitude: parseFloat(event.location.latitude), longitude: parseFloat(event.location.longitude) }}
+            pinColor="#341f97"
+            key={event.event}
+            tracksViewChanges={false}
+            onPress={onPinPress.bind(this, event)}
+            icon={iconHelpers.iconPicker(event.category)}
+          >
+            {Platform.OS === 'ios' ?
+              (
+                <Callout
+                  style={styles.plainView}
+                  tooltip={true}
+                  key={event.id}
+                >
+                  <View>
+                    <CalloutSubview onPress={onEventCalloutPress.bind(this, event)}>
+                      <EventCard event={event} style={{ width: SCREEN_WIDTH * 0.75 }} streetAddress />
+                    </CalloutSubview>
+                    {/*<View style={{ flexDirection: 'row' }}>
                       {(userName != event.host.name && userName) ?
                         (<CalloutSubview onPress={toggleSaveButton}>
                           <TouchableOpacity>
@@ -309,27 +311,27 @@ const MapScreen = props => {
                         </TouchableOpacity>
                       </CalloutSubview>
                     </View>*/}
-                    </View>
-                  </Callout>
-                ) :
-                ( // Android
-                  <Callout
-                    style={styles.plainView}
-                    onPress={onEventCalloutPress.bind(this, event)}
-                    tooltip={true}
-                    key={event.id}
-                  >
-                    <CustomCallout
-                      style={{ width: SCREEN_WIDTH * 0.75 }}
-                      event={event}
-                    />
-                  </Callout>
-                )
-              }
-            </Marker>
-          ))
-          }
-        </MapView>
+                  </View>
+                </Callout>
+              ) :
+              ( // Android
+                <Callout
+                  style={styles.plainView}
+                  onPress={onEventCalloutPress.bind(this, event)}
+                  tooltip={true}
+                  key={event.id}
+                >
+                  <CustomCallout
+                    style={{ width: SCREEN_WIDTH * 0.75 }}
+                    event={event}
+                  />
+                </Callout>
+              )
+            }
+          </Marker>
+        ))
+        }
+      </MapView>
       {
         !userAccessToken ?
           (
@@ -425,12 +427,6 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
     backgroundColor: Colors.darkGrey
     //width: Dimensions.get('window').width,
-  },
-  calendar: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: SCREEN_WIDTH * 0.9,
-    backgroundColor: Colors.darkGrey,
   },
   top: {
     backgroundColor: '#2d3436',
