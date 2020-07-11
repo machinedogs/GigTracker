@@ -6,17 +6,38 @@ import {
     SAVE_EVENT,
     UNSAVE_EVENT,
     EDIT_EVENT,
-    DELETE_EVENT
+    DELETE_EVENT,
+    ADD_FILTER,
+    REMOVE_FILTER,
+    CLEAR_FILTERS
 } from '../actions/events';
 
 const initialState = {
     createdEvents: [],
     savedEvents: [],
-    events: []
+    events: [],
+    filters: []
 }
 
 export default (state = initialState, action) => {
     switch (action.type) {
+        case ADD_FILTER:
+            return {
+                ...state,
+                filters: state.filters.concat(action.filter)
+            };
+        case REMOVE_FILTER:
+            const filterIndex = state.filters.findIndex(filter => filter === action.filter)
+            if (filterIndex >= 0) { // splice out filter to remove
+                const updatedFilters = [...state.filters];
+                updatedFilters.splice(filterIndex, 1);
+                return { ...state, filters: updatedFilters };
+            }
+        case CLEAR_FILTERS:
+            return {
+                ...state,
+                filters: []
+            };
         case UPDATE_HOSTED_EVENTS:
             return {
                 ...state,
@@ -51,7 +72,7 @@ export default (state = initialState, action) => {
             const savedIndex = state.savedEvents.findIndex(event => event.event === action.eventId)
             if (savedIndex >= 0) { // splice out event to unsave
                 const updatedSavedEvents = [...state.savedEvents];
-                updatedSavedEvents.splice(savedIndex, 1); 
+                updatedSavedEvents.splice(savedIndex, 1);
                 return { ...state, savedEvents: updatedSavedEvents };
             }
         case DELETE_EVENT:
@@ -59,7 +80,7 @@ export default (state = initialState, action) => {
             const hostedIndex = state.createdEvents.findIndex(event => event.event === action.eventId)
             if (hostedIndex >= 0) { // splice out event to unsave
                 const updatedCreatedEvents = [...state.createdEvents];
-                updatedCreatedEvents.splice(hostedIndex, 1); 
+                updatedCreatedEvents.splice(hostedIndex, 1);
                 return { ...state, createdEvents: updatedCreatedEvents };
             }
         default:

@@ -6,6 +6,21 @@ export const EDIT_EVENT = "EDIT_EVENT";
 export const SAVE_EVENT = "SAVE_EVENT";
 export const UNSAVE_EVENT = "UNSAVE_EVENT";
 export const DELETE_EVENT = "DELETE_EVENT";
+export const ADD_FILTER = "ADD_FILTER";
+export const REMOVE_FILTER = "REMOVE_FILTER";
+export const CLEAR_FILTERS = "CLEAR_FILTERS";
+
+export const addFilter = (filter) => {
+	return { type: ADD_FILTER, filter: filter}
+}
+
+export const removeFilter = (filter) => {
+	return { type: REMOVE_FILTER, filter: filter}
+}
+
+export const clearFilters = () => {
+	return { type: CLEAR_FILTERS}
+}
 
 export const deleteEvent = (event) => {
 	return async (dispatch, getState) => {

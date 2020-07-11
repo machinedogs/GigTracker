@@ -1,9 +1,16 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView, Text, FlatList } from 'react-native';
+import { View, StyleSheet, ScrollView, Text, FlatList, TouchableOpacity } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 import { List, ListItem, Left, Right, Icon } from 'native-base';
+import { AntDesign } from '@expo/vector-icons';
+
 import Colors from '../constants/Colors';
+import * as eventActions from '../store/actions/events';
 
 const CategorySelector = (props) => {
+    const filters = useSelector(state => state.events.filters);
+    const dispatch = useDispatch();
+
     return (
         <View style={{ ...props.style }}>
             <FlatList
@@ -15,12 +22,23 @@ const CategorySelector = (props) => {
                     { type: "Meeting", id: "meeting" },
                 ]}
                 renderItem={({ item }) =>
-                    <ListItem noIndent onPress={() => { }}>
+                    <ListItem noIndent onPress={() => {
+                        {
+                            filters.includes(item.id) ?
+                                (dispatch(eventActions.removeFilter(item.id))) :
+                                (dispatch(eventActions.addFilter(item.id)))
+                        }
+                    }}>
                         <Left>
                             <Text style={{ color: 'white' }}>{item.type}</Text>
                         </Left>
                         <Right>
-                            <Icon type='AntDesign' name="checksquareo" color='white' style={{paddingRight: 10}} />
+                            <AntDesign
+                                name={filters.includes(item.id) ? "checkcircle" : "checkcircleo"}
+                                color='white'
+                                style={{ paddingRight: 13 }}
+                                size={18}
+                            />
                         </Right>
                     </ListItem>
                 }
@@ -28,10 +46,22 @@ const CategorySelector = (props) => {
                 indicatorStyle='white'
             />
 
-            <View style={{ paddingHorizontal: 15, paddingVertical: 10, borderColor: 'white', borderTopWidth: 1 }}>
-                <Text style={{ color: 'white' }}>Clear Filters</Text>
+            <View style={{
+                paddingHorizontal: 15,
+                paddingVertical: 10,
+                borderColor: 'white',
+                borderTopWidth: 1,
+                alignItems: 'center'
+            }}>
+                <TouchableOpacity onPress={() => {
+                    dispatch(eventActions.clearFilters())
+                }}>
+                    <Text style={{ color: 'white' }}>Clear Filters</Text>
+                </TouchableOpacity>
+
             </View>
-        </View>
+
+        </View >
     );
 }
 
