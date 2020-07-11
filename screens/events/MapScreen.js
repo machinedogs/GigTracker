@@ -182,10 +182,16 @@ const MapScreen = props => {
   };
 
   const toggleShowCalendar = () => {
+    if (showCategories) {
+      setShowCategories(false);
+    }
     setShowCalendar(!showCalendar);
   }
 
   const toggleShowCategories = () => {
+    if (showCalendar) {
+      setShowCalendar(false);
+    }
     setShowCategories(!showCategories);
   }
 
