@@ -7,14 +7,6 @@ export const UPDATE_WALLPAPER = 'UPDATE_WALLPAPER';
 export const LOGOUT = 'LOGOUT';
 export const UPDATE_GOING_EVENTS = 'UPDATE_GOING_EVENTS';
 
-export const addToGoingEvents = (event) => {
-	return { type: GOING_TO_EVENT, event: event };
-};
-
-export const removeFromGoingEvents = (event) => {
-	return { type: NOT_GOING_TO_EVENT, eventId: event.event };
-}
-
 export const authenticate = (userName, userEmail, accessToken, refreshToken) => {
     return {
         type: AUTHENTICATE,
@@ -294,8 +286,8 @@ export const GetGoingEvents = (accessToken) => {
 		);
 		if (response.ok) {
 			const resData = await response.json();
-			console.log("Got response for getting the saved events ");
-			//console.log(resData);
+			console.log("Got response for getting the going events ");
+			console.log(resData);
 			//ToDo:Eventually improve this filter event
 			var filteredEvents = resData.filter((event) => {
 				console.log(`event is here ${event.title}`);
