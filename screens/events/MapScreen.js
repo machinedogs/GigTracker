@@ -27,16 +27,12 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { PROVIDER_GOOGLE, Marker, Callout, CalloutSubview } from 'react-native-maps';
 import MapView from 'react-native-map-clustering';
-import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import { Icon } from 'react-native-elements';
-import RNPickerSelect from "react-native-picker-select";
-import DropDownPicker from "react-native-dropdown-picker";
 import CalendarPicker from 'react-native-calendar-picker';
 
 import { EventCard } from "../../components/EventCard";
 import MapStyle from '../../constants/MapStyle';
 import Event from '../../models/event';
-import HeaderButton from '../../components/HeaderButton';
 import Colors from '../../constants/Colors';
 import { GetHostedEvents } from '../../store/actions/events';
 import { GetSavedEvents } from '../../store/actions/events';
@@ -169,7 +165,7 @@ const MapScreen = props => {
   const filterDate = (selectedDate) => {
     setDate(selectedDate);
     //setEvents(events.filter(event => event.date === selectedDate))
-    console.log(selectedDate + '\n' + filteredEvents.map((event) => { event.toString() }))
+    console.log(selectedDate)
   }
 
   const toggleSaveButton = () => {
@@ -229,6 +225,15 @@ const MapScreen = props => {
       {showCalendar && (
         <View style={styles.calendar}>
           <CalendarPicker
+            disabledDates={date => {
+              var currentDate = new Date()
+              currentDate.setDate(currentDate.getDate() - 1)
+              if (date >= currentDate) {
+                return false;
+              } else {
+                return true;
+              }
+            }}
             onDateChange={filterDate}
             textStyle={{ color: '#fff' }}
           />
