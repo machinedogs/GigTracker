@@ -30,12 +30,12 @@ const CategorySelector = (props) => {
                         }
                     }}>
                         <Left>
-                            <Text style={{ color: 'white' }}>{item.type}</Text>
+                            <Text style={{ color: 'black' }}>{item.type}</Text>
                         </Left>
                         <Right>
                             <AntDesign
                                 name={filters.includes(item.id) ? "checkcircle" : "checkcircleo"}
-                                color='white'
+                                color='black'
                                 style={{ paddingRight: 13 }}
                                 size={18}
                             />
@@ -43,20 +43,22 @@ const CategorySelector = (props) => {
                     </ListItem>
                 }
                 keyExtractor={(item) => item.id}
-                indicatorStyle='white'
+                indicatorStyle='black'
             />
 
             <View style={{
                 paddingHorizontal: 15,
-                paddingVertical: 10,
-                borderColor: 'white',
+                paddingVertical: 12,
+                borderColor: '#E7E8E7',
                 borderTopWidth: 1,
-                alignItems: 'center'
+                borderBottomWidth: 1,
+                alignItems: 'center',
+                backgroundColor: 'white'
             }}>
                 <TouchableOpacity onPress={() => {
                     dispatch(eventActions.clearFilters())
                 }}>
-                    <Text style={{ color: 'white' }}>Clear Filters</Text>
+                    <Text style={{ color: 'black' }}>Reset Filters</Text>
                 </TouchableOpacity>
 
             </View>

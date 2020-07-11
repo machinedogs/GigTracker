@@ -82,7 +82,6 @@ const MapScreen = props => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(new Event);
   let mapRef = useRef(null);
-  const [date, setDate] = useState(todaysDate());
   const [showCategories, setShowCategories] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
 
@@ -162,10 +161,12 @@ const MapScreen = props => {
     */
   }
 
-  const filterDate = (selectedDate) => {
-    setDate(selectedDate);
-    //setEvents(events.filter(event => event.date === selectedDate))
+  const filterDate = async (selectedDate) => {
     console.log(selectedDate)
+    setIsRefreshing(true);
+    await dispatch(eventActions.getEvents(new Date(selectedDate)));
+    await dispatch(eventActions.setFilters());
+    setIsRefreshing(false);
   }
 
   const toggleSaveButton = () => {
@@ -198,7 +199,7 @@ const MapScreen = props => {
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={Colors.darkGrey} barStyle='light-content' />
-      <SafeAreaView style={{ flexDirection: 'row', alignItems: 'center', height: '13%' }}>
+      <SafeAreaView style={{ flexDirection: 'row', alignItems: 'center', height: '13%', backgroundColor: Colors.darkGrey }}>
         <Left>
           <VectorIcon
             type="Feather"
@@ -240,8 +241,8 @@ const MapScreen = props => {
         <CategorySelector
           style={{
             width: SCREEN_WIDTH,
-            backgroundColor: Colors.darkGrey,
-            maxHeight: 200
+            backgroundColor: 'white',
+            maxHeight: 225
           }}
         />
       )}
@@ -426,7 +427,6 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH,
     paddingTop: 0,
     paddingBottom: 0,
-    backgroundColor: Colors.darkGrey
     //width: Dimensions.get('window').width,
   },
   top: {
