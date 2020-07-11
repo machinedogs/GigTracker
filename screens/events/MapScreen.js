@@ -128,16 +128,16 @@ const MapScreen = props => {
 
   // gets called when callout is pressed i.e. pin must be pressed first
   const onEventCalloutPress = (event) => {
-    console.log("pressing event callout");
-    console.log(selectedEvent);
+    //console.log("pressing event callout");
+    //console.log(selectedEvent);
     //toggleModal();
     props.navigation.navigate('EventScreen', { event: event });
   }
 
   const onPinPress = (event) => {
     setSelectedEvent(event);
-    console.log("pressing pin");
-    console.log(event)
+    //console.log("pressing pin");
+    //console.log(event)
     // Determine if selected event has already been saved
     var existingIndex = savedEvents.findIndex(myEvent => myEvent.event === event.event)
     if (existingIndex >= 0) { // check if index exists

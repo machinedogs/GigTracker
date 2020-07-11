@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateUserProfile, GetGoingEvents } from '../store/actions/user';
+import { updateUserProfile } from '../store/actions/user';
 import * as authActions from '../store/actions/user';
 import * as eventActions from '../store/actions/events';
 import { getProfileDataStorage } from '../screens/helper/secureStorageHelpers';
@@ -79,7 +79,7 @@ const StartupScreen = props => {
 
             // pass user data to state and navigate to home
             await dispatch(authActions.authenticate(userName, userEmail, accessToken, refreshToken));
-            dispatch(GetGoingEvents(accessToken));
+            dispatch(authActions.getGoingEvents(accessToken));
             //Dispatch action to update profile image state in store 
             await dispatch(updateUserProfile(profileImage, transformedData));
             props.navigation.replace('Home');
