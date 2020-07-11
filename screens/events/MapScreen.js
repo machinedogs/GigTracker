@@ -10,6 +10,8 @@ import {
   StatusBar,
   Alert,
   ActivityIndicator,
+  ScrollView,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import {
   Button,
@@ -17,6 +19,10 @@ import {
   Form,
   Content,
   Icon as VectorIcon,
+  Left,
+  Right,
+  List,
+  ListItem,
 } from 'native-base';
 import { useSelector, useDispatch } from 'react-redux';
 import { PROVIDER_GOOGLE, Marker, Callout, CalloutSubview } from 'react-native-maps';
@@ -38,6 +44,7 @@ import * as eventActions from '../../store/actions/events';
 import { CustomCallout } from '../../components/CustomCallout';
 import * as iconHelpers from '../helper/iconHelpers';
 import { getGeoInfo } from '../../screens/helper/geoHelper';
+import CategorySelector from '../../components/CategorySelector';
 
 const { width, height } = Dimensions.get('window')
 const SCREEN_HEIGHT = height
@@ -192,122 +199,92 @@ const MapScreen = props => {
     setShowCalendar(!showCalendar);
   }
 
+  const toggleShowCategories = () => {
+    setShowCategories(!showCategories);
+  }
+
   return (
     //add a dropdown to choose map style? -> what if we put it in user settings? could incentivize people to become users
     //add dropdown calendar
     <View style={styles.container}>
       <StatusBar backgroundColor={Colors.darkGrey} barStyle='light-content' />
-      <View style={{
-        flexDirection: 'row', backgroundColor: Colors.darkGrey,
-        height: 55, color: '#fff', alignItems: 'center', alignContent: 'space-evenly', justifyContent: 'space-between',
-        width: SCREEN_WIDTH,
-      }}>
-        {Platform.OS === "ios" ? (
-          <DropDownPicker
-            multiple={true} min={0} max={15} multipleText="%d categories selected"
-            items={[
-              { label: "Music", value: "music" },
-              { label: "Sports", value: "sports" },
-              { label: "Meeting", value: "meeting" },
-              { label: "Party", value: "party" },
-              { label: "Protest", value: "protest" },
-              { label: "Food", value: "food" },
-              { label: "Market", value: "market" },
-              { label: "Discussion", value: "discussion" },
-              { label: "Political", value: "political" },
-              { label: "Other", value: "other" },
-            ]}
-            //defaultValue={category}
-            placeholder="Category"
-            containerStyle={{
-              height: 50,
-              width: SCREEN_WIDTH * 0.4,
-              justifyContent: "center",
-              alignItems: "center",
-              color: '#fff'
-            }}
-            style={{ borderColor: Colors.purpleBackground, borderWidth: 0.5, color: '#fff', backgroundColor: Colors.darkGrey }}
-            dropdownStyle={{ borderColor: Colors.purpleBackground, height: 300, color: '#fff', backgroundColor: Colors.lightBackground }}
-            itemStyle={{ alignItems: "center", color: '#fff' }}
-            onChangeItem={(category) => filterCategory(category.value)}
+      <SafeAreaView style={{ flexDirection: 'row', alignItems: 'center', height: '13%' }}>
+        <Left>
+          <VectorIcon
+            type="Feather"
+            name="filter"
+            color='#fff'
+            style={{ color: 'white', paddingLeft: 20 }}
+            onPress={toggleShowCategories}
           />
-        ) : (
-            <RNPickerSelect
-              items={[
-                { label: "Music", value: "music" },
-                { label: "Sports", value: "sports" },
-                { label: "Art", value: "art" },
-                { label: "Meeting", value: "meeting" },
-                { label: "Party", value: "party" },
-                { label: "Protest", value: "protest" },
-                { label: "Food", value: "food" },
-                { label: "Market", value: "market" },
-                { label: "Discussion", value: "discussion" },
-                { label: "Political", value: "political" },
-                { label: "Other", value: "other" },
-              ]}
-              style={{ borderColor: "gray", borderWidth: 0.5 }}
-              onValueChange={(value) => setCategory(value)}
-            />
-          )}
-          <Text></Text>
-          <Text></Text>
-          <Text></Text>
-        <Button iconRight transparent
-          style={{ width: 150, }}
-          onPress={toggleShowCalendar}
+        </Left>
+        <Text style={{
+          fontFamily: 'jack-silver',
+          fontSize: 32,
+          textAlign: 'center',
+          color: 'white', width: SCREEN_HEIGHT * .25
+        }}
         >
-          <Text style={styles.text}>Date</Text>
-          <VectorIcon name="calendar" color='#fff' style={{color: Colors.lightPurple}}/>
-        </Button>
-      </View>
+          Current
+        </Text>
+        <Right>
+          <VectorIcon
+            name="calendar"
+            color='#fff'
+            style={{ color: 'white', paddingRight: 20 }}
+            onPress={toggleShowCalendar}
+          />
+        </Right>
+      </SafeAreaView>
       {showCalendar && (
-          <View style={styles.calendar}>
-            <CalendarPicker
-              onDateChange={filterDate}
-              textStyle={{color: '#fff'}}
-            />
-
-            <View>
-              <Text>SELECTED DATE:</Text>
-            </View>
-          </View>
-        )}
-      <MapView
-        initialRegion={INITIAL_REGION}
-        style={styles.map}
-        provider={PROVIDER_GOOGLE}
-        showsUserLocation
-        showsMyLocationButton
-        rotateEnabled={false}
-        showsTraffic={false}
-        toolbarEnabled={true}
-        ref={mapRef}
-        customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
-        clusterColor="#341f97"
-      >
-        {events.map(event => (
-          <Marker
-            coordinate={{ latitude: parseFloat(event.location.latitude), longitude: parseFloat(event.location.longitude) }}
-            pinColor="#341f97"
-            key={event.event}
-            tracksViewChanges={false}
-            onPress={onPinPress.bind(this, event)}
-            icon={iconHelpers.iconPicker(event.category)}
-          >
-            {Platform.OS === 'ios' ?
-              (
-                <Callout
-                  style={styles.plainView}
-                  tooltip={true}
-                  key={event.id}
-                >
-                  <View>
-                    <CalloutSubview onPress={onEventCalloutPress.bind(this, event)}>
-                      <EventCard event={event} style={{ width: SCREEN_WIDTH * 0.75 }} streetAddress />
-                    </CalloutSubview>
-
-                    {/*<View style={{ flexDirection: 'row' }}>
+        <View style={styles.calendar}>
+          <CalendarPicker
+            onDateChange={filterDate}
+            textStyle={{ color: '#fff' }}
+          />
+        </View>
+      )}
+      {showCategories && (
+        <CategorySelector style={{
+          width: SCREEN_WIDTH,
+          backgroundColor: Colors.darkGrey,
+          maxHeight: 250
+        }} />
+      )}
+        <MapView
+          initialRegion={INITIAL_REGION}
+          style={styles.map}
+          provider={PROVIDER_GOOGLE}
+          showsUserLocation
+          showsMyLocationButton
+          rotateEnabled={false}
+          showsTraffic={false}
+          toolbarEnabled={true}
+          ref={mapRef}
+          customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
+          clusterColor="#341f97"
+        >
+          {events.map(event => (
+            <Marker
+              coordinate={{ latitude: parseFloat(event.location.latitude), longitude: parseFloat(event.location.longitude) }}
+              pinColor="#341f97"
+              key={event.event}
+              tracksViewChanges={false}
+              onPress={onPinPress.bind(this, event)}
+              icon={iconHelpers.iconPicker(event.category)}
+            >
+              {Platform.OS === 'ios' ?
+                (
+                  <Callout
+                    style={styles.plainView}
+                    tooltip={true}
+                    key={event.id}
+                  >
+                    <View>
+                      <CalloutSubview onPress={onEventCalloutPress.bind(this, event)}>
+                        <EventCard event={event} style={{ width: SCREEN_WIDTH * 0.75 }} streetAddress />
+                      </CalloutSubview>
+                      {/*<View style={{ flexDirection: 'row' }}>
                       {(userName != event.host.name && userName) ?
                         (<CalloutSubview onPress={toggleSaveButton}>
                           <TouchableOpacity>
@@ -337,27 +314,27 @@ const MapScreen = props => {
                         </TouchableOpacity>
                       </CalloutSubview>
                     </View>*/}
-                  </View>
-                </Callout>
-              ) :
-              ( // Android
-                <Callout
-                  style={styles.plainView}
-                  onPress={onEventCalloutPress.bind(this, event)}
-                  tooltip={true}
-                  key={event.id}
-                >
-                  <CustomCallout
-                    style={{ width: SCREEN_WIDTH * 0.75 }}
-                    event={event}
-                  />
-                </Callout>
-              )
-            }
-          </Marker>
-        ))
-        }
-      </MapView>
+                    </View>
+                  </Callout>
+                ) :
+                ( // Android
+                  <Callout
+                    style={styles.plainView}
+                    onPress={onEventCalloutPress.bind(this, event)}
+                    tooltip={true}
+                    key={event.id}
+                  >
+                    <CustomCallout
+                      style={{ width: SCREEN_WIDTH * 0.75 }}
+                      event={event}
+                    />
+                  </Callout>
+                )
+              }
+            </Marker>
+          ))
+          }
+        </MapView>
       {
         !userAccessToken ?
           (
@@ -443,32 +420,6 @@ const MapScreen = props => {
   );
 }
 
-/*
-MapScreen.navigationOptions = navData => {
-  return {
-    headerLeft: () =>
-      (
-        <HeaderButtons HeaderButtonComponent={HeaderButton} >
-          <Item
-            title='Menu'
-            iconName={Platform.OS === 'android' ? 'md-options' : 'ios-options'}
-            onPress={() => { }}
-          />
-        </HeaderButtons>
-      ),
-    headerRight: () => (
-      <HeaderButtons HeaderButtonComponent={HeaderButton}>
-        <Item
-          title='Menu'
-          iconName={Platform.OS === 'android' ? 'md-calendar' : 'ios-calendar'}
-          onPress={() => { }}
-        />
-      </HeaderButtons>
-    )
-  }
-}
-*/
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -484,7 +435,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: SCREEN_WIDTH * 0.9,
-    backgroundColor: Colors.darkGrey,  
+    backgroundColor: Colors.darkGrey,
   },
   top: {
     backgroundColor: '#2d3436',

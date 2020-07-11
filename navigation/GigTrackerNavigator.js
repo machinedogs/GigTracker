@@ -27,7 +27,9 @@ const EventNavigator = createStackNavigator(
         Home: {
             screen: MapScreen,
             navigationOptions: {
-                headerTitle: Platform.OS === 'ios' ? '  Current' : 'Current  ',
+                headerShown: false,
+                /*
+                headerTitle: Platform.OS === 'ios' ? 'Current' : 'Current  ',
                 headerTitleStyle: {
                     fontFamily: 'jack-silver',
                     fontSize: 32,
@@ -39,6 +41,7 @@ const EventNavigator = createStackNavigator(
                     height: Platform.OS === 'ios' ? 110 : Header.height
                 },
                 headerTintColor: Colors.lightText,
+                */
                 gestureEnabled: false, // this stops us from swiping back to startup screen
             },
         },
