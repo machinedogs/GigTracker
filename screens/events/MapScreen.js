@@ -196,8 +196,6 @@ const MapScreen = props => {
   }
 
   return (
-    //add a dropdown to choose map style? -> what if we put it in user settings? could incentivize people to become users
-    //add dropdown calendar
     <View style={styles.container}>
       <StatusBar backgroundColor={Colors.darkGrey} barStyle='light-content' />
       <SafeAreaView style={{ flexDirection: 'row', alignItems: 'center', height: '13%' }}>
@@ -229,26 +227,23 @@ const MapScreen = props => {
         </Right>
       </SafeAreaView>
       {showCalendar && (
-        <CalendarPicker
-          disabledDates={date => {
-            var currentDate = new Date()
-            currentDate.setDate(currentDate.getDate() - 1)
-            if (date >= currentDate) {
-              return false;
-            } else {
-              return true;
-            }
-          }}
-          onDateChange={filterDate}
-          textStyle={{ color: '#fff' }}
-        />
+        <View style={{backgroundColor: 'white', paddingVertical: 5}}>
+          <CalendarPicker
+            minDate={new Date()}
+            onDateChange={filterDate}
+            selectedDayColor={Colors.lightPurple}
+            previousTitle='Prev'
+          />
+        </View>
       )}
       {showCategories && (
-        <CategorySelector style={{
-          width: SCREEN_WIDTH,
-          backgroundColor: Colors.darkGrey,
-          maxHeight: 250
-        }} />
+        <CategorySelector
+          style={{
+            width: SCREEN_WIDTH,
+            backgroundColor: Colors.darkGrey,
+            maxHeight: 200
+          }}
+        />
       )}
       <MapView
         initialRegion={INITIAL_REGION}
