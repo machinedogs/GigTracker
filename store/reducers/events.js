@@ -9,14 +9,17 @@ import {
     DELETE_EVENT,
     ADD_FILTER,
     REMOVE_FILTER,
-    CLEAR_FILTERS
+    CLEAR_FILTERS,
+    SET_FILTERS
 } from '../actions/events';
+import { TabRouter } from 'react-navigation';
 
 const initialState = {
     createdEvents: [],
     savedEvents: [],
     events: [],
-    filters: []
+    filters: [],
+    filteredEvents: []
 }
 
 export default (state = initialState, action) => {
@@ -38,6 +41,19 @@ export default (state = initialState, action) => {
                 ...state,
                 filters: []
             };
+        case SET_FILTERS:
+            if (state.filters.length > 0) {
+                const updatedFilteredEvents = state.events.filter(event => {
+                    if (state.filters.includes(event.category)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+                return { ...state, filteredEvents: updatedFilteredEvents };
+            } else { // if no filters set return regular events
+                return { ...state, filteredEvents: state.events };
+            }
         case UPDATE_HOSTED_EVENTS:
             return {
                 ...state,

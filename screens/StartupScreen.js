@@ -33,6 +33,7 @@ const StartupScreen = props => {
             await getGeoInfo().then(coords => coordinates = coords);
             var currentDate = new Date().toISOString();
             await dispatch(eventActions.getEvents(currentDate, coordinates.latitude, coordinates.longitude));
+            dispatch(eventActions.setFilters());
             //dispatch(eventActions.getAllEvents());
             // change this to secure store function
             const userData = await SecureStore.getItemAsync('userData');

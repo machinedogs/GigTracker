@@ -82,13 +82,11 @@ const MapScreen = props => {
   const userAccessToken = useSelector(state => state.user.accessToken);
   const savedEvents = useSelector(state => state.events.savedEvents);
   const [isEventSaved, setEventSaved] = useState(false);
-  const events = useSelector(state => state.events.events);
+  const filteredEvents = useSelector(state => state.events.filteredEvents);
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(new Event);
-  const [category, setCategory] = useState("0");
   let mapRef = useRef(null);
   const [date, setDate] = useState(todaysDate());
-  const [filteredEvents, setFilteredEvents] = useState([]);
   const [showCategories, setShowCategories] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
 
@@ -134,17 +132,9 @@ const MapScreen = props => {
     var currentDate = new Date().toISOString();
     setIsRefreshing(true);
     await dispatch(eventActions.getEvents(currentDate, coordinates.latitude, coordinates.longitude));
+    await dispatch(eventActions.setFilters());
     setIsRefreshing(false);
-    //dispatch(eventActions.getEvents()); pull global events here, no 
   }
-
-  const filterCategory = (category) => {
-    if (category === 'All events') {
-      //setEvents(theEvents)
-    } else {
-      //setEvents(theEvents.filter(event => event.category === category))
-    }
-  };
 
   // gets called when callout is pressed i.e. pin must be pressed first
   const onEventCalloutPress = (event) => {
@@ -179,7 +169,7 @@ const MapScreen = props => {
   const filterDate = (selectedDate) => {
     setDate(selectedDate);
     //setEvents(events.filter(event => event.date === selectedDate))
-    console.log(selectedDate + '\n' + events.map((event) => { event.toString() }))
+    console.log(selectedDate + '\n' + filteredEvents.map((event) => { event.toString() }))
   }
 
   const toggleSaveButton = () => {
@@ -264,7 +254,7 @@ const MapScreen = props => {
           customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
           clusterColor="#341f97"
         >
-          {events.map(event => (
+          {filteredEvents.map(event => (
             <Marker
               coordinate={{ latitude: parseFloat(event.location.latitude), longitude: parseFloat(event.location.longitude) }}
               pinColor="#341f97"

@@ -9,17 +9,31 @@ export const DELETE_EVENT = "DELETE_EVENT";
 export const ADD_FILTER = "ADD_FILTER";
 export const REMOVE_FILTER = "REMOVE_FILTER";
 export const CLEAR_FILTERS = "CLEAR_FILTERS";
+export const SET_FILTERS = "SET_FILTERS";
 
 export const addFilter = (filter) => {
-	return { type: ADD_FILTER, filter: filter}
+	return async (dispatch) => {
+		await dispatch({ type: ADD_FILTER, filter: filter });
+		dispatch(setFilters())
+	}
 }
 
 export const removeFilter = (filter) => {
-	return { type: REMOVE_FILTER, filter: filter}
+	return async (dispatch) => {
+		await dispatch({ type: REMOVE_FILTER, filter: filter });
+		dispatch(setFilters())
+	}
 }
 
 export const clearFilters = () => {
-	return { type: CLEAR_FILTERS}
+	return async (dispatch) => {
+		await dispatch({ type: CLEAR_FILTERS });
+		dispatch(setFilters())
+	}
+}
+
+export const setFilters = () => {
+	return { type: SET_FILTERS }
 }
 
 export const deleteEvent = (event) => {
@@ -217,7 +231,7 @@ export const addFakeEvents = () => {
 				"category": "sports",
 				"location": {
 					"longitude": `${Math.random() * 70}`,
-					"latitude":`${Math.random() * 20}`,
+					"latitude": `${Math.random() * 20}`,
 					"address": "Temple University, Fontain Street, Stanton, Philadelphia, Philadelphia County, Pennsylvania, 19121, United States of America"
 				},
 				"host": {
@@ -238,7 +252,7 @@ export const addFakeEvents = () => {
 
 export const getAllEvents = () => {
 	return dispatch => {
-		setTimeout(() => {  dispatch(addFakeEvents()) }, 10000);
+		setTimeout(() => { dispatch(addFakeEvents()) }, 10000);
 	}
 };
 
