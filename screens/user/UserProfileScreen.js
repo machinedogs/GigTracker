@@ -106,7 +106,7 @@ const UserProfileScreen = (props) => {
 	}
 
 	return (
-		<ScrollView>
+		<ScrollView showsVerticalScrollIndicator={false}>
 			<View style={styles.container}>
 				<View style={styles.headerContainer}>
 					<View style={styles.headerColumn, { paddingLeft: 20 }}>
