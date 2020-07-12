@@ -1,3 +1,4 @@
+//Move to its own file
 export const CREATE_EVENT = "CREATE_EVENT";
 export const UPDATE_HOSTED_EVENTS = "UPDATE_HOSTED_EVENTS";
 export const UPDATE_SAVED_EVENTS = "UPDATE_SAVED_EVENTS";

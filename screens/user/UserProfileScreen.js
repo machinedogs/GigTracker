@@ -15,7 +15,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Container, Header, Tab, Tabs, TabHeading, Icon, Button } from "native-base";
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
-
+import InsetShadow from 'react-native-inset-shadow';
 import HeaderButton from '../../components/HeaderButton';
 import { updateUserProfile } from "../../store/actions/user";
 import {
@@ -138,7 +138,7 @@ const UserProfileScreen = (props) => {
 						tabBarActiveTextColor={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}
 					//tabBarInactiveTextColor={Platform.OS === 'ios' ? 'grey' : Colors.lightPurple}
 					>
-						<Tab heading="Saved Events" tabBarUnderlineStyle={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}>
+						<Tab heading="Saved" tabBarUnderlineStyle={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}>
 
 							<FlatList
 								data={constructEvents(event.savedEvents)}
@@ -150,12 +150,22 @@ const UserProfileScreen = (props) => {
 
 							/>
 						</Tab>
-						<Tab heading="Hosted Events" tabBarUnderlineStyle={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}>
+						<Tab heading="Going" tabBarUnderlineStyle={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}>
+						<FlatList
+								data={constructEvents(user.goingEvents)}
+								renderItem={({ item }) =>
+									<EventCard event={item} />
+								}
+								keyExtractor={(item) => item.id.toString()}
+								scrollEnabled={false}
+							/>
+						</Tab>
+						<Tab heading="Hosted" tabBarUnderlineStyle={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}>
 							<FlatList
 								data={constructEvents(event.createdEvents)}
 								renderItem={({ item }) =>
 									<View>
-										<EventCard event={item} hosting={false} />
+										<EventCard event={item} />
 										<View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingHorizontal: 15 }}>
 											<Button full transparent light
 												onPress={() => {
