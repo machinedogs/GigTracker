@@ -85,6 +85,8 @@ const MapScreen = props => {
   const [showCategories, setShowCategories] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
 
+  let clusterRef = useRef(null);
+  const [date, setDate] = useState(todaysDate());
   //Redux
   const dispatch = useDispatch();
   var user = useSelector((state) => state.user);
@@ -133,16 +135,16 @@ const MapScreen = props => {
 
   // gets called when callout is pressed i.e. pin must be pressed first
   const onEventCalloutPress = (event) => {
-    console.log("pressing event callout");
-    console.log(selectedEvent);
+    //console.log("pressing event callout");
+    //console.log(selectedEvent);
     //toggleModal();
     props.navigation.navigate('EventScreen', { event: event });
   }
 
   const onPinPress = (event) => {
     setSelectedEvent(event);
-    console.log("pressing pin");
-    console.log(event)
+    //console.log("pressing pin");
+    //console.log(event)
     // Determine if selected event has already been saved
     var existingIndex = savedEvents.findIndex(myEvent => myEvent.event === event.event)
     if (existingIndex >= 0) { // check if index exists
@@ -150,15 +152,15 @@ const MapScreen = props => {
     } else {
       setEventSaved(false);
     }
-    console.log("Selected Event Save status: " + isEventSaved);
-    /*
+
     let coords = {
-      latitude: parseFloat(event.location.latitude), // mapRef.current.region.latitude + ((parseFloat(event.location.latitude)) - (mapRef.current.region.latitude - (mapRef.current.region.latitudeDelta / 4))), //parseFloat(event.location.latitude) + 0.035,
+      latitude: parseFloat(event.location.latitude) + mapRef.current.__lastRegion.latitudeDelta*0.35,
       longitude: parseFloat(event.location.longitude),
-      latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA
+      latitudeDelta: mapRef.current.__lastRegion.latitudeDelta, 
+      longitudeDelta: mapRef.current.__lastRegion.longitudeDelta
     };
     mapRef.current.animateToRegion(coords, 0);
-    */
+
   }
 
   const filterDate = async (selectedDate) => {
@@ -248,6 +250,9 @@ const MapScreen = props => {
       )}
       <MapView
         initialRegion={INITIAL_REGION}
+        onRegionChange={() => {
+          //console.log(mapRef.current.__lastRegion)
+        }}
         style={styles.map}
         provider={PROVIDER_GOOGLE}
         showsUserLocation
@@ -255,6 +260,10 @@ const MapScreen = props => {
         rotateEnabled={false}
         showsTraffic={false}
         toolbarEnabled={true}
+        superClusterRef={clusterRef}
+        onClusterPress={(cluster) => {
+          //console.log(cluster)
+        }}
         ref={mapRef}
         customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
         clusterColor="#341f97"
@@ -262,6 +271,7 @@ const MapScreen = props => {
           setShowCalendar(false);
           setShowCategories(false);
         }}
+        edgePadding={{ top: 100, left: 50, bottom: 150, right: 50 }}
       >
         {filteredEvents.map(event => (
           <Marker

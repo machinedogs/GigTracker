@@ -3,10 +3,10 @@ import {
     View,
     ActivityIndicator,
     StyleSheet,
-    Text
+    Text,
+    StatusBar
 } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
-
 import { useDispatch, useSelector } from 'react-redux';
 import { updateUserProfile } from '../store/actions/user';
 import * as authActions from '../store/actions/user';
@@ -80,6 +80,7 @@ const StartupScreen = props => {
 
             // pass user data to state and navigate to home
             await dispatch(authActions.authenticate(userName, userEmail, accessToken, refreshToken));
+            dispatch(authActions.getGoingEvents(accessToken));
             //Dispatch action to update profile image state in store 
             await dispatch(updateUserProfile(profileImage, transformedData));
             props.navigation.replace('Home');
@@ -89,6 +90,7 @@ const StartupScreen = props => {
 
     return (
         <View style={styles.screen} >
+            <StatusBar backgroundColor={Colors.darkGrey} barStyle='light-content' />
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text style={{ color: 'white', fontSize: 17 }}>
                     {startupText}

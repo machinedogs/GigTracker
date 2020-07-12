@@ -22,6 +22,7 @@ const EventScreen = (props) => {
     const savedEvents = useSelector(state => state.events.savedEvents);
     const goingEvents = useSelector(state => state.user.goingEvents);
     const event = props.navigation.getParam('event');
+    const [numGoing, setNumGoing] = useState(event.attending)
     console.log("this is the event " + JSON.stringify(event));
     // See if user previously saved the event
     var initialEventSaveState;
@@ -60,8 +61,10 @@ const EventScreen = (props) => {
     const toggleGoingButton = () => {
         // dispatch action
         if (!isGoing) {
+            setNumGoing(numGoing + 1)
             dispatch(userActions.addToGoingEvents(event))
         } else { // indicating user is no longer going to the event
+            setNumGoing(numGoing - 1)
             dispatch(userActions.removeFromGoingEvents(event))
         }
         setGoing(!isGoing);
@@ -124,39 +127,19 @@ const EventScreen = (props) => {
                     <InsetShadow shadowRadius={1} shadowColor='black' left={false} right={false} shadowOpacity={1}>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 15, paddingHorizontal: 15 }}>
                             <Text style={styles.goingText}>
-                                50 People Going
+                                {numGoing} Going
                             </Text>
                             <TouchableOpacity onPress={toggleGoingButton}>
-                                {
-                                    Platform.OS === 'ios' ?
-                                        (
-                                            <View style={{
-                                                backgroundColor: isGoing ? '#f5b800' : Colors.lightBackground,
-                                                borderRadius: 5,
-                                                borderColor: isGoing ? '#f5b800' : Colors.lightBackground,
-                                                borderWidth: 2,
-                                                paddingHorizontal: 10
-                                            }}>
-                                                <Button
-                                                    title='Going'
-                                                    color='black'
-                                                    onPress={toggleGoingButton}
-                                                />
-                                            </View>
-                                        ) : (
-                                            <View style={{
-                                                backgroundColor: isGoing ? '#f5b800' : Colors.lightBackground,
-                                                borderRadius: 5,
-                                                borderColor: isGoing ? '#f5b800' : Colors.lightBackground,
-                                                borderWidth: 2,
-                                                paddingHorizontal: 10,
-                                                paddingVertical: 5
-                                            }}>
-                                                <Text>Going</Text>
-                                            </View>
-                                        )
-                                }
-
+                                <View style={{
+                                    backgroundColor: isGoing ? '#f5b800' : Colors.lightBackground,
+                                    borderRadius: 5,
+                                    borderColor: isGoing ? '#f5b800' : Colors.lightBackground,
+                                    borderWidth: 2,
+                                    paddingHorizontal: 10,
+                                    paddingVertical: 5
+                                }}>
+                                    <Text>Going</Text>
+                                </View>
                             </TouchableOpacity>
                         </View>
                     </InsetShadow>

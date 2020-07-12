@@ -43,7 +43,7 @@ export const EventCard = (props) => {
 				</InsetShadow>
 			</View >
 			<View style={styles.footer}>
-				<View style={{width: '80%'}}>
+				<View style={{ width: '80%' }}>
 					{
 						props.streetAddress ?
 							<Text>{makeStreetAddress(props.event.location.address)}</Text>
@@ -55,8 +55,8 @@ export const EventCard = (props) => {
 						{new Date(props.event.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
 					</Text>
 				</View>
-				<View style={{justifyContent: 'center', alignItems: 'center'}}>
-					<Text>50</Text>
+				<View style={{ justifyContent: 'center', alignItems: 'center' }}>
+					<Text>{props.event.attending}</Text>
 					<Text>Going</Text>
 				</View>
 			</View>

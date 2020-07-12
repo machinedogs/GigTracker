@@ -3,7 +3,8 @@ import {
 	LOGOUT,
 	UPDATE_PROFILE,
 	GOING_TO_EVENT,
-	NOT_GOING_TO_EVENT
+	NOT_GOING_TO_EVENT,
+	SET_GOING_EVENTS,
 } from "../actions/user";
 
 const initialState = {
@@ -33,13 +34,20 @@ export default (state = initialState, action) => {
 			};
 		case LOGOUT:
 			return initialState;
+		case SET_GOING_EVENTS:
+			return {
+				...state,
+				goingEvents: action.goingEvents
+			};
 		case GOING_TO_EVENT:
 			return {
 				...state,
 				goingEvents: state.goingEvents.concat(action.event)
 			};
 		case NOT_GOING_TO_EVENT:
-			const goingIndex = state.goingEvents.findIndex(event => event.event === action.eventId)
+			console.log("IN REDUCER")
+			console.log("id to remove:" + action.event.event)
+			const goingIndex = state.goingEvents.findIndex(event => event.event === action.event.event)
 			if (goingIndex >= 0) { // splice out event to unsave
 				const updatedGoingEvents = [...state.goingEvents];
 				updatedGoingEvents.splice(goingIndex, 1);
