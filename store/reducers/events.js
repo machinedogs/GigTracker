@@ -68,11 +68,19 @@ export default (state = initialState, action) => {
             if (regularGoingIndex >= 0) { // splice out event to unsave
                 updatedGoingEvents.splice(regularGoingIndex, 1);
                 updatedGoingEvents.splice(regularGoingIndex, 0, action.event);
-                return { ...state, events: updatedGoingEvents };
             }
-            return { ...state, 
+            const filteredGoingIndex = state.events.findIndex(event => event.event === action.event.event)
+            const updatedFilteredGoingEvents = [...state.events];
+            if (filteredGoingIndex >= 0) { // splice out event to unsave
+                updatedFilteredGoingEvents.splice(filteredGoingIndex, 1);
+                updatedFilteredGoingEvents.splice(filteredGoingIndex, 0, action.event);
+            }
+            return {
+                ...state,
                 events: updatedGoingEvents,
-                savedEvents: updatedSavedGoingEvents };
+                savedEvents: updatedSavedGoingEvents,
+                filteredEvents: updatedFilteredGoingEvents
+            };
         case UPDATE_HOSTED_EVENTS:
             return {
                 ...state,
