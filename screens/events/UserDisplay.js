@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet} from "react-native";
+import { StyleSheet } from "react-native";
 import {
 	Container,
 	Content,
@@ -9,11 +9,12 @@ import {
 	Left,
 	Body,
 	Thumbnail,
-	Text
+	Text,
 } from "native-base";
+import { useSelector, useDispatch } from "react-redux";
 
 const UserDisplay = (props) => {
-	const people = props.navigation.getParam("people");
+	const people = useSelector((state) => state.events.eventGoing);
 
 	return (
 		<Card style={styles.container}>

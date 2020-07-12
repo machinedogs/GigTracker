@@ -88,7 +88,9 @@ const EventScreen = (props) => {
 	};
 
 	const navigateToGoingList = () => {
-		props.navigation.navigate('GoingListScreen', {people: peopleGoing});
+        console.log('dispatching get people going')
+        dispatch(eventActions.getPeopleGoing(event.event));
+		props.navigation.navigate('GoingListScreen');
 	};
 
 	return (
