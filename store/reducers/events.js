@@ -107,7 +107,7 @@ export default (state = initialState, action) => {
                     createdEvents: state.createdEvents.concat(action.event),
                 };
             }
-            
+
         case GET_EVENTS:
             return {
                 ...state,
@@ -152,11 +152,21 @@ export default (state = initialState, action) => {
         case DELETE_EVENT:
             // Delete from all events
             const index = state.events.findIndex(event => event.event === action.eventId)
+            const updatedEvents = [...state.events];
             if (index >= 0) { // splice out event to unsave
-                const updatedEvents = [...state.events];
                 updatedEvents.splice(index, 1);
-                return { ...state, events: updatedEvents };
             }
+            const deleteFilterdIndex = state.filteredEvents.findIndex(event => event.event === action.eventId)
+            const updatedFilteredEvents = [...state.filteredEvents];
+            if (deleteFilterdIndex >= 0) { // splice out event to unsave
+                updatedFilteredEvents.splice(deleteFilterdIndex, 1);
+            }
+            return {
+                ...state,
+                events: updatedEvents,
+                filteredEvents: updatedFilteredEvents
+            };
+
         default:
             return state;
     }
