@@ -106,6 +106,8 @@ const MapScreen = props => {
     //console.log("pressing event callout");
     //console.log(selectedEvent);
     //toggleModal();
+    console.log('dispatching get people going')
+    dispatch(eventActions.getPeopleGoing(event.event));
     props.navigation.navigate('EventScreen', { event: event });
   }
 

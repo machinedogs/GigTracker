@@ -13,6 +13,7 @@ import AuthScreen from '../screens/user/AuthScreen';
 import StartupScreen from '../screens/StartupScreen';
 import DeleteScreen from '../screens/user/DeleteScreen';
 import SettingsScreen from '../screens/user/SettingsScreen';
+import UserDisplay from '../screens/events/UserDisplay';
 
 const WIDTH = Dimensions.get('window').width;
 
@@ -79,6 +80,25 @@ const EventNavigator = createStackNavigator(
                     height: Platform.OS === 'ios' ? 110 : Header.height,
                 },
                 headerTitle: "event details",
+                headerTitleStyle: {
+                    fontSize: 30,
+                    fontFamily: 'jack-silver',
+                    textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
+                    width: WIDTH - 75,
+                },
+                headerBackTitleVisible: false,
+                headerTintColor: 'white',
+                headerTitleAllowFontScaling: true
+            }
+        },
+        GoingListScreen: {
+            screen: UserDisplay,
+            navigationOptions: {
+                headerStyle: {
+                    backgroundColor: Colors.darkGrey,
+                    height: Platform.OS === 'ios' ? 110 : Header.height,
+                },
+                headerTitle: "People Going",
                 headerTitleStyle: {
                     fontSize: 30,
                     fontFamily: 'jack-silver',
