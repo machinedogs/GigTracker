@@ -22,6 +22,7 @@ const EventScreen = (props) => {
     const savedEvents = useSelector(state => state.events.savedEvents);
     const goingEvents = useSelector(state => state.user.goingEvents);
     const event = props.navigation.getParam('event');
+    const [numGoing, setNumGoing] = useState(event.attending)
     console.log("this is the event " + JSON.stringify(event));
     // See if user previously saved the event
     var initialEventSaveState;
@@ -60,8 +61,10 @@ const EventScreen = (props) => {
     const toggleGoingButton = () => {
         // dispatch action
         if (!isGoing) {
+            setNumGoing(numGoing + 1)
             dispatch(userActions.addToGoingEvents(event))
         } else { // indicating user is no longer going to the event
+            setNumGoing(numGoing - 1)
             dispatch(userActions.removeFromGoingEvents(event))
         }
         setGoing(!isGoing);
@@ -124,7 +127,7 @@ const EventScreen = (props) => {
                     <InsetShadow shadowRadius={1} shadowColor='black' left={false} right={false} shadowOpacity={1}>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 15, paddingHorizontal: 15 }}>
                             <Text style={styles.goingText}>
-                                {event.attending} Going
+                                {numGoing} Going
                             </Text>
                             <TouchableOpacity onPress={toggleGoingButton}>
                                 <View style={{

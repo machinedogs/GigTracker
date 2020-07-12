@@ -8,6 +8,7 @@ export const LOGOUT = 'LOGOUT';
 export const SET_GOING_EVENTS = 'SET_GOING_EVENTS';
 export const GOING_TO_EVENT = 'GOING_TO_EVENT';
 export const NOT_GOING_TO_EVENT = 'NOT_GOING_TO_EVENT';
+export const UPDATE_EVENT = "UPDATE_EVENT";
 
 export const addToGoingEvents = (event) => {
     return async (dispatch, getState) => {
@@ -28,7 +29,8 @@ export const addToGoingEvents = (event) => {
         console.log('Updated DB that user is going to an event')
         console.log(resData)
 
-        dispatch({ type: GOING_TO_EVENT, event: event });
+        dispatch({ type: GOING_TO_EVENT, event: resData.event });
+        dispatch({ type: UPDATE_EVENT, event: resData.event });
     }
 };
 
@@ -51,7 +53,8 @@ export const removeFromGoingEvents = (event) => {
         console.log('Updated DB that user is not going to this event')
         console.log(resData)
 
-        dispatch({ type: NOT_GOING_TO_EVENT, event: event });
+        dispatch({ type: UPDATE_EVENT, event: resData.event });
+        dispatch({ type: NOT_GOING_TO_EVENT, event: resData.event});
     }
 }
 

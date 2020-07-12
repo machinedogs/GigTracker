@@ -10,7 +10,7 @@ import {
     DELETE_CREATED_EVENT,
     EDIT_CREATED_EVENT
 } from '../actions/events';
-
+import { UPDATE_EVENT } from '../actions/user'
 const initialState = {
     createdEvents: [],
     savedEvents: [],
@@ -19,6 +19,23 @@ const initialState = {
 
 export default (state = initialState, action) => {
     switch (action.type) {
+        case UPDATE_EVENT:
+            const savedGoingIndex = state.savedEvents.findIndex(event => event.event === action.eventId)
+            const updatedSavedGoingEvents = [...state.savedEvents];
+            if (savedGoingIndex >= 0) { // splice out event to unsave
+                updatedSavedGoingEvents.splice(savedGoingIndex, 1);
+                updatedSavedGoingEvents.splice(savedGoingIndex, 0, action.event);
+            }
+            const regularGoingIndex = state.events.findIndex(event => event.event === action.event.event)
+            const updatedGoingEvents = [...state.events];
+            if (regularGoingIndex >= 0) { // splice out event to unsave
+                updatedGoingEvents.splice(regularGoingIndex, 1);
+                updatedGoingEvents.splice(regularGoingIndex, 0, action.event);
+                return { ...state, events: updatedGoingEvents };
+            }
+            return { ...state, 
+                events: updatedGoingEvents,
+                savedEvents: updatedSavedGoingEvents };
         case UPDATE_HOSTED_EVENTS:
             return {
                 ...state,
