@@ -129,18 +129,22 @@ const EventScreen = (props) => {
                             <Text style={styles.goingText}>
                                 {numGoing} Going
                             </Text>
-                            <TouchableOpacity onPress={toggleGoingButton}>
-                                <View style={{
-                                    backgroundColor: isGoing ? '#f5b800' : Colors.lightBackground,
-                                    borderRadius: 5,
-                                    borderColor: isGoing ? '#f5b800' : Colors.lightBackground,
-                                    borderWidth: 2,
-                                    paddingHorizontal: 10,
-                                    paddingVertical: 5
-                                }}>
-                                    <Text>Going</Text>
-                                </View>
-                            </TouchableOpacity>
+                            {(userName != event.host.name && userName) ?
+                                (
+                                    <TouchableOpacity onPress={toggleGoingButton}>
+                                        <View style={{
+                                            backgroundColor: isGoing ? '#f5b800' : Colors.lightBackground,
+                                            borderRadius: 5,
+                                            borderColor: isGoing ? '#f5b800' : Colors.lightBackground,
+                                            borderWidth: 2,
+                                            paddingHorizontal: 10,
+                                            paddingVertical: 5
+                                        }}>
+                                            <Text>Going</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                ) : null
+                            }
                         </View>
                     </InsetShadow>
                 </Col>
