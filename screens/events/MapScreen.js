@@ -154,9 +154,9 @@ const MapScreen = props => {
     }
 
     let coords = {
-      latitude: parseFloat(event.location.latitude) + mapRef.current.__lastRegion.latitudeDelta*0.35,
+      latitude: parseFloat(event.location.latitude) + mapRef.current.__lastRegion.latitudeDelta * 0.35,
       longitude: parseFloat(event.location.longitude),
-      latitudeDelta: mapRef.current.__lastRegion.latitudeDelta, 
+      latitudeDelta: mapRef.current.__lastRegion.latitudeDelta,
       longitudeDelta: mapRef.current.__lastRegion.longitudeDelta
     };
     mapRef.current.animateToRegion(coords, 0);
@@ -230,7 +230,7 @@ const MapScreen = props => {
         </Right>
       </SafeAreaView>
       {showCalendar && (
-        <View style={{backgroundColor: 'white', paddingVertical: 5}}>
+        <View style={{ backgroundColor: 'white', paddingVertical: 5 }}>
           <CalendarPicker
             minDate={new Date()}
             onDateChange={filterDate}
