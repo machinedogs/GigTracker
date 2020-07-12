@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   StatusBar,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import {
   Icon as VectorIcon,
@@ -133,8 +134,8 @@ const MapScreen = props => {
   const filterDate = async (selectedDate) => {
     console.log(selectedDate)
     setIsRefreshing(true);
-    dispatch(eventActions.getEvents(new Date(selectedDate)));
-    dispatch(eventActions.setFilters());
+    await dispatch(eventActions.getEvents(new Date(selectedDate)));
+    await dispatch(eventActions.setFilters());
     setIsRefreshing(false);
   }
 
@@ -321,70 +322,59 @@ const MapScreen = props => {
                 alignSelf: 'center' //for align to right
               }}
             >
-              <TouchableOpacity>
-                <Icon
-                  reverse
-                  raised
-                  name='user'
-                  type='font-awesome'
-                  color={Colors.darkGrey}
-                  size={28}
-                  reverseColor={Colors.lightText}
-                  onPress={() => { props.navigation.navigate('Auth') }}
-                />
+              <TouchableOpacity style={{ paddingBottom: 10 }}>
+                <View style={{ width: 60, height: 60, borderRadius: 30, backgroundColor: Colors.darkGrey, justifyContent: 'center', alignItems: 'center' }}>
+                  <VectorIcon
+                    name='ios-person'
+                    type='Ionicons'
+                    size={28}
+                    style={{ color: 'white' }}
+                    onPress={() => { props.navigation.navigate('Auth') }}
+                  />
+                </View>
               </TouchableOpacity>
             </SafeAreaView>
           ) :
           (
             <SafeAreaView style={styles.row}>
-              <TouchableOpacity>
-                <Icon
-                  reverse
-                  raised
-                  name='user'
-                  type='font-awesome'
-                  color={Colors.darkGrey}
-                  size={28}
-                  reverseColor={Colors.lightText}
-                  onPress={() => { props.navigation.navigate('UserProfile') }}
-                />
+              <TouchableOpacity style={{ paddingBottom: 10 }}>
+                <View style={{ width: 60, height: 60, borderRadius: 30, backgroundColor: Colors.darkGrey, justifyContent: 'center', alignItems: 'center' }}>
+                  <VectorIcon
+                    name='ios-person'
+                    type='Ionicons'
+                    size={28}
+                    style={{ color: 'white' }}
+                    onPress={() => { props.navigation.navigate('UserProfile') }}
+                  />
+                </View>
               </TouchableOpacity>
-              <TouchableOpacity>
-                <Icon
-                  reverse
-                  raised
-                  name='plus'
-                  type='font-awesome'
-                  color={Colors.darkGrey}
-                  size={28}
-                  reverseColor={Colors.lightText}
-                  onPress={() => { props.navigation.navigate('CreateEvent') }}
-                />
+              <TouchableOpacity style={{ paddingHorizontal: 10, paddingBottom: 10 }}>
+                <View style={{ width: 60, height: 60, borderRadius: 30, paddingHorizontal: 10, backgroundColor: Colors.darkGrey, justifyContent: 'center', alignItems: 'center' }}>
+                  <VectorIcon
+                    name='add-location'
+                    type='MaterialIcons'
+                    size={28}
+                    style={{ color: 'white' }}
+                    onPress={() => { props.navigation.navigate('CreateEvent') }} />
+                </View>
               </TouchableOpacity>
-              <TouchableOpacity>
+              <TouchableOpacity style={{ paddingBottom: 10 }}>
                 {isRefreshing ? // if refreshing events, show activity indicator
                   (
-                    <Icon
-                      reverse
-                      raised
-                      name='spinner'
-                      type='font-awesome'
-                      color={Colors.darkGrey}
-                      size={28}
-                      reverseColor={Colors.lightText}
-                    />
+                    <View style={{ width: 60, height: 60, borderRadius: 30, backgroundColor: Colors.darkGrey, justifyContent: 'center', alignItems: 'center' }}>
+                      <ActivityIndicator color='white' />
+                    </View>
                   ) :
                   (
-                    <Icon
-                      reverse
-                      raised
-                      name='refresh'
-                      type='font-awesome'
-                      color={Colors.darkGrey}
-                      size={28}
-                      reverseColor={Colors.lightText}
-                      onPress={refreshEvents}
-                    />
+                    <View style={{ width: 60, height: 60, borderRadius: 30, backgroundColor: Colors.darkGrey, justifyContent: 'center', alignItems: 'center' }}>
+                      <VectorIcon
+                        name='database-refresh'
+                        type='MaterialCommunityIcons'
+                        size={28}
+                        style={{ color: 'white' }}
+                        onPress={refreshEvents}
+                      />
+                    </View>
                   )
                 }
               </TouchableOpacity>
@@ -437,7 +427,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     position: 'absolute',//use absolute position to show button on top of the map
     bottom: 0,
-    paddingBottom: 19,
     alignSelf: 'center' //for align to right
   },
   topBarStyle: {
