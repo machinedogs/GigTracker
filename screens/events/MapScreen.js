@@ -144,8 +144,8 @@ const MapScreen = props => {
   const filterDate = async (selectedDate) => {
     console.log(selectedDate)
     setIsRefreshing(true);
-    await dispatch(eventActions.getEvents(new Date(selectedDate)));
-    await dispatch(eventActions.setFilters());
+    dispatch(eventActions.getEvents(new Date(selectedDate)));
+    dispatch(eventActions.setFilters());
     setIsRefreshing(false);
   }
 
@@ -179,7 +179,7 @@ const MapScreen = props => {
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={Colors.darkGrey} barStyle='light-content' />
-      <SafeAreaView style={{ flexDirection: 'row', alignItems: 'center', height: '13%', backgroundColor: Colors.darkGrey }}>
+      <SafeAreaView style={{ flexDirection: 'row', alignItems: 'center', height: 110, backgroundColor: Colors.darkGrey }}>
         <Left>
           <VectorIcon
             type="Feather"
