@@ -9,20 +9,11 @@ import {
   TouchableOpacity,
   StatusBar,
   Alert,
-  ActivityIndicator,
-  ScrollView,
-  TouchableWithoutFeedback,
 } from 'react-native';
 import {
-  Button,
-  Picker,
-  Form,
-  Content,
   Icon as VectorIcon,
   Left,
   Right,
-  List,
-  ListItem,
 } from 'native-base';
 import { useSelector, useDispatch } from 'react-redux';
 import { PROVIDER_GOOGLE, Marker, Callout, CalloutSubview } from 'react-native-maps';
@@ -34,8 +25,6 @@ import { EventCard } from "../../components/EventCard";
 import MapStyle from '../../constants/MapStyle';
 import Event from '../../models/event';
 import Colors from '../../constants/Colors';
-import { GetHostedEvents } from '../../store/actions/events';
-import { GetSavedEvents } from '../../store/actions/events';
 import * as eventActions from '../../store/actions/events';
 import { CustomCallout } from '../../components/CustomCallout';
 import * as iconHelpers from '../helper/iconHelpers';
