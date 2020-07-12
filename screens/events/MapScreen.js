@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   StyleSheet,
   Text,
-  Button,
   View,
   Dimensions,
   Platform,
@@ -10,18 +9,30 @@ import {
   TouchableOpacity,
   StatusBar,
   Alert,
-  ActivityIndicator
+  ActivityIndicator,
+  ScrollView,
+  TouchableWithoutFeedback,
 } from 'react-native';
+import {
+  Button,
+  Picker,
+  Form,
+  Content,
+  Icon as VectorIcon,
+  Left,
+  Right,
+  List,
+  ListItem,
+} from 'native-base';
 import { useSelector, useDispatch } from 'react-redux';
 import { PROVIDER_GOOGLE, Marker, Callout, CalloutSubview } from 'react-native-maps';
 import MapView from 'react-native-map-clustering';
-import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import { Icon } from 'react-native-elements';
+import CalendarPicker from 'react-native-calendar-picker';
 
 import { EventCard } from "../../components/EventCard";
 import MapStyle from '../../constants/MapStyle';
 import Event from '../../models/event';
-import HeaderButton from '../../components/HeaderButton';
 import Colors from '../../constants/Colors';
 import { GetHostedEvents } from '../../store/actions/events';
 import { GetSavedEvents } from '../../store/actions/events';
@@ -29,6 +40,7 @@ import * as eventActions from '../../store/actions/events';
 import { CustomCallout } from '../../components/CustomCallout';
 import * as iconHelpers from '../helper/iconHelpers';
 import { getGeoInfo } from '../../screens/helper/geoHelper';
+import CategorySelector from '../../components/CategorySelector';
 
 const { width, height } = Dimensions.get('window')
 const SCREEN_HEIGHT = height
@@ -66,10 +78,13 @@ const MapScreen = props => {
   const userAccessToken = useSelector(state => state.user.accessToken);
   const savedEvents = useSelector(state => state.events.savedEvents);
   const [isEventSaved, setEventSaved] = useState(false);
-  const events = useSelector(state => state.events.events);
+  const filteredEvents = useSelector(state => state.events.filteredEvents);
   const [isModalVisible, setModalVisible] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(new Event)
+  const [selectedEvent, setSelectedEvent] = useState(new Event);
   let mapRef = useRef(null);
+  const [showCategories, setShowCategories] = useState(false);
+  const [showCalendar, setShowCalendar] = useState(false);
+
   let clusterRef = useRef(null);
   const [date, setDate] = useState(todaysDate());
   //Redux
@@ -114,17 +129,9 @@ const MapScreen = props => {
     var currentDate = new Date().toISOString();
     setIsRefreshing(true);
     await dispatch(eventActions.getEvents(currentDate, coordinates.latitude, coordinates.longitude));
+    await dispatch(eventActions.setFilters());
     setIsRefreshing(false);
-    //dispatch(eventActions.getEvents()); pull global events here, no 
   }
-
-  const filterCategory = (category) => {
-    if (category === 'All events') {
-      //setEvents(theEvents)
-    } else {
-      //setEvents(theEvents.filter(event => event.category === category))
-    }
-  };
 
   // gets called when callout is pressed i.e. pin must be pressed first
   const onEventCalloutPress = (event) => {
@@ -147,21 +154,22 @@ const MapScreen = props => {
     }
 
     let coords = {
-      latitude: parseFloat(event.location.latitude) + mapRef.current.__lastRegion.latitudeDelta*0.35,
+      latitude: parseFloat(event.location.latitude) + mapRef.current.__lastRegion.latitudeDelta * 0.35,
       longitude: parseFloat(event.location.longitude),
-      latitudeDelta: mapRef.current.__lastRegion.latitudeDelta, 
+      latitudeDelta: mapRef.current.__lastRegion.latitudeDelta,
       longitudeDelta: mapRef.current.__lastRegion.longitudeDelta
     };
     mapRef.current.animateToRegion(coords, 0);
 
   }
-  /*
-  const filterDate = (selectedDate) => {
-    setDate(selectedDate);
-    //setEvents(events.filter(event => event.date === selectedDate))
-    console.log(selectedDate + '\n' + events.map((event) => {event.toString()}))
+
+  const filterDate = async (selectedDate) => {
+    console.log(selectedDate)
+    setIsRefreshing(true);
+    await dispatch(eventActions.getEvents(new Date(selectedDate)));
+    await dispatch(eventActions.setFilters());
+    setIsRefreshing(false);
   }
-  */
 
   const toggleSaveButton = () => {
     // dispatch action
@@ -176,11 +184,70 @@ const MapScreen = props => {
     console.log(isEventSaved);
   };
 
+  const toggleShowCalendar = () => {
+    if (showCategories) {
+      setShowCategories(false);
+    }
+    setShowCalendar(!showCalendar);
+  }
+
+  const toggleShowCategories = () => {
+    if (showCalendar) {
+      setShowCalendar(false);
+    }
+    setShowCategories(!showCategories);
+  }
+
   return (
-    //add a dropdown to choose map style? -> what if we put it in user settings? could incentivize people to become users
-    //add dropdown calendar
     <View style={styles.container}>
       <StatusBar backgroundColor={Colors.darkGrey} barStyle='light-content' />
+      <SafeAreaView style={{ flexDirection: 'row', alignItems: 'center', height: '13%', backgroundColor: Colors.darkGrey }}>
+        <Left>
+          <VectorIcon
+            type="Feather"
+            name="filter"
+            color='#fff'
+            style={{ color: 'white', paddingLeft: 20 }}
+            onPress={toggleShowCategories}
+          />
+        </Left>
+        <Text style={{
+          fontFamily: 'jack-silver',
+          fontSize: 32,
+          textAlign: 'center',
+          color: 'white', width: SCREEN_HEIGHT * .25
+        }}
+        >
+          Current
+        </Text>
+        <Right>
+          <VectorIcon
+            name="calendar"
+            color='#fff'
+            style={{ color: 'white', paddingRight: 20 }}
+            onPress={toggleShowCalendar}
+          />
+        </Right>
+      </SafeAreaView>
+      {showCalendar && (
+        <View style={{ backgroundColor: 'white', paddingVertical: 5 }}>
+          <CalendarPicker
+            minDate={new Date()}
+            onDateChange={filterDate}
+            selectedDayColor={Colors.lightPurple}
+            previousTitle='Prev'
+          />
+        </View>
+      )}
+      {showCategories && (
+        <CategorySelector
+          style={{
+            width: SCREEN_WIDTH,
+            backgroundColor: 'white',
+            maxHeight: 225
+          }}
+        />
+      )}
       <MapView
         initialRegion={INITIAL_REGION}
         onRegionChange={() => {
@@ -200,9 +267,13 @@ const MapScreen = props => {
         ref={mapRef}
         customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
         clusterColor="#341f97"
+        onPress={() => {
+          setShowCalendar(false);
+          setShowCategories(false);
+        }}
         edgePadding={{ top: 100, left: 50, bottom: 150, right: 50 }}
       >
-        {events.map(event => (
+        {filteredEvents.map(event => (
           <Marker
             coordinate={{ latitude: parseFloat(event.location.latitude), longitude: parseFloat(event.location.longitude) }}
             pinColor="#341f97"
@@ -222,7 +293,6 @@ const MapScreen = props => {
                     <CalloutSubview onPress={onEventCalloutPress.bind(this, event)}>
                       <EventCard event={event} style={{ width: SCREEN_WIDTH * 0.75 }} streetAddress />
                     </CalloutSubview>
-
                     {/*<View style={{ flexDirection: 'row' }}>
                       {(userName != event.host.name && userName) ?
                         (<CalloutSubview onPress={toggleSaveButton}>
@@ -359,30 +429,6 @@ const MapScreen = props => {
   );
 }
 
-MapScreen.navigationOptions = navData => {
-  return {
-    headerLeft: () =>
-      (
-        <HeaderButtons HeaderButtonComponent={HeaderButton} >
-          <Item
-            title='Menu'
-            iconName={Platform.OS === 'android' ? 'md-options' : 'ios-options'}
-            onPress={() => { }}
-          />
-        </HeaderButtons>
-      ),
-    headerRight: () => (
-      <HeaderButtons HeaderButtonComponent={HeaderButton}>
-        <Item
-          title='Menu'
-          iconName={Platform.OS === 'android' ? 'md-calendar' : 'ios-calendar'}
-          onPress={() => { }}
-        />
-      </HeaderButtons>
-    )
-  }
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -390,7 +436,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: SCREEN_WIDTH,
     paddingTop: 0,
-    paddingBottom: 0
+    paddingBottom: 0,
     //width: Dimensions.get('window').width,
   },
   top: {
@@ -443,6 +489,19 @@ const styles = StyleSheet.create({
     flex: 1,
     width: 'auto'
 
+  },
+  modalContainer: {
+    height: 100,
+    width: SCREEN_WIDTH * 0.95,
+    backgroundColor: Colors.lightBackground
+  },
+  modal: {
+
+  },
+  text: {
+    fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
+    fontSize: 18,
+    color: '#fff',
   },
 });
 

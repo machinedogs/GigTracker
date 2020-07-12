@@ -7,18 +7,55 @@ import {
     UNSAVE_EVENT,
     EDIT_EVENT,
     DELETE_EVENT,
+    ADD_FILTER,
+    REMOVE_FILTER,
+    CLEAR_FILTERS,
+    SET_FILTERS,
     DELETE_CREATED_EVENT,
     EDIT_CREATED_EVENT
 } from '../actions/events';
 import { UPDATE_EVENT } from '../actions/user'
+
 const initialState = {
     createdEvents: [],
     savedEvents: [],
-    events: []
+    events: [],
+    filters: [],
+    filteredEvents: []
 }
 
 export default (state = initialState, action) => {
     switch (action.type) {
+        case ADD_FILTER:
+            return {
+                ...state,
+                filters: state.filters.concat(action.filter)
+            };
+        case REMOVE_FILTER:
+            const filterIndex = state.filters.findIndex(filter => filter === action.filter)
+            if (filterIndex >= 0) { // splice out filter to remove
+                const updatedFilters = [...state.filters];
+                updatedFilters.splice(filterIndex, 1);
+                return { ...state, filters: updatedFilters };
+            }
+        case CLEAR_FILTERS:
+            return {
+                ...state,
+                filters: []
+            };
+        case SET_FILTERS:
+            if (state.filters.length > 0) {
+                const updatedFilteredEvents = state.events.filter(event => {
+                    if (state.filters.includes(event.category)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+                return { ...state, filteredEvents: updatedFilteredEvents };
+            } else { // if no filters set return regular events
+                return { ...state, filteredEvents: state.events };
+            }
         case UPDATE_EVENT:
             const savedGoingIndex = state.savedEvents.findIndex(event => event.event === action.eventId)
             const updatedSavedGoingEvents = [...state.savedEvents];
@@ -31,11 +68,19 @@ export default (state = initialState, action) => {
             if (regularGoingIndex >= 0) { // splice out event to unsave
                 updatedGoingEvents.splice(regularGoingIndex, 1);
                 updatedGoingEvents.splice(regularGoingIndex, 0, action.event);
-                return { ...state, events: updatedGoingEvents };
             }
-            return { ...state, 
+            const filteredGoingIndex = state.events.findIndex(event => event.event === action.event.event)
+            const updatedFilteredGoingEvents = [...state.events];
+            if (filteredGoingIndex >= 0) { // splice out event to unsave
+                updatedFilteredGoingEvents.splice(filteredGoingIndex, 1);
+                updatedFilteredGoingEvents.splice(filteredGoingIndex, 0, action.event);
+            }
+            return {
+                ...state,
                 events: updatedGoingEvents,
-                savedEvents: updatedSavedGoingEvents };
+                savedEvents: updatedSavedGoingEvents,
+                filteredEvents: updatedFilteredGoingEvents
+            };
         case UPDATE_HOSTED_EVENTS:
             return {
                 ...state,
@@ -50,7 +95,7 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 events: state.events.concat(action.event),
-                createdEvents: state.createdEvents.concat(action.event)
+                createdEvents: state.createdEvents.concat(action.event),
             };
         case GET_EVENTS:
             return {
@@ -96,11 +141,21 @@ export default (state = initialState, action) => {
         case DELETE_EVENT:
             // Delete from all events
             const index = state.events.findIndex(event => event.event === action.eventId)
+            const updatedEvents = [...state.events];
             if (index >= 0) { // splice out event to unsave
-                const updatedEvents = [...state.events];
                 updatedEvents.splice(index, 1);
-                return { ...state, events: updatedEvents };
             }
+            const deleteFilterdIndex = state.filteredEvents.findIndex(event => event.event === action.eventId)
+            const updatedFilteredEvents = [...state.filteredEvents];
+            if (deleteFilterdIndex >= 0) { // splice out event to unsave
+                updatedFilteredEvents.splice(deleteFilterdIndex, 1);
+            }
+            return {
+                ...state,
+                events: updatedEvents,
+                filteredEvents: updatedFilteredEvents
+            };
+
         default:
             return state;
     }
