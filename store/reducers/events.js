@@ -92,22 +92,11 @@ export default (state = initialState, action) => {
                 savedEvents: action.savedEvents,
             };
         case CREATE_EVENT:
-            // Check if new event should appear on map if they have its category filtered out
-            if (state.filters.includes(action.event.category)) {
-                return {
-                    ...state,
-                    events: state.events.concat(action.event),
-                    createdEvents: state.createdEvents.concat(action.event),
-                    filteredEvents: state.filteredEvents.concat(action.event),
-                };
-            } else {
-                return {
-                    ...state,
-                    events: state.events.concat(action.event),
-                    createdEvents: state.createdEvents.concat(action.event),
-                };
-            }
-
+            return {
+                ...state,
+                events: state.events.concat(action.event),
+                createdEvents: state.createdEvents.concat(action.event),
+            };
         case GET_EVENTS:
             return {
                 ...state,

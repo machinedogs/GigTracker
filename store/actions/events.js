@@ -307,6 +307,7 @@ export const createEvent = (event) => {
 			}
 			//console.log("****Response event number: " + resData.event);
 			dispatch(updateEventMaps(resData.event))
+			dispatch(setFilters())
 		} catch (err) {
 			alert(err);
 		}
