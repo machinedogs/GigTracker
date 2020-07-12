@@ -138,10 +138,9 @@ export const UpdateSavedEvents = (savedEvents) => {
 	};
 };
 
-export const GetSavedEvents = (user) => {
+export const GetSavedEvents = (accessToken) => {
 	return async (dispatch) => {
 		console.log("Getting saved events...making api call..");
-		const accessToken = user.accessToken;
 		console.log("access token....");
 		console.log(accessToken);
 		var raw = "";
@@ -385,10 +384,9 @@ export const updateEventMaps = (event) => {
 	};
 };
 
-export const GetHostedEvents = (user) => {
+export const GetHostedEvents = (accessToken) => {
 	return async (dispatch) => {
 		console.log("Getting hosted events...making api call..");
-		const accessToken = user.accessToken;
 		console.log("access token....");
 		console.log(accessToken);
 		var raw = "";

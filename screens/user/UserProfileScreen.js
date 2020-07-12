@@ -10,7 +10,8 @@ import {
 	View,
 	TouchableOpacity,
 	Alert,
-	ActivityIndicator
+	ActivityIndicator,
+	RefreshControl
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Container, Header, Tab, Tabs, TabHeading, Icon, Button } from "native-base";
@@ -24,7 +25,7 @@ import {
 	getImage,
 } from "../../screens/helper/ImageHelpers";
 import { saveProfileDataToStorage } from "../../screens/helper/secureStorageHelpers";
-import * as authActions from "../../store/actions/user";
+import * as userActions from "../../store/actions/user";
 import * as eventActions from "../../store/actions/events";
 import { EventCard } from "../../components/EventCard";
 import { constructEvents } from "../../screens/helper/dataTransformation";
@@ -32,6 +33,9 @@ import { GetHostedEvents, GetSavedEvents } from "../../store/actions/events";
 import Colors from '../../constants/Colors';
 
 const UserProfileScreen = (props) => {
+	const [savedRefreshing, setSavedRefreshing] = useState(false);
+	const [goingRefreshing, setGoingRefreshing] = useState(false);
+	const [hostedRefreshing, setHostedRefreshing] = useState(false);
 	const dispatch = useDispatch();
 	var profileImage = useSelector((state) => state.user.profileImage);
 	var user = useSelector((state) => state.user);
@@ -62,16 +66,6 @@ const UserProfileScreen = (props) => {
 		}
 		setLoading(false);
 	};
-	const getHostedEvents = async (user) => {
-		console.log("Dispatching get hosted events action from mapscreen");
-		console.log(user.accessToken);
-		dispatch(GetHostedEvents(user));
-	};
-	const getSavedEvents = async (user) => {
-		console.log("Dispatching get saved events action from mapscreen");
-		console.log(user.accessToken);
-		dispatch(GetSavedEvents(user));
-	};
 
 	const handleDelete = async (event) => {
 		Alert.alert(
@@ -91,111 +85,136 @@ const UserProfileScreen = (props) => {
 			],
 			{ cancelable: false }
 		);
-		getHostedEvents(user);
 	}
 
-	useEffect(() => {
-		getHostedEvents(user);
-		getSavedEvents(user);
-	}, [loading, profileImage]);
-
-	const editEvent = (event) => {
-		console.log('\nthe title of the event is ' + event.title + '\n');
-		console.log('blah Blah ' + event);
-		props.navigation.navigate('CreateEvent', { event: event });
-	}
+	const refreshSaved = useCallback(async () => {
+		setSavedRefreshing(true);
+		try {
+			//await dispatch(GetHostedEvents(user));
+			await dispatch(GetSavedEvents(user.accessToken));
+			setSavedRefreshing(false)
+		} catch (error) {
+			console.error(error);r
+			setSavedRefreshing(false)
+		}
+	}, [savedRefreshing]);
+	const refreshGoing = useCallback(async () => {
+		setGoingRefreshing(true);
+		try {
+			//await dispatch(GetHostedEvents(user));
+			await dispatch(userActions.getGoingEvents(user.accessToken));
+			setGoingRefreshing(false)
+		} catch (error) {
+			console.error(error);
+			setGoingRefreshing(false)
+		}
+	}, [goingRefreshing]);
+	const refreshHosted = useCallback(async () => {
+		setHostedRefreshing(true);
+		try {
+			//await dispatch(GetHostedEvents(user));
+			await dispatch(GetHostedEvents(user.accessToken));
+			setHostedRefreshing(false)
+		} catch (error) {
+			console.error(error);
+			setHostedRefreshing(false)
+		}
+	}, [hostedRefreshing]);
 
 	return (
-		<ScrollView showsVerticalScrollIndicator={false}>
-			<View style={styles.container}>
-				<View style={styles.headerContainer}>
-					<View style={styles.headerColumn, { paddingLeft: 20 }}>
-						<View style={{ flexDirection: 'row', paddingTop: 15, }}>
-							<TouchableOpacity
-								onPress={updateProfilePhoto}
-								style={styles.userImageContainer}
-							>
-								{loading ? (
-									<ActivityIndicator style={styles.userImage} size="large" />
-								) : (
-										<Image
-											style={styles.userImage}
-											source={{ uri: profileImage }}
-										/>
-									)}
-							</TouchableOpacity>
-							<View style={{ flexDirection: 'column', justifyContent: 'center', paddingLeft: 50 }} >
-								<Text style={styles.userNameText}>{user.userName}</Text>
-								<Text style={styles.emailText}>{user.userEmail}</Text>
-							</View>
+		<View style={styles.container}>
+			<View style={styles.headerContainer}>
+				<View style={styles.headerColumn, { paddingLeft: 20 }}>
+					<View style={{ flexDirection: 'row', paddingTop: 15, }}>
+						<TouchableOpacity
+							onPress={updateProfilePhoto}
+							style={styles.userImageContainer}
+						>
+							{loading ? (
+								<ActivityIndicator style={styles.userImage} size="large" />
+							) : (
+									<Image
+										style={styles.userImage}
+										source={{ uri: profileImage }}
+									/>
+								)}
+						</TouchableOpacity>
+						<View style={{ flexDirection: 'column', justifyContent: 'center', paddingLeft: 50 }} >
+							<Text style={styles.userNameText}>{user.userName}</Text>
+							<Text style={styles.emailText}>{user.userEmail}</Text>
 						</View>
 					</View>
 				</View>
-				<View style={styles.content}>
-					<Tabs
-						tabBarUnderlineStyle={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}
-						tabBarUnderlineStyle={{ backgroundColor: Colors.purpleButton }}
-						tabBarActiveTextColor={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}
-					//tabBarInactiveTextColor={Platform.OS === 'ios' ? 'grey' : Colors.lightPurple}
-					>
-						<Tab heading="Saved" tabBarUnderlineStyle={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}>
-
-							<FlatList
-								data={constructEvents(event.savedEvents)}
-								renderItem={({ item }) =>
-									<EventCard event={item} />
-								}
-								keyExtractor={(item) => item.id.toString()}
-								scrollEnabled={false}
-
-							/>
-						</Tab>
-						<Tab heading="Going" tabBarUnderlineStyle={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}>
-						<FlatList
-								data={constructEvents(user.goingEvents)}
-								renderItem={({ item }) =>
-									<EventCard event={item} />
-								}
-								keyExtractor={(item) => item.id.toString()}
-								scrollEnabled={false}
-							/>
-						</Tab>
-						<Tab heading="Hosted" tabBarUnderlineStyle={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}>
-							<FlatList
-								data={constructEvents(event.createdEvents)}
-								renderItem={({ item }) =>
-									<View>
-										<EventCard event={item} />
-										<View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingHorizontal: 15 }}>
-											<Button full transparent light
-												onPress={() => {
-													props.navigation.navigate('CreateEvent', { event: item })
-												}}
-											>
-												<Text style={styles.buttonText}>Edit</Text>
-											</Button>
-											<Button
-												iconRight
-												transparent
-												light
-												title='Delete'
-												onPress={() => {
-													handleDelete(item)
-												}}
-											>
-												<Text style={styles.buttonText}>Delete</Text>
-											</Button>
-										</View>
-									</View>
-								}
-								keyExtractor={(item) => item.id.toString()}
-								scrollEnabled={false}
-							/>
-						</Tab>
-					</Tabs>
-				</View>
 			</View>
-		</ScrollView>
+			<View style={styles.content}>
+				<Tabs
+					tabBarUnderlineStyle={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}
+					tabBarUnderlineStyle={{ backgroundColor: Colors.purpleButton }}
+					tabBarActiveTextColor={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}
+				//tabBarInactiveTextColor={Platform.OS === 'ios' ? 'grey' : Colors.lightPurple}
+				>
+					<Tab heading="Saved" tabBarUnderlineStyle={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}>
+
+						<FlatList
+							data={constructEvents(event.savedEvents)}
+							renderItem={({ item }) =>
+								<EventCard event={item} />
+							}
+							keyExtractor={(item) => item.id.toString()}
+							refreshControl={
+								<RefreshControl refreshing={savedRefreshing} onRefresh={refreshSaved} />
+							  }
+						/>
+					</Tab>
+					<Tab heading="Going" tabBarUnderlineStyle={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}>
+						<FlatList
+							data={constructEvents(user.goingEvents)}
+							renderItem={({ item }) =>
+								<EventCard event={item} />
+							}
+							keyExtractor={(item) => item.id.toString()}
+							refreshControl={
+								<RefreshControl refreshing={goingRefreshing} onRefresh={refreshGoing} />
+							  }
+						/>
+					</Tab>
+					<Tab heading="Hosted" tabBarUnderlineStyle={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}>
+						<FlatList
+							data={constructEvents(event.createdEvents)}
+							renderItem={({ item }) =>
+								<View>
+									<EventCard event={item} />
+									<View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingHorizontal: 15 }}>
+										<Button full transparent light
+											onPress={() => {
+												props.navigation.navigate('CreateEvent', { event: item })
+											}}
+										>
+											<Text style={styles.buttonText}>Edit</Text>
+										</Button>
+										<Button
+											iconRight
+											transparent
+											light
+											title='Delete'
+											onPress={() => {
+												handleDelete(item)
+											}}
+										>
+											<Text style={styles.buttonText}>Delete</Text>
+										</Button>
+									</View>
+								</View>
+							}
+							keyExtractor={(item) => item.id.toString()}
+							refreshControl={
+								<RefreshControl refreshing={hostedRefreshing} onRefresh={refreshHosted} />
+							  }
+						/>
+					</Tab>
+				</Tabs>
+			</View>
+		</View>
 	);
 };
 

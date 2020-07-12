@@ -86,34 +86,12 @@ const MapScreen = props => {
   const [showCalendar, setShowCalendar] = useState(false);
 
   let clusterRef = useRef(null);
-  const [date, setDate] = useState(todaysDate());
   //Redux
   const dispatch = useDispatch();
-  var user = useSelector((state) => state.user);
-
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
-  };
-  const getHostedEvents = async (user) => {
-
-    console.log('Dispatching get hosted events action from mapscreen')
-    console.log(user.accessToken)
-    dispatch(GetHostedEvents(user))
-  }
-  const getSavedEvents = async (user) => {
-
-    console.log('Dispatching get saved events action from mapscreen')
-    console.log(user.accessToken)
-    dispatch(GetSavedEvents(user))
-  }
-
 
   //  get initial location then animate to that location
   // only do this on mount and unmount of map component 
   useEffect(() => {
-    //TODO: Improve service call placements
-    getHostedEvents(user);
-    getSavedEvents(user);
     navigator.geolocation.getCurrentPosition(
       (position) => {
         coords = { latitude: position.coords.latitude, longitude: position.coords.longitude, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA };
