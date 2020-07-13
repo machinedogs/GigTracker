@@ -285,9 +285,8 @@ const CreateEventScreen = (props) => {
               justifyContent: "center",
               //alignItems: "center",
               alignContent: "center",
-              padding: 10,
-              paddingTop: 0,
-              zIndex: 10,
+              paddingHorizontal: 10,
+              paddingRight: 15,
               width: SCREEN_WIDTH,
             }}
           >
@@ -340,7 +339,7 @@ const CreateEventScreen = (props) => {
                 />
               )}
           </View>
-          <View style={styles.container}>
+          <View style={{...styles.container, paddingRight: 20}}>
             <Text style={styles.text}>Location</Text>
             <Button
               iconRight
@@ -449,14 +448,9 @@ const CreateEventScreen = (props) => {
               </Modal>
             </View>
           )}
-          <View style={styles.container}>
+          <View style={{...styles.container, paddingRight: 20}}>
             <Text style={styles.text}>Date</Text>
-            <Button
-              iconRight
-              light
-              onPress={toggleShowDate}
-              style={styles.buttonStyle}
-            >
+            <Button iconRight light onPress={toggleShowDate} style={styles.buttonStyle} >
               <Text
                 style={{
                   textAlign: "center",
@@ -470,7 +464,7 @@ const CreateEventScreen = (props) => {
           {showDate && (
             <DateTimePicker value={date} mode={"date"} onChange={onChangeDate} />
           )}
-          <View style={styles.container}>
+          <View style={{...styles.container, paddingRight: 20}}>
             <Text style={styles.text}>Time</Text>
             <Button
               iconRight
