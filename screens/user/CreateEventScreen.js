@@ -288,6 +288,7 @@ const CreateEventScreen = (props) => {
               paddingHorizontal: 10,
               paddingRight: 15,
               width: SCREEN_WIDTH,
+              zIndex: 10,
             }}
           >
             <Text style={styles.text}>Category</Text>
@@ -339,7 +340,7 @@ const CreateEventScreen = (props) => {
                 />
               )}
           </View>
-          <View style={{...styles.container, paddingRight: 20}}>
+          <View style={styles.container}>
             <Text style={styles.text}>Location</Text>
             <Button
               iconRight
@@ -448,7 +449,7 @@ const CreateEventScreen = (props) => {
               </Modal>
             </View>
           )}
-          <View style={{...styles.container, paddingRight: 20}}>
+          <View style={styles.container}>
             <Text style={styles.text}>Date</Text>
             <Button iconRight light onPress={toggleShowDate} style={styles.buttonStyle} >
               <Text
@@ -464,7 +465,7 @@ const CreateEventScreen = (props) => {
           {showDate && (
             <DateTimePicker value={date} mode={"date"} onChange={onChangeDate} />
           )}
-          <View style={{...styles.container, paddingRight: 20}}>
+          <View style={{...styles.container }}>
             <Text style={styles.text}>Time</Text>
             <Button
               iconRight
