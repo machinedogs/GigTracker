@@ -51,6 +51,7 @@ const MapScreen = props => {
   const [isEventSaved, setEventSaved] = useState(false);
   const filteredEvents = useSelector(state => state.events.filteredEvents);
   const [selectedEvent, setSelectedEvent] = useState(new Event);
+  const [selectedDate, setSelectedDate] = useState(new Date().setHours(0,0,0,0));
   const [showCategories, setShowCategories] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
   let mapRef = useRef(null);
@@ -73,9 +74,10 @@ const MapScreen = props => {
     console.log("Refreshing events")
     let coordinates = '';
     await getGeoInfo().then(coords => coordinates = coords);
-    const currentDate = new Date().toISOString();
     setIsRefreshing(true);
-    await dispatch(eventActions.getEvents(currentDate, coordinates.latitude, coordinates.longitude));
+    const formattedDate = new Date(selectedDate)
+    await dispatch(eventActions.getEvents(formattedDate.toISOString(), coordinates.latitude, coordinates.longitude));
+    dispatch(eventActions.getEvents(formattedDate.toISOString()));
     setIsRefreshing(false);
   }
 
@@ -103,10 +105,16 @@ const MapScreen = props => {
     mapRef.current.animateToRegion(coords, 0);
   }
 
-  const filterDate = async (selectedDate) => {
-    console.log(selectedDate)
+  const filterDate = async (givenDate) => {
+    let coordinates = '';
+    await getGeoInfo().then(coords => coordinates = coords);
+    const dateToSet = new Date(givenDate)
+    dateToSet.setHours(0, 0, 0, 0);
+    console.log("User selected date: " + givenDate)
+    setSelectedDate(dateToSet);
     setIsRefreshing(true);
-    await dispatch(eventActions.getEvents(selectedDate));
+    await dispatch(eventActions.getEvents(dateToSet.toISOString(), coordinates.latitude, coordinates.longitude));
+    dispatch(eventActions.getEvents(dateToSet.toISOString()));
     setIsRefreshing(false);
   }
 
@@ -332,7 +340,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: Platform.OS === 'ios' ? 110 :  '9%',
+    height: Platform.OS === 'ios' ? 110 : '9%',
     backgroundColor: Colors.darkGrey
   },
   top: {

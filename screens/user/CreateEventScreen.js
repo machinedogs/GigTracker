@@ -167,8 +167,6 @@ const CreateEventScreen = (props) => {
         //create new event
         console.log(`Dispatching event ${newEvent.title}`);
         await dispatch(eventActions.createEvent(newEvent));
-        console.log("dispatching getEvents from create page");
-        dispatch(eventActions.getEvents());
         props.navigation.navigate("Home");
       }
     } else {

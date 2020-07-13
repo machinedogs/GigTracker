@@ -198,8 +198,8 @@ export const UpdateHostedEvents = (createdEvents) => {
 	};
 };
 
-export const getEvents = (currentDate, latitude, longitude) => {
-	console.log("Pulling events from microservice for " + currentDate);
+export const getEvents = (date, latitude, longitude) => {
+	console.log("Pulling events from microservice for " + date);
 	console.log(latitude + "......" + longitude)
 	return async (dispatch) => {
 		var requestOptions = {
@@ -207,10 +207,13 @@ export const getEvents = (currentDate, latitude, longitude) => {
 			redirect: "follow",
 		};
 
-		const response = await fetch(
-			"https://gigservice.herokuapp.com/api/v1/events",
-			requestOptions
-		);
+		if (latitude && longitude) {
+			url = `https://gigservice.herokuapp.com/api/v1/events?date=${date}&latitude=${latitude}&longitude=${longitude}`
+		} else {
+			url = `https://gigservice.herokuapp.com/api/v1/events?date=${date}`
+		}
+
+		const response = await fetch(url, requestOptions);
 		const mapEvents = await response.json();
 		console.log('Received events json from db');
 		dispatch(updateMapEvents(mapEvents));

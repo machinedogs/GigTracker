@@ -32,11 +32,11 @@ const StartupScreen = props => {
             console.log('dispatching getEvents from startup page')
             let coordinates = '';
             await getGeoInfo().then(coords => coordinates = coords);
-            var currentDate = new Date().toISOString();
-            await dispatch(eventActions.getEvents(currentDate, coordinates.latitude, coordinates.longitude));
-            dispatch(eventActions.setFilters());
-            //dispatch(eventActions.getAllEvents());
-            // change this to secure store function
+            var currentDate = new Date()
+            currentDate.setHours(0,0,0,0);
+            await dispatch(eventActions.getEvents(currentDate.toISOString(), coordinates.latitude, coordinates.longitude));
+            dispatch(eventActions.getEvents(currentDate));
+
             const userData = await SecureStore.getItemAsync('userData');
 
             if (!userData) {
