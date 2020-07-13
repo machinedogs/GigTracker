@@ -98,7 +98,6 @@ const MapScreen = props => {
     var currentDate = new Date().toISOString();
     setIsRefreshing(true);
     await dispatch(eventActions.getEvents(currentDate, coordinates.latitude, coordinates.longitude));
-    await dispatch(eventActions.setFilters());
     setIsRefreshing(false);
   }
 
@@ -135,8 +134,7 @@ const MapScreen = props => {
   const filterDate = async (selectedDate) => {
     console.log(selectedDate)
     setIsRefreshing(true);
-    await dispatch(eventActions.getEvents(new Date(selectedDate)));
-    await dispatch(eventActions.setFilters());
+    await dispatch(eventActions.getEvents(selectedDate));
     setIsRefreshing(false);
   }
 

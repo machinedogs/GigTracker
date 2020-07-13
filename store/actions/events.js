@@ -214,6 +214,7 @@ export const getEvents = (currentDate, latitude, longitude) => {
 		const mapEvents = await response.json();
 		console.log('Received events json from db');
 		dispatch(updateMapEvents(mapEvents));
+		dispatch(setFilters());
 	};
 };
 
