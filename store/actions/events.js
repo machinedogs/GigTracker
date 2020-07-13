@@ -358,6 +358,7 @@ export const editEvent = (event, id) => {
 			console.log("Response: " + resData);
 			dispatch(replaceEvent(resData.event));
 			dispatch(replaceCreatedEvent(resData.event));
+			dispatch(setFilters())
 		} catch (err) {
 			alert(err);
 		}
