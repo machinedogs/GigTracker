@@ -1,18 +1,35 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { Button, Card } from 'native-base';
 import Colors from '../../constants/Colors';
 import * as authActions from '../../store/actions/user';
-import { ScrollView } from 'react-native';
 
 const DeleteScreen = props => {
     const dispatch = useDispatch();
 
     const deleteAccountHandler = () => {
         console.log("User triggered deleteAccount action creator");
-        dispatch(authActions.deleteAccount());
-        props.navigation.navigate('Home');
+        Alert.alert(
+            "Delete your account?",
+            "",
+            [
+                {
+                    text: "Yes",
+                    onPress: () => {
+                        dispatch(authActions.deleteAccount())
+                        props.navigation.navigate('Home');
+                    },
+                    style: 'destructive'
+                },
+                {
+                    text: "No",
+                    onPress: () => console.log("Delete Account Canceled"),
+                    style: "cancel"
+                }
+            ],
+            { cancelable: false }
+        );
     }
 
     return (
@@ -30,9 +47,6 @@ const DeleteScreen = props => {
                     </Text>
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', paddingHorizontal: 15, paddingBottom: 15 }}>
-                    <Text style={{ fontSize: 20, color: Colors.purpleBackground }}>
-                        Please confirm:
-                    </Text>
                     <TouchableOpacity onPress={deleteAccountHandler}>
                         <View style={{
                             backgroundColor: '#f5b800',
@@ -42,7 +56,7 @@ const DeleteScreen = props => {
                             paddingHorizontal: 10,
                             paddingVertical: 5
                         }}>
-                            <Text style={{ fontSize: 17, color: "white" }}>Delete</Text>
+                            <Text style={{ fontSize: 17}}>Delete</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
