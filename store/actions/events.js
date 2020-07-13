@@ -13,6 +13,7 @@ export const ADD_FILTER = "ADD_FILTER";
 export const REMOVE_FILTER = "REMOVE_FILTER";
 export const CLEAR_FILTERS = "CLEAR_FILTERS";
 export const SET_FILTERS = "SET_FILTERS";
+export const PEOPLE_GOING = "PEOPLE_GOING";
 
 export const addFilter = (filter) => {
 	return async (dispatch) => {
@@ -432,5 +433,38 @@ export const GetHostedEvents = (accessToken) => {
 			//Filter the data for bad events, meaning any null values or something
 			dispatch(UpdateHostedEvents(filteredEvents));
 		}
+	};
+};
+
+export const getPeopleGoing = (event, accessToken) => {
+	return async (dispatch) => {
+		console.log("Getting people going to a specific event");
+		console.log(accessToken);
+		var raw = "";
+
+		var requestOptions = {
+			method: "GET",
+			body: raw,
+			redirect: "follow",
+		};
+		console.log(
+			`https://gigservice.herokuapp.com/api/v1/events/${event}/attending?auth_token=${accessToken}`
+		);
+		const response = await fetch(
+			`https://gigservice.herokuapp.com/api/v1/events/${event}/attending?auth_token=${accessToken}`,
+			requestOptions
+		);
+		if (response.ok) {
+			const resData = await response.json();
+			console.log("Got response for getting people going to a event ");
+			console.log(resData);
+			dispatch(updatePeopleAttending(resData));
+		}
+	};
+};
+export const updatePeopleAttending = (eventGoing) => {
+	return {
+		type: PEOPLE_GOING,
+		eventGoing: eventGoing,
 	};
 };

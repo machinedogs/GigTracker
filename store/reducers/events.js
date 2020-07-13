@@ -12,7 +12,8 @@ import {
     CLEAR_FILTERS,
     SET_FILTERS,
     DELETE_CREATED_EVENT,
-    EDIT_CREATED_EVENT
+    EDIT_CREATED_EVENT,
+    PEOPLE_GOING
 } from '../actions/events';
 import { UPDATE_EVENT } from '../actions/user'
 
@@ -21,7 +22,8 @@ const initialState = {
     savedEvents: [],
     events: [],
     filters: [],
-    filteredEvents: []
+    filteredEvents: [],
+    eventGoing:[]
 }
 
 export default (state = initialState, action) => {
@@ -155,7 +157,11 @@ export default (state = initialState, action) => {
                 events: updatedEvents,
                 filteredEvents: updatedFilteredEvents
             };
-
+        case PEOPLE_GOING:
+            return {
+                ...state,
+                eventGoing: action.eventGoing
+            };
         default:
             return state;
     }

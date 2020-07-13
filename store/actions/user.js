@@ -125,6 +125,8 @@ export const deleteAccount = () => {
     return async (dispatch, getState) => {
         const refreshToken = getState().user.refreshToken;
 
+        // UnGo from any events going to
+
         // Assemble Delete Request
         var raw = "";
         var requestOptions = {
