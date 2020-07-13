@@ -19,7 +19,7 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { PROVIDER_GOOGLE, Marker, Callout, CalloutSubview } from 'react-native-maps';
 import MapView from 'react-native-map-clustering';
-import { Icon } from 'react-native-elements';
+import Fontisto from '@expo/vector-icons';
 import CalendarPicker from 'react-native-calendar-picker';
 
 import { EventCard } from "../../components/EventCard";
@@ -369,10 +369,10 @@ const MapScreen = props => {
                   (
                     <View style={{ width: 60, height: 60, borderRadius: 30, backgroundColor: Colors.darkGrey, justifyContent: 'center', alignItems: 'center' }}>
                       <VectorIcon
-                        name='database-refresh'
-                        type='MaterialCommunityIcons'
+                        name='reload1'
+                        type='AntDesign'
                         size={28}
-                        style={{ color: 'white' }}
+                        style={{ color: 'white'}}
                         onPress={refreshEvents}
                       />
                     </View>
