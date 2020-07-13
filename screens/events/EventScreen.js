@@ -25,6 +25,8 @@ import * as userActions from "../../store/actions/user";
 
 const EventScreen = (props) => {
 	const userName = useSelector((state) => state.user.userName);
+	const accessToken = useSelector((state) => state.user.accessToken);
+
 	const savedEvents = useSelector((state) => state.events.savedEvents);
 	const goingEvents = useSelector((state) => state.user.goingEvents);
 	const peopleGoing = useSelector((state) => state.events.eventGoing);
@@ -89,7 +91,7 @@ const EventScreen = (props) => {
 
 	const navigateToGoingList = () => {
         console.log('dispatching get people going')
-        dispatch(eventActions.getPeopleGoing(event.event));
+        dispatch(eventActions.getPeopleGoing(event.event, accessToken));
 		props.navigation.navigate('GoingListScreen');
 	};
 
