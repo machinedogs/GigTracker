@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import React, { useState } from "react";
-import { Thumbnail, Right, Left } from "native-base";
+import { Thumbnail, Right, Left, Icon as VectorIcon } from "native-base";
 import { Icon } from "react-native-elements";
 import {
 	StyleSheet,
@@ -170,8 +170,9 @@ const EventScreen = (props) => {
 								paddingHorizontal: 15,
 							}}
 						>
-							<TouchableOpacity onPress={navigateToGoingList}>
-								<Text style={styles.goingText}>{numGoing} Going</Text>
+							<TouchableOpacity style={{flexDirection: 'row', alignItems: 'center'}} onPress={navigateToGoingList}>
+								<VectorIcon name="persona" type='Zocial' style={{color: Colors.purpleButton, paddingRight: 10}}/>
+								<Text style={styles.goingText}> {numGoing} Going</Text>
 							</TouchableOpacity>
 							{userName != event.host.name && userName ? (
 								<TouchableOpacity onPress={toggleGoingButton}>
@@ -187,7 +188,7 @@ const EventScreen = (props) => {
 											paddingVertical: 5,
 										}}
 									>
-										<Text>Going</Text>
+										<Text style={styles.goingText}>Going</Text>
 									</View>
 								</TouchableOpacity>
 							) : null}
@@ -267,7 +268,6 @@ const styles = StyleSheet.create({
 	},
 	goingText: {
 		color: "black",
-		backgroundColor: "white",
 		fontSize: 20,
     }
 });

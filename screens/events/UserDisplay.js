@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, ActivityIndicator } from "react-native";
+import { StyleSheet, ActivityIndicator, View } from "react-native";
 import {
 	Container,
 	Content,
@@ -17,30 +17,30 @@ const UserDisplay = (props) => {
 	const people = useSelector((state) => state.events.eventGoing);
 
 	return (
-		<Card style={styles.container}>
+		<View style={styles.container}>
 			{people == null ? (
 				<ActivityIndicator style={styles.userImage} size="large" />
 			) : (
-				<Container>
-					<Content>
-						<List>
-							{people.map((person, i) => (
-								<ListItem key={i} avatar>
-									{console.log("here is the person")}
-									{console.log(person)}
-									<Left>
-										<Thumbnail source={{ uri: person.profile }} />
-									</Left>
-									<Body>
-										<Text>{person.name}</Text>
-									</Body>
-								</ListItem>
-							))}
-						</List>
-					</Content>
-				</Container>
-			)}
-		</Card>
+					<Container>
+						<Content>
+							<List>
+								{people.map((person, i) => (
+									<ListItem key={i} thumbnail style={{ paddingTop: 10 }} noBorder>
+										{console.log("here is the person")}
+										{console.log(person)}
+										<Left >
+											<Thumbnail source={{ uri: person.profile }} />
+										</Left>
+										<Body>
+											<Text>{person.name}</Text>
+										</Body>
+									</ListItem>
+								))}
+							</List>
+						</Content>
+					</Container>
+				)}
+		</View>
 	);
 };
 
