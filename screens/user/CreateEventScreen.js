@@ -203,14 +203,13 @@ const CreateEventScreen = (props) => {
   return (
 
     <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
-      <TouchableWithoutFeedback onPress={() => {
-                        Keyboard.dismiss();
-                    }}>
+      <TouchableWithoutFeedback
+        onPress={() => { Keyboard.dismiss(); }}
+      >
         <SafeAreaView style={styles.container}>
           <View
             style={{
               padding: 12,
-              //alignItems: "center",
               justifyContent: "center",
             }}
           >
@@ -225,7 +224,6 @@ const CreateEventScreen = (props) => {
                   padding: 10
                 }}>
                   <TouchableOpacity onPress={updateEventPhoto}>
-
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                       <Text
                         style={{
@@ -500,10 +498,7 @@ const CreateEventScreen = (props) => {
               paddingBottom: 10
             }}
           >
-            <Button
-              round
-              light
-              onPress={saveEvent}
+            <Button round light onPress={saveEvent}
               style={{
                 borderColor: Colors.purpleButton,
                 alignContent: "center",
