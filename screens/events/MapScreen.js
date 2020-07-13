@@ -8,7 +8,6 @@ import {
   SafeAreaView,
   TouchableOpacity,
   StatusBar,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
 import {
@@ -19,7 +18,6 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { PROVIDER_GOOGLE, Marker, Callout, CalloutSubview } from 'react-native-maps';
 import MapView from 'react-native-map-clustering';
-import Fontisto from '@expo/vector-icons';
 import CalendarPicker from 'react-native-calendar-picker';
 
 import { EventCard } from "../../components/EventCard";
@@ -39,22 +37,6 @@ const ASPECT_RATIO = width / height
 const LATITUDE_DELTA = 0.0922
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
 
-
-const todaysDate = () => {
-  var today = new Date();
-  var dd = today.getDate();
-  var mm = today.getMonth() + 1;
-
-  var yyyy = today.getFullYear();
-  if (dd < 10) {
-    dd = '0' + dd;
-  }
-  if (mm < 10) {
-    mm = '0' + mm;
-  }
-  return mm + '/' + dd + '/' + yyyy;
-}
-
 const INITIAL_REGION = {
   latitude: 39.9,
   longitude: -75.1,
@@ -64,19 +46,15 @@ const INITIAL_REGION = {
 
 const MapScreen = props => {
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const userName = useSelector(state => state.user.userName);
   const userAccessToken = useSelector(state => state.user.accessToken);
   const savedEvents = useSelector(state => state.events.savedEvents);
   const [isEventSaved, setEventSaved] = useState(false);
   const filteredEvents = useSelector(state => state.events.filteredEvents);
-  const [isModalVisible, setModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(new Event);
-  let mapRef = useRef(null);
   const [showCategories, setShowCategories] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
-
+  let mapRef = useRef(null);
   let clusterRef = useRef(null);
-  //Redux
   const dispatch = useDispatch();
 
   //  get initial location then animate to that location
@@ -95,7 +73,7 @@ const MapScreen = props => {
     console.log("Refreshing events")
     let coordinates = '';
     await getGeoInfo().then(coords => coordinates = coords);
-    var currentDate = new Date().toISOString();
+    const currentDate = new Date().toISOString();
     setIsRefreshing(true);
     await dispatch(eventActions.getEvents(currentDate, coordinates.latitude, coordinates.longitude));
     setIsRefreshing(false);
@@ -103,16 +81,11 @@ const MapScreen = props => {
 
   // gets called when callout is pressed i.e. pin must be pressed first
   const onEventCalloutPress = (event) => {
-    //console.log("pressing event callout");
-    //console.log(selectedEvent);
-    //toggleModal();
     props.navigation.navigate('EventScreen', { event: event });
   }
 
   const onPinPress = (event) => {
     setSelectedEvent(event);
-    //console.log("pressing pin");
-    //console.log(event)
     // Determine if selected event has already been saved
     var existingIndex = savedEvents.findIndex(myEvent => myEvent.event === event.event)
     if (existingIndex >= 0) { // check if index exists
@@ -128,7 +101,6 @@ const MapScreen = props => {
       longitudeDelta: mapRef.current.__lastRegion.longitudeDelta
     };
     mapRef.current.animateToRegion(coords, 0);
-
   }
 
   const filterDate = async (selectedDate) => {
@@ -137,19 +109,6 @@ const MapScreen = props => {
     await dispatch(eventActions.getEvents(selectedDate));
     setIsRefreshing(false);
   }
-
-  const toggleSaveButton = () => {
-    // dispatch action
-    if (!isEventSaved) {
-      dispatch(eventActions.saveEvent(selectedEvent))
-      Alert.alert("Event Saved")
-    } else { // indicating user unsaved the event
-      dispatch(eventActions.unsaveEvent(selectedEvent))
-      Alert.alert("Event No Longer Saved")
-    }
-    setEventSaved(!isEventSaved);
-    console.log(isEventSaved);
-  };
 
   const toggleShowCalendar = () => {
     if (showCategories) {
@@ -168,7 +127,7 @@ const MapScreen = props => {
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={Colors.darkGrey} barStyle='light-content' />
-      <SafeAreaView style={{ flexDirection: 'row', alignItems: 'center', height: 110, backgroundColor: Colors.darkGrey }}>
+      <SafeAreaView style={styles.header}>
         <Left>
           <VectorIcon
             type="Feather"
@@ -217,9 +176,6 @@ const MapScreen = props => {
       )}
       <MapView
         initialRegion={INITIAL_REGION}
-        onRegionChange={() => {
-          //console.log(mapRef.current.__lastRegion)
-        }}
         style={styles.map}
         provider={PROVIDER_GOOGLE}
         showsUserLocation
@@ -228,9 +184,6 @@ const MapScreen = props => {
         showsTraffic={false}
         toolbarEnabled={true}
         superClusterRef={clusterRef}
-        onClusterPress={(cluster) => {
-          //console.log(cluster)
-        }}
         ref={mapRef}
         customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
         clusterColor="#341f97"
@@ -260,36 +213,6 @@ const MapScreen = props => {
                     <CalloutSubview onPress={onEventCalloutPress.bind(this, event)}>
                       <EventCard event={event} style={{ width: SCREEN_WIDTH * 0.75 }} streetAddress />
                     </CalloutSubview>
-                    {/*<View style={{ flexDirection: 'row' }}>
-                      {(userName != event.host.name && userName) ?
-                        (<CalloutSubview onPress={toggleSaveButton}>
-                          <TouchableOpacity>
-                            <Icon
-                              reverse
-                              raised
-                              name='save'
-                              type='font-awesome'
-                              color={Colors.darkGrey}
-                              size={20}
-                              reverseColor='white'
-                            />
-                          </TouchableOpacity>
-                        </CalloutSubview>) : null
-                      }
-                      <CalloutSubview onPress={() => { props.navigation.navigate('Auth') }}>
-                        <TouchableOpacity>
-                          <Icon
-                            reverse
-                            raised
-                            name='share-alt'
-                            type='font-awesome'
-                            color={Colors.darkGrey}
-                            size={20}
-                            reverseColor='white'
-                          />
-                        </TouchableOpacity>
-                      </CalloutSubview>
-                    </View>*/}
                   </View>
                 </Callout>
               ) :
@@ -321,14 +244,16 @@ const MapScreen = props => {
                 alignSelf: 'center' //for align to right
               }}
             >
-              <TouchableOpacity style={{ paddingBottom: 10 }}>
-                <View style={{ width: 60, height: 60, borderRadius: 30, backgroundColor: Colors.darkGrey, justifyContent: 'center', alignItems: 'center' }}>
+              <TouchableOpacity
+                style={styles.bottomButtonContainer}
+                onPress={() => { props.navigation.navigate('Auth') }}
+              >
+                <View style={styles.bottomButtonStyle}>
                   <VectorIcon
                     name='ios-person'
                     type='Ionicons'
                     size={28}
                     style={{ color: 'white' }}
-                    onPress={() => { props.navigation.navigate('Auth') }}
                   />
                 </View>
               </TouchableOpacity>
@@ -336,49 +261,58 @@ const MapScreen = props => {
           ) :
           (
             <SafeAreaView style={styles.row}>
-              <TouchableOpacity style={{ paddingBottom: 10 }}>
-                <View style={{ width: 60, height: 60, borderRadius: 30, backgroundColor: Colors.darkGrey, justifyContent: 'center', alignItems: 'center' }}>
+              <TouchableOpacity
+                style={styles.bottomButtonContainer}
+                onPress={() => { props.navigation.navigate('UserProfile') }}
+              >
+                <View style={styles.bottomButtonStyle}>
                   <VectorIcon
                     name='ios-person'
                     type='Ionicons'
                     size={28}
                     style={{ color: 'white' }}
-                    onPress={() => { props.navigation.navigate('UserProfile') }}
                   />
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity style={{ paddingHorizontal: 10, paddingBottom: 10 }}>
-                <View style={{ width: 60, height: 60, borderRadius: 30, paddingHorizontal: 10, backgroundColor: Colors.darkGrey, justifyContent: 'center', alignItems: 'center' }}>
+              <TouchableOpacity
+                style={{ paddingHorizontal: 10, paddingBottom: 10 }}
+                onPress={() => { props.navigation.navigate('CreateEvent') }}
+              >
+                <View style={styles.bottomButtonStyle}>
                   <VectorIcon
                     name='add-location'
                     type='MaterialIcons'
                     size={28}
                     style={{ color: 'white' }}
-                    onPress={() => { props.navigation.navigate('CreateEvent') }} />
+                  />
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity style={{ paddingBottom: 10 }}>
-                {isRefreshing ? // if refreshing events, show activity indicator
-                  (
-                    <View style={{ width: 60, height: 60, borderRadius: 30, backgroundColor: Colors.darkGrey, justifyContent: 'center', alignItems: 'center' }}>
+
+              {isRefreshing ? // if refreshing events, show activity indicator
+                (
+                  <View style={styles.bottomButtonContainer}>
+                    <View style={styles.bottomButtonStyle}>
                       <ActivityIndicator color='white' />
                     </View>
-                  ) :
-                  (
-                    <View style={{ width: 60, height: 60, borderRadius: 30, backgroundColor: Colors.darkGrey, justifyContent: 'center', alignItems: 'center' }}>
+                  </View>
+                ) :
+                (
+                  <TouchableOpacity
+                    style={styles.bottomButtonContainer}
+                    onPress={refreshEvents}
+                  >
+                    <View style={styles.bottomButtonStyle}>
                       <VectorIcon
                         name='reload1'
                         type='AntDesign'
                         size={28}
-                        style={{ color: 'white'}}
-                        onPress={refreshEvents}
+                        style={{ color: 'white' }}
                       />
                     </View>
-                  )
-                }
-              </TouchableOpacity>
+                  </TouchableOpacity>
+                )
+              }
             </SafeAreaView>
-
           )
       }
     </View >
@@ -394,6 +328,12 @@ const styles = StyleSheet.create({
     paddingTop: 0,
     paddingBottom: 0,
     //width: Dimensions.get('window').width,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: Platform.OS === 'ios' ? 110 :  '9%',
+    backgroundColor: Colors.darkGrey
   },
   top: {
     backgroundColor: '#2d3436',
@@ -457,6 +397,17 @@ const styles = StyleSheet.create({
     fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
     fontSize: 18,
     color: '#fff',
+  },
+  bottomButtonStyle: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: Colors.darkGrey,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  bottomButtonContainer: {
+    paddingBottom: 10
   },
 });
 
