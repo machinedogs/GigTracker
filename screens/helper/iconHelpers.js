@@ -18,7 +18,7 @@ export const iconPicker = (category) => {
     } else if (category === "party") {
         pinIcon = PartyPin;
         console.log("Marker Category: " + category)
-    } else if (category === "politics") {
+    } else if (category === "political") {
         pinIcon = PoliticsPin;
         console.log("Marker Category: " + category)
     } else if (category === "sports") {
