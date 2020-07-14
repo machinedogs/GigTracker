@@ -1,11 +1,44 @@
+//Move to its own file
 export const CREATE_EVENT = "CREATE_EVENT";
 export const UPDATE_HOSTED_EVENTS = "UPDATE_HOSTED_EVENTS";
 export const UPDATE_SAVED_EVENTS = "UPDATE_SAVED_EVENTS";
 export const GET_EVENTS = "GET_EVENTS";
 export const EDIT_EVENT = "EDIT_EVENT";
+export const EDIT_CREATED_EVENT = "EDIT_CREATED_EVENT";
 export const SAVE_EVENT = "SAVE_EVENT";
 export const UNSAVE_EVENT = "UNSAVE_EVENT";
+export const DELETE_CREATED_EVENT = "DELETE_CREATED_EVENT";
 export const DELETE_EVENT = "DELETE_EVENT";
+export const ADD_FILTER = "ADD_FILTER";
+export const REMOVE_FILTER = "REMOVE_FILTER";
+export const CLEAR_FILTERS = "CLEAR_FILTERS";
+export const SET_FILTERS = "SET_FILTERS";
+export const PEOPLE_GOING = "PEOPLE_GOING";
+
+export const addFilter = (filter) => {
+	return async (dispatch) => {
+		await dispatch({ type: ADD_FILTER, filter: filter });
+		dispatch(setFilters())
+	}
+}
+
+export const removeFilter = (filter) => {
+	return async (dispatch) => {
+		await dispatch({ type: REMOVE_FILTER, filter: filter });
+		dispatch(setFilters())
+	}
+}
+
+export const clearFilters = () => {
+	return async (dispatch) => {
+		await dispatch({ type: CLEAR_FILTERS });
+		dispatch(setFilters())
+	}
+}
+
+export const setFilters = () => {
+	return { type: SET_FILTERS }
+}
 
 export const deleteEvent = (event) => {
 	return async (dispatch, getState) => {
@@ -27,10 +60,15 @@ export const deleteEvent = (event) => {
 			alert(err)
 		}
 		dispatch(removeFromCreatedEvents(event))
+		dispatch(removeFromEvents(event))
 	}
 }
 
 export const removeFromCreatedEvents = (event) => {
+	return { type: DELETE_CREATED_EVENT, eventId: event.id };
+}
+
+export const removeFromEvents = (event) => {
 	return { type: DELETE_EVENT, eventId: event.id };
 }
 
@@ -101,10 +139,9 @@ export const UpdateSavedEvents = (savedEvents) => {
 	};
 };
 
-export const GetSavedEvents = (user) => {
+export const GetSavedEvents = (accessToken) => {
 	return async (dispatch) => {
 		console.log("Getting saved events...making api call..");
-		const accessToken = user.accessToken;
 		console.log("access token....");
 		console.log(accessToken);
 		var raw = "";
@@ -161,21 +198,26 @@ export const UpdateHostedEvents = (createdEvents) => {
 	};
 };
 
-export const getEvents = () => {
-	console.log("Pulling events from microservice");
+export const getEvents = (date, latitude, longitude) => {
+	console.log("Pulling events from microservice for " + date);
+	console.log(latitude + "......" + longitude)
 	return async (dispatch) => {
 		var requestOptions = {
 			method: "GET",
 			redirect: "follow",
 		};
 
-		const response = await fetch(
-			"https://gigservice.herokuapp.com/api/v1/events",
-			requestOptions
-		);
+		if (latitude && longitude) {
+			url = `https://gigservice.herokuapp.com/api/v1/events?date=${date}&latitude=${latitude}&longitude=${longitude}`
+		} else {
+			url = `https://gigservice.herokuapp.com/api/v1/events?date=${date}`
+		}
+
+		const response = await fetch(url, requestOptions);
 		const mapEvents = await response.json();
-		//console.log(`Map Events ${mapEvents}`);
+		console.log('Received events json from db');
 		dispatch(updateMapEvents(mapEvents));
+		dispatch(setFilters());
 	};
 };
 
@@ -185,6 +227,45 @@ export const updateMapEvents = (mapEvents) => {
 		type: GET_EVENTS,
 		events: mapEvents,
 	};
+};
+
+export const addFakeEvents = () => {
+	console.log('Adding Fake events, 10 seconds passed');
+	var fakeEvents = []
+	for (i = 0; i < 1000; i++) {
+		fakeEvents.push(
+			{
+				"event": i,
+				"title": "Beach Bocci Ball Game 🧠",
+				"description": "Come to tha beach 🏝 🔥🔥🔥🔥",
+				"date": "2020-06-23T23:58:20.715Z",
+				"image": "https://firebasestorage.googleapis.com/v0/b/gigg-146b7.appspot.com/o/images%2Fo2enw?alt=media&token=5c05074d-2908-41bd-b6d0-2330c6fcf85b",
+				"category": "sports",
+				"location": {
+					"longitude": `${Math.random() * 70}`,
+					"latitude": `${Math.random() * 20}`,
+					"address": "Temple University, Fontain Street, Stanton, Philadelphia, Philadelphia County, Pennsylvania, 19121, United States of America"
+				},
+				"host": {
+					"profile": "https://firebasestorage.googleapis.com/v0/b/gigg-146b7.appspot.com/o/images%2Flkko9n?alt=media&token=f44dbf3e-e644-420a-9e23-84a4e307f591",
+					"name": "john",
+					"email": "john@john.com"
+				}
+			}
+		)
+	}
+	var timeEventsMade = new Date();
+	console.log("Events dispatched to reducer @ " + timeEventsMade.toLocaleTimeString())
+	return {
+		type: GET_EVENTS,
+		events: fakeEvents
+	};
+}
+
+export const getAllEvents = () => {
+	return dispatch => {
+		setTimeout(() => { dispatch(addFakeEvents()) }, 10000);
+	}
 };
 
 export const createEvent = (event) => {
@@ -228,8 +309,9 @@ export const createEvent = (event) => {
 				alert(message);
 				throw new Error(message);
 			}
-			console.log("Response: " + resData);
-			dispatch(getEvents);
+			//console.log("****Response event number: " + resData.event);
+			dispatch(updateEventMaps(resData.event))
+			dispatch(setFilters())
 		} catch (err) {
 			alert(err);
 		}
@@ -278,24 +360,39 @@ export const editEvent = (event, id) => {
 				throw new Error(message);
 			}
 			console.log("Response: " + resData);
-			dispatch(getEvents);
+			dispatch(replaceEvent(resData.event));
+			dispatch(replaceCreatedEvent(resData.event));
+			dispatch(setFilters())
 		} catch (err) {
 			alert(err);
 		}
 	};
 };
 
-export const updateEventMaps = () => {
+export const replaceEvent = (event) => {
+	return {
+		type: EDIT_EVENT,
+		event: event,
+	};
+}
+
+export const replaceCreatedEvent = (event) => {
+	return {
+		type: EDIT_CREATED_EVENT,
+		event: event,
+	};
+}
+
+export const updateEventMaps = (event) => {
 	return {
 		type: CREATE_EVENT,
 		event: event,
 	};
 };
 
-export const GetHostedEvents = (user) => {
+export const GetHostedEvents = (accessToken) => {
 	return async (dispatch) => {
 		console.log("Getting hosted events...making api call..");
-		const accessToken = user.accessToken;
 		console.log("access token....");
 		console.log(accessToken);
 		var raw = "";
@@ -341,5 +438,38 @@ export const GetHostedEvents = (user) => {
 			//Filter the data for bad events, meaning any null values or something
 			dispatch(UpdateHostedEvents(filteredEvents));
 		}
+	};
+};
+
+export const getPeopleGoing = (event, accessToken) => {
+	return async (dispatch) => {
+		console.log("Getting people going to a specific event");
+		console.log(accessToken);
+		var raw = "";
+
+		var requestOptions = {
+			method: "GET",
+			body: raw,
+			redirect: "follow",
+		};
+		console.log(
+			`https://gigservice.herokuapp.com/api/v1/events/${event}/attending?auth_token=${accessToken}`
+		);
+		const response = await fetch(
+			`https://gigservice.herokuapp.com/api/v1/events/${event}/attending?auth_token=${accessToken}`,
+			requestOptions
+		);
+		if (response.ok) {
+			const resData = await response.json();
+			console.log("Got response for getting people going to a event ");
+			console.log(resData);
+			dispatch(updatePeopleAttending(resData));
+		}
+	};
+};
+export const updatePeopleAttending = (eventGoing) => {
+	return {
+		type: PEOPLE_GOING,
+		eventGoing: eventGoing,
 	};
 };

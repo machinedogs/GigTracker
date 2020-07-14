@@ -19,6 +19,8 @@ const rootReducer = combineReducers({
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(ReduxThunk)));
 //Look into, andriod issue where you get warnings when communicating with firebase/api
 YellowBox.ignoreWarnings(['Setting a timer']);
+// Get error for having a dropdown picker (iOS) in create event screen
+YellowBox.ignoreWarnings(['VirtualizedLists should never be nested']);
 const _console = _.clone(console);
 console.warn = message => {
   if (message.indexOf('Setting a timer') <= -1) {

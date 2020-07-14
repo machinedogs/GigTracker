@@ -1,6 +1,5 @@
 import React from 'react';
-import { Button } from 'react-native';
-import { Platform } from 'react-native';
+import { Platform, Dimensions } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator, Header } from 'react-navigation-stack';
 
@@ -13,47 +12,161 @@ import EventScreen from '../screens/events/EventScreen'
 import AuthScreen from '../screens/user/AuthScreen';
 import StartupScreen from '../screens/StartupScreen';
 import DeleteScreen from '../screens/user/DeleteScreen';
+import SettingsScreen from '../screens/user/SettingsScreen';
+import UserDisplay from '../screens/events/UserDisplay';
+
+const WIDTH = Dimensions.get('window').width;
 
 
 const EventNavigator = createStackNavigator(
     {
-        Startup: StartupScreen,
+        Startup: {
+            screen: StartupScreen,
+            navigationOptions: {
+                headerShown: false
+            }
+        },
         Home: {
             screen: MapScreen,
             navigationOptions: {
-                headerTitle: 'Conjure',
-                headerTitleStyle: {
-                    fontFamily: 'jack-silver',
-                    fontSize: 32,
-                    textAlign: 'center'
-                },
-                headerStyle: {
-                    backgroundColor: Colors.darkGrey,
-                    height: Platform.OS === 'ios' ? 110 : Header.height
-                },
-                headerTintColor: Colors.lightText,
+                headerShown: false,
                 gestureEnabled: false, // this stops us from swiping back to startup screen
             },
         },
         CreateEvent: {
             screen: CreateEventScreen,
             navigationOptions: {
-                title: "Create Event",
+                title: "create event",
+                headerStyle: {
+                    backgroundColor: Colors.darkGrey,
+                    height: Platform.OS === 'ios' ? 110 : Header.height
+                },
+                headerTitleStyle: {
+                    fontSize: 30,
+                    fontFamily: 'jack-silver',
+                    color: '#fff',
+                    textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
+                    width: WIDTH - 75,
+                },
+                headerTintColor: '#fff',
+                headerBackTitleVisible: false,
             }
         },
-        UserProfile: UserProfileScreen,
+        UserProfile: {
+            screen: UserProfileScreen,
+            navigationOptions: {
+                title: 'Profile',
+                headerStyle: {
+                    backgroundColor: Colors.darkGrey,
+                    height: Platform.OS === 'ios' ? 110 : Header.height
+                },
+                headerTitleStyle: {
+                    fontSize: 30,
+                    fontFamily: 'jack-silver',
+                    color: '#fff',
+                    textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
+                    width: WIDTH - 75,
+                },
+                headerTintColor: '#fff',
+                headerBackTitleVisible: false,
+            },
+        },
         ManageEvent: ManageEventScreen,
         EventScreen: {
             screen: EventScreen,
             navigationOptions: {
                 headerStyle: {
                     backgroundColor: Colors.darkGrey,
-                    height: Platform.OS === 'ios' ? 110 : Header.height
+                    height: Platform.OS === 'ios' ? 110 : Header.height,
                 },
+                headerTitle: "event details",
+                headerTitleStyle: {
+                    fontSize: 30,
+                    fontFamily: 'jack-silver',
+                    textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
+                    width: WIDTH - 75,
+                },
+                headerBackTitleVisible: false,
+                headerTintColor: 'white',
+                headerTitleAllowFontScaling: true
             }
         },
-        Auth: AuthScreen,
-        Delete: DeleteScreen
+        GoingListScreen: {
+            screen: UserDisplay,
+            navigationOptions: {
+                headerStyle: {
+                    backgroundColor: Colors.darkGrey,
+                    height: Platform.OS === 'ios' ? 110 : Header.height,
+                },
+                headerTitle: "People Going",
+                headerTitleStyle: {
+                    fontSize: 30,
+                    fontFamily: 'jack-silver',
+                    textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
+                    width: WIDTH - 75,
+                },
+                headerBackTitleVisible: false,
+                headerTintColor: 'white',
+                headerTitleAllowFontScaling: true
+            }
+        },
+        Settings: {
+            screen: SettingsScreen,
+            navigationOptions: {
+                headerTitle: "Settings",
+                headerStyle: {
+                    backgroundColor: Colors.darkGrey,
+                    height: Platform.OS === 'ios' ? 110 : Header.height,
+                },
+                headerTitleStyle: {
+                    fontSize: 30,
+                    fontFamily: 'jack-silver',
+                    textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
+                    width: WIDTH - 75,
+                },
+                headerBackTitleVisible: false,
+                headerTintColor: 'white',
+                headerTitleAllowFontScaling: true
+            }
+        },
+        Auth: {
+            screen: AuthScreen,
+            navigationOptions: {
+                headerTitle: "Account",
+                headerStyle: {
+                    backgroundColor: Colors.darkGrey,
+                    height: Platform.OS === 'ios' ? 110 : Header.height,
+                },
+                headerTitleStyle: {
+                    fontSize: 30,
+                    fontFamily: 'jack-silver',
+                    textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
+                    width: WIDTH - 75,
+                },
+                headerBackTitleVisible: false,
+                headerTintColor: 'white',
+                headerTitleAllowFontScaling: true
+            }
+        },
+        Delete: {
+            screen: DeleteScreen,
+            navigationOptions: {
+                title: 'Delete Account',
+                headerStyle: {
+                    backgroundColor: Colors.darkGrey,
+                    height: Platform.OS === 'ios' ? 110 : Header.height
+                },
+                headerTitleStyle: {
+                    fontSize: 30,
+                    fontFamily: 'jack-silver',
+                    color: '#fff',
+                    textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
+                    width: WIDTH - 75,
+                },
+                headerTintColor: '#fff',
+                headerBackTitleVisible: false,
+            },
+        }
     }
 );
 

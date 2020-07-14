@@ -9,13 +9,15 @@ import {
 	Text,
 	View,
 	TouchableOpacity,
-	Button,
 	Alert,
-	ActivityIndicator
+	ActivityIndicator,
+	RefreshControl
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { Container, Header, Tab, Tabs, TabHeading, Icon } from "native-base";
-
+import { Container, Header, Tab, Tabs, TabHeading, Icon, Button } from "native-base";
+import { HeaderButtons, Item } from 'react-navigation-header-buttons';
+import InsetShadow from 'react-native-inset-shadow';
+import HeaderButton from '../../components/HeaderButton';
 import { updateUserProfile } from "../../store/actions/user";
 import {
 	openImagePickerAsync,
@@ -23,13 +25,17 @@ import {
 	getImage,
 } from "../../screens/helper/ImageHelpers";
 import { saveProfileDataToStorage } from "../../screens/helper/secureStorageHelpers";
-import * as authActions from "../../store/actions/user";
+import * as userActions from "../../store/actions/user";
 import * as eventActions from "../../store/actions/events";
 import { EventCard } from "../../components/EventCard";
 import { constructEvents } from "../../screens/helper/dataTransformation";
 import { GetHostedEvents, GetSavedEvents } from "../../store/actions/events";
+import Colors from '../../constants/Colors';
 
 const UserProfileScreen = (props) => {
+	const [savedRefreshing, setSavedRefreshing] = useState(false);
+	const [goingRefreshing, setGoingRefreshing] = useState(false);
+	const [hostedRefreshing, setHostedRefreshing] = useState(false);
 	const dispatch = useDispatch();
 	var profileImage = useSelector((state) => state.user.profileImage);
 	var user = useSelector((state) => state.user);
@@ -60,16 +66,6 @@ const UserProfileScreen = (props) => {
 		}
 		setLoading(false);
 	};
-	const getHostedEvents = async (user) => {
-		console.log("Dispatching get hosted events action from mapscreen");
-		console.log(user.accessToken);
-		dispatch(GetHostedEvents(user));
-	};
-	const getSavedEvents = async (user) => {
-		console.log("Dispatching get saved events action from mapscreen");
-		console.log(user.accessToken);
-		dispatch(GetSavedEvents(user));
-	};
 
 	const handleDelete = async (event) => {
 		Alert.alert(
@@ -89,107 +85,154 @@ const UserProfileScreen = (props) => {
 			],
 			{ cancelable: false }
 		);
-		getHostedEvents(user);
 	}
 
-	useEffect(() => {
-		getHostedEvents(user);
-		getSavedEvents(user);
-	}, [loading, profileImage]);
-
-	const editEvent = (event) => {
-		console.log('\nthe title of the event is ' + event.title + '\n');
-		console.log('blah Blah ' + event);
-		props.navigation.navigate('CreateEvent', { event: event });
-	}
+	const refreshSaved = useCallback(async () => {
+		setSavedRefreshing(true);
+		try {
+			//await dispatch(GetHostedEvents(user));
+			await dispatch(GetSavedEvents(user.accessToken));
+			setSavedRefreshing(false)
+		} catch (error) {
+			console.error(error);r
+			setSavedRefreshing(false)
+		}
+	}, [savedRefreshing]);
+	const refreshGoing = useCallback(async () => {
+		setGoingRefreshing(true);
+		try {
+			//await dispatch(GetHostedEvents(user));
+			await dispatch(userActions.getGoingEvents(user.accessToken));
+			setGoingRefreshing(false)
+		} catch (error) {
+			console.error(error);
+			setGoingRefreshing(false)
+		}
+	}, [goingRefreshing]);
+	const refreshHosted = useCallback(async () => {
+		setHostedRefreshing(true);
+		try {
+			//await dispatch(GetHostedEvents(user));
+			await dispatch(GetHostedEvents(user.accessToken));
+			setHostedRefreshing(false)
+		} catch (error) {
+			console.error(error);
+			setHostedRefreshing(false)
+		}
+	}, [hostedRefreshing]);
 
 	return (
-		<ScrollView>
-			<View style={styles.container}>
-				<View style={styles.headerContainer}>
-					<ImageBackground
-						style={styles.headerBackgroundImage}
-						blurRadius={10}
-						source={{
-							uri:
-								"https://visme.co/blog/wp-content/uploads/2017/07/50-Beautiful-and-Minimalist-Presentation-Backgrounds-018.jpg",
-						}}
-					>
-						<View style={styles.headerColumn}>
-							<TouchableOpacity
-								onPress={updateProfilePhoto}
-								style={styles.userImageContainer}
-							>
-								{loading ? (
-									<ActivityIndicator style={styles.userImage} size="large" />
-								) : (
-										<Image
-											style={styles.userImage}
-											source={{ uri: profileImage }}
-										/>
-									)}
-							</TouchableOpacity>
+		<View style={styles.container}>
+			<View style={styles.headerContainer}>
+				<View style={styles.headerColumn, { paddingLeft: 20 }}>
+					<View style={{ flexDirection: 'row', paddingTop: 15, }}>
+						<TouchableOpacity
+							onPress={updateProfilePhoto}
+							style={styles.userImageContainer}
+						>
+							{loading ? (
+								<ActivityIndicator style={styles.userImage} size="large" />
+							) : (
+									<Image
+										style={styles.userImage}
+										source={{ uri: profileImage }}
+									/>
+								)}
+						</TouchableOpacity>
+						<View style={{ flexDirection: 'column', justifyContent: 'center', paddingLeft: 50 }} >
 							<Text style={styles.userNameText}>{user.userName}</Text>
 							<Text style={styles.emailText}>{user.userEmail}</Text>
 						</View>
-					</ImageBackground>
-				</View>
-				<View style={styles.content}>
-					<Tabs>
-						<Tab heading="Saved Events">
-							<FlatList
-								data={constructEvents(event.savedEvents)}
-								renderItem={({ item }) => <EventCard event={item} />}
-								keyExtractor={(item) => item.id.toString()}
-								scrollEnabled={false}
-							/>
-						</Tab>
-						<Tab heading="Hosted Events">
-							<FlatList
-								data={constructEvents(event.createdEvents)}
-								renderItem={({ item }) =>
-									<View>
-										<EventCard event={item} hosting={false} />
-										<View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingHorizontal: 15 }}>
-											<Button iconRight transparent light title='Edit'
-												onPress={() => {
-													props.navigation.navigate('CreateEvent', { event: item })
-												}}
-											/>
-											<Button iconRight transparent light title='Delete'
-												onPress={() => {
-													handleDelete(item)
-												}}
-											/>
-										</View>
-									</View>
-								}
-								keyExtractor={(item) => item.id.toString()}
-								scrollEnabled={false}
-							/>
-						</Tab>
-					</Tabs>
-				</View>
-				<View style={styles.ButtonContainer}>
-					<Button
-						title="Logout"
-						onPress={() => {
-							dispatch(authActions.logout());
-							props.navigation.navigate("Home");
-						}}
-					/>
-					<Button
-						title="Delete Account"
-						onPress={() => {
-							// Take user to delete account screen and let them delete
-							props.navigation.navigate("Delete");
-						}}
-					/>
+					</View>
 				</View>
 			</View>
-		</ScrollView>
+			<View style={styles.content}>
+				<Tabs
+					tabBarUnderlineStyle={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}
+					tabBarUnderlineStyle={{ backgroundColor: Colors.purpleButton }}
+					tabBarActiveTextColor={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}
+				//tabBarInactiveTextColor={Platform.OS === 'ios' ? 'grey' : Colors.lightPurple}
+				>
+					<Tab heading="Saved" tabBarUnderlineStyle={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}>
+
+						<FlatList
+							data={constructEvents(event.savedEvents)}
+							renderItem={({ item }) =>
+								<EventCard event={item} />
+							}
+							keyExtractor={(item) => item.id.toString()}
+							refreshControl={
+								<RefreshControl refreshing={savedRefreshing} onRefresh={refreshSaved} />
+							  }
+						/>
+					</Tab>
+					<Tab heading="Going" tabBarUnderlineStyle={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}>
+						<FlatList
+							data={constructEvents(user.goingEvents)}
+							renderItem={({ item }) =>
+								<EventCard event={item} />
+							}
+							keyExtractor={(item) => item.id.toString()}
+							refreshControl={
+								<RefreshControl refreshing={goingRefreshing} onRefresh={refreshGoing} />
+							  }
+						/>
+					</Tab>
+					<Tab heading="Hosted" tabBarUnderlineStyle={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}>
+						<FlatList
+							data={constructEvents(event.createdEvents)}
+							renderItem={({ item }) =>
+								<View>
+									<EventCard event={item} />
+									<View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingHorizontal: 15 }}>
+										<Button full transparent light
+											onPress={() => {
+												props.navigation.navigate('CreateEvent', { event: item })
+											}}
+										>
+											<Text style={styles.buttonText}>Edit</Text>
+										</Button>
+										<Button
+											iconRight
+											transparent
+											light
+											title='Delete'
+											onPress={() => {
+												handleDelete(item)
+											}}
+										>
+											<Text style={styles.buttonText}>Delete</Text>
+										</Button>
+									</View>
+								</View>
+							}
+							keyExtractor={(item) => item.id.toString()}
+							refreshControl={
+								<RefreshControl refreshing={hostedRefreshing} onRefresh={refreshHosted} />
+							  }
+						/>
+					</Tab>
+				</Tabs>
+			</View>
+		</View>
 	);
 };
+
+UserProfileScreen.navigationOptions = navData => {
+	return {
+		headerRight: () => (
+			<HeaderButtons HeaderButtonComponent={HeaderButton}>
+				<Item
+					title='Menu'
+					iconName='ios-cog'
+					onPress={() => {
+						navData.navigation.navigate('Settings');
+					}}
+				/>
+			</HeaderButtons>
+		)
+	}
+}
 
 const styles = StyleSheet.create({
 	cardContainer: {
@@ -219,18 +262,19 @@ const styles = StyleSheet.create({
 		paddingTop: 35,
 	},
 	headerContainer: {
-		// height:'35%'
+		// height:'35%',
+		backgroundColor: '#2b2d2f',
 	},
 	headerColumn: {
-		backgroundColor: "transparent",
+		//backgroundColor: "transparent",
 		...Platform.select({
 			ios: {
-				alignItems: "center",
+				alignItems: "flex-start",
 				elevation: 1,
 				marginTop: -1,
 			},
 			android: {
-				alignItems: "center",
+				alignItems: "flex-start",
 			},
 		}),
 	},
@@ -253,17 +297,25 @@ const styles = StyleSheet.create({
 	},
 	userNameText: {
 		color: "#FFF",
-		fontSize: 22,
+		fontSize: 24,
 		fontWeight: "bold",
 		paddingBottom: 8,
-		textAlign: "center",
+		textAlign: "left",
+		fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
 	},
 	emailText: {
 		color: "#FFF",
-		fontSize: 14,
+		fontSize: 16,
 		fontWeight: "bold",
 		paddingBottom: 8,
-		textAlign: "center",
+		textAlign: "left",
+		fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
+	},
+	buttonText: {
+		color: Colors.purpleButton,
+		justifyContent: 'center',
+		alignItems: 'center',
+		fontSize: 18
 	},
 });
 export default UserProfileScreen;

@@ -1,10 +1,62 @@
 import * as SecureStore from 'expo-secure-store';
-import {saveProfileDataToStorage} from '../../screens/helper/secureStorageHelpers';
+import { saveProfileDataToStorage } from '../../screens/helper/secureStorageHelpers';
 //TODO: Move to a constant file 
 export const AUTHENTICATE = 'AUTHENTICATE';
 export const UPDATE_PROFILE = 'UPDATE_PROFILE';
 export const UPDATE_WALLPAPER = 'UPDATE_WALLPAPER';
 export const LOGOUT = 'LOGOUT';
+export const SET_GOING_EVENTS = 'SET_GOING_EVENTS';
+export const GOING_TO_EVENT = 'GOING_TO_EVENT';
+export const NOT_GOING_TO_EVENT = 'NOT_GOING_TO_EVENT';
+export const UPDATE_EVENT = "UPDATE_EVENT";
+
+export const addToGoingEvents = (event) => {
+    return async (dispatch, getState) => {
+        const accessToken = getState().user.accessToken;
+        console.log(accessToken)
+        var raw = '';
+        var requestOptions = {
+            method: 'POST',
+            body: raw,
+            redirect: 'follow'
+        };
+        console.log("Going to this event:")
+        console.log(event.event)
+        const response = await fetch(
+            `https://gigservice.herokuapp.com/api/v1/events/${event.event}/attending?auth_token=${accessToken}`,
+            requestOptions)
+        const resData = await response.json();
+        console.log('Updated DB that user is going to an event')
+        console.log(resData)
+
+        dispatch({ type: GOING_TO_EVENT, event: resData.event });
+        dispatch({ type: UPDATE_EVENT, event: resData.event });
+    }
+};
+
+export const removeFromGoingEvents = (event) => {
+    return async (dispatch, getState) => {
+        const accessToken = getState().user.accessToken;
+        console.log(accessToken)
+        var raw = '';
+        var requestOptions = {
+            method: 'DELETE',
+            body: raw,
+            redirect: 'follow'
+        };
+        console.log("No longer going to this event:")
+        console.log(event.event)
+        const response = await fetch(
+            `https://gigservice.herokuapp.com/api/v1/events/${event.event}/attending/1?auth_token=${accessToken}`,
+            requestOptions)
+        const resData = await response.json();
+        console.log('Updated DB that user is not going to this event')
+        console.log(resData)
+
+        dispatch({ type: UPDATE_EVENT, event: resData.event });
+        dispatch({ type: NOT_GOING_TO_EVENT, event: resData.event});
+    }
+}
 
 export const authenticate = (userName, userEmail, accessToken, refreshToken) => {
     return {
@@ -72,6 +124,8 @@ export const logout = () => {
 export const deleteAccount = () => {
     return async (dispatch, getState) => {
         const refreshToken = getState().user.refreshToken;
+
+        // UnGo from any events going to
 
         // Assemble Delete Request
         var raw = "";
@@ -251,6 +305,65 @@ export const login = (email, password) => {
             accessExpiration,
             refreshExpiration
         )
+    };
+};
+
+//Get a person's hosted/created events
+export const setGoingEvents = (goingEvents) => {
+    return {
+        type: SET_GOING_EVENTS,
+        goingEvents: goingEvents,
+    };
+};
+
+export const getGoingEvents = (accessToken) => {
+    return async (dispatch) => {
+        console.log("Getting saved events...making api call..");
+        console.log("access token....");
+        console.log(accessToken);
+        var raw = "";
+
+        var requestOptions = {
+            method: "GET",
+            body: raw,
+            redirect: "follow",
+        };
+        //console.log("request options");
+        //console.log(requestOptions);
+        console.log(
+            `https://gigservice.herokuapp.com/api/v1/host/attending?auth_token=${accessToken}`
+        );
+        const response = await fetch(
+            `https://gigservice.herokuapp.com/api/v1/host/attending?auth_token=${accessToken}`,
+            requestOptions
+        );
+        if (response.ok) {
+            const resData = await response.json();
+            console.log("Got response for getting the going events ");
+            console.log(resData);
+            //ToDo:Eventually improve this filter event
+            var filteredEvents = resData.filter((event) => {
+                console.log(`event is here ${event.title}`);
+                if (
+                    event.event != null &&
+                    event.title != null &&
+                    event.description != null &&
+                    event.date != null &&
+                    event.category != null &&
+                    event.image != null &&
+                    event.image.length > 8
+                ) {
+                    console.log(`returns true for event ${event.event}`);
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+            //console.log(`filtered Events ${filteredEvents}`);
+
+            //Filter the data for bad events, meaning any null values or something
+            dispatch(setGoingEvents(filteredEvents));
+        }
     };
 };
 

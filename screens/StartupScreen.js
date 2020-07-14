@@ -1,28 +1,42 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     View,
     ActivityIndicator,
-    StyleSheet
+    StyleSheet,
+    Text,
+    StatusBar
 } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
-
 import { useDispatch, useSelector } from 'react-redux';
 import { updateUserProfile } from '../store/actions/user';
 import * as authActions from '../store/actions/user';
 import * as eventActions from '../store/actions/events';
-import { getProfileDataStorage  } from '../screens/helper/secureStorageHelpers';
+import { getProfileDataStorage } from '../screens/helper/secureStorageHelpers';
+import { getGeoInfo } from '../screens/helper/geoHelper';
+import Colors from '../constants/Colors';
+
+const startupTextOptions = [
+    "Contacting Orbital Satellite   ",
+    "Downloading Memes   ",
+    "Kicking Neighbors off Wifi   ",
+    "Carping the Diem   ",
+]
 
 const StartupScreen = props => {
-    const events = useSelector(state => state.events.events)
     const dispatch = useDispatch();
+
+    var startupText = startupTextOptions[Math.floor(Math.random() * startupTextOptions.length)]
 
     useEffect(() => {
         const tryLogin = async () => {
-            //SecureStore.deleteItemAsync('userData')
-            // SecureStore.deleteItemAsync('images')
             console.log('dispatching getEvents from startup page')
-            dispatch(eventActions.getEvents());
-            // change this to secure store function
+            let coordinates = '';
+            await getGeoInfo().then(coords => coordinates = coords);
+            var currentDate = new Date()
+            currentDate.setHours(0,0,0,0);
+            await dispatch(eventActions.getEvents(currentDate.toISOString(), coordinates.latitude, coordinates.longitude));
+            dispatch(eventActions.getEvents(currentDate));
+
             const userData = await SecureStore.getItemAsync('userData');
 
             if (!userData) {
@@ -46,6 +60,7 @@ const StartupScreen = props => {
                 props.navigation.replace('Home');
                 return;
             }
+
             // check if access token expired, then make refresh endpoint call
             if (accessTokenExpiryDate <= new Date()) {
                 console.log('refreshing tokens')
@@ -59,6 +74,9 @@ const StartupScreen = props => {
                     return;
                 }
 
+                dispatch(eventActions.GetSavedEvents(accessToken));
+                dispatch(eventActions.GetHostedEvents(accessToken));
+                dispatch(authActions.getGoingEvents(accessToken));
                 //Dispatch action to update profile image state in store 
                 await dispatch(updateUserProfile(profileImage, transformedData))
                 props.navigation.replace('Home');
@@ -67,17 +85,25 @@ const StartupScreen = props => {
 
             // pass user data to state and navigate to home
             await dispatch(authActions.authenticate(userName, userEmail, accessToken, refreshToken));
+            dispatch(eventActions.GetSavedEvents(accessToken));
+            dispatch(eventActions.GetHostedEvents(accessToken));
+            dispatch(authActions.getGoingEvents(accessToken));
             //Dispatch action to update profile image state in store 
             await dispatch(updateUserProfile(profileImage, transformedData));
             props.navigation.replace('Home');
         };
-
         tryLogin();
     }, [dispatch]);
 
     return (
         <View style={styles.screen} >
-            <ActivityIndicator size='large' />
+            <StatusBar backgroundColor={Colors.darkGrey} barStyle='light-content' />
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={{ color: 'white', fontSize: 17 }}>
+                    {startupText}
+                </Text>
+                <ActivityIndicator size='large' color='white' />
+            </View>
         </View>
     );
 }
@@ -86,7 +112,8 @@ const styles = StyleSheet.create({
     screen: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: Colors.darkGrey
     }
 });
 

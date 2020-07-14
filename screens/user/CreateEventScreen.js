@@ -4,7 +4,7 @@ import {
   Text,
   View,
   Dimensions,
-  TextInput,
+  TouchableWithoutFeedback,
   Platform,
   ScrollView,
   SafeAreaView,
@@ -12,7 +12,8 @@ import {
   TouchableOpacity,
   Modal,
   Image,
-  Vibration
+  Vibration,
+  Keyboard
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -44,6 +45,8 @@ import {
   stringifyTime,
 } from "../helper/createEventHelper";
 import { ActivityIndicator } from "react-native";
+import Colors from '../../constants/Colors';
+import { Ionicons, Fontisto } from "@expo/vector-icons";
 
 const { width, height } = Dimensions.get("window");
 const SCREEN_HEIGHT = height;
@@ -66,7 +69,7 @@ const CreateEventScreen = (props) => {
   const initDate = initEvent ? new Date(initEvent.date) : new Date();
   const initTime = initEvent ? new Date(initEvent.date) : new Date();
   const initImage = initEvent ? initEvent.image : "";
-  const initLocation = initEvent ? {latitude: parseFloat(initEvent.location.latitude), longitude: parseFloat(initEvent.location.latitude)} : "";
+  const initLocation = initEvent ? { latitude: parseFloat(initEvent.location.latitude), longitude: parseFloat(initEvent.location.latitude) } : "";
 
   //These states updated as user interacts with the screen
   const [title, setTitle] = useState(initTitle);
@@ -88,7 +91,8 @@ const CreateEventScreen = (props) => {
 
   //Updates event photo
   const updateEventPhoto = async () => {
-    setImage(await uploadEventPhoto());
+    var eventPhotoRatio = [4, 3];
+    setImage(await uploadEventPhoto(eventPhotoRatio));
   };
 
   useEffect(() => {
@@ -163,8 +167,6 @@ const CreateEventScreen = (props) => {
         //create new event
         console.log(`Dispatching event ${newEvent.title}`);
         await dispatch(eventActions.createEvent(newEvent));
-        console.log("dispatching getEvents from create page");
-        dispatch(eventActions.getEvents());
         props.navigation.navigate("Home");
       }
     } else {
@@ -197,93 +199,102 @@ const CreateEventScreen = (props) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView>
-        <View
-          style={{
-            padding: 12,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          {image == "" ? (
-            <TouchableOpacity
-              style={styles.eventImageContainer}
-              onPress={updateEventPhoto}
-            >
-              <ActivityIndicator style={styles.eventImage} size="large" />
-            </TouchableOpacity>
-          ) : (
-              <TouchableOpacity
-                style={styles.eventImageContainer}
-                onPress={updateEventPhoto}
-              >
-                <Image source={{ uri: image }} style={styles.eventImage} />
-              </TouchableOpacity>
-            )}
-          <Item rounded>
-            <Input
-              style={styles.titleStyle}
-              onChangeText={(text) => setTitle(text)}
-              value={title}
-              placeholder={"Add a title..."}
-            />
-          </Item>
-          <Item rounded>
-            <Textarea
-              style={styles.descriptionStyle}
-              onChangeText={(text) => setDescription(text)}
-              value={description}
-              placeholder={"Add a description..."}
-              multiline
-              numberOfLines={5}
-            />
-          </Item>
-        </View>
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            alignContent: "center",
-            paddingBottom: 10,
-            zIndex: 10,
-            width: SCREEN_WIDTH,
-          }}
-        >
-          <Text style={styles.text}>Category</Text>
-          {Platform.OS === "ios" ? (
-            <DropDownPicker
-              items={[
-                { label: "Music", value: "music" },
-                { label: "Sports", value: "sports" },
-                { label: "Meeting", value: "meeting" },
-                { label: "Party", value: "party" },
-                { label: "Protest", value: "protest" },
-                { label: "Food", value: "food" },
-                { label: "Market", value: "market" },
-                { label: "Discussion", value: "discussion" },
-                { label: "Political", value: "political" },
-                { label: "Other", value: "other" },
-              ]}
-              defaultValue={initCategory}
-              placeholder="Select a category"
-              containerStyle={{
-                height: 50,
-                width: 300,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-              style={{ borderColor: "gray", borderWidth: 1 }}
-              dropdownStyle={{ borderColor: "gray", height: 300 }}
-              itemStyle={{ alignItems: "center" }}
-              onChangeItem={(category) => setCategory(category.value)}
-            />
-          ) : (
-              <RNPickerSelect
+
+    <ScrollView style={{ flex: 1, backgroundColor: 'white' }} showsVerticalScrollIndicator={false}>
+      <TouchableWithoutFeedback
+        onPress={() => { Keyboard.dismiss(); }}
+      >
+        <SafeAreaView style={styles.container}>
+          <View
+            style={{
+              padding: 12,
+              justifyContent: "center",
+            }}
+          >
+            <Text style={styles.text, { color: Colors.purpleBackground, paddingBottom: 5, fontSize: 18 }}>Image</Text>
+            <View style={{ alignItems: "center", paddingTop: 8 }}>
+              {image == "" ? (
+                <View style={{
+                  backgroundColor: "white",
+                  borderRadius: 3,
+                  borderColor: Colors.lightGrey,
+                  borderWidth: 1,
+                  padding: 10
+                }}>
+                  <TouchableOpacity onPress={updateEventPhoto}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          textAlign: "center",
+                          fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
+                          paddingRight: 7,
+                        }}
+                      >
+                        {"Upload Image"}
+                      </Text>
+                      <Fontisto
+                        name="picture"
+                        color="black"
+                        size={28}
+                        style={{
+                          alignContent: 'center',
+                          justifyContent: 'center'
+                        }}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                  <TouchableOpacity
+                    style={styles.eventImageContainer}
+                    onPress={updateEventPhoto}
+                  >
+                    <Image source={{ uri: image }} style={styles.eventImage} />
+                  </TouchableOpacity>
+                )}
+            </View>
+            <View style={{ paddingBottom: 15, paddingTop: 15 }}>
+              <Text style={styles.text, { color: Colors.purpleBackground, paddingBottom: 5, fontSize: 18 }}>Title</Text>
+              <Item regular style={{ borderColor: Colors.lightGrey, borderRadius: 5 }}>
+                <Input
+                  style={styles.titleStyle}
+                  onChangeText={(text) => setTitle(text)}
+                  value={title}
+                  placeholder={"Add a title..."}
+                />
+              </Item>
+              <Text></Text>
+              <Text style={styles.text, { color: Colors.purpleBackground, paddingBottom: 5, fontSize: 18 }}>Description</Text>
+              <Item regular style={{ borderColor: Colors.lightGrey, borderRadius: 5 }}>
+                <Textarea
+                  style={styles.descriptionStyle}
+                  onChangeText={(text) => setDescription(text)}
+                  value={description}
+                  placeholder={"Add a description..."}
+                  multiline
+                  numberOfLines={5}
+                />
+              </Item>
+            </View>
+          </View>
+          <View
+            style={{
+              justifyContent: "center",
+              //alignItems: "center",
+              alignContent: "center",
+              paddingHorizontal: 10,
+              paddingRight: 15,
+              width: SCREEN_WIDTH,
+              zIndex: 10,
+            }}
+          >
+            <Text style={styles.text}>Category</Text>
+            {Platform.OS === "ios" ? (
+              <DropDownPicker
                 items={[
                   { label: "Music", value: "music" },
                   { label: "Sports", value: "sports" },
-                  { label: "Art", value: "art" },
                   { label: "Meeting", value: "meeting" },
                   { label: "Party", value: "party" },
                   { label: "Protest", value: "protest" },
@@ -293,227 +304,241 @@ const CreateEventScreen = (props) => {
                   { label: "Political", value: "political" },
                   { label: "Other", value: "other" },
                 ]}
-                style={{ borderColor: "gray", borderWidth: 1 }}
-                onValueChange={(value) => setCategory(value)}
+                defaultValue={initCategory}
+                placeholder="Select a category"
+                containerStyle={{
+                  height: 50,
+                  width: SCREEN_WIDTH * 0.95,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                style={{ borderColor: Colors.lightGrey, borderWidth: 0.5 }}
+                dropdownStyle={{ borderColor: Colors.lightGrey, height: 300 }}
+                itemStyle={{ alignItems: "center" }}
+                onChangeItem={(category) => setCategory(category.value)}
               />
-            )}
-        </View>
-        <View style={styles.container}>
-          <Text
-            style={{
-              fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
-            }}
-          >
-            Location:
-					</Text>
-          <Button
-            iconRight
-            light
-            onPress={toggleShowMap}
-            style={styles.buttonStyle}
-          >
-            <Text
-              style={{
-                fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
-              }}
-            >
-              Drop a pin...
-						</Text>
-            <Icon name="pin" />
-          </Button>
-        </View>
-        {console.log(`Here ${location.latitude}`)}
-        {showMap && location.latitude && (
+            ) : (
+                <RNPickerSelect
+                  items={[
+                    { label: "Music", value: "music" },
+                    { label: "Sports", value: "sports" },
+                    { label: "Art", value: "art" },
+                    { label: "Meeting", value: "meeting" },
+                    { label: "Party", value: "party" },
+                    { label: "Protest", value: "protest" },
+                    { label: "Food", value: "food" },
+                    { label: "Market", value: "market" },
+                    { label: "Discussion", value: "discussion" },
+                    { label: "Political", value: "political" },
+                    { label: "Other", value: "other" },
+                  ]}
+                  placeholder={{ label: "Select a category", value: "placeHolder", "key": "placeholder" }}
+                  style={{ borderColor: Colors.darkGrey, borderWidth: 0.5, color: "black" }}
+                  onValueChange={(value) => setCategory(value)}
+                />
+              )}
+          </View>
           <View style={styles.container}>
-            <Modal
-              onSwipeComplete={toggleShowMap}
-              swipeDirection={"down"}
-              backdropOpacity={0.3}
-              onBackdropPress={toggleShowMap}
-              swipeThreshold={100}
-              TransitionOutTiming={0}
-              borderRadius={10}
-              propagateSwipe
+            <Text style={styles.text}>Location</Text>
+            <Button
+              iconRight
+              light
+              onPress={toggleShowMap}
+              style={styles.buttonStyle}
             >
-              <Header style={{ backgroundColor: "#2d3436" }}>
-                <Left></Left>
-                <View>
-                  <Title
-                    style={{
-                      color: "#fff",
-                      fontFamily:
-                        Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
-                      fontSize: 20,
-                    }}
-                  >
-                    Select location
-									</Title>
-                </View>
-                <Right>
-                  <Button transparent onPress={toggleShowMap}>
-                    <Icon name="md-checkmark" />
-                  </Button>
-                </Right>
-              </Header>
-              <View
+              <Text
                 style={{
-                  backgroundColor: "#2d3436",
-                  zIndex: 100,
-                  borderColor: "#2d3436",
+                  fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
                 }}
               >
-                <Text
-                  style={{
-                    color: "white",
-                    padding: 10,
-                    fontSize: 15,
-                    fontFamily:
-                      Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
-                  }}
-                >
-                  Hold pin to drag
-								</Text>
-              </View>
-              <View style={styles.mapContainer}>
-                <MapView
-                  initialRegion={{
-                    latitude: parseFloat(location.latitude),
-                    latitudeDelta: LATITUDE_DELTA,
-                    longitude: parseFloat(location.longitude),
-                    longitudeDelta: LONGITUDE_DELTA,
-                  }}
-                  style={styles.mapStyle}
-                  provider={PROVIDER_GOOGLE}
-                  showsUserLocation
-                  showsMyLocationButton
-                  rotateEnabled={false}
-                  showsTraffic={false}
-                  toolbarEnabled={true}
-                  ref={mapRef}
-                  customMapStyle={MapStyle}
-                  clusterColor="#341f97"
-                >
-                  <Marker
-                    ref={markerRef}
-                    coordinate={{latitude: parseFloat(location.latitude), longitude: parseFloat(location.longitude)}}
-                    pinColor="#341f97"
-                    tracksViewChanges={false}
-                    draggable
-                    onDragEnd={handleDragEnd}
-                    onDragStart={handleDragStart}
-                  />
-                </MapView>
-              </View>
-            </Modal>
+                {"Drop a "}
+              </Text>
+              <Icon name="pin" />
+            </Button>
           </View>
-        )}
-        <View style={styles.container}>
-          <Text
-            style={{
-              fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
-            }}
-          >
-            Date:
-					</Text>
-          <Button
-            iconRight
-            light
-            onPress={toggleShowDate}
-            style={styles.buttonStyle}
-          >
-            <Text
-              style={{
-                textAlign: "center",
-                fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
-              }}
+          {console.log(`Here ${location.latitude}`)}
+          {showMap && location.latitude && (
+            <View style={styles.container}>
+              <Modal
+                onSwipeComplete={toggleShowMap}
+                swipeDirection={"down"}
+                backdropOpacity={0.3}
+                onBackdropPress={toggleShowMap}
+                swipeThreshold={100}
+                TransitionOutTiming={0}
+                borderRadius={10}
+                propagateSwipe
+              >
+                <Header style={{ backgroundColor: Colors.darkGrey, }}>
+                  <Left></Left>
+                  <View>
+                    <Title
+                      style={{
+                        color: "#fff",
+                        fontFamily: 'jack-silver',
+                        fontSize: 26,
+                        paddingBottom: 10,
+                        paddingTop: Platform.OS === 'ios' ? 0 : 10,
+                        width: SCREEN_WIDTH * 0.75
+                      }}
+                    >
+                      Select Location
+									</Title>
+                  </View>
+                  <Right>
+                    <Ionicons
+                      name="md-checkmark"
+                      color='white'
+                      onPress={toggleShowMap}
+                      size={28}
+                      style={{ paddingRight: 10 }}
+                    />
+                  </Right>
+                </Header>
+                <View
+                  style={{
+                    backgroundColor: Colors.darkGrey,
+                    zIndex: 100,
+                    borderColor: "#2d3436",
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: "white",
+                      padding: 10,
+                      fontSize: 15,
+                      fontFamily:
+                        Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
+                    }}
+                  >
+                    Hold pin to drag
+								</Text>
+                </View>
+                <View style={styles.mapContainer}>
+                  <MapView
+                    initialRegion={{
+                      latitude: parseFloat(location.latitude),
+                      latitudeDelta: LATITUDE_DELTA,
+                      longitude: parseFloat(location.longitude),
+                      longitudeDelta: LONGITUDE_DELTA,
+                    }}
+                    style={styles.mapStyle}
+                    provider={PROVIDER_GOOGLE}
+                    showsUserLocation
+                    showsMyLocationButton
+                    rotateEnabled={false}
+                    showsTraffic={false}
+                    toolbarEnabled={true}
+                    ref={mapRef}
+                    customMapStyle={MapStyle}
+                    clusterColor="#341f97"
+                  >
+                    <Marker
+                      ref={markerRef}
+                      coordinate={{ latitude: parseFloat(location.latitude), longitude: parseFloat(location.longitude) }}
+                      pinColor="#341f97"
+                      tracksViewChanges={false}
+                      draggable
+                      onDragEnd={handleDragEnd}
+                      onDragStart={handleDragStart}
+                    />
+                  </MapView>
+                </View>
+              </Modal>
+            </View>
+          )}
+          <View style={styles.container}>
+            <Text style={styles.text}>Date</Text>
+            <Button iconRight light onPress={toggleShowDate} style={styles.buttonStyle} >
+              <Text
+                style={{
+                  textAlign: "center",
+                  fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
+                }}
+              >
+                {stringifyDate(date)}
+              </Text>
+            </Button>
+          </View>
+          {showDate && (
+            <DateTimePicker value={date} mode={"date"} onChange={onChangeDate} />
+          )}
+          <View style={{...styles.container }}>
+            <Text style={styles.text}>Time</Text>
+            <Button
+              iconRight
+              light
+              onPress={toggleShowTime}
+              style={styles.buttonStyle}
             >
-              {stringifyDate(date)}
-            </Text>
-            <Icon name="calendar" />
-          </Button>
-        </View>
-        {showDate && (
-          <DateTimePicker value={date} mode={"date"} onChange={onChangeDate} />
-        )}
-        <View style={styles.container}>
-          <Text
+              <Text>{stringifyTime(time)}</Text>
+            </Button>
+          </View>
+          {showTime && (
+            <DateTimePicker
+              value={time}
+              mode={"time"}
+              is24Hour={false}
+              onChange={onChangeTime}
+            />
+          )}
+          <View
             style={{
-              fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
-            }}
-          >
-            Time:
-					</Text>
-          <Button
-            iconRight
-            light
-            onPress={toggleShowTime}
-            style={styles.buttonStyle}
-          >
-            <Text>{stringifyTime(time)}</Text>
-            <Icon name="clock" />
-          </Button>
-        </View>
-        {showTime && (
-          <DateTimePicker
-            value={time}
-            mode={"time"}
-            is24Hour={false}
-            onChange={onChangeTime}
-          />
-        )}
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            padding: 10,
-          }}
-        >
-          <Text></Text>
-          <Button
-            round
-            light
-            onPress={saveEvent}
-            style={{
-              borderWidth: 1,
-              borderColor: "gray",
+              flexDirection: "row",
               alignContent: "center",
               justifyContent: "center",
-              width: 125,
-              height: 50,
-              backgroundColor: "#fff",
+              paddingTop: 15,
+              paddingBottom: 10
             }}
           >
+            <Button round light onPress={saveEvent}
+              style={{
+                borderColor: Colors.purpleButton,
+                alignContent: "center",
+                justifyContent: "center",
+                backgroundColor: Colors.purpleButton,
+                borderRadius: 5,
+                borderWidth: 2,
+                paddingHorizontal: 10
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 20,
+                  color: "#fff",
+                  textAlign: "center",
+                  fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
+                }}
+              >
+                Submit
+						</Text>
+            </Button>
+          </View>
+          <View style={styles.container}>
             <Text
               style={{
-                fontSize: 22,
-                color: "#2f3640",
-                textAlign: "center",
+                color: "gray",
                 fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
               }}
             >
-              Submit
-						</Text>
-          </Button>
-        </View>
-        <View style={styles.container}>
-          <Text
-            style={{
-              color: "gray",
-              fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
-            }}
-          >
-            Note: If you are hosting this event at a private location, we
-            recommend not using the exact location of your address but somewhere
-            nearby. Include a contact where people can ask you directly for the
-            address.
+              Note: If you are hosting this event at a private location, we
+              recommend not using the exact location of your address but somewhere
+              nearby. Include a contact in the description where people can ask
+              you directly for the address.
 					</Text>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+          </View>
+        </SafeAreaView>
+      </TouchableWithoutFeedback >
+
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: "white"
+  },
   mapContainer: {
     flex: 1,
     alignItems: 'center',
@@ -525,7 +550,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    alignItems: "center",
+    //alignItems: "center",
     justifyContent: "flex-start",
     width: SCREEN_WIDTH,
     padding: 10,
@@ -533,21 +558,22 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
-    fontSize: 16,
+    fontSize: 18,
+    color: Colors.purpleBackground,
   },
   dropdownStyle: {
     width: 100,
   },
   titleStyle: {
     height: 50,
-    borderColor: "gray",
+    //borderColor: "gray",
     //borderWidth: 1,
     width: 350,
     fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
     fontSize: 16,
   },
   descriptionStyle: {
-    borderColor: "gray",
+    //borderColor: "gray",
     //borderWidth: 1,
     width: 350,
     height: 120,
@@ -571,10 +597,10 @@ const styles = StyleSheet.create({
   },
   buttonStyle: {
     height: 50,
-    width: 200,
+    width: '98%',
     color: "black",
-    borderColor: "gray",
-    borderWidth: 1,
+    borderColor: Colors.lightGrey,
+    borderWidth: 0.5,
     backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
@@ -602,16 +628,21 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   eventImageContainer: {
-    borderColor: "gray",
-    borderWidth: 5,
-    height: 170,
+    borderColor: Colors.purpleBackground,
+    borderWidth: 3,
+    height: 200,
     marginBottom: 15,
-    width: SCREEN_WIDTH * 0.8,
+    width: SCREEN_WIDTH * 0.9,
   },
   eventImage: {
     height: "100%",
     width: "100%",
   },
+  pictureUpload: {
+    height: 200,
+    marginBottom: 15,
+    width: SCREEN_WIDTH * 0.9,
+  }
 });
 
 export default CreateEventScreen;
