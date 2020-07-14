@@ -54,7 +54,7 @@ export const removeFromGoingEvents = (event) => {
         console.log(resData)
 
         dispatch({ type: UPDATE_EVENT, event: resData.event });
-        dispatch({ type: NOT_GOING_TO_EVENT, event: resData.event});
+        dispatch({ type: NOT_GOING_TO_EVENT, event: resData.event });
     }
 }
 
@@ -124,16 +124,32 @@ export const logout = () => {
 export const deleteAccount = () => {
     return async (dispatch, getState) => {
         const refreshToken = getState().user.refreshToken;
+        const accessToken = getState().user.accessToken;
+        const goingEvents = getState().user.goingEvents;
 
-        // UnGo from any events going to
-
-        // Assemble Delete Request
-        var raw = "";
+        // Assemble DELETE Payload
+        var raw = '';
         var requestOptions = {
             method: 'DELETE',
             body: raw,
             redirect: 'follow'
         };
+        // Un-go from all events in goingEvents state
+        goingEvents.map(async event => {
+            // in map
+            console.log("No longer going to this event:")
+            console.log(event.event)
+            const response = await fetch(
+                `https://gigservice.herokuapp.com/api/v1/events/${event.event}/attending/1?auth_token=${accessToken}`,
+                requestOptions)
+            const resData = await response.json();
+            console.log('Updated DB that user is not going to this event')
+            console.log(resData)
+            // in map
+        })
+        console.log("No longer going to any events")
+
+        // Delete Account
         const response = await fetch(
             `https://gig-authentication-service.herokuapp.com/api/v1/hosts?refresh_token=${refreshToken}`,
             requestOptions
