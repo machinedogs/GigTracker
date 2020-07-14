@@ -8,7 +8,9 @@ import {
 	View,
 	ScrollView,
 	TouchableOpacity,
-	Image
+	Image,
+  Dimensions,
+  Linking
 } from "react-native";
 import { Col, Grid } from "react-native-easy-grid";
 import InsetShadow from "react-native-inset-shadow";
@@ -24,14 +26,55 @@ import * as userActions from "../../store/actions/user";
 // save the isEventSaved in a redux store for persistance.
 
 const EventScreen = (props) => {
-	const userName = useSelector((state) => state.user.userName);
-	const accessToken = useSelector((state) => state.user.accessToken);
+   	const userName = useSelector((state) => state.user.userName);
+	  const accessToken = useSelector((state) => state.user.accessToken);
 
-	const savedEvents = useSelector((state) => state.events.savedEvents);
-	const goingEvents = useSelector((state) => state.user.goingEvents);
-	const peopleGoing = useSelector((state) => state.events.eventGoing);
-	const event = props.navigation.getParam("event");
-	const [numGoing, setNumGoing] = useState(event.attending);
+	  const savedEvents = useSelector((state) => state.events.savedEvents);
+	  const goingEvents = useSelector((state) => state.user.goingEvents);
+	  const peopleGoing = useSelector((state) => state.events.eventGoing);
+	  const event = props.navigation.getParam("event");
+	  const [numGoing, setNumGoing] = useState(event.attending);
+    console.log("this is the event " + JSON.stringify(event));
+    var initialEventSaveState;
+    const existingIndex = savedEvents.findIndex(myEvent => myEvent.event === event.event);
+    const lat = event.location.latitude;
+    const lng = event.location.longitude;
+    console.log("this is lat and long " + lat + lng)
+    if (existingIndex >= 0) { // check if index exists
+        initialEventSaveState = true;
+    } else {
+        initialEventSaveState = false;
+    }
+    const [isEventSaved, setEventSaved] = useState(initialEventSaveState);
+
+    const dispatch = useDispatch();
+
+
+    const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
+    const latLng = `${lat},${lng}`;
+    const label = 'Custom Label';
+    const url = Platform.select({
+        ios: `${scheme}${label}@${latLng}`,
+        android: `${scheme}${latLng}(${label})`
+    });
+
+    const pressAdress = () => {
+        console.log("pressing address link");
+        Linking.openURL(url);
+    }
+
+
+    //  for icon color selection
+    const toggleSaveButton = () => {
+        // dispatch action
+        if (!isEventSaved) {
+            dispatch(eventActions.saveEvent(event))
+        } else { // indicating user unsaved the event
+            dispatch(eventActions.unsaveEvent(event))
+        }
+        setEventSaved(!isEventSaved);
+        console.log(isEventSaved);
+    };
 
 	console.log("this is the event " + JSON.stringify(event));
 	// See if user previously saved the event
