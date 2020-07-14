@@ -3,10 +3,10 @@ import {
     View,
     ActivityIndicator,
     StyleSheet,
-    Text
+    Text,
+    StatusBar
 } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
-
 import { useDispatch, useSelector } from 'react-redux';
 import { updateUserProfile } from '../store/actions/user';
 import * as authActions from '../store/actions/user';
@@ -24,6 +24,7 @@ const startupTextOptions = [
 
 const StartupScreen = props => {
     const dispatch = useDispatch();
+
     var startupText = startupTextOptions[Math.floor(Math.random() * startupTextOptions.length)]
 
     useEffect(() => {
@@ -31,10 +32,11 @@ const StartupScreen = props => {
             console.log('dispatching getEvents from startup page')
             let coordinates = '';
             await getGeoInfo().then(coords => coordinates = coords);
-            var currentDate = new Date().toISOString();
-            await dispatch(eventActions.getEvents(currentDate, coordinates.latitude, coordinates.longitude));
-            //dispatch(eventActions.getAllEvents());
-            // change this to secure store function
+            var currentDate = new Date()
+            currentDate.setHours(0,0,0,0);
+            await dispatch(eventActions.getEvents(currentDate.toISOString(), coordinates.latitude, coordinates.longitude));
+            dispatch(eventActions.getEvents(currentDate));
+
             const userData = await SecureStore.getItemAsync('userData');
 
             if (!userData) {
@@ -58,6 +60,7 @@ const StartupScreen = props => {
                 props.navigation.replace('Home');
                 return;
             }
+
             // check if access token expired, then make refresh endpoint call
             if (accessTokenExpiryDate <= new Date()) {
                 console.log('refreshing tokens')
@@ -71,6 +74,9 @@ const StartupScreen = props => {
                     return;
                 }
 
+                dispatch(eventActions.GetSavedEvents(accessToken));
+                dispatch(eventActions.GetHostedEvents(accessToken));
+                dispatch(authActions.getGoingEvents(accessToken));
                 //Dispatch action to update profile image state in store 
                 await dispatch(updateUserProfile(profileImage, transformedData))
                 props.navigation.replace('Home');
@@ -79,6 +85,9 @@ const StartupScreen = props => {
 
             // pass user data to state and navigate to home
             await dispatch(authActions.authenticate(userName, userEmail, accessToken, refreshToken));
+            dispatch(eventActions.GetSavedEvents(accessToken));
+            dispatch(eventActions.GetHostedEvents(accessToken));
+            dispatch(authActions.getGoingEvents(accessToken));
             //Dispatch action to update profile image state in store 
             await dispatch(updateUserProfile(profileImage, transformedData));
             props.navigation.replace('Home');
@@ -88,6 +97,7 @@ const StartupScreen = props => {
 
     return (
         <View style={styles.screen} >
+            <StatusBar backgroundColor={Colors.darkGrey} barStyle='light-content' />
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text style={{ color: 'white', fontSize: 17 }}>
                     {startupText}

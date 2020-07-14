@@ -7,9 +7,9 @@
       "android",
       "web"
     ],
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/current.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -22,7 +22,26 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.machinedogs.current",
+      "config": {
+        "googleMapsApiKey": "AIzaSyABVhqSwWjctOOPzSAWNFmzCzkgEbLZvjY"
+      }
+    },
+    "android": {
+      "package": "com.machinedogs.current",
+      "versionCode": 1,
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "CAMERA",
+        "WRITE_EXTERNAL_STORAGE",
+        "VIBRATE"
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDv5ieMrtNv9UAeTGPiAjisrjjV5uIx-ko"
+        }
+      }
     }
   }
 }
