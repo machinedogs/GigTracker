@@ -8,7 +8,10 @@ import {
 	View,
 	ScrollView,
 	TouchableOpacity,
-	Image
+	Image,
+	Platform,
+	Dimensions,
+	Linking
 } from "react-native";
 import { Col, Grid } from "react-native-easy-grid";
 import InsetShadow from "react-native-inset-shadow";
@@ -26,10 +29,8 @@ import * as userActions from "../../store/actions/user";
 const EventScreen = (props) => {
 	const userName = useSelector((state) => state.user.userName);
 	const accessToken = useSelector((state) => state.user.accessToken);
-
 	const savedEvents = useSelector((state) => state.events.savedEvents);
 	const goingEvents = useSelector((state) => state.user.goingEvents);
-	const peopleGoing = useSelector((state) => state.events.eventGoing);
 	const event = props.navigation.getParam("event");
 	const [numGoing, setNumGoing] = useState(event.attending);
 
@@ -62,6 +63,19 @@ const EventScreen = (props) => {
 
 	const dispatch = useDispatch();
 
+	const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
+	const latLng = `${event.location.latitude},${event.location.longitude}`;
+	const label = 'Custom Label';
+	const url = Platform.select({
+		ios: `${scheme}${label}@${latLng}`,
+		android: `${scheme}${latLng}(${label})`
+	});
+
+	const pressAddress = () => {
+		console.log("pressing address link");
+		Linking.openURL(url);
+	}
+
 	//  for icon color selection
 	const toggleSaveButton = () => {
 		// dispatch action
@@ -90,8 +104,8 @@ const EventScreen = (props) => {
 	};
 
 	const navigateToGoingList = () => {
-        console.log('dispatching get people going')
-        dispatch(eventActions.getPeopleGoing(event.event, accessToken));
+		console.log('dispatching get people going')
+		dispatch(eventActions.getPeopleGoing(event.event, accessToken));
 		props.navigation.navigate('GoingListScreen');
 	};
 
@@ -127,9 +141,11 @@ const EventScreen = (props) => {
 				}}
 			>
 				<Left size={2} style={{ height: "auto", justifyContent: "center" }}>
-					<Text style={{ fontSize: 15, color: "black" }}>
-						{makeFullAddress(event.location.address)}
-					</Text>
+					<TouchableOpacity onPress={pressAddress}>
+						<Text style={{ fontSize: 15, color: "#147EFB" }} >
+							{makeFullAddress(event.location.address)}
+						</Text>
+					</TouchableOpacity>
 				</Left>
 				<Right size={2} style={{ height: "auto" }}>
 					{Platform.OS === "ios" ? (
@@ -141,11 +157,11 @@ const EventScreen = (props) => {
 							})}
 						</Text>
 					) : (
-						// format time for android
-						<Text style={{ fontSize: 35, color: "black" }}>
-							{formatStandardTime(event.date)}
-						</Text>
-					)}
+							// format time for android
+							<Text style={{ fontSize: 35, color: "black" }}>
+								{formatStandardTime(event.date)}
+							</Text>
+						)}
 
 					<Text style={{ fontSize: 20, color: "black" }}>
 						{new Date(event.date).toLocaleDateString()}
@@ -170,8 +186,8 @@ const EventScreen = (props) => {
 								paddingHorizontal: 15,
 							}}
 						>
-							<TouchableOpacity style={{flexDirection: 'row', alignItems: 'center'}} onPress={navigateToGoingList}>
-								<VectorIcon name="persona" type='Zocial' style={{color: Colors.purpleButton, paddingRight: 10}}/>
+							<TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={navigateToGoingList}>
+								<VectorIcon name="persona" type='Zocial' style={{ color: Colors.purpleButton, paddingRight: 10 }} />
 								<Text style={styles.goingText}> {numGoing} Going</Text>
 							</TouchableOpacity>
 							{userName != event.host.name && userName ? (
@@ -231,11 +247,11 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		paddingHorizontal: 15,
 		paddingTop: 15,
-    },
-    container: {
-        height: '30%',
-        width: '100%'
-    },
+	},
+	container: {
+		height: '30%',
+		width: '100%'
+	},
 	titleDescriptionContainer: {
 		justifyContent: "center",
 		flex: 4,
@@ -269,7 +285,7 @@ const styles = StyleSheet.create({
 	goingText: {
 		color: "black",
 		fontSize: 20,
-    }
+	}
 });
 
 export default EventScreen;
