@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import React, { useState } from 'react';
 import { Thumbnail, Right, Left } from 'native-base';
 import { Icon } from 'react-native-elements';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Dimensions, Linking } from 'react-native';
 import { Col, Grid } from 'react-native-easy-grid';
 import InsetShadow from 'react-native-inset-shadow';
 
@@ -20,7 +20,10 @@ const EventScreen = (props) => {
     const event = props.navigation.getParam('event');
     console.log("this is the event " + JSON.stringify(event));
     var initialEventSaveState;
-    const existingIndex = savedEvents.findIndex(myEvent => myEvent.event === event.event)
+    const existingIndex = savedEvents.findIndex(myEvent => myEvent.event === event.event);
+    const lat = event.location.latitude;
+    const lng = event.location.longitude;
+    console.log("this is lat and long " + lat + lng)
     if (existingIndex >= 0) { // check if index exists
         initialEventSaveState = true;
     } else {
@@ -29,6 +32,21 @@ const EventScreen = (props) => {
     const [isEventSaved, setEventSaved] = useState(initialEventSaveState);
 
     const dispatch = useDispatch();
+
+
+    const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
+    const latLng = `${lat},${lng}`;
+    const label = 'Custom Label';
+    const url = Platform.select({
+        ios: `${scheme}${label}@${latLng}`,
+        android: `${scheme}${latLng}(${label})`
+    });
+
+    const pressAdress = () => {
+        console.log("pressing address link");
+        Linking.openURL(url);
+    }
+
 
     //  for icon color selection
     const toggleSaveButton = () => {
@@ -70,7 +88,7 @@ const EventScreen = (props) => {
             </Grid>
             <View style={{ flexDirection: 'row', paddingHorizontal: 15, paddingTop: 10, paddingBottom: 15 }}>
                 <Left size={2} style={{ height: 'auto' }}>
-                    <Text style={{ fontSize: 15, color: 'black', marginTop: 10, margin: 5 }}>
+                    <Text onPress={pressAdress} style={{ fontSize: 15, color: 'blue', marginTop: 10, margin: 5 }}>
                         {makeFullAddress(event.location.address)}
                     </Text>
                 </Left>

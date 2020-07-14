@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, View, Dimensions } from "react-native";
+import { Image, StyleSheet, View, Dimensions, Linking } from "react-native";
 import { Container, Header, Content, Accordion } from "native-base";
 import {
 	Card,
@@ -16,6 +16,22 @@ import InsetShadow from 'react-native-inset-shadow'
 import { makeStreetAddress, makeFullAddress } from "../screens/helper/calloutHelper";
 
 export const EventCard = (props) => {
+
+	const lat = props.event.location.latitude;
+	const lng = props.event.location.longitude;
+	const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
+	const latLng = `${lat},${lng}`;
+	const label = 'Custom Label';
+	const url = Platform.select({
+		ios: `${scheme}${label}@${latLng}`,
+		android: `${scheme}${latLng}(${label})`
+	});
+
+	const pressAdress = () => {
+		console.log("pressing address link");
+		Linking.openURL(url);
+	}
+
 	return (
 		<Card style={{ ...props.style }} >
 			<View style={styles.header}>
@@ -45,9 +61,9 @@ export const EventCard = (props) => {
 			<View style={styles.footer}>
 				{
 					props.streetAddress ?
-						<Text>{makeStreetAddress(props.event.location.address)}</Text>
+						<Text onPress={pressAdress} style={{ color: 'blue' }}>{makeStreetAddress(props.event.location.address)}</Text>
 						:
-						<Text>{makeFullAddress(props.event.location.address)}</Text>
+						<Text onPress={pressAdress} style={{ color: 'blue' }}>{makeFullAddress(props.event.location.address)}</Text>
 				}
 				<Text style={styles.dateTimeText} >
 					{new Date(props.event.date).toLocaleDateString()}{", "}
