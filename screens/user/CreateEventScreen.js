@@ -358,18 +358,17 @@ const CreateEventScreen = (props) => {
                 //setLocation(newLocation)
               }}
               query={{
-                key: 'YOUR API KEY',
+                key: 'AIzaSyDhUxyaAFozVK1JkgYjmRjetSn-dN8sK-M',
                 language: 'en',
               }}
               styles={{
                 textInputContainer: {
                   backgroundColor: 'rgba(0,0,0,0)',
-                  //borderTopWidth: 0,
-                  //borderBottomWidth: 0,
                   borderWidth: 0.5,
                   borderColor: 'gray',
                   height: 50,
-                  borderRadius: 4
+                  borderRadius: 4,
+                  zIndex: 300
                 },
                 textInput: {
                   marginLeft: 0,
