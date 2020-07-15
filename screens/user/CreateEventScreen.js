@@ -345,6 +345,7 @@ const CreateEventScreen = (props) => {
             <GooglePlacesAutocomplete
             nearbyPlacesAPI='GooglePlacesSearch'
               placeholder='Search a location...'
+              fetchDetails={true}
               onPress={(data, details = null) => {
                 // 'details' is provided when fetchDetails = true
                 console.log(data, details);
