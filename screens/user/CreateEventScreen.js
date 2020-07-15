@@ -47,6 +47,7 @@ import {
 import { ActivityIndicator } from "react-native";
 import Colors from '../../constants/Colors';
 import { Ionicons, Fontisto } from "@expo/vector-icons";
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 const { width, height } = Dimensions.get("window");
 const SCREEN_HEIGHT = height;
@@ -339,7 +340,50 @@ const CreateEventScreen = (props) => {
               )}
           </View>
           <View style={styles.container}>
+            <Text> </Text>
             <Text style={styles.text}>Location</Text>
+            <GooglePlacesAutocomplete
+            nearbyPlacesAPI='GooglePlacesSearch'
+              placeholder='Search a location...'
+              onPress={(data, details = null) => {
+                // 'details' is provided when fetchDetails = true
+                console.log(data, details);
+                const newLat = details.geometry.location.lat;
+                const newLong = details.geometry.location.long;
+                const newLocation = {
+                  "latitude": newLat,
+                  "longitude": newLong
+                }
+                //setLocation(newLocation)
+              }}
+              query={{
+                key: 'YOUR API KEY',
+                language: 'en',
+              }}
+              styles={{
+                textInputContainer: {
+                  backgroundColor: 'rgba(0,0,0,0)',
+                  //borderTopWidth: 0,
+                  //borderBottomWidth: 0,
+                  borderWidth: 0.5,
+                  borderColor: 'gray',
+                  height: 50,
+                  borderRadius: 4
+                },
+                textInput: {
+                  marginLeft: 0,
+                  marginRight: 0,
+                  height: 38,
+                  color: '#5d5d5d',
+                  fontSize: 16,
+                  fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
+                },
+                predefinedPlacesDescription: {
+                  color: '#1faadb',
+                },
+              }}
+            />
+            <Text style={{ textAlign: 'center', fontSize: 18, fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "", color: Colors.purpleButton }}>Or </Text>
             <Button
               iconRight
               light
@@ -463,7 +507,7 @@ const CreateEventScreen = (props) => {
           {showDate && (
             <DateTimePicker value={date} mode={"date"} onChange={onChangeDate} />
           )}
-          <View style={{...styles.container }}>
+          <View style={{ ...styles.container }}>
             <Text style={styles.text}>Time</Text>
             <Button
               iconRight
