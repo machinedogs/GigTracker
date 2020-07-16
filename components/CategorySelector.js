@@ -16,10 +16,12 @@ const CategorySelector = (props) => {
             <FlatList
                 data={[
                     { type: "Party", id: "party" },
-                    { type: "Food", id: "Food" },
+                    { type: "Food", id: "food" },
                     { type: "Music", id: "music" },
                     { type: "Sports", id: "sports" },
                     { type: "Meeting", id: "meeting" },
+                    { type: "Political", id: "political" },
+                    { type: "Protest", id: "protest" },
                 ]}
                 renderItem={({ item }) =>
                     <ListItem noIndent onPress={() => {
