@@ -261,6 +261,7 @@ const CreateEventScreen = (props) => {
                   style={styles.titleStyle}
                   onChangeText={(text) => setTitle(text)}
                   value={title}
+                  testID="titleText"
                   placeholder={"Add a title..."}
                 />
               </Item>
