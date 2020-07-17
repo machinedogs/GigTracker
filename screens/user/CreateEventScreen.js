@@ -422,7 +422,14 @@ const CreateEventScreen = (props) => {
                         "latitude": newLat,
                         "longitude": newLong
                       }
-                      setLocation(newLocation)
+                      setLocation(newLocation);
+                      const newRegion = {
+                        latitude: newLat,
+                        latitudeDelta: LATITUDE_DELTA,
+                        longitude: newLong,
+                        longitudeDelta: LONGITUDE_DELTA
+                      }
+                      mapRef.current.animateToRegion(newRegion, 50);
                     }}
                     query={{
                       key: 'AIzaSyDhUxyaAFozVK1JkgYjmRjetSn-dN8sK-M',
