@@ -200,8 +200,7 @@ const CreateEventScreen = (props) => {
   };
 
   return (
-
-    <ScrollView style={{ flex: 1, backgroundColor: 'white' }} showsVerticalScrollIndicator={false}>
+    <ScrollView style={{ flex: 1, backgroundColor: 'white' }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps='always'>
       <TouchableWithoutFeedback
         onPress={() => { Keyboard.dismiss(); }}
       >
@@ -342,48 +341,6 @@ const CreateEventScreen = (props) => {
           <View style={styles.container}>
             <Text> </Text>
             <Text style={styles.text}>Location</Text>
-            <GooglePlacesAutocomplete
-            nearbyPlacesAPI='GooglePlacesSearch'
-              placeholder='Search a location...'
-              fetchDetails={true}
-              onPress={(data, details = null) => {
-                // 'details' is provided when fetchDetails = true
-                console.log(data, details);
-                const newLat = details.geometry.location.lat;
-                const newLong = details.geometry.location.long;
-                const newLocation = {
-                  "latitude": newLat,
-                  "longitude": newLong
-                }
-                //setLocation(newLocation)
-              }}
-              query={{
-                key: 'AIzaSyDhUxyaAFozVK1JkgYjmRjetSn-dN8sK-M',
-                language: 'en',
-              }}
-              styles={{
-                textInputContainer: {
-                  backgroundColor: 'rgba(0,0,0,0)',
-                  borderWidth: 0.5,
-                  borderColor: 'gray',
-                  height: 50,
-                  borderRadius: 4,
-                  zIndex: 300
-                },
-                textInput: {
-                  marginLeft: 0,
-                  marginRight: 0,
-                  height: 38,
-                  color: '#5d5d5d',
-                  fontSize: 16,
-                  fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
-                },
-                predefinedPlacesDescription: {
-                  color: '#1faadb',
-                },
-              }}
-            />
-            <Text style={{ textAlign: 'center', fontSize: 18, fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "", color: Colors.purpleButton }}>Or </Text>
             <Button
               iconRight
               light
@@ -393,9 +350,10 @@ const CreateEventScreen = (props) => {
               <Text
                 style={{
                   fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
+                  fontSize: 16
                 }}
               >
-                {"Drop a "}
+                {"Select a location "}
               </Text>
               <Icon name="pin" />
             </Button>
@@ -439,23 +397,86 @@ const CreateEventScreen = (props) => {
                     />
                   </Right>
                 </Header>
-                <View
-                  style={{
-                    backgroundColor: Colors.darkGrey,
-                    zIndex: 100,
-                    borderColor: "#2d3436",
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: "white",
-                      padding: 10,
-                      fontSize: 15,
-                      fontFamily:
-                        Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
+                <View style={{
+                  justifyContent: "flex-start",
+                  width: SCREEN_WIDTH,
+                  height: 350, 
+                  backgroundColor: Colors.darkGrey, 
+                  alignContent: 'space-evenly',
+                  paddingTop: 8,
+                  paddingHorizontal: 8
+                }}>
+                  <GooglePlacesAutocomplete
+                    placeholder='Search a location...'
+                    fetchDetails={true}
+                    suppressDefaultStyles
+                    enablePoweredByContainer={false}
+                    numberOfLines={4}
+                    isRowScrollable={false}
+                    onPress={(data, details = null) => {
+                      // 'details' is provided when fetchDetails = true
+                      console.log(data, details);
+                      const newLat = details.geometry.location.lat;
+                      const newLong = details.geometry.location.lng;
+                      const newLocation = {
+                        "latitude": newLat,
+                        "longitude": newLong
+                      }
+                      setLocation(newLocation)
                     }}
-                  >
-                    Hold pin to drag
+                    query={{
+                      key: 'AIzaSyDhUxyaAFozVK1JkgYjmRjetSn-dN8sK-M',
+                      language: 'en',
+                    }}
+                    styles={{
+                      textInputContainer: {
+                        backgroundColor: Colors.lightBackground,
+                        borderWidth: 0.5,
+                        borderColor: 'gray',
+                        height: 50,
+                        borderRadius: 4,
+                        zIndex: 3000,
+                        justifyContent: 'center',
+                        paddingHorizontal: 16
+                      },
+                      textInput: {
+                        marginLeft: 0,
+                        marginRight: 0,
+                        height: 38,
+                        color: 'black',
+                        fontSize: 16,
+                        fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
+                      },
+                      description: {
+                        paddingTop: 8,
+                        color: Colors.darkGrey,
+                        backgroundColor: Colors.lightBackground,
+                        marginLeft: 0,
+                        marginRight: 0,
+                        height: 26,
+                        fontSize: 16,
+                        fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
+                      }, 
+                      container: {
+                        zIndex: 1000
+                      },
+                    }}
+                  />
+                  <Text> </Text>
+                  <Text> </Text>
+                  <Text> </Text>
+                  <Text> </Text>
+                    <Text
+                      style={{
+                        color: "white",
+                        padding: 10,
+                        paddingHorizontal: 8,
+                        fontSize: 16,
+                        fontFamily:
+                          Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
+                      }}
+                    >
+                      Or hold pin to drag
 								</Text>
                 </View>
                 <View style={styles.mapContainer}>
@@ -498,6 +519,7 @@ const CreateEventScreen = (props) => {
                 style={{
                   textAlign: "center",
                   fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
+                  fontSize: 16
                 }}
               >
                 {stringifyDate(date)}
@@ -515,7 +537,7 @@ const CreateEventScreen = (props) => {
               onPress={toggleShowTime}
               style={styles.buttonStyle}
             >
-              <Text>{stringifyTime(time)}</Text>
+              <Text style={{ fontSize: 16 }}>{stringifyTime(time)}</Text>
             </Button>
           </View>
           {showTime && (

@@ -6,6 +6,7 @@ import { createStackNavigator, Header } from 'react-navigation-stack';
 import Colors from '../constants/Colors';
 import MapScreen from '../screens/events/MapScreen';
 import CreateEventScreen from '../screens/user/CreateEventScreen';
+import AddLocationScreen from '../screens/user/AddLocationScreen';
 import UserProfileScreen from '../screens/user/UserProfileScreen';
 import ManageEventScreen from '../screens/user/ManageEventScreen';
 import EventScreen from '../screens/events/EventScreen'
