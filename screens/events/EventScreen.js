@@ -22,6 +22,7 @@ import Colors from "../../constants/Colors";
 import * as eventActions from "../../store/actions/events";
 import * as userActions from "../../store/actions/user";
 
+
 // this function returns the screen elements for the event screen
 // this should take the event or event id as a prop. we should also
 // save the isEventSaved in a redux store for persistance.
@@ -65,7 +66,7 @@ const EventScreen = (props) => {
 
 	const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
 	const latLng = `${event.location.latitude},${event.location.longitude}`;
-	const label = 'Custom Label';
+	const label = `${event.title}`;
 	const url = Platform.select({
 		ios: `${scheme}${label}@${latLng}`,
 		android: `${scheme}${latLng}(${label})`
@@ -74,6 +75,7 @@ const EventScreen = (props) => {
 	const pressAddress = () => {
 		console.log("pressing address link");
 		Linking.openURL(url);
+		
 	}
 
 	//  for icon color selection
