@@ -397,7 +397,7 @@ const CreateEventScreen = (props) => {
                     />
                   </Right>
                 </Header>
-                <View style={{
+                <View style={Platform.OS === 'ios' ? ({
                   justifyContent: "flex-start",
                   width: SCREEN_WIDTH,
                   height: 350, 
@@ -405,7 +405,14 @@ const CreateEventScreen = (props) => {
                   alignContent: 'space-evenly',
                   paddingTop: 8,
                   paddingHorizontal: 8
-                }}>
+                }) : ({
+                  justifyContent: "flex-start",
+                  width: SCREEN_WIDTH,
+                  height: 175, 
+                  backgroundColor: Colors.darkGrey, 
+                  paddingTop: 8,
+                  paddingHorizontal: 8
+                })}>
                   <GooglePlacesAutocomplete
                     placeholder='Search a location...'
                     fetchDetails={true}
