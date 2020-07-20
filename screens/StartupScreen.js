@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { updateUserProfile } from '../store/actions/user';
 import * as authActions from '../store/actions/user';
 import * as eventActions from '../store/actions/events';
@@ -24,7 +25,6 @@ const startupTextOptions = [
 
 const StartupScreen = props => {
     const dispatch = useDispatch();
-
     var startupText = startupTextOptions[Math.floor(Math.random() * startupTextOptions.length)]
 
     useEffect(() => {

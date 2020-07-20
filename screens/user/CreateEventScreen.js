@@ -29,10 +29,10 @@ import {
   Right,
   Title,
 } from "native-base";
-//import Modal from 'react-native-modal';
 import { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import MapView from "react-native-maps";
 import { useDispatch } from "react-redux";
+import Geocoder from 'react-native-geocoding';
 
 import MapStyle from "../../constants/MapStyle";
 import eventBuilder from "../../models/createEvent";
@@ -55,6 +55,8 @@ const SCREEN_WIDTH = width;
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.02;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+
+Geocoder.init("AIzaSyBWXt03TgEnGb9oIeTPXgB1dyGtSsG9IAs");
 
 const CreateEventScreen = (props) => {
   var initEvent = false;
@@ -191,6 +193,14 @@ const CreateEventScreen = (props) => {
       longitude: parseFloat(e.nativeEvent.coordinate.longitude),
     });
     console.log("lat: " + location.latitude + " long: " + location.longitude);
+    // Get address from geocoding api
+    Geocoder.from(parseFloat(location.latitude), parseFloat(location.longitude))
+      .then(json => {
+        var addressComponent = json.results[0].formatted_address;
+        console.log(addressComponent);
+        setAddress(addressComponent);
+      })
+      .catch(error => console.warn(error));
   };
 
   const handleDragStart = () => {
@@ -359,9 +369,9 @@ const CreateEventScreen = (props) => {
                 numberOfLines={2}
                 minimumFontScale={.3}
               >
-                { address ? address : "Select a location"}
+                {address ? address : "Select a location"}
               </Text>
-              { address ? null : <Icon name="pin" />}
+              {address ? null : <Icon name="pin" />}
             </Button>
           </View>
           {showMap && location.latitude && (
