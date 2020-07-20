@@ -138,7 +138,7 @@ const UserProfileScreen = (props) => {
 				</View>
 				<View style={{ flexDirection: 'column', justifyContent: 'center', paddingLeft: 15, paddingRight: 20, maxWidth: '70%'}} >
 					<Text style={styles.userNameText}>{user.userName}</Text>
-					<Text style={styles.emailText}>{user.userEmail}</Text>
+					<Text numberOfLines={2} style={styles.emailText}>{user.userEmail}</Text>
 				</View>
 			</View>
 			<View style={styles.content}>
