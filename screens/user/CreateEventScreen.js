@@ -158,7 +158,8 @@ const CreateEventScreen = (props) => {
         image,
         category,
         location.latitude,
-        location.longitude
+        location.longitude,
+        address // if user just drags pin, this is null and that is ok. Server will set it
       );
       if (initEvent) {
         //edit existing event
@@ -352,12 +353,15 @@ const CreateEventScreen = (props) => {
               <Text
                 style={{
                   fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
-                  fontSize: 16
+                  fontSize: 16,
+                  paddingHorizontal: 10
                 }}
+                numberOfLines={2}
+                minimumFontScale={.3}
               >
-                {"Select a location "}
+                { address ? address : "Select a location"}{" "}
               </Text>
-              <Icon name="pin" />
+              { address ? null : <Icon name="pin" />}
             </Button>
           </View>
           {showMap && location.latitude && (
