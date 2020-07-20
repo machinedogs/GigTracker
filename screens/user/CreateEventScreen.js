@@ -26,15 +26,15 @@ import {
   Icon,
   Header,
   Left,
-  Body,
   Right,
   Title,
 } from "native-base";
 //import Modal from 'react-native-modal';
 import { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import MapView from "react-native-maps";
-import MapStyle from "../../constants/MapStyle";
 import { useDispatch } from "react-redux";
+
+import MapStyle from "../../constants/MapStyle";
 import eventBuilder from "../../models/createEvent";
 import * as eventActions from "../../store/actions/events";
 import {
@@ -360,7 +360,6 @@ const CreateEventScreen = (props) => {
               <Icon name="pin" />
             </Button>
           </View>
-          {console.log(`Here ${location.latitude}`)}
           {showMap && location.latitude && (
             <View style={styles.container}>
               <Modal
@@ -401,7 +400,6 @@ const CreateEventScreen = (props) => {
                 </Header>
                 <View style={Platform.OS === 'ios' ? ({
                   //justifyContent: "flex-start",
-                  width: SCREEN_WIDTH,
                   //height: 350, 
                   backgroundColor: Colors.darkGrey,
                   alignContent: 'space-evenly',
@@ -409,14 +407,13 @@ const CreateEventScreen = (props) => {
                   paddingHorizontal: 8
                 }) : ({
                   //justifyContent: "flex-start",
-                  width: SCREEN_WIDTH,
                   //height: 175, 
                   backgroundColor: Colors.darkGrey,
                   paddingTop: 8,
                   paddingHorizontal: 8
                 })}>
                   <GooglePlacesAutocomplete
-                    placeholder='Search a location...'
+                    placeholder={address ? address : 'Search a location...'}
                     fetchDetails={true}
                     suppressDefaultStyles
                     enablePoweredByContainer={false}
@@ -425,6 +422,7 @@ const CreateEventScreen = (props) => {
                       // 'details' is provided when fetchDetails = true
                       console.log(data, details);
                       console.log(details.formatted_address)
+                      setAddress(details.formatted_address);
                       const newLat = details.geometry.location.lat;
                       const newLong = details.geometry.location.lng;
                       const newLocation = {
@@ -475,7 +473,7 @@ const CreateEventScreen = (props) => {
                     style={{
                       color: "white",
                       padding: 10,
-                      paddingHorizontal: 8,
+                      paddingHorizontal: 15,
                       fontSize: 16,
                       fontFamily:
                         Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
@@ -513,7 +511,7 @@ const CreateEventScreen = (props) => {
                     draggable
                     onDragEnd={handleDragEnd}
                     onDragStart={handleDragStart}
-                    
+
                   />
                 </MapView>
               </Modal>
