@@ -26,15 +26,15 @@ import {
   Icon,
   Header,
   Left,
-  Body,
   Right,
   Title,
 } from "native-base";
 //import Modal from 'react-native-modal';
 import { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import MapView from "react-native-maps";
-import MapStyle from "../../constants/MapStyle";
 import { useDispatch } from "react-redux";
+
+import MapStyle from "../../constants/MapStyle";
 import eventBuilder from "../../models/createEvent";
 import * as eventActions from "../../store/actions/events";
 import {
@@ -47,12 +47,13 @@ import {
 import { ActivityIndicator } from "react-native";
 import Colors from '../../constants/Colors';
 import { Ionicons, Fontisto } from "@expo/vector-icons";
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 const { width, height } = Dimensions.get("window");
 const SCREEN_HEIGHT = height;
 const SCREEN_WIDTH = width;
 const ASPECT_RATIO = width / height;
-const LATITUDE_DELTA = 0.0922;
+const LATITUDE_DELTA = 0.02;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const CreateEventScreen = (props) => {
@@ -70,11 +71,13 @@ const CreateEventScreen = (props) => {
   const initTime = initEvent ? new Date(initEvent.date) : new Date();
   const initImage = initEvent ? initEvent.image : "";
   const initLocation = initEvent ? { latitude: parseFloat(initEvent.location.latitude), longitude: parseFloat(initEvent.location.latitude) } : "";
+  const initAddress = initEvent ? initEvent.location.address : "";
 
   //These states updated as user interacts with the screen
   const [title, setTitle] = useState(initTitle);
   const [description, setDescription] = useState(initDescription);
   const [location, setLocation] = useState(initLocation);
+  const [address, setAddress] = useState(initAddress);
   const [date, setDate] = useState(initDate);
   const [time, setTime] = useState(initTime);
   const [category, setCategory] = useState(initCategory);
@@ -155,7 +158,8 @@ const CreateEventScreen = (props) => {
         image,
         category,
         location.latitude,
-        location.longitude
+        location.longitude,
+        address // if user just drags pin, this is null and that is ok. Server will set it
       );
       if (initEvent) {
         //edit existing event
@@ -199,8 +203,7 @@ const CreateEventScreen = (props) => {
   };
 
   return (
-
-    <ScrollView style={{ flex: 1, backgroundColor: 'white' }} showsVerticalScrollIndicator={false}>
+    <ScrollView style={{ flex: 1, backgroundColor: 'white' }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps='always'>
       <TouchableWithoutFeedback
         onPress={() => { Keyboard.dismiss(); }}
       >
@@ -339,6 +342,7 @@ const CreateEventScreen = (props) => {
               )}
           </View>
           <View style={styles.container}>
+            <Text> </Text>
             <Text style={styles.text}>Location</Text>
             <Button
               iconRight
@@ -349,14 +353,17 @@ const CreateEventScreen = (props) => {
               <Text
                 style={{
                   fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
+                  fontSize: 16,
+                  paddingHorizontal: 10
                 }}
+                numberOfLines={2}
+                minimumFontScale={.3}
               >
-                {"Drop a "}
+                { address ? address : "Select a location"}
               </Text>
-              <Icon name="pin" />
+              { address ? null : <Icon name="pin" />}
             </Button>
           </View>
-          {console.log(`Here ${location.latitude}`)}
           {showMap && location.latitude && (
             <View style={styles.container}>
               <Modal
@@ -395,55 +402,122 @@ const CreateEventScreen = (props) => {
                     />
                   </Right>
                 </Header>
-                <View
-                  style={{
-                    backgroundColor: Colors.darkGrey,
-                    zIndex: 100,
-                    borderColor: "#2d3436",
-                  }}
-                >
+                <View style={Platform.OS === 'ios' ? ({
+                  //justifyContent: "flex-start",
+                  //height: 350, 
+                  backgroundColor: Colors.darkGrey,
+                  alignContent: 'space-evenly',
+                  paddingTop: 8,
+                  paddingHorizontal: 8
+                }) : ({
+                  //justifyContent: "flex-start",
+                  //height: 175, 
+                  backgroundColor: Colors.darkGrey,
+                  paddingTop: 8,
+                  paddingHorizontal: 8
+                })}>
+                  <GooglePlacesAutocomplete
+                    placeholder={address ? address : 'Search a location...'}
+                    fetchDetails={true}
+                    suppressDefaultStyles
+                    enablePoweredByContainer={false}
+                    isRowScrollable={false}
+                    onPress={(data, details = null) => {
+                      // 'details' is provided when fetchDetails = true
+                      console.log(data, details);
+                      console.log(details.formatted_address)
+                      setAddress(details.formatted_address);
+                      const newLat = details.geometry.location.lat;
+                      const newLong = details.geometry.location.lng;
+                      const newLocation = {
+                        "latitude": parseFloat(newLat),
+                        "longitude": parseFloat(newLong)
+                      }
+                      setLocation(newLocation);
+                      const newRegion = {
+                        latitude: newLat,
+                        latitudeDelta: LATITUDE_DELTA,
+                        longitude: newLong,
+                        longitudeDelta: LONGITUDE_DELTA
+                      }
+                      mapRef.current.animateToRegion(newRegion, 50);
+                    }}
+                    query={{
+                      key: 'AIzaSyDhUxyaAFozVK1JkgYjmRjetSn-dN8sK-M',
+                      language: 'en',
+                    }}
+                    styles={{
+                      textInputContainer: {
+                        backgroundColor: Colors.lightBackground,
+                        borderWidth: 0.5,
+                        borderColor: 'gray',
+                        borderRadius: 5,
+                        justifyContent: 'center',
+                        paddingHorizontal: 15,
+                      },
+                      textInput: {
+                        marginLeft: 0,
+                        marginRight: 0,
+                        height: 38,
+                        color: 'black',
+                        fontSize: 16,
+                        fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
+                      },
+                      description: {
+                        paddingTop: 5,
+                        paddingBottom: 5,
+                        color: Colors.darkGrey,
+                        backgroundColor: Colors.lightBackground,
+                        paddingLeft: 15,
+                        fontSize: 16,
+                      },
+                    }}
+                  />
                   <Text
                     style={{
                       color: "white",
                       padding: 10,
-                      fontSize: 15,
+                      paddingHorizontal: 15,
+                      fontSize: 16,
                       fontFamily:
                         Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
                     }}
                   >
-                    Hold pin to drag
+                    or hold pin to drag
 								</Text>
                 </View>
-                <View style={styles.mapContainer}>
-                  <MapView
-                    initialRegion={{
-                      latitude: parseFloat(location.latitude),
-                      latitudeDelta: LATITUDE_DELTA,
-                      longitude: parseFloat(location.longitude),
-                      longitudeDelta: LONGITUDE_DELTA,
-                    }}
-                    style={styles.mapStyle}
-                    provider={PROVIDER_GOOGLE}
-                    showsUserLocation
-                    showsMyLocationButton
-                    rotateEnabled={false}
-                    showsTraffic={false}
-                    toolbarEnabled={true}
-                    ref={mapRef}
-                    customMapStyle={MapStyle}
-                    clusterColor="#341f97"
-                  >
-                    <Marker
-                      ref={markerRef}
-                      coordinate={{ latitude: parseFloat(location.latitude), longitude: parseFloat(location.longitude) }}
-                      pinColor="#341f97"
-                      tracksViewChanges={false}
-                      draggable
-                      onDragEnd={handleDragEnd}
-                      onDragStart={handleDragStart}
-                    />
-                  </MapView>
-                </View>
+                <MapView
+                  initialRegion={{
+                    latitude: parseFloat(location.latitude),
+                    latitudeDelta: LATITUDE_DELTA,
+                    longitude: parseFloat(location.longitude),
+                    longitudeDelta: LONGITUDE_DELTA,
+                  }}
+                  style={styles.mapStyle}
+                  provider={PROVIDER_GOOGLE}
+                  showsUserLocation
+                  showsMyLocationButton
+                  onPress={() => {
+                    Keyboard.dismiss()
+                  }}
+                  rotateEnabled={false}
+                  showsTraffic={false}
+                  toolbarEnabled={true}
+                  ref={mapRef}
+                  customMapStyle={MapStyle}
+                  clusterColor="#341f97"
+                >
+                  <Marker
+                    ref={markerRef}
+                    coordinate={{ latitude: parseFloat(location.latitude), longitude: parseFloat(location.longitude) }}
+                    pinColor="#341f97"
+                    tracksViewChanges={false}
+                    draggable
+                    onDragEnd={handleDragEnd}
+                    onDragStart={handleDragStart}
+
+                  />
+                </MapView>
               </Modal>
             </View>
           )}
@@ -454,6 +528,7 @@ const CreateEventScreen = (props) => {
                 style={{
                   textAlign: "center",
                   fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
+                  fontSize: 16
                 }}
               >
                 {stringifyDate(date)}
@@ -463,7 +538,7 @@ const CreateEventScreen = (props) => {
           {showDate && (
             <DateTimePicker value={date} mode={"date"} onChange={onChangeDate} />
           )}
-          <View style={{...styles.container }}>
+          <View style={{ ...styles.container }}>
             <Text style={styles.text}>Time</Text>
             <Button
               iconRight
@@ -471,7 +546,7 @@ const CreateEventScreen = (props) => {
               onPress={toggleShowTime}
               style={styles.buttonStyle}
             >
-              <Text>{stringifyTime(time)}</Text>
+              <Text style={{ fontSize: 16 }}>{stringifyTime(time)}</Text>
             </Button>
           </View>
           {showTime && (
@@ -591,9 +666,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#2d3436",
   },
   mapStyle: {
+    flex: 1,
     zIndex: -1,
     width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT * 0.85,
+    height: SCREEN_HEIGHT,
   },
   buttonStyle: {
     height: 50,
