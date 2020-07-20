@@ -43,8 +43,7 @@ import {
   combineDateAndTime,
   stringifyDate,
   stringifyTime,
-} from "../helper/createEventHelper";
-import { ActivityIndicator } from "react-native";
+} from '../../helper/createEventHelper'; 
 import Colors from '../../constants/Colors';
 import { Ionicons, Fontisto } from "@expo/vector-icons";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';

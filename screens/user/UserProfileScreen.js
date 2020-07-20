@@ -23,12 +23,12 @@ import {
 	openImagePickerAsync,
 	uploadImage,
 	getImage,
-} from "../../screens/helper/ImageHelpers";
-import { saveProfileDataToStorage } from "../../screens/helper/secureStorageHelpers";
+} from "../../helper/ImageHelpers";
+import { saveProfileDataToStorage } from "../../helper/secureStorageHelpers";
 import * as userActions from "../../store/actions/user";
 import * as eventActions from "../../store/actions/events";
 import { EventCard } from "../../components/EventCard";
-import { constructEvents } from "../../screens/helper/dataTransformation";
+import { constructEvents } from "../../helper/dataTransformation";
 import { GetHostedEvents, GetSavedEvents } from "../../store/actions/events";
 import Colors from '../../constants/Colors';
 

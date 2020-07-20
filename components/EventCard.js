@@ -13,7 +13,7 @@ import {
 	Right,
 } from "native-base";
 import InsetShadow from 'react-native-inset-shadow'
-import { makeStreetAddress, makeFullAddress } from "../screens/helper/calloutHelper";
+import { makeStreetAddress, makeFullAddress } from "../helper/calloutHelper";
 
 export const EventCard = (props) => {
 	return (

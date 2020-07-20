@@ -2,7 +2,7 @@ import {
 	openImagePickerAsync,
 	uploadImage,
 	getImage,
-  } from "../../screens/helper/ImageHelpers";
+  } from "./ImageHelpers";
 
 
 export const getCurrentLocation = function (options) {

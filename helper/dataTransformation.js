@@ -1,6 +1,6 @@
-import Event from "../../models/event";
-import host from "../../models/host";
-import location from "../../models/location";
+import Event from "../models/event";
+import host from "../models/host";
+import location from "../models/location";
 
 export const constructEvents = (data) => {
     console.log("constructing events");

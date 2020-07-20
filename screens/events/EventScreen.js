@@ -15,9 +15,9 @@ import {
 } from "react-native";
 import { Col, Grid } from "react-native-easy-grid";
 import InsetShadow from "react-native-inset-shadow";
-import { formatStandardTime } from "../helper/timeFormater";
 import ShareComponent from "../../components/ShareComponent";
-import { makeFullAddress } from "../helper/calloutHelper";
+import { formatStandardTime } from "../../helper/timeFormater";
+import { makeFullAddress } from "../../helper/calloutHelper";
 import Colors from "../../constants/Colors";
 import * as eventActions from "../../store/actions/events";
 import * as userActions from "../../store/actions/user";

@@ -12,7 +12,7 @@ import {
     Body,
     Right,
 } from "native-base";
-import { makeStreetAddress } from "../screens/helper/calloutHelper";
+import { makeStreetAddress } from "../helper/calloutHelper";
 
 
 import { EventImage } from './calloutEventImage';

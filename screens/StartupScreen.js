@@ -12,8 +12,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateUserProfile } from '../store/actions/user';
 import * as authActions from '../store/actions/user';
 import * as eventActions from '../store/actions/events';
-import { getProfileDataStorage } from '../screens/helper/secureStorageHelpers';
-import { getGeoInfo } from '../screens/helper/geoHelper';
+import { getProfileDataStorage } from '../helper/secureStorageHelpers'; 
+import { getGeoInfo } from '../helper/geoHelper'; 
 import Colors from '../constants/Colors';
 
 const startupTextOptions = [
