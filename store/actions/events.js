@@ -310,7 +310,6 @@ export const createEvent = (event) => {
 				alert(message);
 				throw new Error(message);
 			}
-			//console.log("****Response event number: " + resData.event);
 			dispatch(updateEventMaps(resData.event))
 			dispatch(setFilters())
 		} catch (err) {
