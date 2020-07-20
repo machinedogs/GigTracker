@@ -53,7 +53,7 @@ const { width, height } = Dimensions.get("window");
 const SCREEN_HEIGHT = height;
 const SCREEN_WIDTH = width;
 const ASPECT_RATIO = width / height;
-const LATITUDE_DELTA = 0.0922;
+const LATITUDE_DELTA = 0.02;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const CreateEventScreen = (props) => {
@@ -71,11 +71,13 @@ const CreateEventScreen = (props) => {
   const initTime = initEvent ? new Date(initEvent.date) : new Date();
   const initImage = initEvent ? initEvent.image : "";
   const initLocation = initEvent ? { latitude: parseFloat(initEvent.location.latitude), longitude: parseFloat(initEvent.location.latitude) } : "";
+  const initAddress = initEvent ? initEvent.location.address : "";
 
   //These states updated as user interacts with the screen
   const [title, setTitle] = useState(initTitle);
   const [description, setDescription] = useState(initDescription);
   const [location, setLocation] = useState(initLocation);
+  const [address, setAddress] = useState(initAddress);
   const [date, setDate] = useState(initDate);
   const [time, setTime] = useState(initTime);
   const [category, setCategory] = useState(initCategory);
@@ -398,18 +400,18 @@ const CreateEventScreen = (props) => {
                   </Right>
                 </Header>
                 <View style={Platform.OS === 'ios' ? ({
-                  justifyContent: "flex-start",
+                  //justifyContent: "flex-start",
                   width: SCREEN_WIDTH,
-                  height: 350, 
-                  backgroundColor: Colors.darkGrey, 
+                  //height: 350, 
+                  backgroundColor: Colors.darkGrey,
                   alignContent: 'space-evenly',
                   paddingTop: 8,
                   paddingHorizontal: 8
                 }) : ({
-                  justifyContent: "flex-start",
+                  //justifyContent: "flex-start",
                   width: SCREEN_WIDTH,
-                  height: 175, 
-                  backgroundColor: Colors.darkGrey, 
+                  //height: 175, 
+                  backgroundColor: Colors.darkGrey,
                   paddingTop: 8,
                   paddingHorizontal: 8
                 })}>
@@ -418,11 +420,11 @@ const CreateEventScreen = (props) => {
                     fetchDetails={true}
                     suppressDefaultStyles
                     enablePoweredByContainer={false}
-                    numberOfLines={4}
                     isRowScrollable={false}
                     onPress={(data, details = null) => {
                       // 'details' is provided when fetchDetails = true
                       console.log(data, details);
+                      console.log(details.formatted_address)
                       const newLat = details.geometry.location.lat;
                       const newLong = details.geometry.location.lng;
                       const newLocation = {
@@ -447,11 +449,9 @@ const CreateEventScreen = (props) => {
                         backgroundColor: Colors.lightBackground,
                         borderWidth: 0.5,
                         borderColor: 'gray',
-                        height: 50,
-                        borderRadius: 4,
-                        zIndex: 3000,
+                        borderRadius: 5,
                         justifyContent: 'center',
-                        paddingHorizontal: 16
+                        paddingHorizontal: 15,
                       },
                       textInput: {
                         marginLeft: 0,
@@ -462,67 +462,60 @@ const CreateEventScreen = (props) => {
                         fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
                       },
                       description: {
-                        paddingTop: 8,
+                        paddingTop: 5,
+                        paddingBottom: 5,
                         color: Colors.darkGrey,
                         backgroundColor: Colors.lightBackground,
-                        marginLeft: 0,
-                        marginRight: 0,
-                        height: 26,
+                        paddingLeft: 15,
                         fontSize: 16,
-                        fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
-                      }, 
-                      container: {
-                        zIndex: 1000
                       },
                     }}
                   />
-                  <Text> </Text>
-                  <Text> </Text>
-                  <Text> </Text>
-                  <Text> </Text>
-                    <Text
-                      style={{
-                        color: "white",
-                        padding: 10,
-                        paddingHorizontal: 8,
-                        fontSize: 16,
-                        fontFamily:
-                          Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
-                      }}
-                    >
-                      Or hold pin to drag
+                  <Text
+                    style={{
+                      color: "white",
+                      padding: 10,
+                      paddingHorizontal: 8,
+                      fontSize: 16,
+                      fontFamily:
+                        Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
+                    }}
+                  >
+                    or hold pin to drag
 								</Text>
                 </View>
-                <View style={styles.mapContainer}>
-                  <MapView
-                    initialRegion={{
-                      latitude: parseFloat(location.latitude),
-                      latitudeDelta: LATITUDE_DELTA,
-                      longitude: parseFloat(location.longitude),
-                      longitudeDelta: LONGITUDE_DELTA,
-                    }}
-                    style={styles.mapStyle}
-                    provider={PROVIDER_GOOGLE}
-                    showsUserLocation
-                    showsMyLocationButton
-                    rotateEnabled={false}
-                    showsTraffic={false}
-                    toolbarEnabled={true}
-                    ref={mapRef}
-                    customMapStyle={MapStyle}
-                    clusterColor="#341f97"
-                  >
-                    <Marker
-                      ref={markerRef}
-                      coordinate={{ latitude: parseFloat(location.latitude), longitude: parseFloat(location.longitude) }}
-                      pinColor="#341f97"
-                      tracksViewChanges={false}
-                      draggable
-                      onDragEnd={handleDragEnd}
-                      onDragStart={handleDragStart}
-                    />
-                  </MapView>
-                </View>
+                <MapView
+                  initialRegion={{
+                    latitude: parseFloat(location.latitude),
+                    latitudeDelta: LATITUDE_DELTA,
+                    longitude: parseFloat(location.longitude),
+                    longitudeDelta: LONGITUDE_DELTA,
+                  }}
+                  style={styles.mapStyle}
+                  provider={PROVIDER_GOOGLE}
+                  showsUserLocation
+                  showsMyLocationButton
+                  onPress={() => {
+                    Keyboard.dismiss()
+                  }}
+                  rotateEnabled={false}
+                  showsTraffic={false}
+                  toolbarEnabled={true}
+                  ref={mapRef}
+                  customMapStyle={MapStyle}
+                  clusterColor="#341f97"
+                >
+                  <Marker
+                    ref={markerRef}
+                    coordinate={{ latitude: parseFloat(location.latitude), longitude: parseFloat(location.longitude) }}
+                    pinColor="#341f97"
+                    tracksViewChanges={false}
+                    draggable
+                    onDragEnd={handleDragEnd}
+                    onDragStart={handleDragStart}
+                    
+                  />
+                </MapView>
               </Modal>
             </View>
           )}
@@ -671,9 +664,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#2d3436",
   },
   mapStyle: {
+    flex: 1,
     zIndex: -1,
     width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT * 0.85,
+    height: SCREEN_HEIGHT,
   },
   buttonStyle: {
     height: 50,
