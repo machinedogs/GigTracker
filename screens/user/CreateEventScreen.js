@@ -359,7 +359,7 @@ const CreateEventScreen = (props) => {
                 numberOfLines={2}
                 minimumFontScale={.3}
               >
-                { address ? address : "Select a location"}{" "}
+                { address ? address : "Select a location"}
               </Text>
               { address ? null : <Icon name="pin" />}
             </Button>
@@ -430,8 +430,8 @@ const CreateEventScreen = (props) => {
                       const newLat = details.geometry.location.lat;
                       const newLong = details.geometry.location.lng;
                       const newLocation = {
-                        "latitude": newLat,
-                        "longitude": newLong
+                        "latitude": parseFloat(newLat),
+                        "longitude": parseFloat(newLong)
                       }
                       setLocation(newLocation);
                       const newRegion = {
