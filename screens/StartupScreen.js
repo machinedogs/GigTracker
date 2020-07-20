@@ -74,9 +74,9 @@ const StartupScreen = props => {
                     return;
                 }
 
-                dispatch(eventActions.GetSavedEvents(accessToken));
-                dispatch(eventActions.GetHostedEvents(accessToken));
-                dispatch(authActions.getGoingEvents(accessToken));
+                await dispatch(eventActions.GetSavedEvents(accessToken));
+                await dispatch(eventActions.GetHostedEvents(accessToken));
+                await dispatch(authActions.getGoingEvents(accessToken));
                 //Dispatch action to update profile image state in store 
                 await dispatch(updateUserProfile(profileImage, transformedData))
                 props.navigation.replace('Home');
@@ -85,9 +85,9 @@ const StartupScreen = props => {
 
             // pass user data to state and navigate to home
             await dispatch(authActions.authenticate(userName, userEmail, accessToken, refreshToken));
-            dispatch(eventActions.GetSavedEvents(accessToken));
-            dispatch(eventActions.GetHostedEvents(accessToken));
-            dispatch(authActions.getGoingEvents(accessToken));
+            await dispatch(eventActions.GetSavedEvents(accessToken));
+            await dispatch(eventActions.GetHostedEvents(accessToken));
+            await dispatch(authActions.getGoingEvents(accessToken));
             //Dispatch action to update profile image state in store 
             await dispatch(updateUserProfile(profileImage, transformedData));
             props.navigation.replace('Home');
