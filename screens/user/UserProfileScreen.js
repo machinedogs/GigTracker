@@ -304,8 +304,6 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		fontWeight: "bold",
 		textAlign: "left",
-		//maxWidth: '90%',
-		paddingRight: 15,
 		fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
 	},
 	buttonText: {
