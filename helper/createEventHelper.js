@@ -1,6 +1,5 @@
 import {
 	openImagePickerAsync,
-	uploadImage,
 	getImage,
   } from "./ImageHelpers";
 

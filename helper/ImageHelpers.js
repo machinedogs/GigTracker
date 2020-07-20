@@ -1,6 +1,7 @@
 import * as firebase from 'firebase';
-import { firebaseConfig } from '../../firebase/index';
 import * as ImagePicker from "expo-image-picker";
+
+import { firebaseConfig } from '../firebase/index';
 //Function that lets you pick the image from your library, and uploads it to firebase and returns the name of the file
 // If null returned then picking image was unsuccessful and do nothing
 export const openImagePickerAsync = async (ratio) => {
@@ -13,9 +14,7 @@ export const openImagePickerAsync = async (ratio) => {
 
     let pickerResult = await ImagePicker.launchImageLibraryAsync({
         allowsEditing: true,
-        // this creates a sqaure. if we change this we must change the aspect ratio
-        // for images that are picked with this component.
-        aspect: ratio ? ratio : [4, 4],
+        aspect: ratio ? ratio : [4, 3],
         quality: 1,
         });
     if (!pickerResult.cancelled) {

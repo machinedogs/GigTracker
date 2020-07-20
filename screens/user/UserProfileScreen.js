@@ -1,10 +1,8 @@
-import React, { useState, useEffect, useReducer, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import {
 	Image,
-	ImageBackground,
 	Platform,
 	StyleSheet,
-	ScrollView,
 	FlatList,
 	Text,
 	View,
@@ -14,16 +12,12 @@ import {
 	RefreshControl
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { Container, Header, Tab, Tabs, TabHeading, Icon, Button } from "native-base";
+import { Tab, Tabs, Button } from "native-base";
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 
 import HeaderButton from '../../components/HeaderButton';
 import { updateUserProfile } from "../../store/actions/user";
-import {
-	openImagePickerAsync,
-	uploadImage,
-	getImage,
-} from "../../helper/ImageHelpers";
+import { openImagePickerAsync, getImage, } from "../../helper/ImageHelpers";
 import { saveProfileDataToStorage } from "../../helper/secureStorageHelpers";
 import * as userActions from "../../store/actions/user";
 import * as eventActions from "../../store/actions/events";
@@ -151,7 +145,7 @@ const UserProfileScreen = (props) => {
 					<Tab heading="Saved" tabBarUnderlineStyle={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}>
 
 						<FlatList
-							data={constructEvents(event.savedEvents)}
+							data={constructEvents(event.savedEvents).reverse()}
 							renderItem={({ item }) =>
 								<EventCard event={item} />
 							}
@@ -163,7 +157,7 @@ const UserProfileScreen = (props) => {
 					</Tab>
 					<Tab heading="Going" tabBarUnderlineStyle={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}>
 						<FlatList
-							data={constructEvents(user.goingEvents)}
+							data={constructEvents(user.goingEvents).reverse()}
 							renderItem={({ item }) =>
 								<EventCard event={item} />
 							}
@@ -175,7 +169,7 @@ const UserProfileScreen = (props) => {
 					</Tab>
 					<Tab heading="Hosted" tabBarUnderlineStyle={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}>
 						<FlatList
-							data={constructEvents(event.createdEvents)}
+							data={constructEvents(event.createdEvents).reverse()}
 							renderItem={({ item }) =>
 								<View>
 									<EventCard event={item} />

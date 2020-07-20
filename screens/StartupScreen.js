@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
     View,
     ActivityIndicator,
@@ -7,7 +7,7 @@ import {
     StatusBar
 } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { updateUserProfile } from '../store/actions/user';
 import * as authActions from '../store/actions/user';

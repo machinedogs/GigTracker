@@ -1,10 +1,10 @@
-const PoliticsPin = require('../../assets/Pins/PoliticsPin.png');
-const SportsPin = require('../../assets/Pins/SportsPin.png');
-const MeetingPin = require('../../assets/Pins/MeetingPin.png');
-const FoodPin = require('../../assets/Pins/FoodPin.png');
-const ProtestPin = require('../../assets/Pins/ProtestPin.png');
-const PartyPin = require('../../assets/Pins/PartyPin.png');
-const MusicPin = require('../../assets/Pins/MusicPin.png');
+const PoliticsPin = require('../assets/Pins/PoliticsPin.png');
+const SportsPin = require('../assets/Pins/SportsPin.png');
+const MeetingPin = require('../assets/Pins/MeetingPin.png');
+const FoodPin = require('../assets/Pins/FoodPin.png');
+const ProtestPin = require('../assets/Pins/ProtestPin.png');
+const PartyPin = require('../assets/Pins/PartyPin.png');
+const MusicPin = require('../assets/Pins/MusicPin.png');
 
 export const iconPicker = (category) => {
     let pinIcon;
