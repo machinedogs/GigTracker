@@ -463,6 +463,7 @@ const CreateEventScreen = (props) => {
                         borderRadius: 5,
                         justifyContent: 'center',
                         paddingHorizontal: 15,
+                        paddingVertical: Platform.OS === 'ios' ? 0 : 3
                       },
                       textInput: {
                         marginLeft: 0,

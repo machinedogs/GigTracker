@@ -10,7 +10,6 @@ import {
 	TouchableOpacity,
 	Image,
 	Platform,
-	Dimensions,
 	Linking
 } from "react-native";
 import { Col, Grid } from "react-native-easy-grid";
