@@ -1,4 +1,4 @@
-import { makeStreetAddress, makeFullAddress} from '../screens/helper/calloutHelper';
+import { makeStreetAddress, makeFullAddress} from '../helper/calloutHelper';
 
 describe('makeStreetAddress', () => {
     it('returns street address for addresses that start with number', () => {
