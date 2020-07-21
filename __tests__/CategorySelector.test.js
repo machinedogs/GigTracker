@@ -4,7 +4,6 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import ReduxThunk from 'redux-thunk';
 
-import Hello from '../Hello';
 import CategorySelector from '../components/CategorySelector'
 import eventsReducer from '../store/reducers/events'
 import userReducer from '../store/reducers/user';
@@ -15,7 +14,7 @@ import userReducer from '../store/reducers/user';
     expect()        -> creates a Jest expectation to check a condition
     .not.toBeNull() -> checks that the value isn't null i.e. the element with specified text was found
 */
-
+ 
 /* Test Component that accesses Redux State
     1. Create rootReducer like how we have in App.js
     2. Create a store with the rootReducer
