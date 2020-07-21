@@ -16,17 +16,6 @@ import userReducer from '../store/reducers/user';
     .not.toBeNull() -> checks that the value isn't null i.e. the element with specified text was found
 */
 
-describe('Hello', () => {
-    it('renders correct static text', () => {
-        const { queryByText } = render(<Hello />);
-        expect(queryByText('Hello, world!')).not.toBeNull();
-    });
-    it('displays the passed-in name', () => {
-        const { queryByText } = render(<Hello name="Matt" />);
-        expect(queryByText('Hello, Matt!')).not.toBeNull();
-    });
-});
-
 /* Test Component that accesses Redux State
     1. Create rootReducer like how we have in App.js
     2. Create a store with the rootReducer
