@@ -1,10 +1,8 @@
-import React, { useState, useEffect, useReducer, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import {
 	Image,
-	ImageBackground,
 	Platform,
 	StyleSheet,
-	ScrollView,
 	FlatList,
 	Text,
 	View,
@@ -14,21 +12,17 @@ import {
 	RefreshControl
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { Container, Header, Tab, Tabs, TabHeading, Icon, Button } from "native-base";
+import { Tab, Tabs, Button } from "native-base";
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
-import InsetShadow from 'react-native-inset-shadow';
+
 import HeaderButton from '../../components/HeaderButton';
 import { updateUserProfile } from "../../store/actions/user";
-import {
-	openImagePickerAsync,
-	uploadImage,
-	getImage,
-} from "../../screens/helper/ImageHelpers";
-import { saveProfileDataToStorage } from "../../screens/helper/secureStorageHelpers";
+import { openImagePickerAsync, getImage, } from "../../helper/ImageHelpers";
+import { saveProfileDataToStorage } from "../../helper/secureStorageHelpers";
 import * as userActions from "../../store/actions/user";
 import * as eventActions from "../../store/actions/events";
 import { EventCard } from "../../components/EventCard";
-import { constructEvents } from "../../screens/helper/dataTransformation";
+import { constructEvents } from "../../helper/dataTransformation";
 import { GetHostedEvents, GetSavedEvents } from "../../store/actions/events";
 import Colors from '../../constants/Colors';
 
@@ -94,7 +88,7 @@ const UserProfileScreen = (props) => {
 			await dispatch(GetSavedEvents(user.accessToken));
 			setSavedRefreshing(false)
 		} catch (error) {
-			console.error(error);r
+			console.error(error);
 			setSavedRefreshing(false)
 		}
 	}, [savedRefreshing]);
@@ -124,26 +118,21 @@ const UserProfileScreen = (props) => {
 	return (
 		<View style={styles.container}>
 			<View style={styles.headerContainer}>
-				<View style={styles.headerColumn, { paddingLeft: 20 }}>
-					<View style={{ flexDirection: 'row', paddingTop: 15, }}>
-						<TouchableOpacity
-							onPress={updateProfilePhoto}
-							style={styles.userImageContainer}
-						>
-							{loading ? (
-								<ActivityIndicator style={styles.userImage} size="large" />
-							) : (
-									<Image
-										style={styles.userImage}
-										source={{ uri: profileImage }}
-									/>
-								)}
-						</TouchableOpacity>
-						<View style={{ flexDirection: 'column', justifyContent: 'center', paddingLeft: 50 }} >
-							<Text style={styles.userNameText}>{user.userName}</Text>
-							<Text style={styles.emailText}>{user.userEmail}</Text>
-						</View>
-					</View>
+				<View style={styles.userImageContainer}>
+					{loading ? (
+						<ActivityIndicator style={styles.userImage} size="large" />
+					) : (
+							<TouchableOpacity onPress={updateProfilePhoto} >
+								<Image
+									style={styles.userImage}
+									source={{ uri: profileImage }}
+								/>
+							</TouchableOpacity>
+						)}
+				</View>
+				<View style={{ flexDirection: 'column', justifyContent: 'center', paddingLeft: 15, paddingRight: 20, maxWidth: '70%'}} >
+					<Text style={styles.userNameText}>{user.userName}</Text>
+					<Text numberOfLines={2} style={styles.emailText}>{user.userEmail}</Text>
 				</View>
 			</View>
 			<View style={styles.content}>
@@ -156,31 +145,31 @@ const UserProfileScreen = (props) => {
 					<Tab heading="Saved" tabBarUnderlineStyle={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}>
 
 						<FlatList
-							data={constructEvents(event.savedEvents)}
+							data={constructEvents(event.savedEvents).reverse()}
 							renderItem={({ item }) =>
 								<EventCard event={item} />
 							}
 							keyExtractor={(item) => item.id.toString()}
 							refreshControl={
 								<RefreshControl refreshing={savedRefreshing} onRefresh={refreshSaved} />
-							  }
+							}
 						/>
 					</Tab>
 					<Tab heading="Going" tabBarUnderlineStyle={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}>
 						<FlatList
-							data={constructEvents(user.goingEvents)}
+							data={constructEvents(user.goingEvents).reverse()}
 							renderItem={({ item }) =>
 								<EventCard event={item} />
 							}
 							keyExtractor={(item) => item.id.toString()}
 							refreshControl={
 								<RefreshControl refreshing={goingRefreshing} onRefresh={refreshGoing} />
-							  }
+							}
 						/>
 					</Tab>
 					<Tab heading="Hosted" tabBarUnderlineStyle={Platform.OS === 'ios' ? Colors.purpleButton : 'white'}>
 						<FlatList
-							data={constructEvents(event.createdEvents)}
+							data={constructEvents(event.createdEvents).reverse()}
 							renderItem={({ item }) =>
 								<View>
 									<EventCard event={item} />
@@ -209,7 +198,7 @@ const UserProfileScreen = (props) => {
 							keyExtractor={(item) => item.id.toString()}
 							refreshControl={
 								<RefreshControl refreshing={hostedRefreshing} onRefresh={refreshHosted} />
-							  }
+							}
 						/>
 					</Tab>
 				</Tabs>
@@ -262,8 +251,10 @@ const styles = StyleSheet.create({
 		paddingTop: 35,
 	},
 	headerContainer: {
-		// height:'35%',
 		backgroundColor: '#2b2d2f',
+		flexDirection: 'row',
+		paddingHorizontal: 15,
+		paddingVertical: 15
 	},
 	headerColumn: {
 		//backgroundColor: "transparent",
@@ -283,15 +274,14 @@ const styles = StyleSheet.create({
 	},
 	userImageContainer: {
 		borderColor: "#FFFFFF",
-		borderRadius: 85,
+		borderRadius: 65,
 		borderWidth: 4,
-		height: 170,
-		marginBottom: 15,
-		width: 170,
+		height: 130,
+		width: 130,
 	},
 	userImage: {
 		borderColor: "#A5A5A5",
-		borderRadius: 85,
+		borderRadius: 65,
 		height: "100%",
 		width: "100%",
 	},
@@ -307,7 +297,6 @@ const styles = StyleSheet.create({
 		color: "#FFF",
 		fontSize: 16,
 		fontWeight: "bold",
-		paddingBottom: 8,
 		textAlign: "left",
 		fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
 	},

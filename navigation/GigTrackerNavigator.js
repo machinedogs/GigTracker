@@ -1,4 +1,3 @@
-import React from 'react';
 import { Platform, Dimensions } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator, Header } from 'react-navigation-stack';
@@ -16,7 +15,6 @@ import SettingsScreen from '../screens/user/SettingsScreen';
 import UserDisplay from '../screens/events/UserDisplay';
 
 const WIDTH = Dimensions.get('window').width;
-
 
 const EventNavigator = createStackNavigator(
     {

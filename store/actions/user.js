@@ -1,5 +1,5 @@
 import * as SecureStore from 'expo-secure-store';
-import { saveProfileDataToStorage } from '../../screens/helper/secureStorageHelpers';
+import { saveProfileDataToStorage } from '../../helper/secureStorageHelpers';
 //TODO: Move to a constant file 
 export const AUTHENTICATE = 'AUTHENTICATE';
 export const UPDATE_PROFILE = 'UPDATE_PROFILE';

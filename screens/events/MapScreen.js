@@ -26,8 +26,8 @@ import Event from '../../models/event';
 import Colors from '../../constants/Colors';
 import * as eventActions from '../../store/actions/events';
 import { CustomCallout } from '../../components/CustomCallout';
-import * as iconHelpers from '../helper/iconHelpers';
-import { getGeoInfo } from '../../screens/helper/geoHelper';
+import * as iconHelpers from '../../helper/iconHelpers';
+import { getGeoInfo } from '../../helper/geoHelper'; 
 import CategorySelector from '../../components/CategorySelector';
 
 const { width, height } = Dimensions.get('window')

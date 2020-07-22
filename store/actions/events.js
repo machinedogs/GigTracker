@@ -283,6 +283,7 @@ export const createEvent = (event) => {
 			image: event.image,
 			latitude: event.latitude,
 			longitude: event.longitude,
+			address: event.address
 		});
 		console.log("Event: " + raw.toString);
 
@@ -309,7 +310,6 @@ export const createEvent = (event) => {
 				alert(message);
 				throw new Error(message);
 			}
-			//console.log("****Response event number: " + resData.event);
 			dispatch(updateEventMaps(resData.event))
 			dispatch(setFilters())
 		} catch (err) {
@@ -332,6 +332,7 @@ export const editEvent = (event, id) => {
 			image: event.image,
 			latitude: event.latitude,
 			longitude: event.longitude,
+			address: event.address
 		});
 		console.log("Event: " + raw.toString());
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
     View,
     ActivityIndicator,
@@ -7,12 +7,13 @@ import {
     StatusBar
 } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+
 import { updateUserProfile } from '../store/actions/user';
 import * as authActions from '../store/actions/user';
 import * as eventActions from '../store/actions/events';
-import { getProfileDataStorage } from '../screens/helper/secureStorageHelpers';
-import { getGeoInfo } from '../screens/helper/geoHelper';
+import { getProfileDataStorage } from '../helper/secureStorageHelpers';
+import { getGeoInfo } from '../helper/geoHelper';
 import Colors from '../constants/Colors';
 
 const startupTextOptions = [
@@ -24,7 +25,6 @@ const startupTextOptions = [
 
 const StartupScreen = props => {
     const dispatch = useDispatch();
-
     var startupText = startupTextOptions[Math.floor(Math.random() * startupTextOptions.length)]
 
     useEffect(() => {
@@ -33,7 +33,7 @@ const StartupScreen = props => {
             let coordinates = '';
             await getGeoInfo().then(coords => coordinates = coords);
             var currentDate = new Date()
-            currentDate.setHours(0,0,0,0);
+            currentDate.setHours(0, 0, 0, 0);
             await dispatch(eventActions.getEvents(currentDate.toISOString(), coordinates.latitude, coordinates.longitude));
             dispatch(eventActions.getEvents(currentDate));
 

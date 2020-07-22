@@ -1,23 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { Image, StyleSheet } from "react-native";
-import { Container, Header, Content, Accordion, View } from "native-base";
+import React from "react";
+import { StyleSheet } from "react-native";
+import { View } from "native-base";
 import {
     Card,
     CardItem,
-    Thumbnail,
     Text,
-    Button,
-    Icon,
     Left,
-    Body,
     Right,
 } from "native-base";
-import { makeStreetAddress } from "../screens/helper/calloutHelper";
+import { WebView } from 'react-native-webview'
 
-
+import { makeStreetAddress } from "../helper/calloutHelper";
 import { EventImage } from './calloutEventImage';
 import { UserImage } from './calloutUserImage';
-import { WebView } from 'react-native-webview'
 
 export const CustomCallout = (props) => {
 

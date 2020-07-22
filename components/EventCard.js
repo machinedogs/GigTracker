@@ -1,19 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, View, Dimensions } from "react-native";
-import { Container, Header, Content, Accordion } from "native-base";
+import React from "react";
+import { Image, StyleSheet, View } from "react-native";
 import {
 	Card,
-	CardItem,
 	Thumbnail,
 	Text,
-	Button,
-	Icon,
-	Left,
-	Body,
 	Right,
 } from "native-base";
-import InsetShadow from 'react-native-inset-shadow'
-import { makeStreetAddress, makeFullAddress } from "../screens/helper/calloutHelper";
+import InsetShadow from 'react-native-inset-shadow';
+
+import { makeStreetAddress, makeFullAddress } from "../helper/calloutHelper";
 
 export const EventCard = (props) => {
 	return (
