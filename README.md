@@ -1,5 +1,8 @@
 # GigTracker
 
+### Documentation
+https://machinedogs.snazzydocs.com/docs/1.0/website
+
 ### Build Requirements
 Follow directions at: https://reactnative.dev/docs/environment-setup
 
