@@ -21,6 +21,16 @@ const startupTextOptions = [
     "Downloading Memes   ",
     "Kicking Neighbors off Wifi   ",
     "Carping the Diem   ",
+    "Dividing by Zero",
+    "Charging Phasers",
+    "Asking for Directions",
+    "Remodulating Plasma Confinement Field",
+    "Fetching Manners",
+    "Loading Cats",
+    "Loading...",
+    "Brewing a Fresh Batch of Joe",
+    "Landing Second Stage",
+    "Buffering Pizza"
 ]
 
 const StartupScreen = props => {
