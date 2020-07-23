@@ -10,7 +10,8 @@ import {
 	TouchableOpacity,
 	Image,
 	Platform,
-	Linking
+	Linking,
+	Dimensions
 } from "react-native";
 import { Col, Grid } from "react-native-easy-grid";
 import InsetShadow from "react-native-inset-shadow";
@@ -74,7 +75,7 @@ const EventScreen = (props) => {
 	const pressAddress = () => {
 		console.log("pressing address link");
 		Linking.openURL(url);
-		
+
 	}
 
 	//  for icon color selection
@@ -169,6 +170,10 @@ const EventScreen = (props) => {
 					</Text>
 				</Right>
 			</View>
+			<View style={{ flexDirection: 'row', padding: 8, width: Dimensions.get('window').width}}>
+				<Text style={styles.categoryText}>category: </Text>
+				<Text style={styles.categoryText}>{event.category}</Text>
+			</View>
 			<Grid>
 				<Col size={1} style={{ height: "auto", justifyContent: "center" }}>
 					<InsetShadow
@@ -238,6 +243,27 @@ const EventScreen = (props) => {
 				<Col size={1} style={{ width: 75 }}>
 					<ShareComponent event={event} />
 				</Col>
+				{userName === event.host.name && userName ? (
+					//user is the host and can edit the event
+					<Col>
+						<TouchableOpacity
+							onPress={() => {
+								props.navigation.navigate('CreateEvent', { event: event })
+							}}
+							style={{ marginTop: 10, marginBottom: 10 }}
+						>
+							<Icon
+								name="edit"
+								type="vector-icons"
+								size={40}
+								color={isEventSaved ? "#f5b800" : "black"}
+							/>
+							<Text style={styles.ButtonText}>
+								Edit Event
+							</Text>
+						</TouchableOpacity>
+					</Col>
+				) : null}
 			</Grid>
 		</ScrollView>
 	);
@@ -286,7 +312,11 @@ const styles = StyleSheet.create({
 	goingText: {
 		color: "black",
 		fontSize: 20,
-	}
+	},
+	categoryText: {
+		fontSize: 18,
+		color: 'gray'
+	},
 });
 
 export default EventScreen;
