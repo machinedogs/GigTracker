@@ -16,7 +16,7 @@ import {
     PEOPLE_GOING,
     SET_DATE_FILTER
 } from '../actions/events';
-import { UPDATE_EVENT } from '../actions/user'
+import { UPDATE_EVENT, LOGOUT } from '../actions/user'
 import { datesAreOnSameDay } from '../../helper/dateHelpers';
 
 const initialState = {
@@ -178,6 +178,12 @@ export default (state = initialState, action) => {
                 ...state,
                 eventGoing: action.eventGoing
             };
+        case LOGOUT:
+            return {
+                ...state,
+                createdEvents: [],
+                savedEvents: []
+            }
         default:
             return state;
     }
