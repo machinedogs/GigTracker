@@ -14,6 +14,11 @@ export const REMOVE_FILTER = "REMOVE_FILTER";
 export const CLEAR_FILTERS = "CLEAR_FILTERS";
 export const SET_FILTERS = "SET_FILTERS";
 export const PEOPLE_GOING = "PEOPLE_GOING";
+export const SET_DATE_FILTER = "SET_DATE_FILTER";
+
+export const setDateFilter = (date) => {
+	return { type: SET_DATE_FILTER, date: date }
+}
 
 export const addFilter = (filter) => {
 	return async (dispatch) => {
@@ -271,7 +276,7 @@ export const getAllEvents = () => {
 export const createEvent = (event) => {
 	return async (dispatch, getState) => {
 		console.log(event);
-		console.log("IN creating event action");
+		console.log("In creating event action");
 		var myHeaders = new Headers();
 		myHeaders.append("Content-Type", "application/json");
 

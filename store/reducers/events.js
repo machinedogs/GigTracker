@@ -13,17 +13,20 @@ import {
     SET_FILTERS,
     DELETE_CREATED_EVENT,
     EDIT_CREATED_EVENT,
-    PEOPLE_GOING
+    PEOPLE_GOING,
+    SET_DATE_FILTER
 } from '../actions/events';
 import { UPDATE_EVENT } from '../actions/user'
+import { datesAreOnSameDay } from '../../helper/dateHelpers';
 
 const initialState = {
     createdEvents: [],
     savedEvents: [],
     events: [],
     filters: [],
+    dateFilter: "",
     filteredEvents: [],
-    eventGoing:[]
+    eventGoing: []
 }
 
 export default (state = initialState, action) => {
@@ -57,6 +60,11 @@ export default (state = initialState, action) => {
                 return { ...state, filteredEvents: updatedFilteredEvents };
             } else { // if no filters set return regular events
                 return { ...state, filteredEvents: state.events };
+            }
+        case SET_DATE_FILTER:
+            return {
+                ...state,
+                dateFilter: action.date
             }
         case UPDATE_EVENT:
             const savedGoingIndex = state.savedEvents.findIndex(event => event.event === action.eventId)
@@ -94,11 +102,19 @@ export default (state = initialState, action) => {
                 savedEvents: action.savedEvents,
             };
         case CREATE_EVENT:
-            return {
-                ...state,
-                events: state.events.concat(action.event),
-                createdEvents: state.createdEvents.concat(action.event),
-            };
+            // check if created event is on the same day as the current date the event 
+            if (datesAreOnSameDay(state.dateFilter, new Date(action.event.date))) {
+                return {
+                    ...state,
+                    events: state.events.concat(action.event),
+                    createdEvents: state.createdEvents.concat(action.event),
+                };
+            } else { // created event is not the same day and should not be added to events state
+                return {
+                    ...state,
+                    createdEvents: state.createdEvents.concat(action.event),
+                };
+            }
         case GET_EVENTS:
             return {
                 ...state,

@@ -34,6 +34,7 @@ const StartupScreen = props => {
             await getGeoInfo().then(coords => coordinates = coords);
             var currentDate = new Date()
             currentDate.setHours(0, 0, 0, 0);
+            dispatch(eventActions.setDateFilter(currentDate))
             await dispatch(eventActions.getEvents(currentDate.toISOString(), coordinates.latitude, coordinates.longitude));
             dispatch(eventActions.getEvents(currentDate));
 
