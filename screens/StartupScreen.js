@@ -12,8 +12,8 @@ import { useDispatch } from 'react-redux';
 import { updateUserProfile } from '../store/actions/user';
 import * as authActions from '../store/actions/user';
 import * as eventActions from '../store/actions/events';
-import { getProfileDataStorage } from '../helper/secureStorageHelpers'; 
-import { getGeoInfo } from '../helper/geoHelper'; 
+import { getProfileDataStorage } from '../helper/secureStorageHelpers';
+import { getGeoInfo } from '../helper/geoHelper';
 import Colors from '../constants/Colors';
 
 const startupTextOptions = [
@@ -33,7 +33,7 @@ const StartupScreen = props => {
             let coordinates = '';
             await getGeoInfo().then(coords => coordinates = coords);
             var currentDate = new Date()
-            currentDate.setHours(0,0,0,0);
+            currentDate.setHours(0, 0, 0, 0);
             await dispatch(eventActions.getEvents(currentDate.toISOString(), coordinates.latitude, coordinates.longitude));
             dispatch(eventActions.getEvents(currentDate));
 
@@ -74,9 +74,9 @@ const StartupScreen = props => {
                     return;
                 }
 
-                await dispatch(eventActions.GetSavedEvents(accessToken));
-                await dispatch(eventActions.GetHostedEvents(accessToken));
-                await dispatch(authActions.getGoingEvents(accessToken));
+                dispatch(eventActions.GetSavedEvents(accessToken));
+                dispatch(eventActions.GetHostedEvents(accessToken));
+                dispatch(authActions.getGoingEvents(accessToken));
                 //Dispatch action to update profile image state in store 
                 await dispatch(updateUserProfile(profileImage, transformedData))
                 props.navigation.replace('Home');
@@ -85,9 +85,9 @@ const StartupScreen = props => {
 
             // pass user data to state and navigate to home
             await dispatch(authActions.authenticate(userName, userEmail, accessToken, refreshToken));
-            await dispatch(eventActions.GetSavedEvents(accessToken));
-            await dispatch(eventActions.GetHostedEvents(accessToken));
-            await dispatch(authActions.getGoingEvents(accessToken));
+            dispatch(eventActions.GetSavedEvents(accessToken));
+            dispatch(eventActions.GetHostedEvents(accessToken));
+            dispatch(authActions.getGoingEvents(accessToken));
             //Dispatch action to update profile image state in store 
             await dispatch(updateUserProfile(profileImage, transformedData));
             props.navigation.replace('Home');
