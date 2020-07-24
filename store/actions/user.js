@@ -1,5 +1,7 @@
 import * as SecureStore from 'expo-secure-store';
+
 import { saveProfileDataToStorage } from '../../helper/secureStorageHelpers';
+import { GetHostedEvents, GetSavedEvents } from './events';
 //TODO: Move to a constant file 
 export const AUTHENTICATE = 'AUTHENTICATE';
 export const UPDATE_PROFILE = 'UPDATE_PROFILE';
@@ -313,6 +315,11 @@ export const login = (email, password) => {
         dispatch(UpdateProfile(resData.data.host.profile))
         let accessExpiration = new Date(resData.data.authorization.auth_token.expires);
         let refreshExpiration = new Date(resData.data.authorization.refresh_token.expires);
+        // Get users saved, created, and going events
+        dispatch(GetSavedEvents(resData.data.authorization.auth_token.token));
+        dispatch(GetHostedEvents(resData.data.authorization.auth_token.token));
+        dispatch(getGoingEvents(resData.data.authorization.auth_token.token));
+        // Save data to device's secure storage keychain
         saveDataToStorage(
             resData.data.host.name,
             resData.data.host.email,
