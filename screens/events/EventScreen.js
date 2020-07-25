@@ -137,17 +137,19 @@ const EventScreen = (props) => {
 			<View
 				style={{
 					flexDirection: "row",
-					paddingHorizontal: 15,
-					paddingTop: 10,
-					paddingBottom: 15,
+					padding: 15
 				}}
 			>
-				<Left size={2} style={{ height: "auto", justifyContent: "center" }}>
+				<Left style={{ height: "auto", justifyContent: "center" }}>
 					<TouchableOpacity onPress={pressAddress}>
 						<Text style={{ fontSize: 15, color: "#147EFB" }} >
 							{makeFullAddress(event.location.address)}
 						</Text>
 					</TouchableOpacity>
+					<View style={{ flexDirection: 'row', paddingTop: 8}}>
+						<Text style={styles.categoryText}>Category: </Text>
+						<Text style={styles.categoryText}>{event.category}</Text>
+					</View>
 				</Left>
 				<Right size={2} style={{ height: "auto" }}>
 					{Platform.OS === "ios" ? (
@@ -170,10 +172,7 @@ const EventScreen = (props) => {
 					</Text>
 				</Right>
 			</View>
-			<View style={{ flexDirection: 'row', padding: 8, width: Dimensions.get('window').width}}>
-				<Text style={styles.categoryText}>category: </Text>
-				<Text style={styles.categoryText}>{event.category}</Text>
-			</View>
+
 			<Grid>
 				<Col size={1} style={{ height: "auto", justifyContent: "center" }}>
 					<InsetShadow
