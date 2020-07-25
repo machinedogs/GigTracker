@@ -147,7 +147,13 @@ const UserProfileScreen = (props) => {
 						<FlatList
 							data={constructEvents(event.savedEvents).reverse()}
 							renderItem={({ item }) =>
-								<EventCard event={item} />
+								<View>
+									<TouchableOpacity onPress={() => {
+										props.navigation.navigate('EventScreen', { event: item })
+									}} >
+										<EventCard event={item} />
+									</TouchableOpacity>
+								</View>
 							}
 							keyExtractor={(item) => item.id.toString()}
 							refreshControl={
@@ -159,7 +165,13 @@ const UserProfileScreen = (props) => {
 						<FlatList
 							data={constructEvents(user.goingEvents).reverse()}
 							renderItem={({ item }) =>
-								<EventCard event={item} />
+								<View>
+									<TouchableOpacity onPress={() => {
+										props.navigation.navigate('EventScreen', { event: item })
+									}} >
+										<EventCard event={item} />
+									</TouchableOpacity>
+								</View>
 							}
 							keyExtractor={(item) => item.id.toString()}
 							refreshControl={
@@ -173,8 +185,8 @@ const UserProfileScreen = (props) => {
 							renderItem={({ item }) =>
 								<View>
 									<TouchableOpacity onPress={() => {
-											props.navigation.navigate('EventScreen', { event: item })
-										}} >
+										props.navigation.navigate('EventScreen', { event: item })
+									}} >
 										<EventCard event={item} />
 									</TouchableOpacity>
 									<View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingHorizontal: 15 }}>
