@@ -1,14 +1,16 @@
-const PoliticsPin = require('../assets/Pins/PoliticsPin.png');
-const SportsPin = require('../assets/Pins/SportsPin.png');
-const MeetingPin = require('../assets/Pins/MeetingPin.png');
-const FoodPin = require('../assets/Pins/FoodPin.png');
-const ProtestPin = require('../assets/Pins/ProtestPin.png');
-const PartyPin = require('../assets/Pins/PartyPin.png');
-const MusicPin = require('../assets/Pins/MusicPin.png');
-const MarketPin = require('../assets/Pins/MarketPin.png')
-const DiscussionPin = require('../assets/Pins/DiscussionPin.png')
-const OtherPin = require('../assets/Pins/OtherPin.png')
-const ArtPin = require('../assets/Pins/ArtPin.png')
+const PoliticsPin = Platform.OS === 'ios' ? require('../assets/Pins/ios/politicsPin.png') : require('../assets/Pins/android/PoliticsPin.png');
+const SportsPin = Platform.OS === 'ios' ? require('../assets/Pins/ios/sportsPin.png') : require('../assets/Pins/android/SportsPin.png');
+const MeetingPin = Platform.OS === 'ios' ? require('../assets/Pins/ios/meetingPin.png') : require('../assets/Pins/android/MeetingPin.png');
+const FoodPin = Platform.OS === 'ios' ? require('../assets/Pins/ios/foodPin.png') : require('../assets/Pins/android/FoodPin.png');
+const ProtestPin = Platform.OS === 'ios' ? require('../assets/Pins/ios/protestPin.png') : require('../assets/Pins/android/ProtestPin.png');
+const PartyPin = Platform.OS === 'ios' ? require('../assets/Pins/ios/partyPin.png') : require('../assets/Pins/android/PartyPin.png');
+const MusicPin = Platform.OS === 'ios' ? require('../assets/Pins/ios/musicPin.png') : require('../assets/Pins/android/MusicPin.png');
+const MarketPin = Platform.OS === 'ios' ? require('../assets/Pins/ios/marketPin.png') : require('../assets/Pins/android/MarketPin.png')
+const DiscussionPin = Platform.OS === 'ios' ? require('../assets/Pins/ios/discussionPin.png') : require('../assets/Pins/android/DiscussionPin.png')
+const OtherPin = Platform.OS === 'ios' ? require('../assets/Pins/ios/otherPin.png') : require('../assets/Pins/android/OtherPin.png')
+const ArtPin = Platform.OS === 'ios' ? require('../assets/Pins/ios/artPin.png') : require('../assets/Pins/android/ArtPin.png')
+
+
 
 export const iconPicker = (category) => {
     let pinIcon;
