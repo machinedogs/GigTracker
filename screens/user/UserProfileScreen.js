@@ -130,7 +130,7 @@ const UserProfileScreen = (props) => {
 							</TouchableOpacity>
 						)}
 				</View>
-				<View style={{ flexDirection: 'column', justifyContent: 'center', paddingLeft: 15, paddingRight: 20, maxWidth: '70%'}} >
+				<View style={{ flexDirection: 'column', justifyContent: 'center', paddingLeft: 15, paddingRight: 20, maxWidth: '70%' }} >
 					<Text style={styles.userNameText}>{user.userName}</Text>
 					<Text numberOfLines={2} style={styles.emailText}>{user.userEmail}</Text>
 				</View>
@@ -147,7 +147,13 @@ const UserProfileScreen = (props) => {
 						<FlatList
 							data={constructEvents(event.savedEvents).reverse()}
 							renderItem={({ item }) =>
-								<EventCard event={item} />
+								<View>
+									<TouchableOpacity onPress={() => {
+										props.navigation.navigate('EventScreen', { event: item })
+									}} >
+										<EventCard event={item} />
+									</TouchableOpacity>
+								</View>
 							}
 							keyExtractor={(item) => item.id.toString()}
 							refreshControl={
@@ -159,7 +165,13 @@ const UserProfileScreen = (props) => {
 						<FlatList
 							data={constructEvents(user.goingEvents).reverse()}
 							renderItem={({ item }) =>
-								<EventCard event={item} />
+								<View>
+									<TouchableOpacity onPress={() => {
+										props.navigation.navigate('EventScreen', { event: item })
+									}} >
+										<EventCard event={item} />
+									</TouchableOpacity>
+								</View>
 							}
 							keyExtractor={(item) => item.id.toString()}
 							refreshControl={
@@ -172,7 +184,11 @@ const UserProfileScreen = (props) => {
 							data={constructEvents(event.createdEvents).reverse()}
 							renderItem={({ item }) =>
 								<View>
-									<EventCard event={item} />
+									<TouchableOpacity onPress={() => {
+										props.navigation.navigate('EventScreen', { event: item })
+									}} >
+										<EventCard event={item} />
+									</TouchableOpacity>
 									<View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingHorizontal: 15 }}>
 										<Button full transparent light
 											onPress={() => {

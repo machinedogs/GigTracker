@@ -10,7 +10,8 @@ import {
 	TouchableOpacity,
 	Image,
 	Platform,
-	Linking
+	Linking,
+	Dimensions
 } from "react-native";
 import { Col, Grid } from "react-native-easy-grid";
 import InsetShadow from "react-native-inset-shadow";
@@ -74,7 +75,7 @@ const EventScreen = (props) => {
 	const pressAddress = () => {
 		console.log("pressing address link");
 		Linking.openURL(url);
-		
+
 	}
 
 	//  for icon color selection
@@ -110,6 +111,27 @@ const EventScreen = (props) => {
 		props.navigation.navigate('GoingListScreen');
 	};
 
+	const stringifyDate = (date) => {
+		var dd = date.getDate();
+		var mm = date.getMonth() + 1;
+		var yyyy = date.getFullYear();
+		if (dd < 10) {
+			dd = "0" + dd;
+		}
+		if (mm < 10) {
+			mm = "0" + mm;
+		}
+		var wkday = date.getDay();
+		if (wkday === 0) wkday = "Sunday";
+		else if (wkday === 1) wkday = "Monday";
+		else if (wkday === 2) wkday = "Tuesday";
+		else if (wkday === 3) wkday = "Wednesday";
+		else if (wkday === 4) wkday = "Thursday";
+		else if (wkday === 5) wkday = "Friday";
+		else if (wkday === 6) wkday = "Saturday";
+		return wkday + ", " + mm + "/" + dd + "/" + yyyy;
+	};
+
 	return (
 		<ScrollView
 			style={{ backgroundColor: "white" }}
@@ -136,17 +158,19 @@ const EventScreen = (props) => {
 			<View
 				style={{
 					flexDirection: "row",
-					paddingHorizontal: 15,
-					paddingTop: 10,
-					paddingBottom: 15,
+					padding: 15
 				}}
 			>
-				<Left size={2} style={{ height: "auto", justifyContent: "center" }}>
+				<Left style={{ height: "auto", justifyContent: "center" }}>
 					<TouchableOpacity onPress={pressAddress}>
 						<Text style={{ fontSize: 15, color: "#147EFB" }} >
 							{makeFullAddress(event.location.address)}
 						</Text>
 					</TouchableOpacity>
+					<View style={{ flexDirection: 'row', paddingTop: 8}}>
+						<Text style={styles.categoryText}>Category: </Text>
+						<Text style={styles.categoryText}>{event.category}</Text>
+					</View>
 				</Left>
 				<Right size={2} style={{ height: "auto" }}>
 					{Platform.OS === "ios" ? (
@@ -165,10 +189,11 @@ const EventScreen = (props) => {
 						)}
 
 					<Text style={{ fontSize: 20, color: "black" }}>
-						{new Date(event.date).toLocaleDateString()}
+						{stringifyDate(new Date(event.date))}
 					</Text>
 				</Right>
 			</View>
+
 			<Grid>
 				<Col size={1} style={{ height: "auto", justifyContent: "center" }}>
 					<InsetShadow
@@ -238,6 +263,27 @@ const EventScreen = (props) => {
 				<Col size={1} style={{ width: 75 }}>
 					<ShareComponent event={event} />
 				</Col>
+				{userName === event.host.name && userName ? (
+					//user is the host and can edit the event
+					<Col>
+						<TouchableOpacity
+							onPress={() => {
+								props.navigation.navigate('CreateEvent', { event: event })
+							}}
+							style={{ marginTop: 10, marginBottom: 10 }}
+						>
+							<Icon
+								name="edit"
+								type="vector-icons"
+								size={40}
+								color={isEventSaved ? "#f5b800" : "black"}
+							/>
+							<Text style={styles.ButtonText}>
+								Edit Event
+							</Text>
+						</TouchableOpacity>
+					</Col>
+				) : null}
 			</Grid>
 		</ScrollView>
 	);
@@ -286,7 +332,11 @@ const styles = StyleSheet.create({
 	goingText: {
 		color: "black",
 		fontSize: 20,
-	}
+	},
+	categoryText: {
+		fontSize: 18,
+		color: 'gray'
+	},
 });
 
 export default EventScreen;
