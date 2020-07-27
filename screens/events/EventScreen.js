@@ -18,6 +18,7 @@ import InsetShadow from "react-native-inset-shadow";
 import ShareComponent from "../../components/ShareComponent";
 import { formatStandardTime } from "../../helper/timeFormater";
 import { makeFullAddress } from "../../helper/calloutHelper";
+import { stringifyDate } from '../../helper/createEventHelper';
 import Colors from "../../constants/Colors";
 import * as eventActions from "../../store/actions/events";
 import * as userActions from "../../store/actions/user";
@@ -109,27 +110,6 @@ const EventScreen = (props) => {
 		console.log('dispatching get people going')
 		dispatch(eventActions.getPeopleGoing(event.id, accessToken));
 		props.navigation.navigate('GoingListScreen');
-	};
-
-	const stringifyDate = (date) => {
-		var dd = date.getDate();
-		var mm = date.getMonth() + 1;
-		var yyyy = date.getFullYear();
-		if (dd < 10) {
-			dd = "0" + dd;
-		}
-		if (mm < 10) {
-			mm = "0" + mm;
-		}
-		var wkday = date.getDay();
-		if (wkday === 0) wkday = "Sunday";
-		else if (wkday === 1) wkday = "Monday";
-		else if (wkday === 2) wkday = "Tuesday";
-		else if (wkday === 3) wkday = "Wednesday";
-		else if (wkday === 4) wkday = "Thursday";
-		else if (wkday === 5) wkday = "Friday";
-		else if (wkday === 6) wkday = "Saturday";
-		return wkday + ", " + mm + "/" + dd + "/" + yyyy;
 	};
 
 	return (
