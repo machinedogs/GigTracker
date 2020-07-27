@@ -27,7 +27,7 @@ import Colors from '../../constants/Colors';
 import * as eventActions from '../../store/actions/events';
 import { CustomCallout } from '../../components/CustomCallout';
 import * as iconHelpers from '../../helper/iconHelpers';
-import { getGeoInfo } from '../../helper/geoHelper'; 
+import { getGeoInfo } from '../../helper/geoHelper';
 import CategorySelector from '../../components/CategorySelector';
 
 const { width, height } = Dimensions.get('window')
@@ -48,7 +48,7 @@ const MapScreen = props => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const userAccessToken = useSelector(state => state.user.accessToken);
   const filteredEvents = useSelector(state => state.events.filteredEvents);
-  const [selectedDate, setSelectedDate] = useState(new Date().setHours(0,0,0,0));
+  const [selectedDate, setSelectedDate] = useState(new Date().setHours(0, 0, 0, 0));
   const [showCategories, setShowCategories] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
   let mapRef = useRef(null);
@@ -190,10 +190,7 @@ const MapScreen = props => {
         }}
         edgePadding={{ top: 100, left: 50, bottom: 150, right: 50 }}
       >
-        {console.log(filteredEvents)}
-        {
-        filteredEvents.map(event => (
-          
+        {filteredEvents.map(event => (
           <Marker
             coordinate={{ latitude: parseFloat(event.location.latitude), longitude: parseFloat(event.location.longitude) }}
             pinColor="#341f97"

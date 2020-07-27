@@ -260,9 +260,9 @@ const EventScreen = (props) => {
 						</TouchableOpacity>
 					</Col>
 				) : null}
-				<Col size={1} style={{ width: 75 }}>
+				{<Col size={1} style={{ width: 75 }}>
 					<ShareComponent event={event} />
-				</Col>
+				</Col>}
 				{userName === event.host.name && userName ? (
 					//user is the host and can edit the event
 					<Col>

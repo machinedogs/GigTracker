@@ -1,4 +1,4 @@
-const PoliticsPin = Platform.OS === 'ios' ? require('../assets/Pins/ios/politicsPin.png') : require('../assets/Pins/android/PoliticsPin.png');
+const PoliticsPin = Platform.OS === 'ios' ?  require('../assets/Pins/ios/politicsPin.png') : require('../assets/Pins/android/PoliticsPin.png');
 const SportsPin = Platform.OS === 'ios' ? require('../assets/Pins/ios/sportsPin.png') : require('../assets/Pins/android/SportsPin.png');
 const MeetingPin = Platform.OS === 'ios' ? require('../assets/Pins/ios/meetingPin.png') : require('../assets/Pins/android/MeetingPin.png');
 const FoodPin = Platform.OS === 'ios' ? require('../assets/Pins/ios/foodPin.png') : require('../assets/Pins/android/FoodPin.png');
