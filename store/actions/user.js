@@ -23,9 +23,9 @@ export const addToGoingEvents = (event) => {
             redirect: 'follow'
         };
         console.log("Going to this event:")
-        console.log(event.event)
+        console.log(event.id)
         const response = await fetch(
-            `https://gigservice.herokuapp.com/api/v1/events/${event.event}/attending?auth_token=${accessToken}`,
+            `https://gigservice.herokuapp.com/api/v1/events/${event.id}/attending?auth_token=${accessToken}`,
             requestOptions)
         const resData = await response.json();
         console.log('Updated DB that user is going to an event')
@@ -47,9 +47,9 @@ export const removeFromGoingEvents = (event) => {
             redirect: 'follow'
         };
         console.log("No longer going to this event:")
-        console.log(event.event)
+        console.log(event.id)
         const response = await fetch(
-            `https://gigservice.herokuapp.com/api/v1/events/${event.event}/attending/1?auth_token=${accessToken}`,
+            `https://gigservice.herokuapp.com/api/v1/events/${event.id}/attending/1?auth_token=${accessToken}`,
             requestOptions)
         const resData = await response.json();
         console.log('Updated DB that user is not going to this event')
@@ -140,9 +140,9 @@ export const deleteAccount = () => {
         goingEvents.map(async event => {
             // in map
             console.log("No longer going to this event:")
-            console.log(event.event)
+            console.log(event.id)
             const response = await fetch(
-                `https://gigservice.herokuapp.com/api/v1/events/${event.event}/attending/1?auth_token=${accessToken}`,
+                `https://gigservice.herokuapp.com/api/v1/events/${event.id}/attending/1?auth_token=${accessToken}`,
                 requestOptions)
             const resData = await response.json();
             console.log('Updated DB that user is not going to this event')
@@ -368,7 +368,7 @@ export const getGoingEvents = (accessToken) => {
             var filteredEvents = resData.filter((event) => {
                 console.log(`event is here ${event.title}`);
                 if (
-                    event.event != null &&
+                    event.id != null &&
                     event.title != null &&
                     event.description != null &&
                     event.date != null &&
@@ -376,7 +376,7 @@ export const getGoingEvents = (accessToken) => {
                     event.image != null &&
                     event.image.length > 8
                 ) {
-                    console.log(`returns true for event ${event.event}`);
+                    console.log(`returns true for event ${event.id}`);
                     return true;
                 } else {
                     return false;

@@ -190,11 +190,14 @@ const MapScreen = props => {
         }}
         edgePadding={{ top: 100, left: 50, bottom: 150, right: 50 }}
       >
-        {filteredEvents.map(event => (
+        {console.log(filteredEvents)}
+        {
+        filteredEvents.map(event => (
+          
           <Marker
             coordinate={{ latitude: parseFloat(event.location.latitude), longitude: parseFloat(event.location.longitude) }}
             pinColor="#341f97"
-            key={event.event}
+            key={event.id}
             tracksViewChanges={false}
             onPress={onPinPress.bind(this, event)}
             icon={iconHelpers.iconPicker(event.category)}

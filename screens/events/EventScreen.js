@@ -39,7 +39,7 @@ const EventScreen = (props) => {
 	// See if user previously saved the event
 	var initialEventSaveState;
 	const existingSavedIndex = savedEvents.findIndex(
-		(myEvent) => myEvent.event === event.event
+		(myEvent) => myEvent.id === event.id
 	);
 	if (existingSavedIndex >= 0) {
 		// check if index exists
@@ -50,7 +50,7 @@ const EventScreen = (props) => {
 	// See if user has already said they are going to an event
 	var initialEventGoingState;
 	const existingGoingIndex = goingEvents.findIndex(
-		(myEvent) => myEvent.event === event.event
+		(myEvent) => myEvent.id === event.id
 	);
 	if (existingGoingIndex >= 0) {
 		// check if index exists
@@ -107,7 +107,7 @@ const EventScreen = (props) => {
 
 	const navigateToGoingList = () => {
 		console.log('dispatching get people going')
-		dispatch(eventActions.getPeopleGoing(event.event, accessToken));
+		dispatch(eventActions.getPeopleGoing(event.id, accessToken));
 		props.navigation.navigate('GoingListScreen');
 	};
 

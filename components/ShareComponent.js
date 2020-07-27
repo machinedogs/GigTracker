@@ -3,17 +3,17 @@ import { Icon } from 'react-native-elements';
 import { Share, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { useSelector } from "react-redux";
 
-export default ShareComponent = (event) => {
+export default ShareComponent = (props) => {
     var user = useSelector((state) => state.user);
     const onShare = async () => {
         try {
-            console.log('event passed to share message:' + event.event.title);
+            console.log('event passed to share message:' + props.event.title);
             const result = await Share.share({
                 // add deep link here
                 message:
-                    `${user.userName} Shared the event: ${event.event.title}
-                     hosted by: ${event.event.host.name},
-                    located at ${event.event.location.address}
+                    `${user.userName} Shared the event: ${props.event.title}
+                     hosted by: ${props.event.host.name},
+                    located at ${props.event.location.address}
                     `
             });
             if (result.action === Share.sharedAction) {

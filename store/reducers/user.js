@@ -46,8 +46,8 @@ export default (state = initialState, action) => {
 			};
 		case NOT_GOING_TO_EVENT:
 			console.log("IN REDUCER")
-			console.log("id to remove:" + action.event.event)
-			const goingIndex = state.goingEvents.findIndex(event => event.event === action.event.event)
+			console.log("id to remove:" + action.event.id)
+			const goingIndex = state.goingEvents.findIndex(event => event.id === action.event.id)
 			if (goingIndex >= 0) { // splice out event to unsave
 				const updatedGoingEvents = [...state.goingEvents];
 				updatedGoingEvents.splice(goingIndex, 1);
