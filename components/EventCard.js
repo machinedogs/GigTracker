@@ -9,27 +9,8 @@ import {
 import InsetShadow from 'react-native-inset-shadow';
 
 import { makeStreetAddress, makeFullAddress } from "../helper/calloutHelper";
+import { stringifyDateShort } from '../helper/createEventHelper';
 
-const stringifyDate = (date) => {
-	var dd = date.getDate();
-	var mm = date.getMonth() + 1;
-	var yyyy = date.getFullYear();
-	if (dd < 10) {
-		dd = "0" + dd;
-	}
-	if (mm < 10) {
-		mm = "0" + mm;
-	}
-	var wkday = date.getDay();
-	if (wkday === 0) wkday = "Sun";
-	else if (wkday === 1) wkday = "Mon";
-	else if (wkday === 2) wkday = "Tues";
-	else if (wkday === 3) wkday = "Wed";
-	else if (wkday === 4) wkday = "Thurs";
-	else if (wkday === 5) wkday = "Fri";
-	else if (wkday === 6) wkday = "Sat";
-	return wkday + ", " + mm + "/" + dd + "/" + yyyy;
-};
 
 export const EventCard = (props) => {
 	return (
@@ -67,7 +48,7 @@ export const EventCard = (props) => {
 							<Text>{makeFullAddress(props.event.location.address)}</Text>
 					}
 					<Text style={styles.dateTimeText} >
-						{stringifyDate(new Date(props.event.date))}{", "}
+						{stringifyDateShort(new Date(props.event.date))}{", "}
 						{new Date(props.event.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
 					</Text>
 				</View>
