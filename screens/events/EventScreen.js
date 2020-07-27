@@ -35,8 +35,12 @@ const EventScreen = (props) => {
 	const goingEvents = useSelector((state) => state.user.goingEvents);
 	const event = props.navigation.getParam("event");
 	const [numGoing, setNumGoing] = useState(event.attending);
+	const [isEventSaved, setEventSaved] = useState(initialEventSaveState);
+	const [isGoing, setGoing] = useState(initialEventGoingState);
+	const dispatch = useDispatch();
 
 	console.log("this is the event " + JSON.stringify(event));
+
 	// See if user previously saved the event
 	var initialEventSaveState;
 	const existingSavedIndex = savedEvents.findIndex(
@@ -60,11 +64,7 @@ const EventScreen = (props) => {
 		initialEventGoingState = false;
 	}
 
-	const [isEventSaved, setEventSaved] = useState(initialEventSaveState);
-	const [isGoing, setGoing] = useState(initialEventGoingState);
-
-	const dispatch = useDispatch();
-
+	// Setup deep link for address
 	const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
 	const latLng = `${event.location.latitude},${event.location.longitude}`;
 	const label = `${event.title}`;
@@ -76,7 +76,6 @@ const EventScreen = (props) => {
 	const pressAddress = () => {
 		console.log("pressing address link");
 		Linking.openURL(url);
-
 	}
 
 	//  for icon color selection
@@ -147,7 +146,7 @@ const EventScreen = (props) => {
 							{makeFullAddress(event.location.address)}
 						</Text>
 					</TouchableOpacity>
-					<View style={{ flexDirection: 'row', paddingTop: 8}}>
+					<View style={{ flexDirection: 'row', paddingTop: 8 }}>
 						<Text style={styles.categoryText}>Category: </Text>
 						<Text style={styles.categoryText}>{event.category}</Text>
 					</View>
@@ -168,7 +167,7 @@ const EventScreen = (props) => {
 							</Text>
 						)}
 
-					<Text style={{ fontSize: 20, color: "black" }}>
+					<Text style={{ fontSize: 20, color: "black", textAlign: 'right' }}>
 						{stringifyDate(new Date(event.date))}
 					</Text>
 				</Right>
