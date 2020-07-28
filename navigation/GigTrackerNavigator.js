@@ -13,7 +13,9 @@ import StartupScreen from '../screens/StartupScreen';
 import DeleteScreen from '../screens/user/DeleteScreen';
 import SettingsScreen from '../screens/user/SettingsScreen';
 import UserDisplay from '../screens/events/UserDisplay';
-
+import SignupLoginScreen from '../screens/auth/SignupLoginScreen';
+import PrivacyStatementScreen from '../screens/auth/PrivacyStatementScreen';
+import SignupScreen from '../screens/auth/SignupScreen';
 const WIDTH = Dimensions.get('window').width;
 
 const EventNavigator = createStackNavigator(
@@ -131,6 +133,63 @@ const EventNavigator = createStackNavigator(
             screen: AuthScreen,
             navigationOptions: {
                 headerTitle: "Account",
+                headerStyle: {
+                    backgroundColor: Colors.darkGrey,
+                    height: Platform.OS === 'ios' ? 110 : Header.height,
+                },
+                headerTitleStyle: {
+                    fontSize: 30,
+                    fontFamily: 'jack-silver',
+                    textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
+                    width: WIDTH - 75,
+                },
+                headerBackTitleVisible: false,
+                headerTintColor: 'white',
+                headerTitleAllowFontScaling: true
+            }
+        },
+        SignupLogin: {
+            screen: SignupLoginScreen,
+            navigationOptions: {
+                headerTitle: "Account",
+                headerStyle: {
+                    backgroundColor: Colors.darkGrey,
+                    height: Platform.OS === 'ios' ? 110 : Header.height,
+                },
+                headerTitleStyle: {
+                    fontSize: 30,
+                    fontFamily: 'jack-silver',
+                    textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
+                    width: WIDTH - 75,
+                },
+                headerBackTitleVisible: false,
+                headerTintColor: 'white',
+                headerTitleAllowFontScaling: true
+            }
+        },
+        PrivacyStatement: {
+            screen: PrivacyStatementScreen,
+            navigationOptions: {
+                headerTitle: "Privacy Statement",
+                headerStyle: {
+                    backgroundColor: Colors.darkGrey,
+                    height: Platform.OS === 'ios' ? 110 : Header.height,
+                },
+                headerTitleStyle: {
+                    fontSize: 30,
+                    fontFamily: 'jack-silver',
+                    textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
+                    width: WIDTH - 75,
+                },
+                headerBackTitleVisible: false,
+                headerTintColor: 'white',
+                headerTitleAllowFontScaling: true
+            }
+        },
+        Signup: {
+            screen: SignupScreen,
+            navigationOptions: {
+                headerTitle: "Sign Up",
                 headerStyle: {
                     backgroundColor: Colors.darkGrey,
                     height: Platform.OS === 'ios' ? 110 : Header.height,
