@@ -1,5 +1,5 @@
 
-export const UserImage = (event) => {
+export const UserImage = (props) => {
 
    var value = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -16,7 +16,7 @@ export const UserImage = (event) => {
       border-radius: 50%;'>
          <img  style='   
          width: 100%; height: 100%; border-radius: 50%;
-        'src="` + event.event.host.profile + `" /> 
+        'src="` + props.event.host.profile + `" /> 
       </div>
    </body>
 </html> `

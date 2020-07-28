@@ -27,7 +27,7 @@ import Colors from '../../constants/Colors';
 import * as eventActions from '../../store/actions/events';
 import { CustomCallout } from '../../components/CustomCallout';
 import * as iconHelpers from '../../helper/iconHelpers';
-import { getGeoInfo } from '../../helper/geoHelper'; 
+import { getGeoInfo } from '../../helper/geoHelper';
 import CategorySelector from '../../components/CategorySelector';
 
 const { width, height } = Dimensions.get('window')
@@ -47,11 +47,8 @@ const INITIAL_REGION = {
 const MapScreen = props => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const userAccessToken = useSelector(state => state.user.accessToken);
-  const savedEvents = useSelector(state => state.events.savedEvents);
-  const [isEventSaved, setEventSaved] = useState(false);
   const filteredEvents = useSelector(state => state.events.filteredEvents);
-  const [selectedEvent, setSelectedEvent] = useState(new Event);
-  const [selectedDate, setSelectedDate] = useState(new Date().setHours(0,0,0,0));
+  const [selectedDate, setSelectedDate] = useState(new Date().setHours(0, 0, 0, 0));
   const [showCategories, setShowCategories] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
   let mapRef = useRef(null);
@@ -87,15 +84,6 @@ const MapScreen = props => {
   }
 
   const onPinPress = (event) => {
-    setSelectedEvent(event);
-    // Determine if selected event has already been saved
-    var existingIndex = savedEvents.findIndex(myEvent => myEvent.event === event.event)
-    if (existingIndex >= 0) { // check if index exists
-      setEventSaved(true);
-    } else {
-      setEventSaved(false);
-    }
-
     let coords = {
       latitude: parseFloat(event.location.latitude) + mapRef.current.__lastRegion.latitudeDelta * 0.35,
       longitude: parseFloat(event.location.longitude),
@@ -112,6 +100,7 @@ const MapScreen = props => {
     dateToSet.setHours(0, 0, 0, 0);
     console.log("User selected date: " + givenDate)
     setSelectedDate(dateToSet);
+    dispatch(eventActions.setDateFilter(dateToSet));
     setIsRefreshing(true);
     await dispatch(eventActions.getEvents(dateToSet.toISOString(), coordinates.latitude, coordinates.longitude));
     dispatch(eventActions.getEvents(dateToSet.toISOString()));
@@ -205,7 +194,7 @@ const MapScreen = props => {
           <Marker
             coordinate={{ latitude: parseFloat(event.location.latitude), longitude: parseFloat(event.location.longitude) }}
             pinColor="#341f97"
-            key={event.event}
+            key={event.id}
             tracksViewChanges={false}
             onPress={onPinPress.bind(this, event)}
             icon={iconHelpers.iconPicker(event.category)}

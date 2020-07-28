@@ -21,6 +21,16 @@ const startupTextOptions = [
     "Downloading Memes   ",
     "Kicking Neighbors off Wifi   ",
     "Carping the Diem   ",
+    "Dividing by Zero",
+    "Charging Phasers",
+    "Asking for Directions",
+    "Remodulating Plasma Confinement Field",
+    "Fetching Manners",
+    "Loading Cats",
+    "Loading...",
+    "Brewing a Fresh Batch of Joe",
+    "Landing Second Stage",
+    "Buffering Pizza"
 ]
 
 const StartupScreen = props => {
@@ -34,6 +44,7 @@ const StartupScreen = props => {
             await getGeoInfo().then(coords => coordinates = coords);
             var currentDate = new Date()
             currentDate.setHours(0, 0, 0, 0);
+            dispatch(eventActions.setDateFilter(currentDate))
             await dispatch(eventActions.getEvents(currentDate.toISOString(), coordinates.latitude, coordinates.longitude));
             dispatch(eventActions.getEvents(currentDate));
 

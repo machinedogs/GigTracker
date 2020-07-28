@@ -9,6 +9,8 @@ import {
 import InsetShadow from 'react-native-inset-shadow';
 
 import { makeStreetAddress, makeFullAddress } from "../helper/calloutHelper";
+import { stringifyDateShort } from '../helper/createEventHelper';
+
 
 export const EventCard = (props) => {
 	return (
@@ -46,7 +48,7 @@ export const EventCard = (props) => {
 							<Text>{makeFullAddress(props.event.location.address)}</Text>
 					}
 					<Text style={styles.dateTimeText} >
-						{new Date(props.event.date).toLocaleDateString()}{", "}
+						{stringifyDateShort(new Date(props.event.date))}{", "}
 						{new Date(props.event.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
 					</Text>
 				</View>

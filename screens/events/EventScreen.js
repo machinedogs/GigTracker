@@ -10,13 +10,15 @@ import {
 	TouchableOpacity,
 	Image,
 	Platform,
-	Linking
+	Linking,
+	Dimensions
 } from "react-native";
 import { Col, Grid } from "react-native-easy-grid";
 import InsetShadow from "react-native-inset-shadow";
 import ShareComponent from "../../components/ShareComponent";
 import { formatStandardTime } from "../../helper/timeFormater";
 import { makeFullAddress } from "../../helper/calloutHelper";
+import { stringifyDate } from '../../helper/createEventHelper';
 import Colors from "../../constants/Colors";
 import * as eventActions from "../../store/actions/events";
 import * as userActions from "../../store/actions/user";
@@ -33,12 +35,16 @@ const EventScreen = (props) => {
 	const goingEvents = useSelector((state) => state.user.goingEvents);
 	const event = props.navigation.getParam("event");
 	const [numGoing, setNumGoing] = useState(event.attending);
+	const [isEventSaved, setEventSaved] = useState(initialEventSaveState);
+	const [isGoing, setGoing] = useState(initialEventGoingState);
+	const dispatch = useDispatch();
 
 	console.log("this is the event " + JSON.stringify(event));
+
 	// See if user previously saved the event
 	var initialEventSaveState;
 	const existingSavedIndex = savedEvents.findIndex(
-		(myEvent) => myEvent.event === event.event
+		(myEvent) => myEvent.id === event.id
 	);
 	if (existingSavedIndex >= 0) {
 		// check if index exists
@@ -49,7 +55,7 @@ const EventScreen = (props) => {
 	// See if user has already said they are going to an event
 	var initialEventGoingState;
 	const existingGoingIndex = goingEvents.findIndex(
-		(myEvent) => myEvent.event === event.event
+		(myEvent) => myEvent.id === event.id
 	);
 	if (existingGoingIndex >= 0) {
 		// check if index exists
@@ -58,11 +64,7 @@ const EventScreen = (props) => {
 		initialEventGoingState = false;
 	}
 
-	const [isEventSaved, setEventSaved] = useState(initialEventSaveState);
-	const [isGoing, setGoing] = useState(initialEventGoingState);
-
-	const dispatch = useDispatch();
-
+	// Setup deep link for address
 	const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
 	const latLng = `${event.location.latitude},${event.location.longitude}`;
 	const label = `${event.title}`;
@@ -74,7 +76,6 @@ const EventScreen = (props) => {
 	const pressAddress = () => {
 		console.log("pressing address link");
 		Linking.openURL(url);
-		
 	}
 
 	//  for icon color selection
@@ -106,7 +107,7 @@ const EventScreen = (props) => {
 
 	const navigateToGoingList = () => {
 		console.log('dispatching get people going')
-		dispatch(eventActions.getPeopleGoing(event.event, accessToken));
+		dispatch(eventActions.getPeopleGoing(event.id, accessToken));
 		props.navigation.navigate('GoingListScreen');
 	};
 
@@ -136,17 +137,19 @@ const EventScreen = (props) => {
 			<View
 				style={{
 					flexDirection: "row",
-					paddingHorizontal: 15,
-					paddingTop: 10,
-					paddingBottom: 15,
+					padding: 15
 				}}
 			>
-				<Left size={2} style={{ height: "auto", justifyContent: "center" }}>
+				<Left style={{ height: "auto", justifyContent: "center" }}>
 					<TouchableOpacity onPress={pressAddress}>
 						<Text style={{ fontSize: 15, color: "#147EFB" }} >
 							{makeFullAddress(event.location.address)}
 						</Text>
 					</TouchableOpacity>
+					<View style={{ flexDirection: 'row', paddingTop: 8 }}>
+						<Text style={styles.categoryText}>Category: </Text>
+						<Text style={styles.categoryText}>{event.category}</Text>
+					</View>
 				</Left>
 				<Right size={2} style={{ height: "auto" }}>
 					{Platform.OS === "ios" ? (
@@ -163,12 +166,12 @@ const EventScreen = (props) => {
 								{formatStandardTime(event.date)}
 							</Text>
 						)}
-
-					<Text style={{ fontSize: 20, color: "black" }}>
-						{new Date(event.date).toLocaleDateString()}
+					<Text style={{ fontSize: 20, color: "black", textAlign: 'right' }}>
+						{stringifyDate(new Date(event.date))}
 					</Text>
 				</Right>
 			</View>
+
 			<Grid>
 				<Col size={1} style={{ height: "auto", justifyContent: "center" }}>
 					<InsetShadow
@@ -235,9 +238,30 @@ const EventScreen = (props) => {
 						</TouchableOpacity>
 					</Col>
 				) : null}
-				<Col size={1} style={{ width: 75 }}>
+				{<Col size={1} style={{ width: 75 }}>
 					<ShareComponent event={event} />
-				</Col>
+				</Col>}
+				{userName === event.host.name && userName ? (
+					//user is the host and can edit the event
+					<Col>
+						<TouchableOpacity
+							onPress={() => {
+								props.navigation.navigate('CreateEvent', { event: event })
+							}}
+							style={{ marginTop: 10, marginBottom: 10 }}
+						>
+							<Icon
+								name="edit"
+								type="vector-icons"
+								size={40}
+								color={isEventSaved ? "#f5b800" : "black"}
+							/>
+							<Text style={styles.ButtonText}>
+								Edit Event
+							</Text>
+						</TouchableOpacity>
+					</Col>
+				) : null}
 			</Grid>
 		</ScrollView>
 	);
@@ -286,7 +310,11 @@ const styles = StyleSheet.create({
 	goingText: {
 		color: "black",
 		fontSize: 20,
-	}
+	},
+	categoryText: {
+		fontSize: 18,
+		color: 'gray'
+	},
 });
 
 export default EventScreen;

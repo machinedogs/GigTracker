@@ -6,7 +6,7 @@ export const constructEvents = (data) => {
     console.log("constructing events");
     var hosted = data.map((item) => {
         return new Event(
-            item.event,
+            item.id,
             item.title,
             item.description,
             item.date,

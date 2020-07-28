@@ -43,7 +43,8 @@ import {
   combineDateAndTime,
   stringifyDate,
   stringifyTime,
-} from '../../helper/createEventHelper'; 
+  createEventFormIsValid
+} from '../../helper/createEventHelper';
 import Colors from '../../constants/Colors';
 import { Ionicons, Fontisto } from "@expo/vector-icons";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
@@ -141,16 +142,16 @@ const CreateEventScreen = (props) => {
   const saveEvent = async () => {
     console.log(`Category is here.... ${category}`);
     //verify that event is complete
-    if (
-      title &&
-      description &&
-      location &&
-      location.latitude &&
-      location.longitude &&
-      date &&
-      category &&
-      image.length > 3
-    ) {
+    if (createEventFormIsValid(
+      title,
+      description,
+      location.latitude,
+      location.longitude,
+      address,
+      date,
+      category,
+      image.length
+    )) {
       console.log(category);
       const newEvent = new eventBuilder(
         title,
@@ -191,9 +192,11 @@ const CreateEventScreen = (props) => {
       latitude: parseFloat(e.nativeEvent.coordinate.latitude),
       longitude: parseFloat(e.nativeEvent.coordinate.longitude),
     });
-    console.log("lat: " + location.latitude + " long: " + location.longitude);
     // Get address from geocoding api
-    Geocoder.from(parseFloat(location.latitude), parseFloat(location.longitude))
+    Geocoder.from(
+      parseFloat(e.nativeEvent.coordinate.latitude),
+      parseFloat(e.nativeEvent.coordinate.longitude)
+    )
       .then(json => {
         var addressComponent = json.results[0].formatted_address;
         console.log(addressComponent);

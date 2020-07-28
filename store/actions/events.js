@@ -14,6 +14,11 @@ export const REMOVE_FILTER = "REMOVE_FILTER";
 export const CLEAR_FILTERS = "CLEAR_FILTERS";
 export const SET_FILTERS = "SET_FILTERS";
 export const PEOPLE_GOING = "PEOPLE_GOING";
+export const SET_DATE_FILTER = "SET_DATE_FILTER";
+
+export const setDateFilter = (date) => {
+	return { type: SET_DATE_FILTER, date: date }
+}
 
 export const addFilter = (filter) => {
 	return async (dispatch) => {
@@ -83,7 +88,7 @@ export const unsaveEvent = (event) => {
 
 		try {
 			const response = await fetch(
-				`https://gigservice.herokuapp.com/api/v1/host/save_event?auth_token=${accessToken}&event=${event.event}`,
+				`https://gigservice.herokuapp.com/api/v1/host/save_event?auth_token=${accessToken}&event=${event.id}`,
 				requestOptions
 			)
 			const resData = await response.json();
@@ -98,7 +103,7 @@ export const unsaveEvent = (event) => {
 }
 
 export const removeFromSavedEvents = (event) => {
-	return { type: UNSAVE_EVENT, eventId: event.event };
+	return { type: UNSAVE_EVENT, eventId: event.id };
 }
 
 export const saveEvent = (event) => {
@@ -112,7 +117,7 @@ export const saveEvent = (event) => {
 
 		try {
 			const response = await fetch(
-				`https://gigservice.herokuapp.com/api/v1/host/save_event?auth_token=${accessToken}&event=${event.event}`,
+				`https://gigservice.herokuapp.com/api/v1/host/save_event?auth_token=${accessToken}&event=${event.id}`,
 				requestOptions
 			)
 			const resData = await response.json();
@@ -168,7 +173,7 @@ export const GetSavedEvents = (accessToken) => {
 			var filteredEvents = resData.filter((event) => {
 				console.log(`event is here ${event.title}`);
 				if (
-					event.event != null &&
+					event.id != null &&
 					event.title != null &&
 					event.description != null &&
 					event.date != null &&
@@ -176,7 +181,7 @@ export const GetSavedEvents = (accessToken) => {
 					event.image != null &&
 					event.image.length > 8
 				) {
-					console.log(`returns true for event ${event.event}`);
+					console.log(`returns true for event ${event.id}`);
 					return true;
 				} else {
 					return false;
@@ -271,7 +276,7 @@ export const getAllEvents = () => {
 export const createEvent = (event) => {
 	return async (dispatch, getState) => {
 		console.log(event);
-		console.log("IN creating event action");
+		console.log("In creating event action");
 		var myHeaders = new Headers();
 		myHeaders.append("Content-Type", "application/json");
 
@@ -420,7 +425,7 @@ export const GetHostedEvents = (accessToken) => {
 			var filteredEvents = resData.filter((event) => {
 				console.log(`event is here ${event.title}`);
 				if (
-					event.event != null &&
+					event.id != null &&
 					event.title != null &&
 					event.description != null &&
 					event.date != null &&
@@ -428,7 +433,7 @@ export const GetHostedEvents = (accessToken) => {
 					event.image != null &&
 					event.image.length > 8
 				) {
-					console.log(`returns true for event ${event.event}`);
+					console.log(`returns true for event ${event.id}`);
 					return true;
 				} else {
 					return false;
