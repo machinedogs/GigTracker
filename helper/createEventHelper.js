@@ -30,15 +30,20 @@ export const stringifyDate = (date) => {
 	if (mm < 10) {
 		mm = "0" + mm;
 	}
-	var wkday = date.getDay();
-	if (wkday === 0) wkday = "Sunday";
-	else if (wkday === 1) wkday = "Monday";
-	else if (wkday === 2) wkday = "Tuesday";
-	else if (wkday === 3) wkday = "Wednesday";
-	else if (wkday === 4) wkday = "Thursday";
-	else if (wkday === 5) wkday = "Friday";
-	else if (wkday === 6) wkday = "Saturday";
-	return wkday + ", " + mm + "/" + dd + "/" + yyyy;
+	var weekDay = date.getDay();
+
+	switch (weekDay) {
+		case 0:
+			weekDay = "Sunday"; break;
+		case 1: weekDay = "Monday"; break;
+		case 2: weekDay = "Tuesday"; break;
+		case 3: weekDay = "Wednesday"; break;
+		case 4: weekDay = "Thursday"; break;
+		case 5: weekDay = "Friday"; break;
+		case 6: weekDay = "Saturday"; break;
+		default: weekDay = ""; break;
+	}
+	return weekDay + ", " + mm + "/" + dd + "/" + yyyy;
 };
 
 export const stringifyDateShort = (date) => {
@@ -51,15 +56,19 @@ export const stringifyDateShort = (date) => {
 	if (mm < 10) {
 		mm = "0" + mm;
 	}
-	var wkday = date.getDay();
-	if (wkday === 0) wkday = "Sun";
-	else if (wkday === 1) wkday = "Mon";
-	else if (wkday === 2) wkday = "Tues";
-	else if (wkday === 3) wkday = "Wed";
-	else if (wkday === 4) wkday = "Thurs";
-	else if (wkday === 5) wkday = "Fri";
-	else if (wkday === 6) wkday = "Sat";
-	return wkday + ", " + mm + "/" + dd + "/" + yyyy;
+	var weekDay = date.getDay();
+
+	switch (weekDay) {
+		case 0: weekDay = "Sun"; break;
+		case 1: weekDay = "Mon"; break;
+		case 2: weekDay = "Tues"; break;
+		case 3: weekDay = "Wed"; break;
+		case 4: weekDay = "Thurs"; break;
+		case 5: weekDay = "Fri"; break;
+		case 6: weekDay = "Sat"; break;
+		default: weekDay = ""; break;
+	}
+	return weekDay + ", " + mm + "/" + dd + "/" + yyyy;
 };
 
 export const stringifyTime = (time) => {
