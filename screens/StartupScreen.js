@@ -15,9 +15,11 @@ import * as eventActions from '../store/actions/events';
 import { getProfileDataStorage } from '../helper/secureStorageHelpers';
 import { getGeoInfo } from '../helper/geoHelper';
 import Colors from '../constants/Colors';
+import Bolt from '../assets/svg/purple_bolt.svg'
+import Svg from 'react-native-svg';
 
 const startupTextOptions = [
-    "Contacting Orbital Satellite   ",
+    /*"Contacting Orbital Satellite   ",
     "Downloading Memes   ",
     "Kicking Neighbors off Wifi   ",
     "Carping the Diem   ",
@@ -30,12 +32,13 @@ const startupTextOptions = [
     "Loading...",
     "Brewing a Fresh Batch of Joe",
     "Landing Second Stage",
-    "Buffering Pizza"
+    "Buffering Pizza"*/
+    "Loading events near you        "
 ]
 
 const StartupScreen = props => {
     const dispatch = useDispatch();
-    var startupText = startupTextOptions[Math.floor(Math.random() * startupTextOptions.length)]
+    var startupText = "Loading events near you     "/*startupTextOptions[Math.floor(Math.random() * startupTextOptions.length)]*/
 
     useEffect(() => {
         const tryLogin = async () => {
@@ -110,7 +113,8 @@ const StartupScreen = props => {
         <View style={styles.screen} >
             <StatusBar backgroundColor={Colors.darkGrey} barStyle='light-content' />
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Text style={{ color: 'white', fontSize: 17 }}>
+                <Bolt  />
+                <Text style={{ color: 'white', fontSize: 17, fontFamily: 'jack-silver' }}>
                     {startupText}
                 </Text>
                 <ActivityIndicator size='large' color='white' />
