@@ -1,13 +1,20 @@
-import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
 import { Button } from 'native-base';
 
 import Colors from '../../constants/Colors';
+import LoginModal from '../../components/LoginModal';
 
 const SignupLoginScreen = props => {
+    const [isLoginMode, setIsLoginMode] = useState(false);
+
+    const cancelLogin = () => {
+        setIsLoginMode(false);
+    }
 
     return (
         <SafeAreaView style={styles.container}>
+            <LoginModal visible={isLoginMode} onCancel={cancelLogin} />
             <Text style={styles.welcomeText}>
                 {'Stay Current\nwith whats\ngoing on'}
             </Text>
@@ -15,27 +22,22 @@ const SignupLoginScreen = props => {
                 <Button
                     round
                     light
+                    style={styles.createAccountButton}
                     onPress={() => {
                         props.navigation.navigate("PrivacyStatement")
                     }}
-                    style={styles.createAccountButton}
                 >
                     <Text style={styles.createAccountButtonText}>
                         Create Account
 				    </Text>
                 </Button>
             </View>
-            <Text style={styles.loginText}>
-                {'Have an account already? '}
-                <Text
-                    style={styles.loginLinkText}
-                    onPress={() => {
-                        props.navigation.navigate('Home')
-                    }}
-                >
-                    Log in
-                </Text>
-            </Text>
+            <View style={styles.loginTextContainer}>
+                <Text>{'Have an account already? '}</Text>
+                <TouchableOpacity onPress={() => setIsLoginMode(true)}>
+                    <Text style={styles.loginLinkText}>Log in</Text>
+                </TouchableOpacity>
+            </View>
         </SafeAreaView>
     );
 }
@@ -54,7 +56,8 @@ const styles = StyleSheet.create({
         paddingTop: '35%',
         paddingBottom: '10%'
     },
-    loginText: {
+    loginTextContainer: {
+        flexDirection: 'row',
         paddingLeft: '10%',
         paddingBottom: '20%',
         bottom: 0,
