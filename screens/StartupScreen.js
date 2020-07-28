@@ -15,8 +15,7 @@ import * as eventActions from '../store/actions/events';
 import { getProfileDataStorage } from '../helper/secureStorageHelpers';
 import { getGeoInfo } from '../helper/geoHelper';
 import Colors from '../constants/Colors';
-import Bolt from '../assets/svg/purple_bolt.svg'
-import Svg from 'react-native-svg';
+import Bolt from '../assets/svg/purple_bolt.svg';
 
 const startupTextOptions = [
     /*"Contacting Orbital Satellite   ",
@@ -113,7 +112,7 @@ const StartupScreen = props => {
         <View style={styles.screen} >
             <StatusBar backgroundColor={Colors.darkGrey} barStyle='light-content' />
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Bolt  />
+                <Bolt width={120} height={40}  />
                 <Text style={{ color: 'white', fontSize: 17, fontFamily: 'jack-silver' }}>
                     {startupText}
                 </Text>

@@ -7,6 +7,22 @@
       "android"
     ],
     "version": "1.0.4",
+    "packagerOpts": {
+      "config": "metro.config.js",
+      "sourceExts": [
+        "expo.ts",
+        "expo.tsx",
+        "expo.js",
+        "expo.jsx",
+        "ts",
+        "tsx",
+        "js",
+        "jsx",
+        "json",
+        "wasm",
+        "svg"
+      ]
+    },
     "orientation": "portrait",
     "icon": "./assets/current.png",
     "splash": {
