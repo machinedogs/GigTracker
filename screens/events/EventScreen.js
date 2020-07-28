@@ -166,7 +166,6 @@ const EventScreen = (props) => {
 								{formatStandardTime(event.date)}
 							</Text>
 						)}
-
 					<Text style={{ fontSize: 20, color: "black", textAlign: 'right' }}>
 						{stringifyDate(new Date(event.date))}
 					</Text>

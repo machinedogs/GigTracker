@@ -43,6 +43,7 @@ import {
   combineDateAndTime,
   stringifyDate,
   stringifyTime,
+  createEventFormIsValid
 } from '../../helper/createEventHelper';
 import Colors from '../../constants/Colors';
 import { Ionicons, Fontisto } from "@expo/vector-icons";
@@ -141,17 +142,16 @@ const CreateEventScreen = (props) => {
   const saveEvent = async () => {
     console.log(`Category is here.... ${category}`);
     //verify that event is complete
-    if (
-      title &&
-      description &&
-      location &&
-      location.latitude &&
-      location.longitude &&
-      address &&
-      date &&
-      category &&
-      image.length > 3
-    ) {
+    if (createEventFormIsValid(
+      title,
+      description,
+      location.latitude,
+      location.longitude,
+      address,
+      date,
+      category,
+      image.length
+    )) {
       console.log(category);
       const newEvent = new eventBuilder(
         title,

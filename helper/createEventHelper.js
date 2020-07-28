@@ -1,7 +1,7 @@
 import {
 	openImagePickerAsync,
 	getImage,
-  } from "./ImageHelpers";
+} from "./ImageHelpers";
 
 
 export const getCurrentLocation = function (options) {
@@ -77,12 +77,31 @@ export const stringifyTime = (time) => {
 };
 
 export const uploadEventPhoto = async () => {
-    console.log("Inside update event photo ");
-    //Get image from camera library
+	console.log("Inside update event photo ");
+	//Get image from camera library
 	var file = await openImagePickerAsync();
 	//Only do if  file was chosen
-	if(file){
-		var imageUrl =  await getImage(file);
+	if (file) {
+		var imageUrl = await getImage(file);
 		return imageUrl;
 	}
-  };
+};
+
+export const createEventFormIsValid = (
+	title, description, latitude, longitude, address, date, category, imageLength
+) => {
+	if (
+		title &&
+		description &&
+		latitude &&
+		longitude &&
+		address &&
+		date &&
+		category &&
+		imageLength > 3 // The length of the image object type lets us know if a picture was selected
+	) {
+		return (true)
+	} else {
+		return (false)
+	}
+}
