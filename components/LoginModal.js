@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { View, StyleSheet, Modal, Text, StatusBar, SafeAreaView, TouchableOpacity, ActivityIndicator, Alert, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { Button, Icon, Item, Input, } from 'native-base';
@@ -11,6 +11,7 @@ const LoginModal = props => {
     const [password, setPassword] = useState('');
     const [hidePassword, setHidePassword] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState();
     const dispatch = useDispatch();
 
     const onCancelHandler = () => {
@@ -21,20 +22,28 @@ const LoginModal = props => {
 
     const loginHandler = async () => {
         if (email && password) {
+            setError(null);
             setIsLoading(true);
             try {
                 await dispatch(authActions.login(email, password));
                 props.navigateHome();
             } catch (err) {
+                setError(err.message);
                 // set it back to false here because we only need to reload app state if we
                 //  still on the screen.
                 setIsLoading(false);
             }
         } else {
-            Alert.alert('Incomplete Form')
+            Alert.alert('Incomplete Form', 'Please provide your email and password', [{ text: 'Okay' }]);
         }
 
     }
+
+    useEffect(() => {
+        if (error) {
+            Alert.alert('An Error Occurred', error, [{ text: 'Okay' }]);
+        }
+    }, [error]);
 
     return (
         <Modal visible={props.visible} animationType='slide' >
