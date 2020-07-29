@@ -37,7 +37,7 @@ const startupTextOptions = [
 
 const StartupScreen = props => {
     const dispatch = useDispatch();
-    var startupText = "Loading events near you     "/*startupTextOptions[Math.floor(Math.random() * startupTextOptions.length)]*/
+    var startupText = "     Loading events near you     "/*startupTextOptions[Math.floor(Math.random() * startupTextOptions.length)]*/
 
     useEffect(() => {
         const tryLogin = async () => {
@@ -111,12 +111,15 @@ const StartupScreen = props => {
     return (
         <View style={styles.screen} >
             <StatusBar backgroundColor={Colors.darkGrey} barStyle='light-content' />
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Bolt width={120} height={40}  />
-                <Text style={{ color: 'white', fontSize: 17, fontFamily: 'jack-silver' }}>
-                    {startupText}
-                </Text>
+            <View style={{ alignItems: 'center' }}>
+                <Bolt width={300} height={400} />
+                <Text> </Text>
+                <View style={{ flexDirection: 'row' }}>
+
+                    
                 <ActivityIndicator size='large' color='white' />
+                </View>
+
             </View>
         </View>
     );
