@@ -46,7 +46,7 @@ const SignupScreen = props => {
 
     const handleUserNameInput = (userNameInput) => {
         setUserName(userNameInput);
-        // Pass email to the validator to confirm its an email
+        // Pass username to the validator to confirm its a valid username
         console.log(userNameInput)
         console.log(userNameInputValidator(userNameInput))
         setIsUserNameValid(userNameInputValidator(userNameInput));
@@ -62,7 +62,7 @@ const SignupScreen = props => {
 
     const handlePasswordInput = (passwordInput) => {
         setPassword(passwordInput);
-        // Pass email to the validator to confirm its an email
+        // Pass password to the validator to confirm its a valid password
         console.log(passwordInput)
         console.log(passwordInputValidator(passwordInput))
         setPasswordValid(passwordInputValidator(passwordInput));
