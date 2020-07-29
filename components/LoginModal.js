@@ -3,10 +3,12 @@ import { View, TextInput, StyleSheet, Modal, Text, StatusBar, SafeAreaView } fro
 import { Header, Left, Right, Button, Icon, Item, Input, } from 'native-base';
 
 import Colors from '../constants/Colors';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const LoginModal = props => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [hidePassword, setHidePassword] = useState(true);
 
     const onCancelHandler = () => {
         props.onCancel();
@@ -24,7 +26,7 @@ const LoginModal = props => {
                         <Icon name='chevron-down' type='FontAwesome5' onPress={onCancelHandler} style={{ paddingBottom: 10 }} />
                     </View>
                 </View>
-                <View style={{ paddingHorizontal: '10%', paddingTop: 40 }}>
+                <View style={{ paddingHorizontal: '10%', paddingTop: 35 }}>
                     <Text style={styles.inputTitle}>Email</Text>
                     <Item regular style={{ borderColor: Colors.lightGrey, borderRadius: 5 }}>
                         <Input
@@ -41,10 +43,18 @@ const LoginModal = props => {
                             value={password}
                             testID="emailInput"
                             keyboardType='email-address'
-                            secureTextEntry={true}
+                            secureTextEntry={hidePassword}
                         />
+
                     </Item>
-                    <View style={{paddingTop: 35}}>
+                    <TouchableOpacity onPress={() => {setHidePassword(!hidePassword)}}>
+                        <Text style={{ textAlign: 'right', paddingTop: 10, color: Colors.purpleButton }}>
+                            {hidePassword ? 
+                            'Show Password' : 'Hide Password'
+                            }
+                    </Text>
+                    </TouchableOpacity>
+                    <View style={{ paddingTop: 35 }}>
                         <Button
                             round
                             light
