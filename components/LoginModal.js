@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { View, StyleSheet, Modal, Text, StatusBar, SafeAreaView, TouchableOpacity, ActivityIndicator, Alert, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, StyleSheet, Modal, Text, StatusBar, SafeAreaView, TouchableOpacity, ActivityIndicator, Alert, TouchableWithoutFeedback, Keyboard, ScrollView } from 'react-native';
 import { Button, Icon, Item, Input, } from 'native-base';
 
 import Colors from '../constants/Colors';
 import * as authActions from '../store/actions/user';
-import { ScrollView } from 'react-native-gesture-handler';
 
 const LoginModal = props => {
     const [email, setEmail] = useState('');
@@ -66,7 +65,7 @@ const LoginModal = props => {
                             </View>
                         </View>
                         <View style={{ paddingHorizontal: '10%', paddingTop: '5%' }}>
-                            <Item style={{ borderColor: Colors.lightGrey, borderRadius: 5 }}>
+                            <Item>
                                 <Input
                                     onChangeText={(text) => setEmail(text)}
                                     value={email}
@@ -75,7 +74,7 @@ const LoginModal = props => {
                                     placeholder='Email'
                                 />
                             </Item>
-                            <Item style={{ borderColor: Colors.lightGrey, borderRadius: 5 }}>
+                            <Item>
                                 <Input
                                     onChangeText={(text) => setPassword(text)}
                                     value={password}
