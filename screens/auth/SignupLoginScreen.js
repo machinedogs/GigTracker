@@ -12,13 +12,13 @@ const SignupLoginScreen = props => {
         setIsLoginMode(false);
     }
 
-    const loginHandler = () => {
+    const goHomeHandler = () => {
         props.navigation.replace('Home');
     }
 
     return (
         <SafeAreaView style={styles.container}>
-            <LoginModal visible={isLoginMode} onCancel={cancelLoginHandler} onLogin={loginHandler}/>
+            <LoginModal visible={isLoginMode} onCancel={cancelLoginHandler} navigateHome={goHomeHandler}/>
             <Text style={styles.welcomeText}>
                 {'Stay Current\nwith whats\ngoing on'}
             </Text>
