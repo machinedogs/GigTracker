@@ -5,6 +5,7 @@ import { Button, Icon, Item, Input, } from 'native-base';
 
 import Colors from '../constants/Colors';
 import * as authActions from '../store/actions/user';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const LoginModal = props => {
     const [email, setEmail] = useState('');
@@ -51,64 +52,68 @@ const LoginModal = props => {
             <TouchableWithoutFeedback onPress={() => {
                 Keyboard.dismiss();
             }}>
-                <SafeAreaView>
-                    <View style={styles.header}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <View style={{ flex: 1, height: 130, flexGrow: 2 }}>
-                                <Text style={styles.loginText}>Log in{'\n'}to Current</Text>
+                <ScrollView>
+
+                    <SafeAreaView>
+                        <View style={styles.header}>
+                            <View style={{ flexDirection: 'row' }}>
+                                <View style={{ flex: 1, height: 130, flexGrow: 2 }}>
+                                    <Text style={styles.loginText}>Log in{'\n'}to Current</Text>
+                                </View>
+                                <TouchableOpacity onPress={onCancelHandler}>
+                                    <Icon name='chevron-down' type='FontAwesome5' style={{ paddingBottom: 10 }} />
+                                </TouchableOpacity>
                             </View>
-                            <TouchableOpacity onPress={onCancelHandler}>
-                                <Icon name='chevron-down' type='FontAwesome5' style={{ paddingBottom: 10 }} />
+                        </View>
+                        <View style={{ paddingHorizontal: '10%', paddingTop: '5%' }}>
+                            <Item style={{ borderColor: Colors.lightGrey, borderRadius: 5 }}>
+                                <Input
+                                    onChangeText={(text) => setEmail(text)}
+                                    value={email}
+                                    testID="emailInput"
+                                    keyboardType='email-address'
+                                    placeholder='Email'
+                                />
+                            </Item>
+                            <Item style={{ borderColor: Colors.lightGrey, borderRadius: 5 }}>
+                                <Input
+                                    onChangeText={(text) => setPassword(text)}
+                                    value={password}
+                                    testID="emailInput"
+                                    placeholder='Password'
+                                    secureTextEntry={hidePassword}
+                                />
+                            </Item>
+                            <TouchableOpacity onPress={() => { setHidePassword(!hidePassword) }}>
+                                <Text style={{ textAlign: 'right', paddingTop: 10, color: Colors.purpleButton }}>
+                                    {hidePassword ?
+                                        'Show Password' : 'Hide Password'
+                                    }
+                                </Text>
                             </TouchableOpacity>
-                        </View>
-                    </View>
-                    <View style={{ paddingHorizontal: '10%', paddingTop: '5%' }}>
-                        <Item style={{ borderColor: Colors.lightGrey, borderRadius: 5 }}>
-                            <Input
-                                onChangeText={(text) => setEmail(text)}
-                                value={email}
-                                testID="emailInput"
-                                keyboardType='email-address'
-                                placeholder='Email'
-                            />
-                        </Item>
-                        <Item style={{ borderColor: Colors.lightGrey, borderRadius: 5 }}>
-                            <Input
-                                onChangeText={(text) => setPassword(text)}
-                                value={password}
-                                testID="emailInput"
-                                placeholder='Password'
-                                secureTextEntry={hidePassword}
-                            />
-                        </Item>
-                        <TouchableOpacity onPress={() => { setHidePassword(!hidePassword) }}>
-                            <Text style={{ textAlign: 'right', paddingTop: 10, color: Colors.purpleButton }}>
-                                {hidePassword ?
-                                    'Show Password' : 'Hide Password'
-                                }
-                            </Text>
-                        </TouchableOpacity>
-                        <View style={{ paddingTop: 35 }}>
-                            {isLoading ?
-                                (
-                                    <ActivityIndicator size='small' color={Colors.primary} />
-                                ) :
-                                (
-                                    <Button
-                                        round
-                                        light
-                                        style={styles.createAccountButton}
-                                        onPress={loginHandler}
-                                    >
-                                        <Text style={styles.createAccountButtonText}>
-                                            Log in
+                            <View style={{ paddingTop: 35 }}>
+                                {isLoading ?
+                                    (
+                                        <ActivityIndicator size='small' color={Colors.primary} />
+                                    ) :
+                                    (
+                                        <Button
+                                            round
+                                            light
+                                            style={styles.createAccountButton}
+                                            onPress={loginHandler}
+                                        >
+                                            <Text style={styles.createAccountButtonText}>
+                                                Log in
 				                    </Text>
-                                    </Button>
-                                )
-                            }
+                                        </Button>
+                                    )
+                                }
+                            </View>
                         </View>
-                    </View>
-                </SafeAreaView>
+                    </SafeAreaView>
+                </ScrollView>
+
             </TouchableWithoutFeedback>
         </Modal >
     );
