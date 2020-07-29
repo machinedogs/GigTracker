@@ -11,6 +11,8 @@ const LoginModal = props => {
     const [hidePassword, setHidePassword] = useState(true);
 
     const onCancelHandler = () => {
+        setEmail('');
+        setPassword('');
         props.onCancel();
     }
 
@@ -27,41 +29,39 @@ const LoginModal = props => {
                     </View>
                 </View>
                 <View style={{ paddingHorizontal: '10%', paddingTop: 35 }}>
-                    <Text style={styles.inputTitle}>Email</Text>
-                    <Item regular style={{ borderColor: Colors.lightGrey, borderRadius: 5 }}>
+                    <Item style={{ borderColor: Colors.lightGrey, borderRadius: 5 }}>
                         <Input
                             onChangeText={(text) => setEmail(text)}
                             value={email}
                             testID="emailInput"
                             keyboardType='email-address'
+                            placeholder='Email'
                         />
                     </Item>
-                    <Text style={{ ...styles.inputTitle, paddingTop: 20 }}>Password</Text>
-                    <Item regular style={{ borderColor: Colors.lightGrey, borderRadius: 5 }}>
+                    <Item style={{ borderColor: Colors.lightGrey, borderRadius: 5 }}>
                         <Input
                             onChangeText={(text) => setPassword(text)}
                             value={password}
                             testID="emailInput"
                             keyboardType='email-address'
+                            placeholder='Password'
                             secureTextEntry={hidePassword}
                         />
 
                     </Item>
-                    <TouchableOpacity onPress={() => {setHidePassword(!hidePassword)}}>
+                    <TouchableOpacity onPress={() => { setHidePassword(!hidePassword) }}>
                         <Text style={{ textAlign: 'right', paddingTop: 10, color: Colors.purpleButton }}>
-                            {hidePassword ? 
-                            'Show Password' : 'Hide Password'
+                            {hidePassword ?
+                                'Show Password' : 'Hide Password'
                             }
-                    </Text>
+                        </Text>
                     </TouchableOpacity>
                     <View style={{ paddingTop: 35 }}>
                         <Button
                             round
                             light
                             style={styles.createAccountButton}
-                            onPress={() => {
-                                props.navigation.navigate("PrivacyStatement")
-                            }}
+                            onPress={props.onLogin}
                         >
                             <Text style={styles.createAccountButtonText}>
                                 Log in

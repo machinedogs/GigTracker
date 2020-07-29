@@ -8,13 +8,17 @@ import LoginModal from '../../components/LoginModal';
 const SignupLoginScreen = props => {
     const [isLoginMode, setIsLoginMode] = useState(false);
 
-    const cancelLogin = () => {
+    const cancelLoginHandler = () => {
         setIsLoginMode(false);
+    }
+
+    const loginHandler = () => {
+        props.navigation.replace('Home');
     }
 
     return (
         <SafeAreaView style={styles.container}>
-            <LoginModal visible={isLoginMode} onCancel={cancelLogin} />
+            <LoginModal visible={isLoginMode} onCancel={cancelLoginHandler} onLogin={loginHandler}/>
             <Text style={styles.welcomeText}>
                 {'Stay Current\nwith whats\ngoing on'}
             </Text>
