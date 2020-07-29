@@ -112,7 +112,7 @@ const StartupScreen = props => {
         <View style={styles.screen} >
             <StatusBar backgroundColor={Colors.darkGrey} barStyle='light-content' />
             <View style={{ alignItems: 'center' }}>
-                <Bolt width={300} height={400} />
+                <Bolt width={150} height={200} />
                 <Text> </Text>
                 <View style={{ flexDirection: 'row' }}>
 
