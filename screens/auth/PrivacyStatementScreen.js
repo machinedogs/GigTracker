@@ -23,7 +23,7 @@ const PrivacyStatementScreen = props => {
                         <TouchableOpacity>
                             <Text style={{ color: "#147EFB" }}>
                                 full Privacy Policy
-                    </Text>
+                            </Text>
                         </TouchableOpacity>
                     </View>
                     <View style={{ paddingTop: 30 }}>
@@ -37,7 +37,7 @@ const PrivacyStatementScreen = props => {
                         >
                             <Text style={styles.buttonText}>
                                 Agree
-				    </Text>
+				            </Text>
                         </Button>
                     </View>
                     <View style={{ paddingTop: 15, paddingBottom: 30 }}>
@@ -45,13 +45,11 @@ const PrivacyStatementScreen = props => {
                             round
                             light
                             style={styles.disagreeButton}
-                            onPress={() => {
-                                props.navigation.navigate('Home');
-                            }}
+                            onPress={() => {props.navigation.navigate('Home');}}
                         >
                             <Text style={styles.buttonText}>
                                 Disagree
-				    </Text>
+				            </Text>
                         </Button>
                     </View>
                 </View>
