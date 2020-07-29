@@ -1,38 +1,96 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Modal, Text } from 'react-native';
-import { Header, Left, Right } from 'native-base';
+import { View, TextInput, StyleSheet, Modal, Text, StatusBar, SafeAreaView } from 'react-native';
+import { Header, Left, Right, Button, Icon, Item, Input, } from 'native-base';
 
 import Colors from '../constants/Colors';
 
 const LoginModal = props => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
     const onCancelHandler = () => {
         props.onCancel();
     }
 
     return (
-        <Modal visible={props.visible} animationType='slide'>
-            <Header style={{backgroundColor: Colors.darkGrey}}>
-                <Right style={{ paddingLeft: 1, position: 'absolute', left: 10}}>
-                    <Button title='Cancel' color='white' onPress={onCancelHandler} />
-                </Right>
-            </Header>
-            <View style={styles.inputContainer}>
-                <Text style={styles.loginText}>Log in to Current</Text>
-            </View>
-        </Modal>
+        <Modal visible={props.visible} animationType='slide' >
+            <StatusBar barStyle='dark-content' />
+            <SafeAreaView>
+                <View style={styles.header}>
+                    <View style={{ flexDirection: 'row' }}>
+                        <View style={{ flex: 1, height: 130, flexGrow: 2 }}>
+                            <Text style={styles.loginText}>Log in{'\n'}to Current</Text>
+                        </View>
+                        <Icon name='chevron-down' type='FontAwesome5' onPress={onCancelHandler} style={{ paddingBottom: 10 }} />
+                    </View>
+                </View>
+                <View style={{ paddingHorizontal: '10%', paddingTop: 40 }}>
+                    <Text style={styles.inputTitle}>Email</Text>
+                    <Item regular style={{ borderColor: Colors.lightGrey, borderRadius: 5 }}>
+                        <Input
+                            onChangeText={(text) => setEmail(text)}
+                            value={email}
+                            testID="emailInput"
+                            keyboardType='email-address'
+                        />
+                    </Item>
+                    <Text style={{ ...styles.inputTitle, paddingTop: 20 }}>Password</Text>
+                    <Item regular style={{ borderColor: Colors.lightGrey, borderRadius: 5 }}>
+                        <Input
+                            onChangeText={(text) => setPassword(text)}
+                            value={password}
+                            testID="emailInput"
+                            keyboardType='email-address'
+                            secureTextEntry={true}
+                        />
+                    </Item>
+                    <View style={{paddingTop: 35}}>
+                        <Button
+                            round
+                            light
+                            style={styles.createAccountButton}
+                            onPress={() => {
+                                props.navigation.navigate("PrivacyStatement")
+                            }}
+                        >
+                            <Text style={styles.createAccountButtonText}>
+                                Log in
+				        </Text>
+                        </Button>
+                    </View>
+                </View>
+            </SafeAreaView>
+
+        </Modal >
     );
 }
 
 const styles = StyleSheet.create({
-    inputContainer: {
-        flex: 1,
-        paddingTop: '10%',
-        alignItems: 'center'
+    header: {
+        paddingHorizontal: '10%',
+        paddingTop: '10%'
     },
     loginText: {
-        fontSize: 28
-    }
+        fontSize: 48
+    },
+    inputTitle: {
+        color: Colors.purpleBackground,
+        paddingBottom: 5,
+        fontSize: 28,
+    },
+    createAccountButtonText: {
+        fontSize: 20,
+        color: 'white',
+    },
+    createAccountButton: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: Colors.purpleButton,
+        borderRadius: 5,
+    },
+    buttonContainer: {
+        paddingTop: 30
+    },
 });
 
 export default LoginModal;
