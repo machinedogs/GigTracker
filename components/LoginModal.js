@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, Modal, Text, StatusBar, SafeAreaView } from 'react-native';
+import { View, Keyboard, StyleSheet, Modal, Text, StatusBar, SafeAreaView, KeyboardAvoidingView } from 'react-native';
 import { Header, Left, Right, Button, Icon, Item, Input, } from 'native-base';
 
 import Colors from '../constants/Colors';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 const LoginModal = props => {
     const [email, setEmail] = useState('');
@@ -20,55 +20,61 @@ const LoginModal = props => {
         <Modal visible={props.visible} animationType='slide' >
             <StatusBar barStyle='dark-content' />
             <SafeAreaView>
-                <View style={styles.header}>
-                    <View style={{ flexDirection: 'row' }}>
-                        <View style={{ flex: 1, height: 130, flexGrow: 2 }}>
-                            <Text style={styles.loginText}>Log in{'\n'}to Current</Text>
+                <KeyboardAvoidingView behavior="height" >
+                    <TouchableWithoutFeedback onPress={() => {
+                        Keyboard.dismiss();
+                    }}>
+                        <View style={styles.header}>
+                            <View style={{ flexDirection: 'row' }}>
+                                <View style={{ flex: 1, height: 130, flexGrow: 2 }}>
+                                    <Text style={styles.loginText}>Log in{'\n'}to Current</Text>
+                                </View>
+                                <TouchableOpacity onPress={onCancelHandler}>
+                                    <Icon name='chevron-down' type='FontAwesome5' style={{ paddingBottom: 10 }} />
+                                </TouchableOpacity>
+                            </View>
                         </View>
-                        <Icon name='chevron-down' type='FontAwesome5' onPress={onCancelHandler} style={{ paddingBottom: 10 }} />
-                    </View>
-                </View>
-                <View style={{ paddingHorizontal: '10%', paddingTop: 35 }}>
-                    <Item style={{ borderColor: Colors.lightGrey, borderRadius: 5 }}>
-                        <Input
-                            onChangeText={(text) => setEmail(text)}
-                            value={email}
-                            testID="emailInput"
-                            keyboardType='email-address'
-                            placeholder='Email'
-                        />
-                    </Item>
-                    <Item style={{ borderColor: Colors.lightGrey, borderRadius: 5 }}>
-                        <Input
-                            onChangeText={(text) => setPassword(text)}
-                            value={password}
-                            testID="emailInput"
-                            keyboardType='email-address'
-                            placeholder='Password'
-                            secureTextEntry={hidePassword}
-                        />
-
-                    </Item>
-                    <TouchableOpacity onPress={() => { setHidePassword(!hidePassword) }}>
-                        <Text style={{ textAlign: 'right', paddingTop: 10, color: Colors.purpleButton }}>
-                            {hidePassword ?
-                                'Show Password' : 'Hide Password'
-                            }
-                        </Text>
-                    </TouchableOpacity>
-                    <View style={{ paddingTop: 35 }}>
-                        <Button
-                            round
-                            light
-                            style={styles.createAccountButton}
-                            onPress={props.onLogin}
-                        >
-                            <Text style={styles.createAccountButtonText}>
-                                Log in
-				        </Text>
-                        </Button>
-                    </View>
-                </View>
+                        <View style={{ paddingHorizontal: '10%', paddingTop: '5%' }}>
+                            <Item style={{ borderColor: Colors.lightGrey, borderRadius: 5 }}>
+                                <Input
+                                    onChangeText={(text) => setEmail(text)}
+                                    value={email}
+                                    testID="emailInput"
+                                    keyboardType='email-address'
+                                    placeholder='Email'
+                                />
+                            </Item>
+                            <Item style={{ borderColor: Colors.lightGrey, borderRadius: 5 }}>
+                                <Input
+                                    onChangeText={(text) => setPassword(text)}
+                                    value={password}
+                                    testID="emailInput"
+                                    placeholder='Password'
+                                    secureTextEntry={hidePassword}
+                                />
+                            </Item>
+                            <TouchableOpacity onPress={() => { setHidePassword(!hidePassword) }}>
+                                <Text style={{ textAlign: 'right', paddingTop: 10, color: Colors.purpleButton }}>
+                                    {hidePassword ?
+                                        'Show Password' : 'Hide Password'
+                                    }
+                                </Text>
+                            </TouchableOpacity>
+                            <View style={{ paddingTop: 35 }}>
+                                <Button
+                                    round
+                                    light
+                                    style={styles.createAccountButton}
+                                    onPress={props.onLogin}
+                                >
+                                    <Text style={styles.createAccountButtonText}>
+                                        Log in
+				                    </Text>
+                                </Button>
+                            </View>
+                        </View>
+                    </TouchableWithoutFeedback>
+                </KeyboardAvoidingView>
             </SafeAreaView>
 
         </Modal >
@@ -85,7 +91,6 @@ const styles = StyleSheet.create({
     },
     inputTitle: {
         color: Colors.purpleBackground,
-        paddingBottom: 5,
         fontSize: 28,
     },
     createAccountButtonText: {
