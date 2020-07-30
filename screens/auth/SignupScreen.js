@@ -157,7 +157,7 @@ const SignupScreen = props => {
                             <Text style={{ color: passwordValid.caseValid ? '#34c759' : 'grey', paddingTop: 3 }} >
                                 Mixture of uppercase and lowercase
                             </Text>
-                            <Text style={{ color: passwordValid.caseValid ? '#34c759' : 'grey', paddingTop: 3 }} >
+                            <Text style={{ color: passwordValid.numberValid ? '#34c759' : 'grey', paddingTop: 3 }} >
                                 Mixture of letters and numbers
                             </Text>
                         </View>
