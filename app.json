@@ -26,11 +26,10 @@
     "orientation": "portrait",
     "icon": "./assets/current.png",
     "splash": {
-      "image": "./assets/purple_bolt.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#212121",
-      "width": 300,
-      "height": 400
+      "color": "#fff"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
