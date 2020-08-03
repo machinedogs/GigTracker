@@ -2,10 +2,7 @@
   "expo": {
     "name": "GigTracker",
     "slug": "GigTracker",
-    "platforms": [
-      "ios",
-      "android"
-    ],
+    "platforms": ["ios", "android"],
     "version": "1.0.4",
     "packagerOpts": {
       "config": "metro.config.js",
@@ -26,17 +23,19 @@
     "orientation": "portrait",
     "icon": "./assets/current.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "ldpi": "./assets/splash.png",
+      "mdpi": "./assets/splash.png",
+      "hdpi": "./assets/splash.png",
+      "xhdpi": "./assets/splash.png",
+      "xxhdpi": "./assets/splash.png",
+      "xxxhdpi": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#212121",
-      "color": "#fff"
+      "backgroundColor": "#212121"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.machinedogs.current",
