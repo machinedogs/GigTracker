@@ -212,8 +212,7 @@ export const refresh = (email, userName, refreshToken) => {
     };
 };
 
-export const signup = (email, password, username, passwordConfirmation) => {
-    console.log(email, password, username, passwordConfirmation);
+export const signup = (email, password, username) => {
     return async dispatch => {
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
@@ -222,7 +221,7 @@ export const signup = (email, password, username, passwordConfirmation) => {
             "name": username,
             "email": email,
             "password": password,
-            "password_confirmation": passwordConfirmation
+            "password_confirmation": password
         });
 
         var requestOptions = {
@@ -247,9 +246,6 @@ export const signup = (email, password, username, passwordConfirmation) => {
             if (resData.data.password) {
                 let passwordError = '• Password ' + resData.data.password[0]
                 errorArray.push(passwordError)
-            }
-            if (resData.data.password_confirmation) {
-                errorArray.push('• Passwords do not match')
             }
             message = errorArray.join('\n')
 
