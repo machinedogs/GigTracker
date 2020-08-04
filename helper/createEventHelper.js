@@ -33,8 +33,7 @@ export const stringifyDate = (date) => {
 	var weekDay = date.getDay();
 
 	switch (weekDay) {
-		case 0:
-			weekDay = "Sunday"; break;
+		case 0: weekDay = "Sunday"; break;
 		case 1: weekDay = "Monday"; break;
 		case 2: weekDay = "Tuesday"; break;
 		case 3: weekDay = "Wednesday"; break;

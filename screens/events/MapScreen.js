@@ -243,7 +243,7 @@ const MapScreen = props => {
             >
               <TouchableOpacity
                 style={styles.bottomButtonContainer}
-                onPress={() => { props.navigation.navigate('Auth') }}
+                onPress={() => { props.navigation.navigate('SignupLogin') }}
               >
                 <View style={styles.bottomButtonStyle}>
                   <VectorIcon
