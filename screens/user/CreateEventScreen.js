@@ -234,7 +234,15 @@ const CreateEventScreen = (props) => {
                   borderRadius: 3,
                   borderColor: Colors.lightGrey,
                   borderWidth: 1,
-                  padding: 10
+                  padding: 10,
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 1,
+                  },
+                  shadowOpacity: 0.20,
+                  shadowRadius: 1.41,
+                  elevation: 2,
                 }}>
                   <TouchableOpacity onPress={updateEventPhoto}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
@@ -269,7 +277,17 @@ const CreateEventScreen = (props) => {
                   </TouchableOpacity>
                 )}
             </View>
-            <View style={{ paddingBottom: 15, paddingTop: 15 }}>
+            <View style={{
+              paddingBottom: 15, paddingTop: 15, shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 1,
+              },
+              shadowOpacity: 0.1,
+              shadowRadius: 1.00,
+
+              elevation: 1,
+            }}>
               <Text style={styles.text, { color: Colors.purpleBackground, paddingBottom: 5, fontSize: 18 }}>Title</Text>
               <Item regular style={{ borderColor: Colors.lightGrey, borderRadius: 5 }}>
                 <Input
@@ -327,6 +345,15 @@ const CreateEventScreen = (props) => {
                   width: SCREEN_WIDTH * 0.95,
                   justifyContent: "center",
                   alignItems: "center",
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 1,
+                  },
+                  shadowOpacity: 0.18,
+                  shadowRadius: 1.00,
+
+                  elevation: 1,
                 }}
                 style={{ borderColor: Colors.lightGrey, borderWidth: 0.5 }}
                 dropdownStyle={{ borderColor: Colors.lightGrey, height: 300 }}
@@ -588,7 +615,16 @@ const CreateEventScreen = (props) => {
                 backgroundColor: Colors.purpleButton,
                 borderRadius: 5,
                 borderWidth: 2,
-                paddingHorizontal: 10
+                paddingHorizontal: 10,
+                shadowColor: "#000",
+                shadowOffset: {
+                  width: 0,
+                  height: 1,
+                },
+                shadowOpacity: 0.1,
+                shadowRadius: 1.00,
+
+                elevation: 1,
               }}
             >
               <Text
@@ -646,7 +682,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   text: {
-    fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
+    fontFamily: Platform.OS === "ios" ? "Helvetica" : "",
     fontSize: 18,
     color: Colors.purpleBackground,
   },
@@ -658,7 +694,7 @@ const styles = StyleSheet.create({
     //borderColor: "gray",
     //borderWidth: 1,
     width: 350,
-    fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
+    fontFamily: Platform.OS === "ios" ? "Helvetica" : "",
     fontSize: 16,
   },
   descriptionStyle: {
@@ -667,7 +703,7 @@ const styles = StyleSheet.create({
     width: 350,
     height: 120,
     marginTop: 5,
-    fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
+    fontFamily: Platform.OS === "ios" ? "Helvetica" : "",
     fontSize: 16,
   },
   modal: {
@@ -694,6 +730,15 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 1.00,
+
+    elevation: 1,
   },
   centeredView: {
     flex: 1,

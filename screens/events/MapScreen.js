@@ -324,13 +324,27 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH,
     paddingTop: 0,
     paddingBottom: 0,
-    //width: Dimensions.get('window').width,
+    shadowRadius: 8,
+    shadowColor: Colors.yellow,
+    shadowOffset: {
+      width: 4,
+      height: 4
+    }
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     height: Platform.OS === 'ios' ? 110 : '9%',
-    backgroundColor: Colors.darkGrey
+    backgroundColor: Colors.darkGrey,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.37,
+    shadowRadius: 7.49,
+
+    elevation: 12,
   },
   top: {
     backgroundColor: '#2d3436',
@@ -401,7 +415,16 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     backgroundColor: Colors.darkGrey,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.37,
+    shadowRadius: 7.49,
+
+    elevation: 12,
   },
   bottomButtonContainer: {
     paddingBottom: 10
