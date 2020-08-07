@@ -278,35 +278,35 @@ const CreateEventScreen = (props) => {
                   </TouchableOpacity>
                 )}
             </View>
-            <View style={{
-              paddingBottom: 15, paddingTop: 15,
-            }}>
+            <View style={{paddingBottom: 15, paddingTop: 15, }}>
               <Text style={styles.text, { color: Colors.purpleBackground, paddingBottom: 5, fontSize: 18 }}>Title</Text>
-              <Item regular >
-                <InsetShadow shadowOpacity={0.1} shadowRadius={2} containerStyle={styles.titleStyle}>
+              
+                <InsetShadow shadowOpacity={0.18} shadowRadius={2.5} containerStyle={styles.titleStyle}>
                   <Input
                     //style={styles.titleStyle}
                     onChangeText={(text) => setTitle(text)}
                     value={title}
                     testID="titleText"
                     placeholder={"Add a title..."}
+                    maxLength={77}
+                    style={{ fontSize: 18}}
                   />
                 </InsetShadow>
-              </Item>
+              
               <Text></Text>
               <Text style={styles.text, { color: Colors.purpleBackground, paddingBottom: 5, fontSize: 18 }}>Description</Text>
-              <Item regular >
-                <InsetShadow shadowOpacity={0.1} shadowRadius={2}>
+              
+                <InsetShadow shadowOpacity={0.18} shadowRadius={2.5} containerStyle={styles.descriptionStyle} >
                   <Textarea
-                    style={styles.descriptionStyle}
                     onChangeText={(text) => setDescription(text)}
                     value={description}
                     placeholder={"Add a description..."}
                     multiline
                     numberOfLines={5}
+                    style={{fontSize: 17}}
                   />
                 </InsetShadow>
-              </Item>
+              
             </View>
           </View>
           <View
@@ -320,7 +320,7 @@ const CreateEventScreen = (props) => {
               zIndex: 10,
             }}
           >
-            <Text style={styles.text}>Category</Text>
+            <Text style={styles.text, { color: Colors.purpleBackground, paddingBottom: 5, fontSize: 18 }}>Category</Text>
             {Platform.OS === "ios" ? (
               <DropDownPicker
                 items={[
@@ -380,7 +380,7 @@ const CreateEventScreen = (props) => {
           </View>
           <View style={styles.container}>
             <Text> </Text>
-            <Text style={styles.text}>Location</Text>
+            <Text style={styles.text, { color: Colors.purpleBackground, paddingBottom: 5, fontSize: 18 }}>Location</Text>
             <Button
               iconRight
               light
@@ -560,7 +560,7 @@ const CreateEventScreen = (props) => {
             </View>
           )}
           <View style={styles.container}>
-            <Text style={styles.text}>Date</Text>
+            <Text style={styles.text, { color: Colors.purpleBackground, paddingBottom: 5, fontSize: 18 }}>Date</Text>
             <Button iconRight light onPress={toggleShowDate} style={styles.buttonStyle} >
               <Text
                 style={{
@@ -577,7 +577,7 @@ const CreateEventScreen = (props) => {
             <DateTimePicker value={date} mode={"date"} onChange={onChangeDate} />
           )}
           <View style={{ ...styles.container }}>
-            <Text style={styles.text}>Time</Text>
+            <Text style={styles.text, { color: Colors.purpleBackground, paddingBottom: 5, fontSize: 18 }}>Time</Text>
             <Button
               iconRight
               light
