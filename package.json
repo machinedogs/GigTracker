@@ -43,7 +43,7 @@
     "react-native-geocoding": "^0.4.0",
     "react-native-gesture-handler": "~1.6.0",
     "react-native-google-places-autocomplete": "^1.7.1",
-    "react-native-inset-shadow": "^1.0.2",
+    "react-native-inset-shadow": "^1.0.3",
     "react-native-map-clustering": "^3.3.9",
     "react-native-map-link": "^2.7.10",
     "react-native-maps": "^0.26.1",

@@ -33,6 +33,7 @@ import { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import MapView from "react-native-maps";
 import { useDispatch } from "react-redux";
 import Geocoder from 'react-native-geocoding';
+import InsetShadow from 'react-native-inset-shadow'
 
 import MapStyle from "../../constants/MapStyle";
 import eventBuilder from "../../models/createEvent";
@@ -240,7 +241,7 @@ const CreateEventScreen = (props) => {
                     width: 0,
                     height: 1,
                   },
-                  shadowOpacity: 0.20,
+                  shadowOpacity: 0.10,
                   shadowRadius: 1.41,
                   elevation: 2,
                 }}>
@@ -278,37 +279,33 @@ const CreateEventScreen = (props) => {
                 )}
             </View>
             <View style={{
-              paddingBottom: 15, paddingTop: 15, shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 1,
-              },
-              shadowOpacity: 0.1,
-              shadowRadius: 1.00,
-
-              elevation: 1,
+              paddingBottom: 15, paddingTop: 15,
             }}>
               <Text style={styles.text, { color: Colors.purpleBackground, paddingBottom: 5, fontSize: 18 }}>Title</Text>
-              <Item regular style={{ borderColor: Colors.lightGrey, borderRadius: 5 }}>
-                <Input
-                  style={styles.titleStyle}
-                  onChangeText={(text) => setTitle(text)}
-                  value={title}
-                  testID="titleText"
-                  placeholder={"Add a title..."}
-                />
+              <Item regular >
+                <InsetShadow shadowOpacity={0.1} shadowRadius={2} containerStyle={styles.titleStyle}>
+                  <Input
+                    //style={styles.titleStyle}
+                    onChangeText={(text) => setTitle(text)}
+                    value={title}
+                    testID="titleText"
+                    placeholder={"Add a title..."}
+                  />
+                </InsetShadow>
               </Item>
               <Text></Text>
               <Text style={styles.text, { color: Colors.purpleBackground, paddingBottom: 5, fontSize: 18 }}>Description</Text>
-              <Item regular style={{ borderColor: Colors.lightGrey, borderRadius: 5 }}>
-                <Textarea
-                  style={styles.descriptionStyle}
-                  onChangeText={(text) => setDescription(text)}
-                  value={description}
-                  placeholder={"Add a description..."}
-                  multiline
-                  numberOfLines={5}
-                />
+              <Item regular >
+                <InsetShadow shadowOpacity={0.1} shadowRadius={2}>
+                  <Textarea
+                    style={styles.descriptionStyle}
+                    onChangeText={(text) => setDescription(text)}
+                    value={description}
+                    placeholder={"Add a description..."}
+                    multiline
+                    numberOfLines={5}
+                  />
+                </InsetShadow>
               </Item>
             </View>
           </View>
@@ -350,8 +347,8 @@ const CreateEventScreen = (props) => {
                     width: 0,
                     height: 1,
                   },
-                  shadowOpacity: 0.18,
-                  shadowRadius: 1.00,
+                  shadowOpacity: 0.1,
+                  shadowRadius: 0.75,
 
                   elevation: 1,
                 }}
@@ -622,7 +619,7 @@ const CreateEventScreen = (props) => {
                   height: 1,
                 },
                 shadowOpacity: 0.1,
-                shadowRadius: 1.00,
+                shadowRadius: 0.75,
 
                 elevation: 1,
               }}
@@ -693,14 +690,14 @@ const styles = StyleSheet.create({
     height: 50,
     //borderColor: "gray",
     //borderWidth: 1,
-    width: 350,
+    width: '100%',
     fontFamily: Platform.OS === "ios" ? "Helvetica" : "",
     fontSize: 16,
   },
   descriptionStyle: {
     //borderColor: "gray",
     //borderWidth: 1,
-    width: 350,
+    width: '100%',
     height: 120,
     marginTop: 5,
     fontFamily: Platform.OS === "ios" ? "Helvetica" : "",
@@ -736,7 +733,7 @@ const styles = StyleSheet.create({
       height: 1,
     },
     shadowOpacity: 0.1,
-    shadowRadius: 1.00,
+    shadowRadius: 0.75,
 
     elevation: 1,
   },
