@@ -72,14 +72,14 @@ export const stringifyDateShort = (date) => {
 
 export const stringifyTime = (time) => {
 	const str = time.toLocaleTimeString();
-	console.log("local time === " + str);
+	console.log(str)
 	let s1 = "";
 	if (str[1] === ":") {
 		s1 = str.substr(0, 4);
 	} else {
 		s1 = str.substr(0, 5);
 	}
-	const s2 = str.substr(8);
+	const s2 = str.substr(8).trim();
 	const res = s1.concat(" ", s2);
 	return res;
 };
