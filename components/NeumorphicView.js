@@ -22,13 +22,13 @@ const NeumorphicView = (props) => {
 
 const styles = StyleSheet.create({
     container: {
-        borderRadius: 5,
+        borderRadius: 3,
         width: '100%',
         height: 45,
         overflow: 'hidden',
     },
     descriptionStyle: {
-        borderRadius: 5,
+        borderRadius: 3,
         width: '100%',
         height: 150,
         overflow: 'hidden'
