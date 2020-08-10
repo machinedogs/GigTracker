@@ -350,13 +350,27 @@ const CreateEventScreen = (props) => {
                   },
                   shadowOpacity: 0.1,
                   shadowRadius: 0.75,
-
-                  elevation: 1,
                 }}
                 style={{ borderColor: Colors.lightGrey, borderWidth: 0.5 }}
-                dropdownStyle={{ borderColor: Colors.lightGrey, height: 300 }}
-                itemStyle={{ alignItems: "center" }}
+                dropdownStyle={{ borderColor: Colors.lightGrey}}
+                dropDownMaxHeight={220}
+                itemStyle={{ justifyContent: "flex-start" }}
                 onChangeItem={(category) => setCategory(category.value)}
+                labelStyle={{
+                  fontFamily: "Helvetica",
+                  textAlign: 'center',
+                  fontSize: 16
+                }}
+                placeholderStyle={{
+                  textAlign: 'center',
+                  color: 'gray',
+                  fontSize: 16
+                }}
+                searchable={true}
+                searchablePlaceholder="Search for an item"
+                searchablePlaceholderTextColor="gray"
+                seachableStyle={{}}
+                searchableError={() => <Text>Not Found</Text>}
               />
             ) : (
                 <RNPickerSelect
@@ -376,6 +390,7 @@ const CreateEventScreen = (props) => {
                   placeholder={{ label: "Select a category", value: "placeHolder", "key": "placeholder" }}
                   style={{ borderColor: Colors.darkGrey, borderWidth: 0.5, color: "black" }}
                   onValueChange={(value) => setCategory(value)}
+
                 />
               )}
           </View>
