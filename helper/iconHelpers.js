@@ -1,3 +1,5 @@
+import DiscussionPin from '../components/Pins/DisscussionPin'
+
 const PoliticsPin = Platform.OS === 'ios' ?  require('../assets/Pins/ios/politicsPin.png') : require('../assets/Pins/android/PoliticsPin.png');
 const SportsPin = Platform.OS === 'ios' ? require('../assets/Pins/ios/sportsPin.png') : require('../assets/Pins/android/SportsPin.png');
 const MeetingPin = Platform.OS === 'ios' ? require('../assets/Pins/ios/meetingPin.png') : require('../assets/Pins/android/MeetingPin.png');
@@ -6,9 +8,10 @@ const ProtestPin = Platform.OS === 'ios' ? require('../assets/Pins/ios/protestPi
 const PartyPin = Platform.OS === 'ios' ? require('../assets/Pins/ios/partyPin.png') : require('../assets/Pins/android/PartyPin.png');
 const MusicPin = Platform.OS === 'ios' ? require('../assets/Pins/ios/musicPin.png') : require('../assets/Pins/android/MusicPin.png');
 const MarketPin = Platform.OS === 'ios' ? require('../assets/Pins/ios/marketPin.png') : require('../assets/Pins/android/MarketPin.png')
-const DiscussionPin = Platform.OS === 'ios' ? require('../assets/Pins/ios/discussionPin.png') : require('../assets/Pins/android/DiscussionPin.png')
+//const DiscussionPin = Platform.OS === 'ios' ? require('../assets/Pins/ios/discussionPin.png') : require('../assets/Pins/android/DiscussionPin.png')
 const OtherPin = Platform.OS === 'ios' ? require('../assets/Pins/ios/otherPin.png') : require('../assets/Pins/android/OtherPin.png')
 const ArtPin = Platform.OS === 'ios' ? require('../assets/Pins/ios/artPin.png') : require('../assets/Pins/android/ArtPin.png')
+
 
 
 
@@ -46,7 +49,7 @@ export const iconPicker = (category) => {
         console.log("Marker Category: " + category)
     }
     else if (category === "discussion") {
-        pinIcon = DiscussionPin;
+        pinIcon = <DiscussionPin />;
         console.log("Marker Category: " + category)
     }
     else if (category === "other") {
