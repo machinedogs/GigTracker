@@ -34,6 +34,8 @@ import MapView from "react-native-maps";
 import { useDispatch } from "react-redux";
 import Geocoder from 'react-native-geocoding';
 import InsetShadow from 'react-native-inset-shadow'
+import { Ionicons, Fontisto } from "@expo/vector-icons";
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 import MapStyle from "../../constants/MapStyle";
 import eventBuilder from "../../models/createEvent";
@@ -47,8 +49,7 @@ import {
   createEventFormIsValid
 } from '../../helper/createEventHelper';
 import Colors from '../../constants/Colors';
-import { Ionicons, Fontisto } from "@expo/vector-icons";
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import NeumorphicView from '../../components/NeumorphicView';
 
 const { width, height } = Dimensions.get("window");
 const SCREEN_HEIGHT = height;
@@ -228,8 +229,8 @@ const CreateEventScreen = (props) => {
             }}
           >
             <Text style={styles.text}>Image</Text>
-            <View style={{ alignItems: "center", paddingTop: 8 }}>
-              {image == "" ? (
+            <View style={{ alignItems: "center", paddingTop: 8, paddingBottom: 15 }}>
+              {!image ? (
                 <View style={{
                   backgroundColor: "white",
                   borderRadius: 3,
@@ -270,44 +271,44 @@ const CreateEventScreen = (props) => {
                   </TouchableOpacity>
                 </View>
               ) : (
+
                   <TouchableOpacity
                     style={styles.eventImageContainer}
                     onPress={updateEventPhoto}
                   >
-                    <Image source={{ uri: image }} style={styles.eventImage} />
+                    <InsetShadow>
+                      <Image source={{ uri: image }} style={styles.eventImage} />
+                    </InsetShadow>
                   </TouchableOpacity>
                 )}
             </View>
-            <View style={{ paddingBottom: 15, paddingTop: 15, }}>
-              <Text style={styles.text}>Title</Text>
+            <Text style={styles.text}>Title</Text>
+            <NeumorphicView>
+              <Input
+                //style={styles.titleStyle}
+                onChangeText={(text) => setTitle(text)}
+                value={title}
+                testID="titleText"
+                placeholder={"Add a title..."}
+                maxLength={77}
+                style={{ fontSize: 17, paddingLeft: 10, fontFamily: 'Helvetica' }}
+              />
+            </NeumorphicView>
 
-              <InsetShadow shadowOpacity={0.18} shadowRadius={3} containerStyle={styles.titleStyle}>
-                <Input
-                  //style={styles.titleStyle}
-                  onChangeText={(text) => setTitle(text)}
-                  value={title}
-                  testID="titleText"
-                  placeholder={"Add a title..."}
-                  maxLength={77}
-                  style={{ fontSize: 18 }}
-                />
-              </InsetShadow>
+            <Text></Text>
 
-              <Text></Text>
-              <Text style={styles.text}>Description</Text>
-              <InsetShadow shadowOpacity={0.18} shadowRadius={3} elevation={5} containerStyle={styles.descriptionStyle} >
-                <Input
-                  onChangeText={(text) => setDescription(text)}
-                  value={description}
-                  placeholder={"Add a description..."}
-                  multiline
-                  numberOfLines={5}
-                  style={{ fontSize: 17 }}
-                  textAlignVertical='top'
-                />
-              </InsetShadow>
-
-            </View>
+            <Text style={styles.text}>Description</Text>
+            <NeumorphicView textArea>
+              <Input
+                onChangeText={(text) => setDescription(text)}
+                value={description}
+                placeholder={"Add a description..."}
+                multiline
+                numberOfLines={5}
+                style={{ fontSize: 17, paddingLeft: 10, paddingTop: 10, paddingBottom: 10, fontFamily: 'Helvetica' }}
+                textAlignVertical='top'
+              />
+            </NeumorphicView>
           </View>
           <View
             style={{
@@ -602,7 +603,7 @@ const CreateEventScreen = (props) => {
               paddingBottom: 15
             }}
           >
-            <View style={{flex: 1, paddingRight: 20}}>
+            <View style={{ flex: 1, paddingRight: 20 }}>
               <Text
                 style={{
                   color: "gray",
@@ -764,11 +765,8 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   eventImageContainer: {
-    borderColor: Colors.purpleBackground,
-    borderWidth: 3,
     height: 200,
-    marginBottom: 15,
-    width: SCREEN_WIDTH * 0.9,
+    width: '100%',
   },
   eventImage: {
     height: "100%",

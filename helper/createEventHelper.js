@@ -92,6 +92,8 @@ export const uploadEventPhoto = async () => {
 	if (file) {
 		var imageUrl = await getImage(file);
 		return imageUrl;
+	} else {
+		return null;
 	}
 };
 
