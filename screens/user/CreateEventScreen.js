@@ -227,7 +227,7 @@ const CreateEventScreen = (props) => {
               justifyContent: "center",
             }}
           >
-            <Text style={styles.text, { color: Colors.purpleBackground, paddingBottom: 5, fontSize: 18 }}>Image</Text>
+            <Text style={styles.text}>Image</Text>
             <View style={{ alignItems: "center", paddingTop: 8 }}>
               {image == "" ? (
                 <View style={{
@@ -251,7 +251,7 @@ const CreateEventScreen = (props) => {
                         style={{
                           fontSize: 16,
                           textAlign: "center",
-                          fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
+                          fontFamily: "Helvetica",
                           paddingRight: 7,
                         }}
                       >
@@ -278,35 +278,35 @@ const CreateEventScreen = (props) => {
                   </TouchableOpacity>
                 )}
             </View>
-            <View style={{paddingBottom: 15, paddingTop: 15, }}>
-              <Text style={styles.text, { color: Colors.purpleBackground, paddingBottom: 5, fontSize: 18 }}>Title</Text>
-              
-                <InsetShadow shadowOpacity={0.18} shadowRadius={2.5} containerStyle={styles.titleStyle}>
-                  <Input
-                    //style={styles.titleStyle}
-                    onChangeText={(text) => setTitle(text)}
-                    value={title}
-                    testID="titleText"
-                    placeholder={"Add a title..."}
-                    maxLength={77}
-                    style={{ fontSize: 18}}
-                  />
-                </InsetShadow>
-              
+            <View style={{ paddingBottom: 15, paddingTop: 15, }}>
+              <Text style={styles.text}>Title</Text>
+
+              <InsetShadow shadowOpacity={0.18} shadowRadius={3} containerStyle={styles.titleStyle}>
+                <Input
+                  //style={styles.titleStyle}
+                  onChangeText={(text) => setTitle(text)}
+                  value={title}
+                  testID="titleText"
+                  placeholder={"Add a title..."}
+                  maxLength={77}
+                  style={{ fontSize: 18 }}
+                />
+              </InsetShadow>
+
               <Text></Text>
-              <Text style={styles.text, { color: Colors.purpleBackground, paddingBottom: 5, fontSize: 18 }}>Description</Text>
-              
-                <InsetShadow shadowOpacity={0.18} shadowRadius={2.5} containerStyle={styles.descriptionStyle} >
-                  <Textarea
-                    onChangeText={(text) => setDescription(text)}
-                    value={description}
-                    placeholder={"Add a description..."}
-                    multiline
-                    numberOfLines={5}
-                    style={{fontSize: 17}}
-                  />
-                </InsetShadow>
-              
+              <Text style={styles.text}>Description</Text>
+              <InsetShadow shadowOpacity={0.18} shadowRadius={3} elevation={5} containerStyle={styles.descriptionStyle} >
+                <Input
+                  onChangeText={(text) => setDescription(text)}
+                  value={description}
+                  placeholder={"Add a description..."}
+                  multiline
+                  numberOfLines={5}
+                  style={{ fontSize: 17 }}
+                  textAlignVertical='top'
+                />
+              </InsetShadow>
+
             </View>
           </View>
           <View
@@ -320,7 +320,7 @@ const CreateEventScreen = (props) => {
               zIndex: 10,
             }}
           >
-            <Text style={styles.text, { color: Colors.purpleBackground, paddingBottom: 5, fontSize: 18 }}>Category</Text>
+            <Text style={styles.text}>Category</Text>
             {Platform.OS === "ios" ? (
               <DropDownPicker
                 items={[
@@ -380,7 +380,7 @@ const CreateEventScreen = (props) => {
           </View>
           <View style={styles.container}>
             <Text> </Text>
-            <Text style={styles.text, { color: Colors.purpleBackground, paddingBottom: 5, fontSize: 18 }}>Location</Text>
+            <Text style={styles.text}>Location</Text>
             <Button
               iconRight
               light
@@ -389,7 +389,7 @@ const CreateEventScreen = (props) => {
             >
               <Text
                 style={{
-                  fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
+                  fontFamily: "Helvetica",
                   fontSize: 16,
                   paddingHorizontal: 10
                 }}
@@ -515,10 +515,9 @@ const CreateEventScreen = (props) => {
                     style={{
                       color: "white",
                       padding: 10,
-                      paddingHorizontal: 15,
+                      paddingHorizontal: 5,
                       fontSize: 16,
-                      fontFamily:
-                        Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
+                      fontFamily: "Helvetica",
                     }}
                   >
                     or hold pin to drag
@@ -560,12 +559,12 @@ const CreateEventScreen = (props) => {
             </View>
           )}
           <View style={styles.container}>
-            <Text style={styles.text, { color: Colors.purpleBackground, paddingBottom: 5, fontSize: 18 }}>Date</Text>
+            <Text style={styles.text}>Date</Text>
             <Button iconRight light onPress={toggleShowDate} style={styles.buttonStyle} >
               <Text
                 style={{
                   textAlign: "center",
-                  fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
+                  fontFamily: "Helvetica",
                   fontSize: 16
                 }}
               >
@@ -577,14 +576,14 @@ const CreateEventScreen = (props) => {
             <DateTimePicker value={date} mode={"date"} onChange={onChangeDate} />
           )}
           <View style={{ ...styles.container }}>
-            <Text style={styles.text, { color: Colors.purpleBackground, paddingBottom: 5, fontSize: 18 }}>Time</Text>
+            <Text style={styles.text}>Time</Text>
             <Button
               iconRight
               light
               onPress={toggleShowTime}
               style={styles.buttonStyle}
             >
-              <Text style={{ fontSize: 16 }}>{stringifyTime(time)}</Text>
+              <Text style={{ fontFamily: "Helvetica", fontSize: 16 }}>{stringifyTime(time)}</Text>
             </Button>
           </View>
           {showTime && (
@@ -598,12 +597,24 @@ const CreateEventScreen = (props) => {
           <View
             style={{
               flexDirection: "row",
-              alignContent: "center",
-              justifyContent: "center",
+              paddingHorizontal: 15,
               paddingTop: 15,
-              paddingBottom: 10
+              paddingBottom: 15
             }}
           >
+            <View style={{flex: 1, paddingRight: 20}}>
+              <Text
+                style={{
+                  color: "gray",
+                  fontFamily: "Helvetica",
+                }}
+              >
+                Note: If you are hosting this event at a private location, we
+                recommend not using the exact location of your address but somewhere
+                nearby. Include a contact in the description where people can ask
+                you directly for the address.
+              </Text>
+            </View>
             <Button round light onPress={saveEvent}
               style={{
                 borderColor: Colors.purpleButton,
@@ -629,26 +640,14 @@ const CreateEventScreen = (props) => {
                   fontSize: 20,
                   color: "#fff",
                   textAlign: "center",
-                  fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
+                  fontFamily: "Helvetica"
                 }}
               >
                 Submit
 						</Text>
             </Button>
           </View>
-          <View style={styles.container}>
-            <Text
-              style={{
-                color: "gray",
-                fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
-              }}
-            >
-              Note: If you are hosting this event at a private location, we
-              recommend not using the exact location of your address but somewhere
-              nearby. Include a contact in the description where people can ask
-              you directly for the address.
-					</Text>
-          </View>
+
         </SafeAreaView>
       </TouchableWithoutFeedback >
 
@@ -679,9 +678,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   text: {
-    fontFamily: Platform.OS === "ios" ? "Helvetica" : "",
-    fontSize: 18,
+    fontFamily: "Helvetica-Bold",
+    fontSize: 20,
     color: Colors.purpleBackground,
+    paddingBottom: 5
   },
   dropdownStyle: {
     width: 100,
@@ -690,17 +690,21 @@ const styles = StyleSheet.create({
     height: 50,
     //borderColor: "gray",
     //borderWidth: 1,
+    borderRadius: 3,
+    paddingHorizontal: 5,
     width: '100%',
-    fontFamily: Platform.OS === "ios" ? "Helvetica" : "",
+    fontFamily: "Helvetica",
     fontSize: 16,
   },
   descriptionStyle: {
     //borderColor: "gray",
     //borderWidth: 1,
+    borderRadius: 3,
+    paddingHorizontal: 5,
+    paddingVertical: 5,
     width: '100%',
     height: 120,
-    marginTop: 5,
-    fontFamily: Platform.OS === "ios" ? "Helvetica" : "",
+    fontFamily: "Helvetica",
     fontSize: 16,
   },
   modal: {
