@@ -72,7 +72,6 @@ export const stringifyDateShort = (date) => {
 
 export const stringifyTime = (time) => {
 	const str = time.toLocaleTimeString();
-	console.log(str)
 	let s1 = "";
 	if (str[1] === ":") {
 		s1 = str.substr(0, 4);
