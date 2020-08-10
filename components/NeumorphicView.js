@@ -6,13 +6,13 @@ const NeumorphicView = (props) => {
 
     let containerStyle = styles.container
     if (props.textArea) {
-        containerStyle = styles.descriptionStyle
+        containerStyle = styles.textArea
     }
 
     return (
         <View style={containerStyle}>
-            <InsetShadow right={false} bottom={false} shadowOpacity={0.2} shadowRadius={5} shadowOffset={39} elevation={5}>
-                <InsetShadow left={false} top={false} shadowColor='#d5d5d5' shadowRadius={5} shadowOffset={39} elevation={5} >
+            <InsetShadow right={false} bottom={false} shadowOpacity={0.2} shadowRadius={5} shadowOffset={39} elevation={6}>
+                <InsetShadow left={false} top={false} shadowColor='#d5d5d5' shadowRadius={5} shadowOffset={39} elevation={6} >
                     {props.children}
                 </InsetShadow>
             </InsetShadow>
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
         height: 45,
         overflow: 'hidden',
     },
-    descriptionStyle: {
+    textArea: {
         borderRadius: 3,
         width: '100%',
         height: 150,
