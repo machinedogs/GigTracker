@@ -309,24 +309,14 @@ const CreateEventScreen = (props) => {
                 textAlignVertical='top'
               />
             </NeumorphicView>
-          </View>
-          <View
-            style={{
-              justifyContent: "center",
-              //alignItems: "center",
-              alignContent: "center",
-              paddingHorizontal: 10,
-              paddingRight: 15,
-              width: SCREEN_WIDTH,
-              zIndex: 10,
-            }}
-          >
+            <Text></Text>
             <Text style={styles.text}>Category</Text>
-            {Platform.OS === "ios" ? (
-              <DropDownPicker
+            <View style={styles.buttonStyle}>
+              <RNPickerSelect
                 items={[
                   { label: "Music", value: "music" },
                   { label: "Sports", value: "sports" },
+                  { label: "Art", value: "art" },
                   { label: "Meeting", value: "meeting" },
                   { label: "Party", value: "party" },
                   { label: "Protest", value: "protest" },
@@ -336,64 +326,33 @@ const CreateEventScreen = (props) => {
                   { label: "Political", value: "political" },
                   { label: "Other", value: "other" },
                 ]}
-                defaultValue={initCategory}
-                placeholder="Select a category"
-                containerStyle={{
-                  height: 50,
-                  width: SCREEN_WIDTH * 0.95,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  shadowColor: "#000",
-                  shadowOffset: {
-                    width: 0,
-                    height: 1,
+                placeholder={{ label: "Select a category", value: "placeHolder", "key": "placeholder" }}
+                onValueChange={(value) => setCategory(value)}
+                useNativeAndroidPickerStyle
+                style={{
+                  placeholder: {
+                    fontFamily: "Helvetica",
+                    fontSize: 16,
+                    color: 'gray',
+                    textAlign: 'center'
                   },
-                  shadowOpacity: 0.1,
-                  shadowRadius: 0.75,
+                  viewContainer: {
+                    alignItems: Platform.OS === 'ios' ? 'center' : null,
+                  },
+                  inputIOS: {
+                    fontSize: 16,
+                    fontFamily: "Helvetica"
+                  },
+                  inputAndroid: {
+                    fontSize: 16,
+                    fontFamily: "Helvetica",
+                    color: 'black'
+                  }
                 }}
-                style={{ borderColor: Colors.lightGrey, borderWidth: 0.5 }}
-                dropdownStyle={{ borderColor: Colors.lightGrey}}
-                dropDownMaxHeight={220}
-                itemStyle={{ justifyContent: "flex-start" }}
-                onChangeItem={(category) => setCategory(category.value)}
-                labelStyle={{
-                  fontFamily: "Helvetica",
-                  textAlign: 'center',
-                  fontSize: 16
-                }}
-                placeholderStyle={{
-                  textAlign: 'center',
-                  color: 'gray',
-                  fontSize: 16
-                }}
-                searchable={true}
-                searchablePlaceholder="Search for an item"
-                searchablePlaceholderTextColor="gray"
-                seachableStyle={{}}
-                searchableError={() => <Text>Not Found</Text>}
               />
-            ) : (
-                <RNPickerSelect
-                  items={[
-                    { label: "Music", value: "music" },
-                    { label: "Sports", value: "sports" },
-                    { label: "Art", value: "art" },
-                    { label: "Meeting", value: "meeting" },
-                    { label: "Party", value: "party" },
-                    { label: "Protest", value: "protest" },
-                    { label: "Food", value: "food" },
-                    { label: "Market", value: "market" },
-                    { label: "Discussion", value: "discussion" },
-                    { label: "Political", value: "political" },
-                    { label: "Other", value: "other" },
-                  ]}
-                  placeholder={{ label: "Select a category", value: "placeHolder", "key": "placeholder" }}
-                  style={{ borderColor: Colors.darkGrey, borderWidth: 0.5, color: "black" }}
-                  onValueChange={(value) => setCategory(value)}
-
-                />
-              )}
+            </View>
           </View>
+
           <View style={styles.container}>
             <Text> </Text>
             <Text style={styles.text}>Location</Text>
@@ -407,14 +366,13 @@ const CreateEventScreen = (props) => {
                 style={{
                   fontFamily: "Helvetica",
                   fontSize: 16,
-                  paddingHorizontal: 10
+                  paddingHorizontal: 10,
                 }}
                 numberOfLines={2}
                 minimumFontScale={.3}
               >
                 {address ? address : "Select a location"}
               </Text>
-              {address ? null : <Icon name="pin" />}
             </Button>
           </View>
           {showMap && location.latitude && (
@@ -740,10 +698,11 @@ const styles = StyleSheet.create({
   },
   buttonStyle: {
     height: 50,
-    width: '98%',
+    width: '100%',
     color: "black",
     borderColor: Colors.lightGrey,
     borderWidth: 0.5,
+    borderRadius: 3,
     backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
@@ -754,7 +713,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.1,
     shadowRadius: 0.75,
-
     elevation: 1,
   },
   centeredView: {
