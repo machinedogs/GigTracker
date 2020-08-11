@@ -26,10 +26,10 @@ import Event from '../../models/event';
 import Colors from '../../constants/Colors';
 import * as eventActions from '../../store/actions/events';
 import { CustomCallout } from '../../components/CustomCallout';
-import * as iconHelpers from '../../helper/iconHelpers';
+import CustomMarker from '../../components/CustomMarker';
 import { getGeoInfo } from '../../helper/geoHelper';
 import CategorySelector from '../../components/CategorySelector';
-import DisscussionPin from '../../assets/Pins/DisscussionPin.svg'
+
 const { width, height } = Dimensions.get('window')
 const SCREEN_HEIGHT = height
 const SCREEN_WIDTH = width
@@ -197,9 +197,10 @@ const MapScreen = props => {
             key={event.id}
             tracksViewChanges={false}
             onPress={onPinPress.bind(this, event)}
-            //icon={iconHelpers.iconPicker(event.category)}
+          //icon={iconHelpers.iconPicker(event.category)}
           >
-             <DisscussionPin width={50} height={50} />
+
+            <CustomMarker category={event.category} size={50} />
             {Platform.OS === 'ios' ?
               (
                 <Callout
