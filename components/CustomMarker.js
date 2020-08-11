@@ -12,8 +12,9 @@ import MarketPin from '../assets/Pins/MarketPin'
 import React from 'react';
 
 
-/* This function creates the correct custom marker using an SVG file
-takes two props, category and size to display. This is not the best way to do this.
+/* This function creates the correct custom marker using an SVG file,
+then returns this component. It takes two props, category and size to display.
+ This is not the best way to do this if we intend to add more catefories.
 Maybe could use some better design pattern because this wont scale. */
  const CustomMarker = (props) => {
 

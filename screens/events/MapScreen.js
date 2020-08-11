@@ -197,9 +197,8 @@ const MapScreen = props => {
             key={event.id}
             tracksViewChanges={false}
             onPress={onPinPress.bind(this, event)}
-          //icon={iconHelpers.iconPicker(event.category)}
           >
-
+            {/* customMarker needs to be nested within the marker component for our icons to show */}
             <CustomMarker category={event.category} size={50} />
             {Platform.OS === 'ios' ?
               (
