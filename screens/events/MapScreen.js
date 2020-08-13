@@ -26,7 +26,7 @@ import Event from '../../models/event';
 import Colors from '../../constants/Colors';
 import * as eventActions from '../../store/actions/events';
 import { CustomCallout } from '../../components/CustomCallout';
-import CustomMarker from '../../components/CustomMarker';
+import EventPin from '../../components/CustomMarker';
 import { getGeoInfo } from '../../helper/geoHelper';
 import CategorySelector from '../../components/CategorySelector';
 
@@ -199,7 +199,7 @@ const MapScreen = props => {
             onPress={onPinPress.bind(this, event)}
           >
             {/* customMarker needs to be nested within the marker component for our icons to show */}
-            <CustomMarker category={event.category} size={50} />
+            <EventPin category={event.category} size={50} />
             {Platform.OS === 'ios' ?
               (
                 <Callout

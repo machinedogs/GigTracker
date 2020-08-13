@@ -12,49 +12,35 @@ import MarketPin from '../assets/Pins/MarketPin'
 import React from 'react';
 
 
+
+
 /* This function creates the correct custom marker using an SVG file,
-then returns this component. It takes two props, category and size to display.
- This is not the best way to do this if we intend to add more catefories.
-Maybe could use some better design pattern because this wont scale. */
- const CustomMarker = (props) => {
+then returns this component. It takes two props, category and size to display. */
+const EventPin = (props) => {
 
+    // add categories here
+    const categorySVG = {
+        ["music"]: <MusicPin width={props.size} height={props.size} />,
+        ["meeting"]: <MeetingPin width={props.size} height={props.size} />,
+        ["party"]: <PartyPin width={props.size} height={props.size} />,
+        ["political"]: <PoliticsPin width={props.size} height={props.size} />,
+        ["sports"]: <SportsPin width={props.size} height={props.size} />,
+        ["food"]: <FoodPin width={props.size} height={props.size} />,
+        ["protest"]: <ProtestPin width={props.size} height={props.size} />,
+        ["art"]: <ArtPin width={props.size} height={props.size} />,
+        ["market"]: <MarketPin width={props.size} height={props.size} />,
+        ["discussion"]: <DiscussionPin width={props.size} height={props.size} />,
+        ["other"]: <OtherPin width={props.size} height={props.size} />,
+    }
+    const eventPin = categorySVG[props.category];
 
-     if (props.category === "music") {
-        console.log("Marker Category: " + props.category)
-        return (<MusicPin width={props.size} height={props.size} />);
-    } else if (props.category === "meeting") {
-        console.log("Marker Category: " + props.category)
-        return (<MeetingPin width={props.size} height={props.size} />);
-    } else if (props.category === "party") {
-        console.log("Marker Category: " + props.category)
-        return (<PartyPin width={props.size} height={props.size} />);
-    } else if (props.category === "political") {
-        console.log("Marker Category: " + props.category)
-        return (<PoliticsPin width={props.size} height={props.size} />);
-    } else if (props.category === "sports") {
-        console.log("Marker Category: " + props.category)
-        return (<SportsPin width={props.size} height={props.size} />);
-    } else if (props.category === "food") {
-        console.log("Marker Category: " + props.category)
-        return (<FoodPin width={props.size} height={props.size} />);
-    } else if (props.category === "protest") {
-        console.log("Marker Category: " + props.category)
-        return (<ProtestPin width={props.size} height={props.size} />);
-    } else if (props.category === "art") {
-        console.log("Marker Category: " + props.category)
-        return (<ArtPin width={props.size} height={props.size} />);
-    } else if (props.category === "market") {
-        console.log("Marker Category: " + props.category)
-        return (<MarketPin width={props.size} height={props.size} />);
-    } else if (props.category === "discussion") {
-        console.log("Marker Category: " + props.category)
-        return (<DiscussionPin width={props.size} height={props.size} />);
-    } else if (props.category === "other") {
-        console.log("Marker Category: " + props.category)
-        return (<OtherPin width={props.size} height={props.size} />);
+    if (!eventPin) {
+        console.log("CustomMarker.js/EventPin() - No event of type" + props.event + " found");
+        return null
+    };
 
-    } 
+    return (eventPin);
 
 }
 
-export default CustomMarker;
+export default EventPin;
