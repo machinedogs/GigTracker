@@ -423,7 +423,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.37,
     shadowRadius: 7.49,
-
     elevation: 12,
   },
   bottomButtonContainer: {

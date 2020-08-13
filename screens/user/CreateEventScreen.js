@@ -247,7 +247,7 @@ const CreateEventScreen = (props) => {
         <SafeAreaView style={styles.container}>
           <View style={styles.formContainer}>
             {/* Image Input ----------------------------------------------- */}
-            <Text style={styles.text}>Image</Text>
+            <Text style={{...styles.text, paddingBottom: 0}}>Image</Text>
 
             <Text></Text>
 
@@ -351,7 +351,7 @@ const CreateEventScreen = (props) => {
                   placeholder: {
                     fontFamily: "Helvetica",
                     fontSize: 16,
-                    color: 'gray',
+                    color: '#515151',
                     textAlign: 'center'
                   },
                   viewContainer: {
@@ -474,66 +474,67 @@ const CreateEventScreen = (props) => {
                       />
                     </Right>
                   </Header>
-                  <View style={Platform.OS === 'ios' ? ({
-                    backgroundColor: Colors.darkGrey,
-                    alignContent: 'space-evenly',
-                    paddingTop: 8,
-                    paddingHorizontal: 8
-                  }) : ({
-                    backgroundColor: Colors.darkGrey,
-                    paddingTop: 8,
-                    paddingHorizontal: 8
-                  })}>
-                    <GooglePlacesAutocomplete
-                      placeholder={address ? address : 'Search a location...'}
-                      minLength={2}
-                      fetchDetails={true}
-                      suppressDefaultStyles
-                      enablePoweredByContainer={false}
-                      isRowScrollable={false}
-                      onPress={(data, details = null) => {handleLocationSearch(details)}}
-                      query={{
-                        key: 'AIzaSyDhUxyaAFozVK1JkgYjmRjetSn-dN8sK-M',
-                        language: 'en',
-                      }}
-                      styles={{
-                        textInputContainer: {
-                          backgroundColor: Colors.lightBackground,
-                          borderWidth: 0.5,
-                          borderColor: 'gray',
-                          borderRadius: 5,
-                          justifyContent: 'center',
-                          paddingHorizontal: 15,
-                          paddingVertical: Platform.OS === 'ios' ? 0 : 3
-                        },
-                        textInput: {
-                          height: 38,
-                          color: 'black',
-                          fontSize: 16,
-                          fontFamily: "Helvetica",
-                        },
-                        description: {
-                          paddingTop: 5,
-                          paddingBottom: 5,
-                          color: Colors.darkGrey,
-                          backgroundColor: Colors.lightBackground,
-                          paddingLeft: 15,
-                          fontSize: 16,
-                        },
-                      }}
-                    />
-                    <Text
-                      style={{
-                        color: "white",
-                        padding: 10,
-                        paddingHorizontal: 5,
+                  <GooglePlacesAutocomplete
+                    placeholder={address ? address : 'Search a location...'}
+                    minLength={2}
+                    fetchDetails={true}
+                    numberOfLines={1}
+                    suppressDefaultStyles
+                    enablePoweredByContainer={false}
+                    isRowScrollable={true}
+                    onPress={(data, details = null) => { handleLocationSearch(details) }}
+                    query={{
+                      key: 'AIzaSyDhUxyaAFozVK1JkgYjmRjetSn-dN8sK-M',
+                      language: 'en',
+                    }}
+                    styles={{
+                      textInputContainer: {
+                        backgroundColor: 'white',
+                        borderWidth: 1,
+                        borderRadius: 5,
+                        borderColor: 'white',
+                        maxWidth: '87%',
+                        elevation: 5
+                      },
+                      textInput: {
+                        height: 38,
+                        color: 'black',
                         fontSize: 16,
                         fontFamily: "Helvetica",
-                      }}
-                    >
-                      or hold pin to drag
-								</Text>
-                  </View>
+                        paddingHorizontal: 10,
+                        textAlign: 'left'
+                      },
+                      description: {
+                        paddingTop: 10,
+                        color: Colors.darkGrey,
+                        backgroundColor: 'white',
+                        paddingHorizontal: 10,
+                        fontSize: 16,
+                      },
+                      listView: {
+                        backgroundColor: 'white',
+                        borderColor: 'white',
+                        borderRadius: 5,
+                        borderWidth: 1,
+                        marginTop: 5,
+                        elevation: 5
+                      },
+                      container: {
+                        position: 'absolute',
+                        width: '100%',
+                        paddingTop: Platform.OS === 'ios' ? '25%' : '16.6%',
+                        paddingHorizontal: 15,
+                        shadowColor: "#000",
+                        shadowOffset: {
+                          width: 0,
+                          height: 2,
+                        },
+                        shadowOpacity: 0.25,
+                        shadowRadius: 3.84,
+                      }
+                    }}
+                  />
+
                   <MapView
                     initialRegion={{
                       latitude: parseFloat(location.latitude),
@@ -566,7 +567,6 @@ const CreateEventScreen = (props) => {
                       draggable
                       onDragEnd={handlePinDragEnd}
                       onDragStart={handlePinDragStart}
-
                     />
                   </MapView>
                 </Modal>
@@ -648,6 +648,7 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: "Helvetica-Bold",
     fontSize: 20,
+    paddingBottom: 7
   },
   dropdownStyle: {
     width: 100,
