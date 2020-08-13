@@ -13,7 +13,8 @@ import {
   Modal,
   Image,
   Vibration,
-  Keyboard
+  Keyboard,
+  StatusBar
 } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import RNPickerSelect from "react-native-picker-select";
@@ -247,7 +248,7 @@ const CreateEventScreen = (props) => {
         <SafeAreaView style={styles.container}>
           <View style={styles.formContainer}>
             {/* Image Input ----------------------------------------------- */}
-            <Text style={{...styles.text, paddingBottom: 0}}>Image</Text>
+            <Text style={{ ...styles.text, paddingBottom: 0 }}>Image</Text>
 
             <Text></Text>
 
@@ -413,6 +414,7 @@ const CreateEventScreen = (props) => {
                 {stringifyDate(date)}
               </Text>
             </Button>
+            {/* Date Selection Modal  */}
             <DateTimePickerModal
               headerTextIOS="Select Event Date"
               isVisible={showDate}
@@ -435,6 +437,7 @@ const CreateEventScreen = (props) => {
                 {stringifyTime(time)}
               </Text>
             </Button>
+            {/* Time Selection Modal  */}
             <DateTimePickerModal
               headerTextIOS="Select Event Time"
               isVisible={showTime}
@@ -442,6 +445,44 @@ const CreateEventScreen = (props) => {
               onConfirm={onChangeTime}
               onCancel={() => { setShowTime(false) }}
             />
+            <View
+              style={{
+                flexDirection: "row",
+                paddingTop: 15,
+                paddingBottom: 15
+              }}
+            >
+              <View style={{ flex: 1, paddingRight: 20 }}>
+                <Text
+                  style={{
+                    color: "gray",
+                    fontFamily: "Helvetica",
+                  }}
+                >
+                  Note: If you are hosting this event at a private location, we
+                  recommend not using the exact location of your address but somewhere
+                  nearby. Include a contact in the description where people can ask
+                  you directly for the address.
+              </Text>
+              </View>
+              <Button
+                round
+                light
+                onPress={handleSubmitEvent}
+                style={styles.submitButtonStyle}
+              >
+                <Text
+                  style={{
+                    fontSize: 20,
+                    color: "#fff",
+                    textAlign: "center",
+                    fontFamily: "Helvetica"
+                  }}
+                >
+                  Submit
+						</Text>
+              </Button>
+            </View>
           </View>
 
           {showMap && location.latitude ?
@@ -456,15 +497,17 @@ const CreateEventScreen = (props) => {
                   TransitionOutTiming={0}
                   borderRadius={5}
                   propagateSwipe
+                  animated
+                  presentationStyle='fullScreen'
+                  transparent={false}
                 >
-                  <Header style={{ backgroundColor: Colors.darkGrey }}>
+                  <StatusBar backgroundColor={Colors.darkGrey} barStyle='light-content' />
+                  <SafeAreaView style={styles.header}>
                     <Left></Left>
-                    <View>
-                      <Title style={styles.modalHeaderTitle}>
-                        Select Location
-									    </Title>
-                    </View>
-                    <Right>
+                    <Title style={styles.modalHeaderTitle}>
+                      Select Location
+									  </Title>
+                    <Right style={{ paddingRight: 10 }} >
                       <Ionicons
                         name="md-checkmark"
                         color='white'
@@ -473,7 +516,7 @@ const CreateEventScreen = (props) => {
                         style={{ paddingRight: 10 }}
                       />
                     </Right>
-                  </Header>
+                  </SafeAreaView>
                   <GooglePlacesAutocomplete
                     placeholder={address ? address : 'Search a location...'}
                     minLength={2}
@@ -493,7 +536,7 @@ const CreateEventScreen = (props) => {
                         borderWidth: 1,
                         borderRadius: 5,
                         borderColor: 'white',
-                        maxWidth: '87%',
+                        maxWidth: Platform.OS === 'ios' ? '100%' : '87%',
                         elevation: 5
                       },
                       textInput: {
@@ -573,45 +616,6 @@ const CreateEventScreen = (props) => {
               </View>
             ) : null
           }
-          <View
-            style={{
-              flexDirection: "row",
-              paddingHorizontal: 15,
-              paddingTop: 15,
-              paddingBottom: 15
-            }}
-          >
-            <View style={{ flex: 1, paddingRight: 20 }}>
-              <Text
-                style={{
-                  color: "gray",
-                  fontFamily: "Helvetica",
-                }}
-              >
-                Note: If you are hosting this event at a private location, we
-                recommend not using the exact location of your address but somewhere
-                nearby. Include a contact in the description where people can ask
-                you directly for the address.
-              </Text>
-            </View>
-            <Button
-              round
-              light
-              onPress={handleSubmitEvent}
-              style={styles.submitButtonStyle}
-            >
-              <Text
-                style={{
-                  fontSize: 20,
-                  color: "#fff",
-                  textAlign: "center",
-                  fontFamily: "Helvetica"
-                }}
-              >
-                Submit
-						</Text>
-            </Button>
-          </View>
 
         </SafeAreaView>
       </TouchableWithoutFeedback >
@@ -698,6 +702,20 @@ const styles = StyleSheet.create({
     maxHeight: SCREEN_HEIGHT * 0.6,
     backgroundColor: "#2d3436",
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.darkGrey,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.37,
+    shadowRadius: 7.49,
+
+    elevation: 12,
+  },
   mapStyle: {
     flex: 1,
     zIndex: -1,
@@ -779,7 +797,7 @@ const styles = StyleSheet.create({
       width: 0,
       height: 1,
     },
-    shadowOpacity: 0.10,
+    shadowOpacity: 0.50,
     shadowRadius: 1.41,
     elevation: 2,
   }
