@@ -59,7 +59,7 @@ Geocoder.init("AIzaSyBWXt03TgEnGb9oIeTPXgB1dyGtSsG9IAs");
 const CreateEventScreen = (props) => {
   var initEvent = false;
   if (props.navigation.getParam('event', 0)) {
-    console.log('initial event was passed');
+    console.log('CreateEventScreen.js/ - initial event was passed');
     initEvent = props.navigation.getParam('event');
   }
 
@@ -104,7 +104,7 @@ const CreateEventScreen = (props) => {
   useEffect(() => {
     getLocation();
     if (props.navigation.getParam('event', 0)) {
-      console.log('load initital location');
+      console.log('CreateEventScreen.js/useEffect() - setting location to initEvents location: ' + JSON.stringify(initEvent.location) + "\n");
       setLocation(initEvent.location);
     }
   }, []);
@@ -115,8 +115,6 @@ const CreateEventScreen = (props) => {
       latitude: parseFloat(position.coords.latitude),
       longitude: parseFloat(position.coords.longitude),
     };
-    //console.log("Current Location");
-    //console.log(currentLocation);
     if (!location) { setLocation(currentLocation) };
     return currentLocation;
   };
@@ -142,8 +140,7 @@ const CreateEventScreen = (props) => {
     showTime ? setShowTime(false) : setShowTime(true);
   };
 
-  const saveEvent = async () => {
-    console.log(`Category is here.... ${category}`);
+  const handleSubmitEvent = async () => {
     //verify that event is complete
     if (createEventFormIsValid(
       title,
@@ -164,22 +161,22 @@ const CreateEventScreen = (props) => {
         category,
         location.latitude,
         location.longitude,
-        address // if user just drags pin, this is null and that is ok. Server will set it
+        address
       );
       if (initEvent) {
-        //edit existing event
-        console.log(`Dispatching event to be edited: ${newEvent.title}`);
+        // Edit existing event
+        console.log(`CreateEventScreen.js/handleSubmitEvent() - Dispatching editEvent action on: ${newEvent.title}\n`);
         await dispatch(eventActions.editEvent(newEvent, initEvent.id));
         props.navigation.navigate("UserProfile");
       }
       else {
-        //create new event
-        console.log(`Dispatching event to be created ${newEvent.title}`);
+        // Create new event
+        console.log(`CreateEventScreen.js/handleSubmitEvent() - Dispatching createEvent action on: ${newEvent.title}\n`);
         await dispatch(eventActions.createEvent(newEvent));
         props.navigation.navigate("Home");
       }
     } else {
-      //alert that event is not valid
+      // Alert that create event form is not valid
       Alert.alert(
         "Incomplete form",
         "Fill out all event info before submitting.",
@@ -189,7 +186,7 @@ const CreateEventScreen = (props) => {
   };
 
   //Sets location as user moves the marker on map
-  const handleDragEnd = (e) => {
+  const handlePinDragEnd = (e) => {
     setLocation({
       latitude: parseFloat(e.nativeEvent.coordinate.latitude),
       longitude: parseFloat(e.nativeEvent.coordinate.longitude),
@@ -201,14 +198,38 @@ const CreateEventScreen = (props) => {
     )
       .then(json => {
         var addressComponent = json.results[0].formatted_address;
-        console.log(addressComponent);
+        console.log("CreateEventScreen.js/handlePinDragEnd() - received address: " + addressComponent);
         setAddress(addressComponent);
       })
       .catch(error => console.warn(error));
   };
 
+  // Executed when user selects an address from the google autocomplete search
+  const handleLocationSearch = (details) => {
+    console.log("CreateEventScreen.js/handleLocationSearch() - received address:" + details.formatted_address)
+    setAddress(details.formatted_address);
+    const newLat = details.geometry.location.lat;
+    const newLong = details.geometry.location.lng;
+    const newLocation = {
+      "latitude": parseFloat(newLat),
+      "longitude": parseFloat(newLong)
+    }
+    setLocation(newLocation);
+    const newRegion = {
+      latitude: newLat,
+      latitudeDelta: LATITUDE_DELTA,
+      longitude: newLong,
+      longitudeDelta: LONGITUDE_DELTA
+    }
+    mapRef.current.animateToRegion(newRegion, 0);
+  }
+
   const handlePinDragStart = () => {
-    Vibration.vibrate()
+    Vibration.vibrate() // Vibrate phone so user knows they can drag
+  }
+
+  const handleKeyboardDismiss = () => {
+    Keyboard.dismiss();
   }
 
   //This determines whether to show the map or not for user to pick location
@@ -216,22 +237,21 @@ const CreateEventScreen = (props) => {
     showMap ? setShowMap(false) : setShowMap(true);
   };
 
-  console.log(date, time)
-
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: 'white' }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps='always'>
-      <TouchableWithoutFeedback
-        onPress={() => { Keyboard.dismiss(); }}
-      >
+    <ScrollView
+      style={styles.screen}
+      showsVerticalScrollIndicator={false}
+      keyboardShouldPersistTaps='always'
+    >
+      <TouchableWithoutFeedback onPress={handleKeyboardDismiss} >
         <SafeAreaView style={styles.container}>
-          <View
-            style={{
-              padding: 12,
-              justifyContent: "center",
-            }}
-          >
+          <View style={styles.formContainer}>
+            {/* Image Input ----------------------------------------------- */}
             <Text style={styles.text}>Image</Text>
-            <View style={{ alignItems: "center", paddingTop: 8 }}>
+
+            <Text></Text>
+
+            <View style={{ alignItems: "center" }}>
               {!image ? (
                 <View style={styles.uploadImageButton}>
                   <TouchableOpacity onPress={updateEventPhoto}>
@@ -273,6 +293,7 @@ const CreateEventScreen = (props) => {
 
             <Text></Text>
 
+            {/* Title Input ----------------------------------------------- */}
             <Text style={styles.text}>Title</Text>
             <NeumorphicView>
               <Input
@@ -287,7 +308,7 @@ const CreateEventScreen = (props) => {
             </NeumorphicView>
 
             <Text></Text>
-
+            {/* Description Input ----------------------------------------------- */}
             <Text style={styles.text}>Description</Text>
             <NeumorphicView textArea>
               <Input
@@ -300,7 +321,10 @@ const CreateEventScreen = (props) => {
                 textAlignVertical='top'
               />
             </NeumorphicView>
+
             <Text></Text>
+
+            {/* Category Input -------------------------------------------- */}
             <Text style={styles.text}>Category</Text>
             <View style={styles.buttonStyle}>
               <RNPickerSelect
@@ -317,7 +341,10 @@ const CreateEventScreen = (props) => {
                   { label: "Political", value: "political" },
                   { label: "Other", value: "other" },
                 ]}
-                placeholder={{ label: "Select a category", value: "placeHolder", "key": "placeholder" }}
+                placeholder={{
+                  label: "Select a category",
+                  value: "placeHolder", "key": "placeholder"
+                }}
                 onValueChange={(value) => setCategory(value)}
                 useNativeAndroidPickerStyle
                 style={{
@@ -342,7 +369,10 @@ const CreateEventScreen = (props) => {
                 }}
               />
             </View>
+
             <Text> </Text>
+
+            {/* Location Input -------------------------------------------- */}
             <Text style={styles.text}>Location</Text>
             <Button
               iconRight
@@ -362,7 +392,10 @@ const CreateEventScreen = (props) => {
                 {address ? address : "Select a location"}
               </Text>
             </Button>
+
             <Text></Text>
+
+            {/* Date Input ------------------------------------------------ */}
             <Text style={styles.text}>Date</Text>
             <Button
               iconRight
@@ -387,7 +420,10 @@ const CreateEventScreen = (props) => {
               onConfirm={onChangeDate}
               onCancel={() => { setShowDate(false) }}
             />
+
             <Text></Text>
+
+            {/* Time Input ------------------------------------------------ */}
             <Text style={styles.text}>Time</Text>
             <Button
               iconRight
@@ -408,166 +444,135 @@ const CreateEventScreen = (props) => {
             />
           </View>
 
-          {showMap && location.latitude && (
-            <View style={styles.container}>
-              <Modal
-                onSwipeComplete={toggleShowMap}
-                swipeDirection={"down"}
-                backdropOpacity={0.3}
-                onBackdropPress={toggleShowMap}
-                swipeThreshold={100}
-                TransitionOutTiming={0}
-                borderRadius={5}
-                propagateSwipe
-              >
-                <Header style={{ backgroundColor: Colors.darkGrey, }}>
-                  <Left></Left>
-                  <View>
-                    <Title
+          {showMap && location.latitude ?
+            (
+              <View style={styles.container}>
+                <Modal
+                  onSwipeComplete={toggleShowMap}
+                  swipeDirection={"down"}
+                  backdropOpacity={0.3}
+                  onBackdropPress={toggleShowMap}
+                  swipeThreshold={100}
+                  TransitionOutTiming={0}
+                  borderRadius={5}
+                  propagateSwipe
+                >
+                  <Header style={{ backgroundColor: Colors.darkGrey }}>
+                    <Left></Left>
+                    <View>
+                      <Title style={styles.modalHeaderTitle}>
+                        Select Location
+									    </Title>
+                    </View>
+                    <Right>
+                      <Ionicons
+                        name="md-checkmark"
+                        color='white'
+                        onPress={toggleShowMap}
+                        size={28}
+                        style={{ paddingRight: 10 }}
+                      />
+                    </Right>
+                  </Header>
+                  <View style={Platform.OS === 'ios' ? ({
+                    backgroundColor: Colors.darkGrey,
+                    alignContent: 'space-evenly',
+                    paddingTop: 8,
+                    paddingHorizontal: 8
+                  }) : ({
+                    backgroundColor: Colors.darkGrey,
+                    paddingTop: 8,
+                    paddingHorizontal: 8
+                  })}>
+                    <GooglePlacesAutocomplete
+                      placeholder={address ? address : 'Search a location...'}
+                      minLength={2}
+                      fetchDetails={true}
+                      suppressDefaultStyles
+                      enablePoweredByContainer={false}
+                      isRowScrollable={false}
+                      onPress={(data, details = null) => {handleLocationSearch(details)}}
+                      query={{
+                        key: 'AIzaSyDhUxyaAFozVK1JkgYjmRjetSn-dN8sK-M',
+                        language: 'en',
+                      }}
+                      styles={{
+                        textInputContainer: {
+                          backgroundColor: Colors.lightBackground,
+                          borderWidth: 0.5,
+                          borderColor: 'gray',
+                          borderRadius: 5,
+                          justifyContent: 'center',
+                          paddingHorizontal: 15,
+                          paddingVertical: Platform.OS === 'ios' ? 0 : 3
+                        },
+                        textInput: {
+                          height: 38,
+                          color: 'black',
+                          fontSize: 16,
+                          fontFamily: "Helvetica",
+                        },
+                        description: {
+                          paddingTop: 5,
+                          paddingBottom: 5,
+                          color: Colors.darkGrey,
+                          backgroundColor: Colors.lightBackground,
+                          paddingLeft: 15,
+                          fontSize: 16,
+                        },
+                      }}
+                    />
+                    <Text
                       style={{
-                        color: "#fff",
-                        fontFamily: 'jack-silver',
-                        fontSize: 26,
-                        paddingBottom: 10,
-                        paddingTop: Platform.OS === 'ios' ? 0 : 10,
-                        width: SCREEN_WIDTH * 0.75
+                        color: "white",
+                        padding: 10,
+                        paddingHorizontal: 5,
+                        fontSize: 16,
+                        fontFamily: "Helvetica",
                       }}
                     >
-                      Select Location
-									</Title>
-                  </View>
-                  <Right>
-                    <Ionicons
-                      name="md-checkmark"
-                      color='white'
-                      onPress={toggleShowMap}
-                      size={28}
-                      style={{ paddingRight: 10 }}
-                    />
-                  </Right>
-                </Header>
-                <View style={Platform.OS === 'ios' ? ({
-                  //justifyContent: "flex-start",
-                  //height: 350, 
-                  backgroundColor: Colors.darkGrey,
-                  alignContent: 'space-evenly',
-                  paddingTop: 8,
-                  paddingHorizontal: 8
-                }) : ({
-                  //justifyContent: "flex-start",
-                  //height: 175, 
-                  backgroundColor: Colors.darkGrey,
-                  paddingTop: 8,
-                  paddingHorizontal: 8
-                })}>
-                  <GooglePlacesAutocomplete
-                    placeholder={address ? address : 'Search a location...'}
-                    fetchDetails={true}
-                    suppressDefaultStyles
-                    enablePoweredByContainer={false}
-                    isRowScrollable={false}
-                    onPress={(data, details = null) => {
-                      // 'details' is provided when fetchDetails = true
-                      console.log(data, details);
-                      console.log(details.formatted_address)
-                      setAddress(details.formatted_address);
-                      const newLat = details.geometry.location.lat;
-                      const newLong = details.geometry.location.lng;
-                      const newLocation = {
-                        "latitude": parseFloat(newLat),
-                        "longitude": parseFloat(newLong)
-                      }
-                      setLocation(newLocation);
-                      const newRegion = {
-                        latitude: newLat,
-                        latitudeDelta: LATITUDE_DELTA,
-                        longitude: newLong,
-                        longitudeDelta: LONGITUDE_DELTA
-                      }
-                      mapRef.current.animateToRegion(newRegion, 50);
-                    }}
-                    query={{
-                      key: 'AIzaSyDhUxyaAFozVK1JkgYjmRjetSn-dN8sK-M',
-                      language: 'en',
-                    }}
-                    styles={{
-                      textInputContainer: {
-                        backgroundColor: Colors.lightBackground,
-                        borderWidth: 0.5,
-                        borderColor: 'gray',
-                        borderRadius: 5,
-                        justifyContent: 'center',
-                        paddingHorizontal: 15,
-                        paddingVertical: Platform.OS === 'ios' ? 0 : 3
-                      },
-                      textInput: {
-                        marginLeft: 0,
-                        marginRight: 0,
-                        height: 38,
-                        color: 'black',
-                        fontSize: 16,
-                        fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
-                      },
-                      description: {
-                        paddingTop: 5,
-                        paddingBottom: 5,
-                        color: Colors.darkGrey,
-                        backgroundColor: Colors.lightBackground,
-                        paddingLeft: 15,
-                        fontSize: 16,
-                      },
-                    }}
-                  />
-                  <Text
-                    style={{
-                      color: "white",
-                      padding: 10,
-                      paddingHorizontal: 5,
-                      fontSize: 16,
-                      fontFamily: "Helvetica",
-                    }}
-                  >
-                    or hold pin to drag
+                      or hold pin to drag
 								</Text>
-                </View>
-                <MapView
-                  initialRegion={{
-                    latitude: parseFloat(location.latitude),
-                    latitudeDelta: LATITUDE_DELTA,
-                    longitude: parseFloat(location.longitude),
-                    longitudeDelta: LONGITUDE_DELTA,
-                  }}
-                  style={styles.mapStyle}
-                  provider={PROVIDER_GOOGLE}
-                  showsUserLocation
-                  showsMyLocationButton
-                  onPress={() => {
-                    Keyboard.dismiss()
-                  }}
-                  rotateEnabled={false}
-                  showsTraffic={false}
-                  toolbarEnabled={true}
-                  ref={mapRef}
-                  customMapStyle={MapStyle}
-                  clusterColor="#341f97"
-                >
-                  <Marker
-                    ref={markerRef}
-                    coordinate={{
+                  </View>
+                  <MapView
+                    initialRegion={{
                       latitude: parseFloat(location.latitude),
-                      longitude: parseFloat(location.longitude)
+                      latitudeDelta: LATITUDE_DELTA,
+                      longitude: parseFloat(location.longitude),
+                      longitudeDelta: LONGITUDE_DELTA,
                     }}
-                    pinColor="#341f97"
-                    tracksViewChanges={false}
-                    draggable
-                    onDragEnd={handleDragEnd}
-                    onDragStart={handlePinDragStart}
+                    style={styles.mapStyle}
+                    provider={PROVIDER_GOOGLE}
+                    showsUserLocation
+                    showsMyLocationButton
+                    onPress={() => {
+                      Keyboard.dismiss()
+                    }}
+                    rotateEnabled={false}
+                    showsTraffic={false}
+                    toolbarEnabled={true}
+                    ref={mapRef}
+                    customMapStyle={MapStyle}
+                    clusterColor="#341f97"
+                  >
+                    <Marker
+                      ref={markerRef}
+                      coordinate={{
+                        latitude: parseFloat(location.latitude),
+                        longitude: parseFloat(location.longitude)
+                      }}
+                      pinColor="#341f97"
+                      tracksViewChanges={false}
+                      draggable
+                      onDragEnd={handlePinDragEnd}
+                      onDragStart={handlePinDragStart}
 
-                  />
-                </MapView>
-              </Modal>
-            </View>
-          )}
+                    />
+                  </MapView>
+                </Modal>
+              </View>
+            ) : null
+          }
           <View
             style={{
               flexDirection: "row",
@@ -589,24 +594,11 @@ const CreateEventScreen = (props) => {
                 you directly for the address.
               </Text>
             </View>
-            <Button round light onPress={saveEvent}
-              style={{
-                borderColor: Colors.purpleButton,
-                alignContent: "center",
-                justifyContent: "center",
-                backgroundColor: Colors.purpleButton,
-                borderRadius: 5,
-                borderWidth: 2,
-                paddingHorizontal: 10,
-                shadowColor: "#000",
-                shadowOffset: {
-                  width: 0,
-                  height: 1,
-                },
-                shadowOpacity: 0.10,
-                shadowRadius: 1.41,
-                elevation: 2,
-              }}
+            <Button
+              round
+              light
+              onPress={handleSubmitEvent}
+              style={styles.submitButtonStyle}
             >
               <Text
                 style={{
@@ -649,10 +641,13 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "#fff",
   },
+  formContainer: {
+    padding: 12,
+    justifyContent: "center",
+  },
   text: {
     fontFamily: "Helvetica-Bold",
     fontSize: 20,
-    paddingBottom: 5
   },
   dropdownStyle: {
     width: 100,
@@ -749,6 +744,14 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
+  modalHeaderTitle: {
+    color: "#fff",
+    fontFamily: 'jack-silver',
+    fontSize: 26,
+    paddingBottom: 10,
+    paddingTop: Platform.OS === 'ios' ? 0 : 10,
+    width: SCREEN_WIDTH * 0.75
+  },
   eventImageContainer: {
     height: 200,
     width: '100%',
@@ -761,6 +764,23 @@ const styles = StyleSheet.create({
     height: 200,
     marginBottom: 15,
     width: SCREEN_WIDTH * 0.9,
+  },
+  submitButtonStyle: {
+    borderColor: Colors.purpleButton,
+    alignContent: "center",
+    justifyContent: "center",
+    backgroundColor: Colors.purpleButton,
+    borderRadius: 5,
+    borderWidth: 2,
+    paddingHorizontal: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.10,
+    shadowRadius: 1.41,
+    elevation: 2,
   }
 });
 
