@@ -271,20 +271,10 @@ const CreateEventScreen = (props) => {
                             fontSize: 16,
                             textAlign: "center",
                             fontFamily: "Helvetica",
-                            paddingRight: 7,
                           }}
                         >
                           {"Upload Image"}
                         </Text>
-                        <Fontisto
-                          name="picture"
-                          color="black"
-                          size={28}
-                          style={{
-                            alignContent: 'center',
-                            justifyContent: 'center'
-                          }}
-                        />
                       </View>
                     </TouchableOpacity>
                   </View>
