@@ -16,7 +16,7 @@ export const combineDateAndTime = (date, time) => {
 	d = d.substr(0, 10);
 	t = t.substr(10);
 	const dateTime = d.concat(t);
-	console.log(dateTime);
+	console.log("Created date and time: " + dateTime);
 	return dateTime;
 };
 
@@ -72,14 +72,13 @@ export const stringifyDateShort = (date) => {
 
 export const stringifyTime = (time) => {
 	const str = time.toLocaleTimeString();
-	console.log("local time === " + str);
 	let s1 = "";
 	if (str[1] === ":") {
 		s1 = str.substr(0, 4);
 	} else {
 		s1 = str.substr(0, 5);
 	}
-	const s2 = str.substr(8);
+	const s2 = str.substr(8).trim();
 	const res = s1.concat(" ", s2);
 	return res;
 };
@@ -92,11 +91,13 @@ export const uploadEventPhoto = async () => {
 	if (file) {
 		var imageUrl = await getImage(file);
 		return imageUrl;
+	} else {
+		return null;
 	}
 };
 
 export const createEventFormIsValid = (
-	title, description, latitude, longitude, address, date, category, imageLength
+	title, description, latitude, longitude, address, date, time, category, imageLength
 ) => {
 	if (
 		title &&
@@ -105,6 +106,7 @@ export const createEventFormIsValid = (
 		longitude &&
 		address &&
 		date &&
+		time &&
 		category &&
 		imageLength > 3 // The length of the image object type lets us know if a picture was selected
 	) {

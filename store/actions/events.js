@@ -275,8 +275,8 @@ export const getAllEvents = () => {
 
 export const createEvent = (event) => {
 	return async (dispatch, getState) => {
-		console.log(event);
 		console.log("In creating event action");
+		console.log(event.date);
 		var myHeaders = new Headers();
 		myHeaders.append("Content-Type", "application/json");
 
