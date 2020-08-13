@@ -67,7 +67,7 @@ const CreateEventScreen = (props) => {
   //Initial states of event screen
   const initTitle = initEvent ? initEvent.title : null;
   const initDescription = initEvent ? initEvent.description : null;
-  const initCategory = initEvent ? initEvent.category : null;
+  const initCategory = initEvent ? initEvent.category : "Select a Category";
   const initDate = initEvent ? new Date(initEvent.date) : new Date();
   const initTime = initEvent ? new Date(initEvent.date) : new Date();
   const initImage = initEvent ? initEvent.image : null;
@@ -343,7 +343,7 @@ const CreateEventScreen = (props) => {
                   { label: "Other", value: "other" },
                 ]}
                 placeholder={{
-                  label: "Select a category",
+                  label: category,
                   value: "placeHolder", "key": "placeholder"
                 }}
                 onValueChange={(value) => setCategory(value)}
@@ -352,7 +352,7 @@ const CreateEventScreen = (props) => {
                   placeholder: {
                     fontFamily: "Helvetica",
                     fontSize: 16,
-                    color: '#515151',
+                    color: 'black',
                     textAlign: 'center'
                   },
                   viewContainer: {
@@ -463,7 +463,7 @@ const CreateEventScreen = (props) => {
                   recommend not using the exact location of your address but somewhere
                   nearby. Include a contact in the description where people can ask
                   you directly for the address.
-              </Text>
+                </Text>
               </View>
               <Button
                 round
@@ -480,7 +480,7 @@ const CreateEventScreen = (props) => {
                   }}
                 >
                   Submit
-						</Text>
+						    </Text>
               </Button>
             </View>
           </View>
