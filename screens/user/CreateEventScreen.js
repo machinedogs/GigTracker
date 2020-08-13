@@ -14,23 +14,22 @@ import {
   Image,
   Vibration,
   Keyboard,
-  StatusBar
+  StatusBar,
+  ActivityIndicator
 } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import RNPickerSelect from "react-native-picker-select";
 import {
   Input,
   Button,
-  Header,
   Left,
   Right,
   Title,
 } from "native-base";
-import { PROVIDER_GOOGLE, Marker } from "react-native-maps";
-import MapView from "react-native-maps";
+import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { useDispatch } from "react-redux";
 import Geocoder from 'react-native-geocoding';
-import InsetShadow from 'react-native-inset-shadow'
+import InsetShadow from 'react-native-inset-shadow';
 import { Ionicons, Fontisto } from "@expo/vector-icons";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
@@ -58,7 +57,7 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 Geocoder.init("AIzaSyBWXt03TgEnGb9oIeTPXgB1dyGtSsG9IAs");
 
 const CreateEventScreen = (props) => {
-  var initEvent = false;
+  let initEvent = false;
   if (props.navigation.getParam('event', 0)) {
     console.log('CreateEventScreen.js/ - initial event was passed');
     initEvent = props.navigation.getParam('event');
@@ -86,6 +85,7 @@ const CreateEventScreen = (props) => {
   const [time, setTime] = useState(initTime);
   const [category, setCategory] = useState(initCategory);
   const [image, setImage] = useState(initImage);
+  const [isImageUploading, setIsImageUploading] = useState(false);
 
   const [showDate, setShowDate] = useState(false);
   const [showTime, setShowTime] = useState(false);
@@ -98,8 +98,10 @@ const CreateEventScreen = (props) => {
 
   //Updates event photo
   const updateEventPhoto = async () => {
-    var eventPhotoRatio = [4, 3];
+    let eventPhotoRatio = [4, 3];
+    setIsImageUploading(true);
     setImage(await uploadEventPhoto(eventPhotoRatio));
+    setIsImageUploading(false);
   };
 
   useEffect(() => {
@@ -254,33 +256,43 @@ const CreateEventScreen = (props) => {
 
             <View style={{ alignItems: "center" }}>
               {!image ? (
-                <View style={styles.uploadImageButton}>
-                  <TouchableOpacity onPress={updateEventPhoto}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                      <Text
+                !isImageUploading ? (
+                  <View style={styles.uploadImageButton}>
+                    <TouchableOpacity onPress={updateEventPhoto}>
+                      <View
                         style={{
-                          fontSize: 16,
-                          textAlign: "center",
-                          fontFamily: "Helvetica",
-                          paddingRight: 7,
-                        }}
-                      >
-                        {"Upload Image"}
-                      </Text>
-                      <Fontisto
-                        name="picture"
-                        color="black"
-                        size={28}
-                        style={{
-                          alignContent: 'center',
+                          flexDirection: 'row',
+                          alignItems: 'center',
                           justifyContent: 'center'
                         }}
-                      />
-                    </View>
-                  </TouchableOpacity>
-                </View>
-              ) : (
+                      >
+                        <Text
+                          style={{
+                            fontSize: 16,
+                            textAlign: "center",
+                            fontFamily: "Helvetica",
+                            paddingRight: 7,
+                          }}
+                        >
+                          {"Upload Image"}
+                        </Text>
+                        <Fontisto
+                          name="picture"
+                          color="black"
+                          size={28}
+                          style={{
+                            alignContent: 'center',
+                            justifyContent: 'center'
+                          }}
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                ) : (
+                    <ActivityIndicator color='black' />
+                  )
 
+              ) : (
                   <TouchableOpacity
                     style={styles.eventImageContainer}
                     onPress={updateEventPhoto}
@@ -289,7 +301,8 @@ const CreateEventScreen = (props) => {
                       <Image source={{ uri: image }} style={styles.eventImage} />
                     </InsetShadow>
                   </TouchableOpacity>
-                )}
+                )
+              }
             </View>
 
             <Text></Text>
@@ -589,9 +602,7 @@ const CreateEventScreen = (props) => {
                     provider={PROVIDER_GOOGLE}
                     showsUserLocation
                     showsMyLocationButton
-                    onPress={() => {
-                      Keyboard.dismiss()
-                    }}
+                    onPress={handleKeyboardDismiss}
                     rotateEnabled={false}
                     showsTraffic={false}
                     toolbarEnabled={true}

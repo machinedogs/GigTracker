@@ -284,7 +284,6 @@ const MapScreen = props => {
                   />
                 </View>
               </TouchableOpacity>
-
               {isRefreshing ? // if refreshing events, show activity indicator
                 (
                   <View style={styles.bottomButtonContainer}>
@@ -405,7 +404,7 @@ const styles = StyleSheet.create({
 
   },
   text: {
-    fontFamily: Platform.OS === "ios" ? "Sinhala Sangam MN" : "",
+    fontFamily: "Helvetica",
     fontSize: 18,
     color: '#fff',
   },
