@@ -16,7 +16,7 @@ export const combineDateAndTime = (date, time) => {
 	d = d.substr(0, 10);
 	t = t.substr(10);
 	const dateTime = d.concat(t);
-	console.log(dateTime);
+	console.log("Created date and time: " + dateTime);
 	return dateTime;
 };
 
@@ -97,7 +97,7 @@ export const uploadEventPhoto = async () => {
 };
 
 export const createEventFormIsValid = (
-	title, description, latitude, longitude, address, date, category, imageLength
+	title, description, latitude, longitude, address, date, time, category, imageLength
 ) => {
 	if (
 		title &&
@@ -106,6 +106,7 @@ export const createEventFormIsValid = (
 		longitude &&
 		address &&
 		date &&
+		time &&
 		category &&
 		imageLength > 3 // The length of the image object type lets us know if a picture was selected
 	) {

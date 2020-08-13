@@ -15,15 +15,11 @@ import {
   Vibration,
   Keyboard
 } from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import DropDownPicker from "react-native-dropdown-picker";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import RNPickerSelect from "react-native-picker-select";
 import {
-  Textarea,
   Input,
-  Item,
   Button,
-  Icon,
   Header,
   Left,
   Right,
@@ -68,14 +64,17 @@ const CreateEventScreen = (props) => {
   }
 
   //Initial states of event screen
-  const initTitle = initEvent ? initEvent.title : "";
-  const initDescription = initEvent ? initEvent.description : "";
-  const initCategory = initEvent ? initEvent.category : "";
+  const initTitle = initEvent ? initEvent.title : null;
+  const initDescription = initEvent ? initEvent.description : null;
+  const initCategory = initEvent ? initEvent.category : null;
   const initDate = initEvent ? new Date(initEvent.date) : new Date();
   const initTime = initEvent ? new Date(initEvent.date) : new Date();
-  const initImage = initEvent ? initEvent.image : "";
-  const initLocation = initEvent ? { latitude: parseFloat(initEvent.location.latitude), longitude: parseFloat(initEvent.location.latitude) } : "";
-  const initAddress = initEvent ? initEvent.location.address : "";
+  const initImage = initEvent ? initEvent.image : null;
+  const initLocation = initEvent ? {
+    latitude: parseFloat(initEvent.location.latitude),
+    longitude: parseFloat(initEvent.location.latitude)
+  } : null;
+  const initAddress = initEvent ? initEvent.location.address : null;
 
   //These states updated as user interacts with the screen
   const [title, setTitle] = useState(initTitle);
@@ -121,16 +120,18 @@ const CreateEventScreen = (props) => {
     if (!location) { setLocation(currentLocation) };
     return currentLocation;
   };
-  const onChangeDate = (e, selectedDate) => {
+  const onChangeDate = (selectedDate) => {
     const currentDate = selectedDate || date;
     setShowDate(Platform.OS === "ios");
     setDate(currentDate);
+    toggleShowDate();
   };
 
-  const onChangeTime = (e, selectedTime) => {
+  const onChangeTime = (selectedTime) => {
     const currentTime = selectedTime || time;
     setShowTime(Platform.OS === "ios");
     setTime(currentTime);
+    toggleShowTime();
   };
 
   const toggleShowDate = () => {
@@ -151,10 +152,10 @@ const CreateEventScreen = (props) => {
       location.longitude,
       address,
       date,
+      time,
       category,
       image.length
     )) {
-      console.log(category);
       const newEvent = new eventBuilder(
         title,
         description,
@@ -173,7 +174,7 @@ const CreateEventScreen = (props) => {
       }
       else {
         //create new event
-        console.log(`Dispatching event ${newEvent.title}`);
+        console.log(`Dispatching event to be created ${newEvent.title}`);
         await dispatch(eventActions.createEvent(newEvent));
         props.navigation.navigate("Home");
       }
@@ -184,7 +185,6 @@ const CreateEventScreen = (props) => {
         "Fill out all event info before submitting.",
         [{ text: "OK" }]
       );
-      console.log(`Category is here.... ${category} and ${category.value}`);
     }
   };
 
@@ -207,7 +207,7 @@ const CreateEventScreen = (props) => {
       .catch(error => console.warn(error));
   };
 
-  const handleDragStart = () => {
+  const handlePinDragStart = () => {
     Vibration.vibrate()
   }
 
@@ -215,6 +215,8 @@ const CreateEventScreen = (props) => {
   const toggleShowMap = () => {
     showMap ? setShowMap(false) : setShowMap(true);
   };
+
+  console.log(date, time)
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: 'white' }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps='always'>
@@ -229,23 +231,9 @@ const CreateEventScreen = (props) => {
             }}
           >
             <Text style={styles.text}>Image</Text>
-            <View style={{ alignItems: "center", paddingTop: 8, paddingBottom: 15 }}>
+            <View style={{ alignItems: "center", paddingTop: 8 }}>
               {!image ? (
-                <View style={{
-                  backgroundColor: "white",
-                  borderRadius: 3,
-                  borderColor: Colors.lightGrey,
-                  borderWidth: 1,
-                  padding: 10,
-                  shadowColor: "#000",
-                  shadowOffset: {
-                    width: 0,
-                    height: 1,
-                  },
-                  shadowOpacity: 0.10,
-                  shadowRadius: 1.41,
-                  elevation: 2,
-                }}>
+                <View style={styles.uploadImageButton}>
                   <TouchableOpacity onPress={updateEventPhoto}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                       <Text
@@ -282,6 +270,9 @@ const CreateEventScreen = (props) => {
                   </TouchableOpacity>
                 )}
             </View>
+
+            <Text></Text>
+
             <Text style={styles.text}>Title</Text>
             <NeumorphicView>
               <Input
@@ -351,9 +342,6 @@ const CreateEventScreen = (props) => {
                 }}
               />
             </View>
-          </View>
-
-          <View style={styles.container}>
             <Text> </Text>
             <Text style={styles.text}>Location</Text>
             <Button
@@ -374,7 +362,52 @@ const CreateEventScreen = (props) => {
                 {address ? address : "Select a location"}
               </Text>
             </Button>
+            <Text></Text>
+            <Text style={styles.text}>Date</Text>
+            <Button
+              iconRight
+              light
+              onPress={toggleShowDate}
+              style={styles.buttonStyle}
+            >
+              <Text
+                style={{
+                  textAlign: "center",
+                  fontFamily: "Helvetica",
+                  fontSize: 16
+                }}
+              >
+                {stringifyDate(date)}
+              </Text>
+            </Button>
+            <DateTimePickerModal
+              headerTextIOS="Select Event Date"
+              isVisible={showDate}
+              mode="date"
+              onConfirm={onChangeDate}
+              onCancel={() => { setShowDate(false) }}
+            />
+            <Text></Text>
+            <Text style={styles.text}>Time</Text>
+            <Button
+              iconRight
+              light
+              onPress={toggleShowTime}
+              style={styles.buttonStyle}
+            >
+              <Text style={{ fontFamily: "Helvetica", fontSize: 16 }}>
+                {stringifyTime(time)}
+              </Text>
+            </Button>
+            <DateTimePickerModal
+              headerTextIOS="Select Event Time"
+              isVisible={showTime}
+              mode="time"
+              onConfirm={onChangeTime}
+              onCancel={() => { setShowTime(false) }}
+            />
           </View>
+
           {showMap && location.latitude && (
             <View style={styles.container}>
               <Modal
@@ -384,7 +417,7 @@ const CreateEventScreen = (props) => {
                 onBackdropPress={toggleShowMap}
                 swipeThreshold={100}
                 TransitionOutTiming={0}
-                borderRadius={10}
+                borderRadius={5}
                 propagateSwipe
               >
                 <Header style={{ backgroundColor: Colors.darkGrey, }}>
@@ -520,53 +553,20 @@ const CreateEventScreen = (props) => {
                 >
                   <Marker
                     ref={markerRef}
-                    coordinate={{ latitude: parseFloat(location.latitude), longitude: parseFloat(location.longitude) }}
+                    coordinate={{
+                      latitude: parseFloat(location.latitude),
+                      longitude: parseFloat(location.longitude)
+                    }}
                     pinColor="#341f97"
                     tracksViewChanges={false}
                     draggable
                     onDragEnd={handleDragEnd}
-                    onDragStart={handleDragStart}
+                    onDragStart={handlePinDragStart}
 
                   />
                 </MapView>
               </Modal>
             </View>
-          )}
-          <View style={styles.container}>
-            <Text style={styles.text}>Date</Text>
-            <Button iconRight light onPress={toggleShowDate} style={styles.buttonStyle} >
-              <Text
-                style={{
-                  textAlign: "center",
-                  fontFamily: "Helvetica",
-                  fontSize: 16
-                }}
-              >
-                {stringifyDate(date)}
-              </Text>
-            </Button>
-          </View>
-          {showDate && (
-            <DateTimePicker value={date} mode={"date"} onChange={onChangeDate} />
-          )}
-          <View style={{ ...styles.container }}>
-            <Text style={styles.text}>Time</Text>
-            <Button
-              iconRight
-              light
-              onPress={toggleShowTime}
-              style={styles.buttonStyle}
-            >
-              <Text style={{ fontFamily: "Helvetica", fontSize: 16 }}>{stringifyTime(time)}</Text>
-            </Button>
-          </View>
-          {showTime && (
-            <DateTimePicker
-              value={time}
-              mode={"time"}
-              is24Hour={false}
-              onChange={onChangeTime}
-            />
           )}
           <View
             style={{
@@ -603,10 +603,9 @@ const CreateEventScreen = (props) => {
                   width: 0,
                   height: 1,
                 },
-                shadowOpacity: 0.1,
-                shadowRadius: 0.75,
-
-                elevation: 1,
+                shadowOpacity: 0.10,
+                shadowRadius: 1.41,
+                elevation: 2,
               }}
             >
               <Text
@@ -641,7 +640,6 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH,
     paddingTop: 0,
     marginBottom: '3%'
-    //width: Dimensions.get('window').width,
   },
   container: {
     flex: 1,
@@ -654,17 +652,31 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: "Helvetica-Bold",
     fontSize: 20,
-    color: Colors.purpleBackground,
     paddingBottom: 5
   },
   dropdownStyle: {
     width: 100,
   },
+  uploadImageButton: {
+    backgroundColor: "white",
+    borderRadius: 5,
+    borderColor: Colors.lightGrey,
+    borderWidth: 1,
+    padding: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.10,
+    shadowRadius: 1.41,
+    elevation: 2,
+  },
   titleStyle: {
     height: 50,
     //borderColor: "gray",
     //borderWidth: 1,
-    borderRadius: 3,
+    borderRadius: 5,
     paddingHorizontal: 5,
     width: '100%',
     fontFamily: "Helvetica",
@@ -673,7 +685,7 @@ const styles = StyleSheet.create({
   descriptionStyle: {
     //borderColor: "gray",
     //borderWidth: 1,
-    borderRadius: 3,
+    borderRadius: 5,
     paddingHorizontal: 5,
     paddingVertical: 5,
     width: '100%',
@@ -684,7 +696,7 @@ const styles = StyleSheet.create({
   modal: {
     flex: 1,
     marginTop: 300,
-    borderRadius: 10,
+    borderRadius: 5,
     marginLeft: 0,
     marginRight: 0,
     maxHeight: SCREEN_HEIGHT * 0.6,
@@ -702,7 +714,7 @@ const styles = StyleSheet.create({
     color: "black",
     borderColor: Colors.lightGrey,
     borderWidth: 0.5,
-    borderRadius: 3,
+    borderRadius: 5,
     backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
