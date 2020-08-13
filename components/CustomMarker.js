@@ -18,7 +18,8 @@ import React from 'react';
 then returns this component. It takes two props, category and size to display. */
 const EventPin = (props) => {
 
-    // add categories here
+    /* add categories to ENUM object, not sure how to extract the width and height here,
+    there is probably a better way to do this so we dont have to repeat the height and width everytime.*/
     const categorySVG = {
         ["music"]: <MusicPin width={props.size} height={props.size} />,
         ["meeting"]: <MeetingPin width={props.size} height={props.size} />,
@@ -32,6 +33,7 @@ const EventPin = (props) => {
         ["discussion"]: <DiscussionPin width={props.size} height={props.size} />,
         ["other"]: <OtherPin width={props.size} height={props.size} />,
     }
+    
     const eventPin = categorySVG[props.category];
 
     if (!eventPin) {
