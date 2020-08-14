@@ -167,7 +167,7 @@ const EventScreen = (props) => {
 							</Text>
 						)}
 					<Text style={{ fontSize: 20, color: "black", textAlign: 'right' }}>
-						{stringifyDate(new Date(event.date))}
+					{stringifyDate(new Date(event.date), true) /*2nd arg tells us to put day name above date*/ } 
 					</Text>
 				</Right>
 			</View>
@@ -190,8 +190,8 @@ const EventScreen = (props) => {
 								paddingHorizontal: 15,
 							}}
 						>
-							<TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={navigateToGoingList}>
-								<VectorIcon name="persona" type='Zocial' style={{ color: Colors.purpleButton, paddingRight: 10 }} />
+							<TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center'}} onPress={navigateToGoingList}>
+								<VectorIcon name="ios-people" style={{ color: Colors.purpleButton, paddingRight: 5, fontSize: 35 }} />
 								<Text style={styles.goingText}> {numGoing} Going</Text>
 							</TouchableOpacity>
 							{userName != event.host.name && userName ? (
