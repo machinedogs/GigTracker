@@ -20,7 +20,7 @@ export const combineDateAndTime = (date, time) => {
 	return dateTime;
 };
 
-export const stringifyDate = (date) => {
+export const stringifyDate = (date, newLine) => {
 	var dd = date.getDate();
 	var mm = date.getMonth() + 1;
 	var yyyy = date.getFullYear();
@@ -42,7 +42,11 @@ export const stringifyDate = (date) => {
 		case 6: weekDay = "Saturday"; break;
 		default: weekDay = ""; break;
 	}
-	return weekDay + ", " + mm + "/" + dd + "/" + yyyy;
+	if (newLine) {
+		return weekDay + ",\n" + mm + "/" + dd + "/" + yyyy;
+	} else {
+		return weekDay + ", " + mm + "/" + dd + "/" + yyyy;
+	}
 };
 
 export const stringifyDateShort = (date) => {
