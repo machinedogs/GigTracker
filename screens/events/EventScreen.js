@@ -35,8 +35,7 @@ const EventScreen = (props) => {
 	const goingEvents = useSelector((state) => state.user.goingEvents);
 	const event = props.navigation.getParam("event");
 	const [numGoing, setNumGoing] = useState(event.attending);
-	const [isEventSaved, setEventSaved] = useState(initialEventSaveState);
-	const [isGoing, setGoing] = useState(initialEventGoingState);
+	
 	const dispatch = useDispatch();
 
 	console.log("this is the event " + JSON.stringify(event));
@@ -63,6 +62,8 @@ const EventScreen = (props) => {
 	} else {
 		initialEventGoingState = false;
 	}
+	const [isEventSaved, setEventSaved] = useState(initialEventSaveState);
+	const [isGoing, setGoing] = useState(initialEventGoingState);
 
 	// Setup deep link for address
 	const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
