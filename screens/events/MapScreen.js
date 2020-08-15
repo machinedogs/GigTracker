@@ -19,16 +19,19 @@ import { useSelector, useDispatch } from 'react-redux';
 import { PROVIDER_GOOGLE, Marker, Callout, CalloutSubview } from 'react-native-maps';
 import MapView from 'react-native-map-clustering';
 import CalendarPicker from 'react-native-calendar-picker';
+import Toast from 'react-native-easy-toast';
+
 
 import { EventCard } from "../../components/EventCard";
 import MapStyle from '../../constants/MapStyle';
-import Event from '../../models/event';
 import Colors from '../../constants/Colors';
 import * as eventActions from '../../store/actions/events';
 import { CustomCallout } from '../../components/CustomCallout';
 import EventPin from '../../components/CustomMarker';
 import { getGeoInfo } from '../../helper/geoHelper';
 import CategorySelector from '../../components/CategorySelector';
+import { stringifyDateShort, stringifyDate } from '../../helper/createEventHelper';
+import CustomToast from '../../components/CustomToast';
 
 const { width, height } = Dimensions.get('window')
 const SCREEN_HEIGHT = height
@@ -53,6 +56,7 @@ const MapScreen = props => {
   const [showCalendar, setShowCalendar] = useState(false);
   let mapRef = useRef(null);
   let clusterRef = useRef(null);
+  const toastRef = useRef();
   const dispatch = useDispatch();
 
   //  get initial location then animate to that location
@@ -76,6 +80,7 @@ const MapScreen = props => {
     await dispatch(eventActions.getEvents(formattedDate.toISOString(), coordinates.latitude, coordinates.longitude));
     dispatch(eventActions.getEvents(formattedDate.toISOString()));
     setIsRefreshing(false);
+    toastRef.current.show(`Refreshed Events for ${stringifyDate(new Date(selectedDate))}`, 500)
   }
 
   // gets called when callout is pressed i.e. pin must be pressed first
@@ -124,6 +129,7 @@ const MapScreen = props => {
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={Colors.darkGrey} barStyle='light-content' />
+      <CustomToast ref={toastRef} />
       <SafeAreaView style={styles.header}>
         <Left>
           <VectorIcon
