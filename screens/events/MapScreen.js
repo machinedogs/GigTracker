@@ -58,10 +58,7 @@ const MapScreen = props => {
   const toastRef = useRef();
   const dispatch = useDispatch();
 
-  //  get initial location then animate to that location
-  // only do this on mount and unmount of map component 
-  useEffect(() => {
-    dispatch(eventActions.updatePeopleAttending(null))
+  const animateToUser = () => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         coords = {
@@ -73,6 +70,13 @@ const MapScreen = props => {
         console.log("MapScreen.js/useEffect() - Got the coords in map screen: " + coords);
         mapRef.current.animateToRegion(coords, 0);
       }, (error) => console.log("MapScreen.js/useEffect() - Got error from navigator.geolocation.getCurrentPosition: " + error));
+  }
+
+  //  get initial location then animate to that location
+  // only do this on mount and unmount of map component 
+  useEffect(() => {
+    dispatch(eventActions.updatePeopleAttending(null))
+    animateToUser();
   }, []);
 
   // Use effect for toasting user if they created / edited an event
@@ -80,39 +84,23 @@ const MapScreen = props => {
     if (props.navigation.getParam('eventCreated')) {
       // Close any potentially open callouts just in case
       if (markerRef.current) {
-        markerRef.current.hideCallout() 
+        markerRef.current.hideCallout();
       }
-      // Navigate to the event on the map
-      const eventLatLong = props.navigation.getParam('latLong')
-      coords = {
-        latitude: eventLatLong.lat,
-        longitude: eventLatLong.long,
-        latitudeDelta: LATITUDE_DELTA,
-        longitudeDelta: LONGITUDE_DELTA
-      };
-      mapRef.current.animateToRegion(coords, 0);
       // Toast user on succesfull creation
       toastRef.current.show(`Event Successfully Created`, 500);
-      props.navigation.setParams({'eventCreated' : false});
-    }
-    if (props.navigation.getParam('eventModified')) {
+      // now set to false so toast doesn't appear again on the next render
+      props.navigation.setParams({ 'eventCreated': false });
+      animateToUser();
+    } else if (props.navigation.getParam('eventModified')) {
       // Close old callout because it doesn't update itself, then open it again to see updated callout
-      if (markerRef) {
-        markerRef.current.hideCallout() 
-        markerRef.current.showCallout()
+      if (markerRef.current) {
+        markerRef.current.hideCallout();
       }
       // Toast user on successful edit
       toastRef.current.show(`Event Successfully Updated`, 500);
-      props.navigation.setParams({'eventModified' : false});
-      // Navigate to the event on the map
-      const eventLatLong = props.navigation.getParam('latLong')
-      coords = {
-        latitude: parseFloat(eventLatLong.lat) + mapRef.current.__lastRegion.latitudeDelta * 0.35,
-        longitude: eventLatLong.long,
-        latitudeDelta: LATITUDE_DELTA,
-        longitudeDelta: LONGITUDE_DELTA
-      };
-      mapRef.current.animateToRegion(coords, 0);
+      // now set to false so toast doesn't appear again on the next render
+      props.navigation.setParams({ 'eventModified': false });
+      animateToUser();
     }
   }, [props.navigation.state.params]);
 
@@ -126,6 +114,7 @@ const MapScreen = props => {
     dispatch(eventActions.getEvents(formattedDate.toISOString()));
     setIsRefreshing(false);
     toastRef.current.show(`Refreshed Events for ${stringifyDate(new Date(selectedDate))}`, 500)
+    //clusterRef.current.points[2].showCallout()
   }
 
   // gets called when callout is pressed i.e. pin must be pressed first

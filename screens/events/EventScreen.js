@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Thumbnail, Right, Left, Icon as VectorIcon } from "native-base";
 import { Icon } from "react-native-elements";
@@ -22,7 +22,6 @@ import { stringifyDate } from '../../helper/createEventHelper';
 import Colors from "../../constants/Colors";
 import * as eventActions from "../../store/actions/events";
 import * as userActions from "../../store/actions/user";
-import CustomToast from "../../components/CustomToast";
 
 
 // this function returns the screen elements for the event screen
@@ -36,8 +35,6 @@ const EventScreen = (props) => {
 	const goingEvents = useSelector((state) => state.user.goingEvents);
 	const event = props.navigation.getParam("event");
 	const [numGoing, setNumGoing] = useState(event.attending);
-
-	const toastRef = useRef();
 
 	const dispatch = useDispatch();
 
@@ -76,14 +73,6 @@ const EventScreen = (props) => {
 		ios: `${scheme}${label}@${latLng}`,
 		android: `${scheme}${latLng}(${label})`
 	});
-
-	// Use effect for notifying user if they created or edited an event
-	useEffect(() => {
-		if (props.navigation.getParam('eventModified')) {
-			toastRef.current.show(`Event Successfully Updated`, 500);
-			props.navigation.setParams({ 'eventModified': false });
-		}
-	}, [props.navigation.state.params]);
 
 	const pressAddress = () => {
 		console.log("pressing address link");
@@ -128,7 +117,6 @@ const EventScreen = (props) => {
 			style={{ backgroundColor: "white" }}
 			showsVerticalScrollIndicator={false}
 		>
-			<CustomToast ref={toastRef} />
 			<View style={{ flexDirection: "row", padding: 15 }}>
 				<View style={styles.titleDescriptionContainer}>
 					<Text style={styles.titleText}>{event.title}</Text>

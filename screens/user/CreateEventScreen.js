@@ -90,8 +90,6 @@ const CreateEventScreen = (props) => {
   const [showTime, setShowTime] = useState(false);
   const [showMap, setShowMap] = useState(false);
 
-  const toastRef = useRef();
-
   const dispatch = useDispatch();
 
   let mapRef = useRef(null);
@@ -171,23 +169,15 @@ const CreateEventScreen = (props) => {
         // Edit existing event
         console.log(`CreateEventScreen.js/handleSubmitEvent() - Dispatching editEvent action on: ${newEvent.title}\n`);
         dispatch(eventActions.editEvent(newEvent, initEvent.id)).then(() => {
-          props.navigation.navigate("Home", {
-            eventModified: true,
-            latLong: { lat: location.latitude, long: location.longitude }
-          });
-        }
-        );
+          props.navigation.navigate("Home", { eventModified: true, });
+        });
       }
       else {
         // Create new event
         console.log(`CreateEventScreen.js/handleSubmitEvent() - Dispatching createEvent action on: ${newEvent.title}\n`);
         dispatch(eventActions.createEvent(newEvent)).then(() => {
-          props.navigation.navigate("Home", {
-            eventCreated: true,
-            latLong: { lat: location.latitude, long: location.longitude }
-          });
-        }
-        );
+          props.navigation.navigate("Home", { eventCreated: true, });
+        });
       }
     } else {
       // Alert that create event form is not valid
