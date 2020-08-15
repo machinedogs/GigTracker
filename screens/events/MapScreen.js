@@ -65,14 +65,19 @@ const MapScreen = props => {
     dispatch(eventActions.updatePeopleAttending(null))
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        coords = { latitude: position.coords.latitude, longitude: position.coords.longitude, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA };
-        console.log("Got the coords in map screen: " + coords);
+        coords = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          latitudeDelta: LATITUDE_DELTA,
+          longitudeDelta: LONGITUDE_DELTA
+        };
+        console.log("MapScreen.js/useEffect() - Got the coords in map screen: " + coords);
         mapRef.current.animateToRegion(coords, 0);
-      }, (error) => console.log(error));
+      }, (error) => console.log("MapScreen.js/useEffect() - Got error from navigator.geolocation.getCurrentPosition: " + error));
   }, []);
 
   const refreshEvents = async () => {
-    console.log("Refreshing events")
+    console.log("MapScreen.js/refreshEvents() - Refreshing events")
     let coordinates = '';
     await getGeoInfo().then(coords => coordinates = coords);
     setIsRefreshing(true);
@@ -103,7 +108,7 @@ const MapScreen = props => {
     await getGeoInfo().then(coords => coordinates = coords);
     const dateToSet = new Date(givenDate)
     dateToSet.setHours(0, 0, 0, 0);
-    console.log("User selected date: " + givenDate)
+    console.log("MapScreen.js/filterDate.js - User selected date: " + givenDate)
     setSelectedDate(dateToSet);
     dispatch(eventActions.setDateFilter(dateToSet));
     setIsRefreshing(true);
@@ -198,7 +203,10 @@ const MapScreen = props => {
       >
         {filteredEvents.map(event => (
           <Marker
-            coordinate={{ latitude: parseFloat(event.location.latitude), longitude: parseFloat(event.location.longitude) }}
+            coordinate={{
+              latitude: parseFloat(event.location.latitude),
+              longitude: parseFloat(event.location.longitude)
+            }}
             pinColor="#341f97"
             key={event.id}
             tracksViewChanges={false}
@@ -358,7 +366,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: SCREEN_WIDTH,
-    //justifyContent: 'center',
   }
   ,
   map: {
