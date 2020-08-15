@@ -171,7 +171,10 @@ const CreateEventScreen = (props) => {
         // Edit existing event
         console.log(`CreateEventScreen.js/handleSubmitEvent() - Dispatching editEvent action on: ${newEvent.title}\n`);
         dispatch(eventActions.editEvent(newEvent, initEvent.id)).then(() => {
-          props.navigation.navigate("Home", { eventModified: true});
+          props.navigation.navigate("Home", {
+            eventModified: true,
+            latLong: { lat: location.latitude, long: location.longitude }
+          });
         }
         );
       }
@@ -179,7 +182,10 @@ const CreateEventScreen = (props) => {
         // Create new event
         console.log(`CreateEventScreen.js/handleSubmitEvent() - Dispatching createEvent action on: ${newEvent.title}\n`);
         dispatch(eventActions.createEvent(newEvent)).then(() => {
-          props.navigation.navigate("Home", { eventCreated: true});
+          props.navigation.navigate("Home", {
+            eventCreated: true,
+            latLong: { lat: location.latitude, long: location.longitude }
+          });
         }
         );
       }

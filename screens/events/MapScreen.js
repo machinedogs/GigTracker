@@ -54,6 +54,7 @@ const MapScreen = props => {
   const [showCalendar, setShowCalendar] = useState(false);
   let mapRef = useRef(null);
   let clusterRef = useRef(null);
+  let markerRef = useRef(null);
   const toastRef = useRef();
   const dispatch = useDispatch();
 
@@ -77,12 +78,41 @@ const MapScreen = props => {
   // Use effect for toasting user if they created / edited an event
   useEffect(() => {
     if (props.navigation.getParam('eventCreated')) {
+      // Close any potentially open callouts just in case
+      if (markerRef.current) {
+        markerRef.current.hideCallout() 
+      }
+      // Navigate to the event on the map
+      const eventLatLong = props.navigation.getParam('latLong')
+      coords = {
+        latitude: eventLatLong.lat,
+        longitude: eventLatLong.long,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA
+      };
+      mapRef.current.animateToRegion(coords, 0);
+      // Toast user on succesfull creation
       toastRef.current.show(`Event Successfully Created`, 500);
       props.navigation.setParams({'eventCreated' : false});
     }
     if (props.navigation.getParam('eventModified')) {
+      // Close old callout because it doesn't update itself, then open it again to see updated callout
+      if (markerRef) {
+        markerRef.current.hideCallout() 
+        markerRef.current.showCallout()
+      }
+      // Toast user on successful edit
       toastRef.current.show(`Event Successfully Updated`, 500);
       props.navigation.setParams({'eventModified' : false});
+      // Navigate to the event on the map
+      const eventLatLong = props.navigation.getParam('latLong')
+      coords = {
+        latitude: parseFloat(eventLatLong.lat) + mapRef.current.__lastRegion.latitudeDelta * 0.35,
+        longitude: eventLatLong.long,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA
+      };
+      mapRef.current.animateToRegion(coords, 0);
     }
   }, [props.navigation.state.params]);
 
@@ -213,6 +243,7 @@ const MapScreen = props => {
       >
         {filteredEvents.map(event => (
           <Marker
+            ref={markerRef}
             coordinate={{
               latitude: parseFloat(event.location.latitude),
               longitude: parseFloat(event.location.longitude)
