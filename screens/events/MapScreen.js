@@ -19,8 +19,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { PROVIDER_GOOGLE, Marker, Callout, CalloutSubview } from 'react-native-maps';
 import MapView from 'react-native-map-clustering';
 import CalendarPicker from 'react-native-calendar-picker';
-import Toast from 'react-native-easy-toast';
-
 
 import { EventCard } from "../../components/EventCard";
 import MapStyle from '../../constants/MapStyle';
@@ -30,7 +28,7 @@ import { CustomCallout } from '../../components/CustomCallout';
 import EventPin from '../../components/CustomMarker';
 import { getGeoInfo } from '../../helper/geoHelper';
 import CategorySelector from '../../components/CategorySelector';
-import { stringifyDateShort, stringifyDate } from '../../helper/createEventHelper';
+import { stringifyDate } from '../../helper/createEventHelper';
 import CustomToast from '../../components/CustomToast';
 
 const { width, height } = Dimensions.get('window')
@@ -442,7 +440,5 @@ const styles = StyleSheet.create({
     paddingBottom: 10
   },
 });
-
-
 
 export default MapScreen;
