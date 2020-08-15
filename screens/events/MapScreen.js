@@ -74,6 +74,18 @@ const MapScreen = props => {
       }, (error) => console.log("MapScreen.js/useEffect() - Got error from navigator.geolocation.getCurrentPosition: " + error));
   }, []);
 
+  // Use effect for toasting user if they created / edited an event
+  useEffect(() => {
+    if (props.navigation.getParam('eventCreated')) {
+      toastRef.current.show(`Event Successfully Created`, 500);
+      props.navigation.setParams({'eventCreated' : false});
+    }
+    if (props.navigation.getParam('eventModified')) {
+      toastRef.current.show(`Event Successfully Updated`, 500);
+      props.navigation.setParams({'eventModified' : false});
+    }
+  }, [props.navigation.state.params]);
+
   const refreshEvents = async () => {
     console.log("MapScreen.js/refreshEvents() - Refreshing events")
     let coordinates = '';

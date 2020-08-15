@@ -1,5 +1,5 @@
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import React, { useState } from "react";
 import { Thumbnail, Right, Left, Icon as VectorIcon } from "native-base";
 import { Icon } from "react-native-elements";
 import {
@@ -22,6 +22,7 @@ import { stringifyDate } from '../../helper/createEventHelper';
 import Colors from "../../constants/Colors";
 import * as eventActions from "../../store/actions/events";
 import * as userActions from "../../store/actions/user";
+import CustomToast from "../../components/CustomToast";
 
 
 // this function returns the screen elements for the event screen
@@ -35,7 +36,9 @@ const EventScreen = (props) => {
 	const goingEvents = useSelector((state) => state.user.goingEvents);
 	const event = props.navigation.getParam("event");
 	const [numGoing, setNumGoing] = useState(event.attending);
-	
+
+	const toastRef = useRef();
+
 	const dispatch = useDispatch();
 
 	console.log("this is the event " + JSON.stringify(event));
@@ -73,6 +76,14 @@ const EventScreen = (props) => {
 		ios: `${scheme}${label}@${latLng}`,
 		android: `${scheme}${latLng}(${label})`
 	});
+
+	// Use effect for notifying user if they created or edited an event
+	useEffect(() => {
+		if (props.navigation.getParam('eventModified')) {
+			toastRef.current.show(`Event Successfully Updated`, 500);
+			props.navigation.setParams({ 'eventModified': false });
+		}
+	}, [props.navigation.state.params]);
 
 	const pressAddress = () => {
 		console.log("pressing address link");
@@ -117,6 +128,7 @@ const EventScreen = (props) => {
 			style={{ backgroundColor: "white" }}
 			showsVerticalScrollIndicator={false}
 		>
+			<CustomToast ref={toastRef} />
 			<View style={{ flexDirection: "row", padding: 15 }}>
 				<View style={styles.titleDescriptionContainer}>
 					<Text style={styles.titleText}>{event.title}</Text>
@@ -168,7 +180,7 @@ const EventScreen = (props) => {
 							</Text>
 						)}
 					<Text style={{ fontSize: 20, color: "black", textAlign: 'right' }}>
-					{stringifyDate(new Date(event.date), true) /*2nd arg tells us to put day name above date*/ } 
+						{stringifyDate(new Date(event.date), true) /*2nd arg tells us to put day name above date*/}
 					</Text>
 				</Right>
 			</View>
@@ -191,7 +203,7 @@ const EventScreen = (props) => {
 								paddingHorizontal: 15,
 							}}
 						>
-							<TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center'}} onPress={navigateToGoingList}>
+							<TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={navigateToGoingList}>
 								<VectorIcon name="ios-people" style={{ color: Colors.purpleButton, paddingRight: 5, fontSize: 35 }} />
 								<Text style={styles.goingText}> {numGoing} Going</Text>
 							</TouchableOpacity>
