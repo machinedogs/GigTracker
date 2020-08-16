@@ -1,5 +1,5 @@
-import { useSelector, useDispatch } from "react-redux";
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Thumbnail, Right, Left, Icon as VectorIcon } from "native-base";
 import { Icon } from "react-native-elements";
 import {
@@ -35,7 +35,7 @@ const EventScreen = (props) => {
 	const goingEvents = useSelector((state) => state.user.goingEvents);
 	const event = props.navigation.getParam("event");
 	const [numGoing, setNumGoing] = useState(event.attending);
-	
+
 	const dispatch = useDispatch();
 
 	console.log("this is the event " + JSON.stringify(event));
@@ -168,7 +168,7 @@ const EventScreen = (props) => {
 							</Text>
 						)}
 					<Text style={{ fontSize: 20, color: "black", textAlign: 'right' }}>
-					{stringifyDate(new Date(event.date), true) /*2nd arg tells us to put day name above date*/ } 
+						{stringifyDate(new Date(event.date), true) /*2nd arg tells us to put day name above date*/}
 					</Text>
 				</Right>
 			</View>
@@ -191,7 +191,7 @@ const EventScreen = (props) => {
 								paddingHorizontal: 15,
 							}}
 						>
-							<TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center'}} onPress={navigateToGoingList}>
+							<TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={navigateToGoingList}>
 								<VectorIcon name="ios-people" style={{ color: Colors.purpleButton, paddingRight: 5, fontSize: 35 }} />
 								<Text style={styles.goingText}> {numGoing} Going</Text>
 							</TouchableOpacity>

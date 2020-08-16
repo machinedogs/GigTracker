@@ -62,7 +62,6 @@ const CreateEventScreen = (props) => {
     console.log('CreateEventScreen.js/ - initial event was passed');
     initEvent = props.navigation.getParam('event');
   }
-
   //Initial states of event screen
   const initTitle = initEvent ? initEvent.title : null;
   const initDescription = initEvent ? initEvent.description : null;
@@ -169,14 +168,16 @@ const CreateEventScreen = (props) => {
       if (initEvent) {
         // Edit existing event
         console.log(`CreateEventScreen.js/handleSubmitEvent() - Dispatching editEvent action on: ${newEvent.title}\n`);
-        await dispatch(eventActions.editEvent(newEvent, initEvent.id));
-        props.navigation.navigate("UserProfile");
+        dispatch(eventActions.editEvent(newEvent, initEvent.id)).then(() => {
+          props.navigation.navigate("Home", { eventModified: true, });
+        });
       }
       else {
         // Create new event
         console.log(`CreateEventScreen.js/handleSubmitEvent() - Dispatching createEvent action on: ${newEvent.title}\n`);
-        await dispatch(eventActions.createEvent(newEvent));
-        props.navigation.navigate("Home");
+        dispatch(eventActions.createEvent(newEvent)).then(() => {
+          props.navigation.navigate("Home", { eventCreated: true, });
+        });
       }
     } else {
       // Alert that create event form is not valid

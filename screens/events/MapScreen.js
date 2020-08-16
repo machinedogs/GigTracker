@@ -22,13 +22,14 @@ import CalendarPicker from 'react-native-calendar-picker';
 
 import { EventCard } from "../../components/EventCard";
 import MapStyle from '../../constants/MapStyle';
-import Event from '../../models/event';
 import Colors from '../../constants/Colors';
 import * as eventActions from '../../store/actions/events';
 import { CustomCallout } from '../../components/CustomCallout';
 import EventPin from '../../components/CustomMarker';
 import { getGeoInfo } from '../../helper/geoHelper';
 import CategorySelector from '../../components/CategorySelector';
+import { stringifyDate } from '../../helper/createEventHelper';
+import CustomToast from '../../components/CustomToast';
 
 const { width, height } = Dimensions.get('window')
 const SCREEN_HEIGHT = height
@@ -53,22 +54,58 @@ const MapScreen = props => {
   const [showCalendar, setShowCalendar] = useState(false);
   let mapRef = useRef(null);
   let clusterRef = useRef(null);
+  let markerRef = useRef(null);
+  const toastRef = useRef();
   const dispatch = useDispatch();
+
+  const animateToUser = () => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        coords = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          latitudeDelta: LATITUDE_DELTA,
+          longitudeDelta: LONGITUDE_DELTA
+        };
+        console.log("MapScreen.js/useEffect() - Got the coords in map screen: " + coords);
+        mapRef.current.animateToRegion(coords, 0);
+      }, (error) => console.log("MapScreen.js/useEffect() - Got error from navigator.geolocation.getCurrentPosition: " + error));
+  }
 
   //  get initial location then animate to that location
   // only do this on mount and unmount of map component 
   useEffect(() => {
     dispatch(eventActions.updatePeopleAttending(null))
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        coords = { latitude: position.coords.latitude, longitude: position.coords.longitude, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA };
-        console.log("Got the coords in map screen: " + coords);
-        mapRef.current.animateToRegion(coords, 0);
-      }, (error) => console.log(error));
+    animateToUser();
   }, []);
 
+  // Use effect for toasting user if they created / edited an event
+  useEffect(() => {
+    if (props.navigation.getParam('eventCreated')) {
+      // Close any potentially open callouts just in case
+      if (markerRef.current) {
+        markerRef.current.hideCallout();
+      }
+      // Toast user on successful creation
+      toastRef.current.show(`Event Successfully Created`, 500);
+      // now set to false so toast doesn't appear again on the next render
+      props.navigation.setParams({ 'eventCreated': false });
+      animateToUser();
+    } else if (props.navigation.getParam('eventModified')) {
+      // Close old callout because it doesn't update itself, then open it again to see updated callout
+      if (markerRef.current) {
+        markerRef.current.hideCallout();
+      }
+      // Toast user on successful edit
+      toastRef.current.show(`Event Successfully Updated`, 500);
+      // now set to false so toast doesn't appear again on the next render
+      props.navigation.setParams({ 'eventModified': false });
+      animateToUser();
+    }
+  }, [props.navigation.state.params]);
+
   const refreshEvents = async () => {
-    console.log("Refreshing events")
+    console.log("MapScreen.js/refreshEvents() - Refreshing events")
     let coordinates = '';
     await getGeoInfo().then(coords => coordinates = coords);
     setIsRefreshing(true);
@@ -76,6 +113,8 @@ const MapScreen = props => {
     await dispatch(eventActions.getEvents(formattedDate.toISOString(), coordinates.latitude, coordinates.longitude));
     dispatch(eventActions.getEvents(formattedDate.toISOString()));
     setIsRefreshing(false);
+    toastRef.current.show(`Refreshed Events for ${stringifyDate(new Date(selectedDate))}`, 500)
+    //clusterRef.current.points[2].showCallout()
   }
 
   // gets called when callout is pressed i.e. pin must be pressed first
@@ -98,7 +137,7 @@ const MapScreen = props => {
     await getGeoInfo().then(coords => coordinates = coords);
     const dateToSet = new Date(givenDate)
     dateToSet.setHours(0, 0, 0, 0);
-    console.log("User selected date: " + givenDate)
+    console.log("MapScreen.js/filterDate.js - User selected date: " + givenDate)
     setSelectedDate(dateToSet);
     dispatch(eventActions.setDateFilter(dateToSet));
     setIsRefreshing(true);
@@ -124,6 +163,7 @@ const MapScreen = props => {
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={Colors.darkGrey} barStyle='light-content' />
+      <CustomToast ref={toastRef} />
       <SafeAreaView style={styles.header}>
         <Left>
           <VectorIcon
@@ -192,7 +232,11 @@ const MapScreen = props => {
       >
         {filteredEvents.map(event => (
           <Marker
-            coordinate={{ latitude: parseFloat(event.location.latitude), longitude: parseFloat(event.location.longitude) }}
+            ref={markerRef}
+            coordinate={{
+              latitude: parseFloat(event.location.latitude),
+              longitude: parseFloat(event.location.longitude)
+            }}
             pinColor="#341f97"
             key={event.id}
             tracksViewChanges={false}
@@ -352,7 +396,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: SCREEN_WIDTH,
-    //justifyContent: 'center',
   }
   ,
   map: {
@@ -429,7 +472,5 @@ const styles = StyleSheet.create({
     paddingBottom: 10
   },
 });
-
-
 
 export default MapScreen;
