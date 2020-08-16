@@ -86,7 +86,7 @@ const MapScreen = props => {
       if (markerRef.current) {
         markerRef.current.hideCallout();
       }
-      // Toast user on succesfull creation
+      // Toast user on successful creation
       toastRef.current.show(`Event Successfully Created`, 500);
       // now set to false so toast doesn't appear again on the next render
       props.navigation.setParams({ 'eventCreated': false });
