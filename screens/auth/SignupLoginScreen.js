@@ -14,21 +14,9 @@ const SignupLoginScreen = props => {
         setIsLoginMode(false);
     }
 
-    const goHomeHandler = () => {
-        // v4: props.navigation.replace('Home');
-        //props.navigation.dispatch(
-        //    StackActions.replace('Map')
-        //);
-        props.navigation.dispatch(
-            CommonActions.navigate('Home', {
-                screen: 'Map',
-            })
-        );
-    }
-
     return (
         <SafeAreaView style={styles.container}>
-            <LoginModal visible={isLoginMode} onCancel={cancelLoginHandler} navigateHome={goHomeHandler} />
+            <LoginModal visible={isLoginMode} onCancel={cancelLoginHandler} />
             <Text style={styles.welcomeText}>
                 {'Stay Current\nwith whats\ngoing on'}
             </Text>

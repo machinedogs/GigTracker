@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { StackActions } from '@react-navigation/native';
+import { CommonActions } from '@react-navigation/native';
 import { View, StyleSheet, Modal, Text, StatusBar, SafeAreaView, TouchableOpacity, ActivityIndicator, Alert, TouchableWithoutFeedback, Keyboard, ScrollView } from 'react-native';
 import { Button, Icon, Item, Input, } from 'native-base';
 
@@ -32,12 +32,6 @@ const SignupScreen = props => {
                     // props.navigation.dispatch(
                     //    StackActions.replace('Map')
                     //);
-                    setIsLoading(false);
-                    await props.navigation.dispatch(
-                        CommonActions.navigate('Home', {
-                            screen: 'Map',
-                        })
-                    );
                 } catch (err) {
                     setError(err.message);
                     // set it back to false here because we only need to reload app state if we
@@ -65,7 +59,7 @@ const SignupScreen = props => {
     const handleEmailInput = (emailInput) => {
         setEmail(emailInput);
         // Pass email to the validator to confirm its an email
-        //console.log(emailInput)
+        console.log("emailInput")
         //console.log(emailInputValidator(emailInput))
         setIsEmailValid(emailInputValidator(emailInput));
     }
