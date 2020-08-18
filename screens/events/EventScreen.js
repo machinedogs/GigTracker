@@ -1,5 +1,5 @@
-import { useSelector, useDispatch } from "react-redux";
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Thumbnail, Right, Left, Icon as VectorIcon } from "native-base";
 import { Icon } from "react-native-elements";
 import {
@@ -35,8 +35,7 @@ const EventScreen = (props) => {
 	const goingEvents = useSelector((state) => state.user.goingEvents);
 	const event = props.navigation.getParam("event");
 	const [numGoing, setNumGoing] = useState(event.attending);
-	const [isEventSaved, setEventSaved] = useState(initialEventSaveState);
-	const [isGoing, setGoing] = useState(initialEventGoingState);
+
 	const dispatch = useDispatch();
 
 	console.log("this is the event " + JSON.stringify(event));
@@ -63,6 +62,8 @@ const EventScreen = (props) => {
 	} else {
 		initialEventGoingState = false;
 	}
+	const [isEventSaved, setEventSaved] = useState(initialEventSaveState);
+	const [isGoing, setGoing] = useState(initialEventGoingState);
 
 	// Setup deep link for address
 	const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
@@ -167,7 +168,7 @@ const EventScreen = (props) => {
 							</Text>
 						)}
 					<Text style={{ fontSize: 20, color: "black", textAlign: 'right' }}>
-						{stringifyDate(new Date(event.date))}
+						{stringifyDate(new Date(event.date), true) /*2nd arg tells us to put day name above date*/}
 					</Text>
 				</Right>
 			</View>
@@ -191,7 +192,7 @@ const EventScreen = (props) => {
 							}}
 						>
 							<TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={navigateToGoingList}>
-								<VectorIcon name="persona" type='Zocial' style={{ color: Colors.purpleButton, paddingRight: 10 }} />
+								<VectorIcon name="ios-people" style={{ color: Colors.purpleButton, paddingRight: 5, fontSize: 35 }} />
 								<Text style={styles.goingText}> {numGoing} Going</Text>
 							</TouchableOpacity>
 							{userName != event.host.name && userName ? (

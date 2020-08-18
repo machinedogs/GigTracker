@@ -32,6 +32,8 @@ const fetchFonts = async() => {
   await Font.loadAsync({
     'jack-silver': require('./assets/fonts/Jacksilver.ttf'),
     'dumbledor': require('./assets/fonts/dumbledor.3-cut-up.ttf'),
+    'Helvetica-Bold': require('./assets/fonts/Helvetica-Bold-Font.ttf'),
+    'Helvetica': require('./assets/fonts/Helvetica.ttf'),
     Roboto: require("native-base/Fonts/Roboto.ttf"),
     Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
   });

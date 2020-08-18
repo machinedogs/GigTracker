@@ -275,8 +275,8 @@ export const getAllEvents = () => {
 
 export const createEvent = (event) => {
 	return async (dispatch, getState) => {
-		console.log(event);
 		console.log("In creating event action");
+		console.log(event.date);
 		var myHeaders = new Headers();
 		myHeaders.append("Content-Type", "application/json");
 
@@ -306,13 +306,13 @@ export const createEvent = (event) => {
 				requestOptions
 			);
 			if (response.ok) {
-				alert("Successfully created event.");
+				//alert("Successfully created event.");
 			}
 			const resData = await response.json();
 
 			if (resData.status === "ERROR") {
 				let message = "There was an error posting this event.";
-				alert(message);
+				//alert(message);
 				throw new Error(message);
 			}
 			dispatch(updateEventMaps(resData.event))
@@ -356,7 +356,7 @@ export const editEvent = (event, id) => {
 			);
 			console.log(`RESPONSE: ${response.status}`);
 			if (response.ok) {
-				alert("Successfully replaced event.");
+				//alert("Successfully replaced event.");
 			}
 			const resData = await response.json();
 
