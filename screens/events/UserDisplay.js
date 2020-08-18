@@ -15,7 +15,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 const UserDisplay = (props) => {
 	const people = useSelector((state) => state.events.eventGoing);
-	console.log("UserDisplay.js/ - People going form eventGoing event redux state:\n" + JSON.stringify(people))
+
 	return (
 		<View style={styles.container}>
 			{people == null ? (
@@ -26,6 +26,8 @@ const UserDisplay = (props) => {
 							<List>
 								{people.map((person, i) => (
 									<ListItem key={i} thumbnail style={{ paddingTop: 10 }} noBorder>
+										{console.log("here is the person")}
+										{console.log(person)}
 										<Left >
 											<Thumbnail source={{ uri: person.profile }} />
 										</Left>

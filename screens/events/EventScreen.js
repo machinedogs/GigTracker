@@ -11,7 +11,8 @@ import {
 	Image,
 	Platform,
 	Linking,
-	Dimensions
+	Dimensions,
+	Alert
 } from "react-native";
 import { Col, Grid } from "react-native-easy-grid";
 import InsetShadow from "react-native-inset-shadow";
@@ -107,9 +108,14 @@ const EventScreen = (props) => {
 	};
 
 	const navigateToGoingList = () => {
-		console.log('EventScreen.js/navigateToGoingList() - Dispatching getPeopleGoing action creator')
-		dispatch(eventActions.getPeopleGoing(event.id, accessToken));
-		props.navigation.navigate('GoingListScreen');
+		if (accessToken) {
+			console.log('EventScreen.js/navigateToGoingList() - Dispatching getPeopleGoing action creator')
+			dispatch(eventActions.getPeopleGoing(event.id, accessToken));
+			props.navigation.navigate('GoingListScreen');
+		} else {
+			Alert.alert("You must log in to see who is going to this event");
+		}
+		
 	};
 
 	return (
