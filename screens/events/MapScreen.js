@@ -69,9 +69,9 @@ const MapScreen = props => {
           latitudeDelta: LATITUDE_DELTA,
           longitudeDelta: LONGITUDE_DELTA
         };
-        console.log("MapScreen.js/useEffect() - Got the coords in map screen: " + coords);
+        console.log("MapScreen.js/animateToUser() - Got the coords in map screen: " + coords);
         mapRef.current.animateToRegion(coords, 0);
-      }, (error) => console.log("MapScreen.js/useEffect() - Got error from navigator.geolocation.getCurrentPosition: " + error));
+      }, (error) => console.log("MapScreen.js/animateToUser() - Got error from navigator.geolocation.getCurrentPosition: " + error));
   }
 
   //  get initial location then animate to that location
@@ -303,8 +303,8 @@ const MapScreen = props => {
                 onPress={() => {
                   // v4: props.navigation.navigate('SignupLogin')
                   props.navigation.dispatch(
-                    CommonActions.navigate({
-                      name: 'SignupLogin',
+                    CommonActions.navigate('Auth', {
+                      screen: 'SignupLogin',
                     })
                   );
                 }}
@@ -327,8 +327,8 @@ const MapScreen = props => {
                 onPress={() => {
                   // v4: props.navigation.navigate('UserProfile')
                   props.navigation.dispatch(
-                    CommonActions.navigate({
-                      name: 'UserProfile',
+                    CommonActions.navigate('User', {
+                      screen: 'UserProfile',
                     })
                   );
                 }}

@@ -11,7 +11,7 @@ const DeleteScreen = props => {
     const dispatch = useDispatch();
 
     const deleteAccountHandler = () => {
-        console.log("User triggered deleteAccount action creator");
+        console.log("DeleteScreen.js/deleteAccountHandler() - User pressed delete button");
         Alert.alert(
             "Delete your account?",
             "",
@@ -19,19 +19,14 @@ const DeleteScreen = props => {
                 {
                     text: "Yes",
                     onPress: () => {
-                        dispatch(authActions.deleteAccount())
-                        // v4: props.navigation.navigate('Home');
-                        props.navigation.dispatch(
-                            CommonActions.navigate({
-                                name: 'Home',
-                            })
-                        );
+                        console.log("DeleteScreen.js/deleteAccountHandler() - User pressed Yes on Delete Account Alert");
+                        dispatch(authActions.deleteAccount());
                     },
                     style: 'destructive'
                 },
                 {
                     text: "No",
-                    onPress: () => console.log("Delete Account Canceled"),
+                    onPress: () => console.log("DeleteScreen.js/deleteAccountHandler() - User cancelled deleting account"),
                     style: "cancel"
                 }
             ],

@@ -17,14 +17,16 @@ export const SettingsScreen = (props) => {
                 <ListItem itemDivider>
                     <Text>Account Management</Text>
                 </ListItem>
-                <ListItem icon onPress={() => {
+                <ListItem icon first onPress={() => {
                     dispatch(authActions.logout());
                     // v4: props.navigation.navigate("Home");
-                    props.navigation.dispatch(
-                        CommonActions.navigate({
-                            name: 'Home',
-                        })
-                    );
+                    /* v5:
+                        props.navigation.dispatch(
+                            CommonActions.navigate({
+                                name: 'Home',
+                            })
+                        );
+                        */
                 }}>
                     <Left>
                         <Button style={{ backgroundColor: Colors.yellow }}>
@@ -38,7 +40,7 @@ export const SettingsScreen = (props) => {
                         <Icon active name="arrow-forward" />
                     </Right>
                 </ListItem>
-                <ListItem icon onPress={() => {
+                <ListItem icon last onPress={() => {
                     // v4: props.navigation.navigate('Delete');
                     props.navigation.dispatch(
                         CommonActions.navigate({

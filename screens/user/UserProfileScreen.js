@@ -39,7 +39,7 @@ const UserProfileScreen = (props) => {
 	const [loading, setLoading] = useState(false);
 
 	let updateProfilePhoto = async () => {
-		console.log("Inside update profile photo ");
+		console.log("UserProfileScreen.js/updateProfilePhoto() - User clicked upload image button");
 		//Get image from camera library
 		setLoading(true);
 		var file = await openImagePickerAsync();
@@ -50,12 +50,11 @@ const UserProfileScreen = (props) => {
 			//Get image from firebase
 			var imageUrl = await getImage(file);
 			//dispatch action
-			console.log("Dispatching update user profile with ");
-			console.log(user);
-			console.log(
-				`Dispatching update user profile with this image url ${imageUrl} and this user ${user}`
-			);
+			
 			saveProfileDataToStorage(imageUrl);
+			console.log(
+				`UserProfileScreen.js/updateProfilePhoto() - Dispatching updateUserProfile action creator with:\nimage url ${imageUrl} and this user ${user}`
+			);
 			await dispatch(updateUserProfile(imageUrl, user));
 			setLoading(false);
 		}
@@ -69,12 +68,15 @@ const UserProfileScreen = (props) => {
 			[
 				{
 					text: "Yes",
-					onPress: () => dispatch(eventActions.deleteEvent(event)),
+					onPress: () => {
+						console.log("UserProfileScreen.js/handleDelete() - User pressed Yes on Delete Event Alert")
+						dispatch(eventActions.deleteEvent(event))
+					},
 					style: 'destructive'
 				},
 				{
 					text: "No",
-					onPress: () => console.log("Delete Event Canceled"),
+					onPress: () => console.log("UserProfileScreen.js/handleDelete() - Delete Event Canceled"),
 					style: "cancel"
 				}
 			],
@@ -89,7 +91,7 @@ const UserProfileScreen = (props) => {
 			await dispatch(GetSavedEvents(user.accessToken));
 			setSavedRefreshing(false)
 		} catch (error) {
-			console.error(error);
+			console.error("UserProfile.js/refreshSaved() - Caught error dispatching GetSavedEvents action creator:\n" + error);
 			setSavedRefreshing(false)
 		}
 	}, [savedRefreshing]);
@@ -100,7 +102,7 @@ const UserProfileScreen = (props) => {
 			await dispatch(userActions.getGoingEvents(user.accessToken));
 			setGoingRefreshing(false)
 		} catch (error) {
-			console.error(error);
+			console.error("UserProfile.js/refreshGoing() - Caught error dispatching getGoingEvents action creator:\n" + error);
 			setGoingRefreshing(false)
 		}
 	}, [goingRefreshing]);
@@ -111,7 +113,7 @@ const UserProfileScreen = (props) => {
 			await dispatch(GetHostedEvents(user.accessToken));
 			setHostedRefreshing(false)
 		} catch (error) {
-			console.error(error);
+			console.error("UserProfile.js/refreshHosted() - Caught error dispatching GetHostedEvents action creator:\n" + error);
 			setHostedRefreshing(false)
 		}
 	}, [hostedRefreshing]);
@@ -264,6 +266,7 @@ export const screenOptions = navData => {
 				<Item
 					title='Menu'
 					iconName='ios-cog'
+					buttonStyle={{color: 'black'}}
 					onPress={() => {
 						// v4: navData.navigation.navigate('Settings');
 						navData.navigation.dispatch(

@@ -38,7 +38,7 @@ const EventScreen = (props) => {
 
 	const dispatch = useDispatch();
 
-	console.log("this is the event " + JSON.stringify(event));
+	console.log("EventScreen.js/ - Pulled in the following Event:\n" + JSON.stringify(event) + "\n");
 
 	// See if user previously saved the event
 	var initialEventSaveState;
@@ -75,7 +75,7 @@ const EventScreen = (props) => {
 	});
 
 	const pressAddress = () => {
-		console.log("pressing address link");
+		console.log("EventScreen.js/pressAddress() - Pressing Address to open in native mobile map");
 		Linking.openURL(url);
 	}
 
@@ -89,7 +89,7 @@ const EventScreen = (props) => {
 			dispatch(eventActions.unsaveEvent(event));
 		}
 		setEventSaved(!isEventSaved);
-		console.log(isEventSaved);
+		console.log("EventScreen.js/toggleSaveButton() - Save button pressed, current state is: " + isEventSaved);
 	};
 
 	const toggleGoingButton = () => {
@@ -103,11 +103,11 @@ const EventScreen = (props) => {
 			dispatch(userActions.removeFromGoingEvents(event));
 		}
 		setGoing(!isGoing);
-		console.log(isGoing);
+		console.log("EventScreen.js/toggleGoingButton() - Going button pressed, current state is: " + isGoing);
 	};
 
 	const navigateToGoingList = () => {
-		console.log('dispatching get people going')
+		console.log('EventScreen.js/navigateToGoingList() - Dispatching getPeopleGoing action creator')
 		dispatch(eventActions.getPeopleGoing(event.id, accessToken));
 		props.navigation.navigate('GoingListScreen');
 	};

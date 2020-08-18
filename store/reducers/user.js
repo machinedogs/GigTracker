@@ -5,6 +5,7 @@ import {
 	GOING_TO_EVENT,
 	NOT_GOING_TO_EVENT,
 	SET_GOING_EVENTS,
+	SET_DID_TRY_AUTO_LOGIN,
 } from "../actions/user";
 
 const initialState = {
@@ -13,11 +14,17 @@ const initialState = {
 	accessToken: "",
 	refreshToken: "",
 	profileImage: "https://images.unsplash.com/photo-1582266255765-fa5cf1a1d501?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80",
-	goingEvents: []
+	goingEvents: [],
+	didTryAutoLogin: false
 };
 
 export default (state = initialState, action) => {
 	switch (action.type) {
+		case SET_DID_TRY_AUTO_LOGIN:
+			return {
+				...state,
+				didTryAutoLogin: true
+			};
 		case AUTHENTICATE:
 			console.log(`Authenticating.....`);
 			return {
@@ -26,6 +33,7 @@ export default (state = initialState, action) => {
 				userEmail: action.userEmail,
 				accessToken: action.accessToken,
 				refreshToken: action.refreshToken,
+				didTryAutoLogin: true
 			};
 		case UPDATE_PROFILE:
 			return {

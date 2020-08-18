@@ -57,7 +57,7 @@ const PrivacyStatementScreen = props => {
                                 // v4: props.navigation.navigate('Home');
                                 props.navigation.dispatch(
                                     CommonActions.navigate({
-                                        name: 'Home',
+                                        name: 'Map',
                                     })
                                 );
                             }}

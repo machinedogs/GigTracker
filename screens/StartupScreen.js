@@ -18,31 +18,12 @@ import { getGeoInfo } from '../helper/geoHelper';
 import Colors from '../constants/Colors';
 import Bolt from '../assets/svg/purple_bolt.svg';
 
-const startupTextOptions = [
-    /*"Contacting Orbital Satellite   ",
-    "Downloading Memes   ",
-    "Kicking Neighbors off Wifi   ",
-    "Carping the Diem   ",
-    "Dividing by Zero",
-    "Charging Phasers",
-    "Asking for Directions",
-    "Remodulating Plasma Confinement Field",
-    "Fetching Manners",
-    "Loading Cats",
-    "Loading...",
-    "Brewing a Fresh Batch of Joe",
-    "Landing Second Stage",
-    "Buffering Pizza"*/
-    "Loading events near you        "
-]
 
 const StartupScreen = props => {
     const dispatch = useDispatch();
-    var startupText = "     Loading events near you     "/*startupTextOptions[Math.floor(Math.random() * startupTextOptions.length)]*/
 
     useEffect(() => {
         const tryLogin = async () => {
-            console.log('dispatching getEvents from startup page')
             let coordinates = '';
             await getGeoInfo().then(coords => coordinates = coords);
             var currentDate = new Date()
@@ -56,14 +37,12 @@ const StartupScreen = props => {
             if (!userData) {
                 // Go to home screen if no userData saved to storage
                 //props.navigation.replace('Home');
-                props.navigation.dispatch(
-                    StackActions.replace('Home')
-                );
+                dispatch(authActions.setDidTryAutoLogin());
                 return;
             }
 
             const transformedData = JSON.parse(userData);
-            console.log(userData)
+            console.log("StartupScreen.js/tryLogin() - Parsed the userData: " + userData)
             // pull out the access and refresh token as well as email
             const { userName, userEmail, accessToken, refreshToken, accessExpiration, refreshExpiration } = transformedData;
             const refreshTokenExpiryDate = new Date(refreshExpiration)
@@ -75,15 +54,13 @@ const StartupScreen = props => {
             // check if refresh token expired, then user must manually log in again in home screen
             if (refreshTokenExpiryDate <= new Date() || !refreshToken || !userName || !userEmail || !accessToken) {
                 // v4: props.navigation.replace('Home');
-                props.navigation.dispatch(
-                    StackActions.replace('Home')
-                );
+                dispatch(authActions.setDidTryAutoLogin());
                 return;
             }
 
             // check if access token expired, then make refresh endpoint call
             if (accessTokenExpiryDate <= new Date()) {
-                console.log('refreshing tokens')
+                console.log('StartupScreen.js/useEffect()/tryLogin() - refreshing tokens')
                 try {
                     await dispatch(authActions.refresh(userEmail, userName, refreshToken));
                 } catch (error) {
@@ -91,9 +68,12 @@ const StartupScreen = props => {
                     SecureStore.deleteItemAsync('userData'); // user will have to login again
                     SecureStore.deleteItemAsync('images');
                     // v4: props.navigation.replace('Home');
-                    props.navigation.dispatch(
-                        StackActions.replace('Home')
-                    );
+                    // v5: 
+                    //props.navigation.dispatch(
+                    //    StackActions.replace('Map')
+                    //);
+                    // If error then don't log user in and just bring them home to login themselves
+                    dispatch(authActions.setDidTryAutoLogin());
                     return;
                 }
 
@@ -103,23 +83,21 @@ const StartupScreen = props => {
                 //Dispatch action to update profile image state in store 
                 await dispatch(updateUserProfile(profileImage, transformedData))
                 // v4: props.navigation.replace('Home');
-                props.navigation.dispatch(
-                    StackActions.replace('Home')
-                );
+                //props.navigation.dispatch(
+                //    StackActions.replace('Map')
+                //);
                 return;
             }
 
             // pass user data to state and navigate to home
-            await dispatch(authActions.authenticate(userName, userEmail, accessToken, refreshToken));
             dispatch(eventActions.GetSavedEvents(accessToken));
             dispatch(eventActions.GetHostedEvents(accessToken));
             dispatch(authActions.getGoingEvents(accessToken));
-            //Dispatch action to update profile image state in store 
             await dispatch(updateUserProfile(profileImage, transformedData));
+            await dispatch(authActions.authenticate(userName, userEmail, accessToken, refreshToken));
+            //Dispatch action to update profile image state in store 
+            // await dispatch(updateUserProfile(profileImage, transformedData));
             // v4: props.navigation.replace('Home');
-            props.navigation.dispatch(
-                StackActions.replace('Home')
-            );
         };
         tryLogin();
     }, [dispatch]);

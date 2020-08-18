@@ -1,14 +1,14 @@
 import React from 'react';
 import { Platform, Dimensions } from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, useHeaderHeight } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Colors from '../constants/Colors';
 import MapScreen from '../screens/events/MapScreen';
 import CreateEventScreen from '../screens/user/CreateEventScreen';
-import UserProfileScreen, { 
+import UserProfileScreen, {
     screenOptions as UserProfileScreenOptions
 } from '../screens/user/UserProfileScreen';
-import ManageEventScreen from '../screens/user/ManageEventScreen';
 import EventScreen from '../screens/events/EventScreen'
 import StartupScreen from '../screens/StartupScreen';
 import DeleteScreen from '../screens/user/DeleteScreen';
@@ -17,15 +17,14 @@ import UserDisplay from '../screens/events/UserDisplay';
 import SignupLoginScreen from '../screens/auth/SignupLoginScreen';
 import PrivacyStatementScreen from '../screens/auth/PrivacyStatementScreen';
 import SignupScreen from '../screens/auth/SignupScreen';
+import FeedScreen from '../screens/feed/FeedScreen';
+import NotificationScreen from '../screens/notifications/NotificationsScreen';
 
 const WIDTH = Dimensions.get('window').width;
-
-const GigTrackerStackNavigator = createStackNavigator();
 
 const defaultNavOptions = {
     headerStyle: {
         backgroundColor: Colors.darkGrey,
-        height: Platform.OS === 'ios' ? 110 : Header.height
     },
     headerTitleStyle: {
         fontSize: 30,
@@ -38,263 +37,178 @@ const defaultNavOptions = {
     headerBackTitleVisible: false,
 }
 
-export const GigTrackerNavigator = () => {
+// The User navigator when user is signed in
+const UserTabNavigator = createBottomTabNavigator();
+// The Guest navigator when user is not signed in
+const GuestTabNavigator = createBottomTabNavigator();
+
+// Stack Navigators
+const HomeStackNavigator = createStackNavigator(); // Both in Guest & Main Navigator
+const CreateStackNavigator = createStackNavigator();
+const UserStackNavigator = createStackNavigator();
+const FeedStackNavigator = createStackNavigator();
+const NotificationStackNavigator = createStackNavigator();
+const AuthStackNavigator = createStackNavigator();
+
+export const HomeNavigator = () => {
     return (
-        <GigTrackerStackNavigator.Navigator screensOptions={defaultNavOptions}>
-            <GigTrackerStackNavigator.Screen
-                name="Startup"
-                component={StartupScreen}
-                options={{ headerShown: false }}
-            />
-            <GigTrackerStackNavigator.Screen
-                name="Home"
+        <HomeStackNavigator.Navigator>
+            <HomeStackNavigator.Screen
+                name="Map"
                 component={MapScreen}
                 options={{
                     headerShown: false,
-                    gestureEnabled: false, // this stops us from swiping back to startup screen
+                    gestureEnabled: false,
                 }}
             />
-            <GigTrackerStackNavigator.Screen
+            <HomeStackNavigator.Screen
+                name="EventScreen"
+                component={EventScreen}
+                options={{ title: "event details" }}
+            />
+            <HomeStackNavigator.Screen
+                name="GoingListScreen"
+                component={UserDisplay}
+                options={{ title: "People Going" }}
+            />
+        </HomeStackNavigator.Navigator>
+    )
+
+}
+
+export const CreateNavigator = () => {
+    return (
+        <CreateStackNavigator.Navigator>
+            <CreateStackNavigator.Screen
                 name="CreateEvent"
                 component={CreateEventScreen}
                 options={{
                     title: "create event",
                 }}
             />
-            <GigTrackerStackNavigator.Screen
+        </CreateStackNavigator.Navigator>
+    )
+
+}
+
+export const UserProfileNavigator = () => {
+    return (
+        <UserStackNavigator.Navigator>
+            <UserStackNavigator.Screen
                 name="UserProfile"
                 component={UserProfileScreen}
                 options={UserProfileScreenOptions}
             />
-            <GigTrackerStackNavigator.Screen
-                name="EventScreen"
-                component={EventScreen}
-                options={{title: "event details"}}
-            />
-            <GigTrackerStackNavigator.Screen
-                name="GoingListScreen"
-                component={UserDisplay}
-                options={{title: "People Going"}}
-            />
-            <GigTrackerStackNavigator.Screen
+            <UserStackNavigator.Screen
                 name="Settings"
                 component={SettingsScreen}
-                options={{title: "Settings"}}
+                options={{ title: "Settings" }}
             />
-            <GigTrackerStackNavigator.Screen
-                name="SignupLogin"
-                component={SignupLoginScreen}
-                options={{title: "Account"}}
-            />
-            <GigTrackerStackNavigator.Screen
-                name="PrivacyStatement"
-                component={PrivacyStatementScreen}
-                options={{title: "Privacy Statement"}}
-            />
-            <GigTrackerStackNavigator.Screen
-                name="Signup"
-                component={SignupScreen}
-                options={{title: "Sign Up"}}
-            />
-            <GigTrackerStackNavigator.Screen
+            <UserStackNavigator.Screen
                 name="Delete"
                 component={DeleteScreen}
-                options={{title: "Delete Account"}}
+                options={{ title: "Delete Account" }}
             />
-        </GigTrackerStackNavigator.Navigator>
-    );
-};
+        </UserStackNavigator.Navigator>
+    )
+
+}
+
+export const FeedNavigator = () => {
+    return (
+        <FeedStackNavigator.Navigator>
+            <UserStackNavigator.Screen
+                name="Feed"
+                component={FeedScreen}
+                options={{ title: "Feed" }}
+            />
+        </FeedStackNavigator.Navigator>
+    )
+
+}
+
+export const NotificationNavigator = () => {
+    return (
+        <NotificationStackNavigator.Navigator>
+            <NotificationStackNavigator.Screen
+                name="Notification"
+                component={NotificationScreen}
+                options={{ title: "Notifications" }}
+            />
+        </NotificationStackNavigator.Navigator>
+    )
+}
 
 /*
-const EventNavigator = createStackNavigator(
-    {
-        Startup: {
-            screen: StartupScreen,
-            navigationOptions: {
-                headerShown: false
-            }
-        },
-        Home: {
-            screen: MapScreen,
-            navigationOptions: {
-                headerShown: false,
-                gestureEnabled: false, // this stops us from swiping back to startup screen
-            },
-        },
-        CreateEvent: {
-            screen: CreateEventScreen,
-            navigationOptions: {
-                title: "create event",
-                headerStyle: {
-                    backgroundColor: Colors.darkGrey,
-                    height: Platform.OS === 'ios' ? 110 : Header.height
-                },
-                headerTitleStyle: {
-                    fontSize: 30,
-                    fontFamily: 'jack-silver',
-                    color: '#fff',
-                    textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
-                    width: WIDTH - 75,
-                },
-                headerTintColor: '#fff',
-                headerBackTitleVisible: false,
-            }
-        },
-        UserProfile: {
-            screen: UserProfileScreen,
-            navigationOptions: {
-                title: 'Profile',
-                headerStyle: {
-                    backgroundColor: Colors.darkGrey,
-                    height: Platform.OS === 'ios' ? 110 : Header.height
-                },
-                headerTitleStyle: {
-                    fontSize: 30,
-                    fontFamily: 'jack-silver',
-                    color: '#fff',
-                    textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
-                    width: WIDTH - 75,
-                },
-                headerTintColor: '#fff',
-                headerBackTitleVisible: false,
-            },
-        },
-        ManageEvent: ManageEventScreen,
-        EventScreen: {
-            screen: EventScreen,
-            navigationOptions: {
-                headerStyle: {
-                    backgroundColor: Colors.darkGrey,
-                    height: Platform.OS === 'ios' ? 110 : Header.height,
-                },
-                headerTitle: "event details",
-                headerTitleStyle: {
-                    fontSize: 30,
-                    fontFamily: 'jack-silver',
-                    textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
-                    width: WIDTH - 75,
-                },
-                headerBackTitleVisible: false,
-                headerTintColor: 'white',
-                headerTitleAllowFontScaling: true
-            }
-        },
-        GoingListScreen: {
-            screen: UserDisplay,
-            navigationOptions: {
-                headerStyle: {
-                    backgroundColor: Colors.darkGrey,
-                    height: Platform.OS === 'ios' ? 110 : Header.height,
-                },
-                headerTitle: "People Going",
-                headerTitleStyle: {
-                    fontSize: 30,
-                    fontFamily: 'jack-silver',
-                    textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
-                    width: WIDTH - 75,
-                },
-                headerBackTitleVisible: false,
-                headerTintColor: 'white',
-                headerTitleAllowFontScaling: true
-            }
-        },
-        Settings: {
-            screen: SettingsScreen,
-            navigationOptions: {
-                headerTitle: "Settings",
-                headerStyle: {
-                    backgroundColor: Colors.darkGrey,
-                    height: Platform.OS === 'ios' ? 110 : Header.height,
-                },
-                headerTitleStyle: {
-                    fontSize: 30,
-                    fontFamily: 'jack-silver',
-                    textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
-                    width: WIDTH - 75,
-                },
-                headerBackTitleVisible: false,
-                headerTintColor: 'white',
-                headerTitleAllowFontScaling: true
-            }
-        },
-        SignupLogin: {
-            screen: SignupLoginScreen,
-            navigationOptions: {
-                headerTitle: "Account",
-                headerStyle: {
-                    backgroundColor: Colors.darkGrey,
-                    height: Platform.OS === 'ios' ? 110 : Header.height,
-                },
-                headerTitleStyle: {
-                    fontSize: 30,
-                    fontFamily: 'jack-silver',
-                    textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
-                    width: WIDTH - 75,
-                },
-                headerBackTitleVisible: false,
-                headerTintColor: 'white',
-                headerTitleAllowFontScaling: true
-            }
-        },
-        PrivacyStatement: {
-            screen: PrivacyStatementScreen,
-            navigationOptions: {
-                headerTitle: "Privacy Statement",
-                headerStyle: {
-                    backgroundColor: Colors.darkGrey,
-                    height: Platform.OS === 'ios' ? 110 : Header.height,
-                },
-                headerTitleStyle: {
-                    fontSize: 30,
-                    fontFamily: 'jack-silver',
-                    textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
-                    width: WIDTH - 75,
-                },
-                headerBackTitleVisible: false,
-                headerTintColor: 'white',
-                headerTitleAllowFontScaling: true
-            }
-        },
-        Signup: {
-            screen: SignupScreen,
-            navigationOptions: {
-                headerTitle: "Sign Up",
-                headerStyle: {
-                    backgroundColor: Colors.darkGrey,
-                    height: Platform.OS === 'ios' ? 110 : Header.height,
-                },
-                headerTitleStyle: {
-                    fontSize: 30,
-                    fontFamily: 'jack-silver',
-                    textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
-                    width: WIDTH - 75,
-                },
-                headerBackTitleVisible: false,
-                headerTintColor: 'white',
-                headerTitleAllowFontScaling: true
-            }
-        },
-        Delete: {
-            screen: DeleteScreen,
-            navigationOptions: {
-                title: 'Delete Account',
-                headerStyle: {
-                    backgroundColor: Colors.darkGrey,
-                    height: Platform.OS === 'ios' ? 110 : Header.height
-                },
-                headerTitleStyle: {
-                    fontSize: 30,
-                    fontFamily: 'jack-silver',
-                    color: '#fff',
-                    textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
-                    width: WIDTH - 75,
-                },
-                headerTintColor: '#fff',
-                headerBackTitleVisible: false,
-            },
-        }
-    }
-);
+MainTabNavigator
+ Home 
+    - Map *
+    - Event *
+    - User Display *
+ Create
+    - Create Event (same as edit Event) *
+ User
+    - User Profile *
+    - Settings *
+    - Delete *
+ Feed
+    - Friends Feed * 
+    - Discovery Feed (not needed now)
+ Notification
+    - Notification Screen (User only: friend requests, going updates, ...) *
+*/
+export const UserNavigator = () => {
+    return (
+        <UserTabNavigator.Navigator screenOptions={defaultNavOptions} >
+            <UserTabNavigator.Screen name="Home" component={HomeNavigator} />
+            <UserTabNavigator.Screen name="Feed" component={FeedNavigator} />
+            <UserTabNavigator.Screen name="Create" component={CreateNavigator} />
+            <UserTabNavigator.Screen name="Notification" component={NotificationNavigator} />
+            <UserTabNavigator.Screen name="User" component={UserProfileNavigator} />
+        </UserTabNavigator.Navigator>
+    )
+}
+
+export const AuthNavigator = () => {
+    return (
+        <AuthStackNavigator.Navigator>
+            <AuthStackNavigator.Screen
+                name="SignupLogin"
+                component={SignupLoginScreen}
+                options={{ title: "Account" }}
+            />
+            <AuthStackNavigator.Screen
+                name="PrivacyStatement"
+                component={PrivacyStatementScreen}
+                options={{ title: "Privacy Statement" }}
+            />
+            <AuthStackNavigator.Screen
+                name="Signup"
+                component={SignupScreen}
+                options={{ title: "Sign Up" }}
+            />
+        </AuthStackNavigator.Navigator>
+    )
+}
+
+/*
+GuestNavigator
+ Home 
+    - Startup *
+    - Map *
+    - Event * 
+    - User Display *
+ Auth
+    - Signup/login *
+    - Privacy Statement *
+    - Signup *
 */
 
-//export default createAppContainer(EventNavigator);
+export const GuestNavigator = () => {
+    return (
+        <GuestTabNavigator.Navigator screenOptions={defaultNavOptions} >
+            <GuestTabNavigator.Screen name="Home" component={HomeNavigator} />
+            <GuestTabNavigator.Screen name="Auth" component={AuthNavigator} />
+        </GuestTabNavigator.Navigator>
+    )
+}

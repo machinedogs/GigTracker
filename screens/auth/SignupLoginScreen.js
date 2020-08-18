@@ -16,8 +16,13 @@ const SignupLoginScreen = props => {
 
     const goHomeHandler = () => {
         // v4: props.navigation.replace('Home');
+        //props.navigation.dispatch(
+        //    StackActions.replace('Map')
+        //);
         props.navigation.dispatch(
-            StackActions.replace('Home')
+            CommonActions.navigate('Home', {
+                screen: 'Map',
+            })
         );
     }
 

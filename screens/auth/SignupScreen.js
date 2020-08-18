@@ -29,8 +29,14 @@ const SignupScreen = props => {
                 try {
                     await dispatch(authActions.signup(email, password, userName));
                     // v4: props.navigation.replace('Home');
-                    props.navigation.dispatch(
-                        StackActions.replace('Home')
+                    // props.navigation.dispatch(
+                    //    StackActions.replace('Map')
+                    //);
+                    setIsLoading(false);
+                    await props.navigation.dispatch(
+                        CommonActions.navigate('Home', {
+                            screen: 'Map',
+                        })
                     );
                 } catch (err) {
                     setError(err.message);
@@ -51,24 +57,24 @@ const SignupScreen = props => {
     const handleUserNameInput = (userNameInput) => {
         setUserName(userNameInput);
         // Pass username to the validator to confirm its a valid username
-        console.log(userNameInput)
-        console.log(userNameInputValidator(userNameInput))
+        //console.log(userNameInput)
+        //console.log(userNameInputValidator(userNameInput))
         setIsUserNameValid(userNameInputValidator(userNameInput));
     }
 
     const handleEmailInput = (emailInput) => {
         setEmail(emailInput);
         // Pass email to the validator to confirm its an email
-        console.log(emailInput)
-        console.log(emailInputValidator(emailInput))
+        //console.log(emailInput)
+        //console.log(emailInputValidator(emailInput))
         setIsEmailValid(emailInputValidator(emailInput));
     }
 
     const handlePasswordInput = (passwordInput) => {
         setPassword(passwordInput);
         // Pass password to the validator to confirm its a valid password
-        console.log(passwordInput)
-        console.log(passwordInputValidator(passwordInput))
+        //console.log(passwordInput)
+        //console.log(passwordInputValidator(passwordInput))
         setPasswordValid(passwordInputValidator(passwordInput));
     }
 
