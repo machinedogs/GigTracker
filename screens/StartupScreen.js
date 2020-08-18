@@ -6,6 +6,7 @@ import {
     Text,
     StatusBar
 } from 'react-native';
+import { StackActions } from '@react-navigation/native';
 import * as SecureStore from 'expo-secure-store';
 import { useDispatch } from 'react-redux';
 
@@ -54,7 +55,10 @@ const StartupScreen = props => {
 
             if (!userData) {
                 // Go to home screen if no userData saved to storage
-                props.navigation.replace('Home');
+                //props.navigation.replace('Home');
+                props.navigation.dispatch(
+                    StackActions.replace('Home')
+                );
                 return;
             }
 
@@ -70,7 +74,10 @@ const StartupScreen = props => {
 
             // check if refresh token expired, then user must manually log in again in home screen
             if (refreshTokenExpiryDate <= new Date() || !refreshToken || !userName || !userEmail || !accessToken) {
-                props.navigation.replace('Home');
+                // v4: props.navigation.replace('Home');
+                props.navigation.dispatch(
+                    StackActions.replace('Home')
+                );
                 return;
             }
 
@@ -83,7 +90,10 @@ const StartupScreen = props => {
                     // Delete the invalid user data
                     SecureStore.deleteItemAsync('userData'); // user will have to login again
                     SecureStore.deleteItemAsync('images');
-                    props.navigation.replace('Home');
+                    // v4: props.navigation.replace('Home');
+                    props.navigation.dispatch(
+                        StackActions.replace('Home')
+                    );
                     return;
                 }
 
@@ -92,7 +102,10 @@ const StartupScreen = props => {
                 dispatch(authActions.getGoingEvents(accessToken));
                 //Dispatch action to update profile image state in store 
                 await dispatch(updateUserProfile(profileImage, transformedData))
-                props.navigation.replace('Home');
+                // v4: props.navigation.replace('Home');
+                props.navigation.dispatch(
+                    StackActions.replace('Home')
+                );
                 return;
             }
 
@@ -103,7 +116,10 @@ const StartupScreen = props => {
             dispatch(authActions.getGoingEvents(accessToken));
             //Dispatch action to update profile image state in store 
             await dispatch(updateUserProfile(profileImage, transformedData));
-            props.navigation.replace('Home');
+            // v4: props.navigation.replace('Home');
+            props.navigation.dispatch(
+                StackActions.replace('Home')
+            );
         };
         tryLogin();
     }, [dispatch]);
@@ -116,8 +132,8 @@ const StartupScreen = props => {
                 <Text> </Text>
                 <View style={{ flexDirection: 'row' }}>
 
-                    
-                <ActivityIndicator size='large' color='white' />
+
+                    <ActivityIndicator size='large' color='white' />
                 </View>
 
             </View>

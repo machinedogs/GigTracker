@@ -33,7 +33,7 @@ const EventScreen = (props) => {
 	const accessToken = useSelector((state) => state.user.accessToken);
 	const savedEvents = useSelector((state) => state.events.savedEvents);
 	const goingEvents = useSelector((state) => state.user.goingEvents);
-	const event = props.navigation.getParam("event");
+	const { event } = props.route.params; //v4: props.navigation.getParam("event");
 	const [numGoing, setNumGoing] = useState(event.attending);
 
 	const dispatch = useDispatch();

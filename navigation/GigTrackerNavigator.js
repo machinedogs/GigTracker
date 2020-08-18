@@ -1,11 +1,13 @@
+import React from 'react';
 import { Platform, Dimensions } from 'react-native';
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator, Header } from 'react-navigation-stack';
+import { createStackNavigator } from '@react-navigation/stack';
 
 import Colors from '../constants/Colors';
 import MapScreen from '../screens/events/MapScreen';
 import CreateEventScreen from '../screens/user/CreateEventScreen';
-import UserProfileScreen from '../screens/user/UserProfileScreen';
+import UserProfileScreen, { 
+    screenOptions as UserProfileScreenOptions
+} from '../screens/user/UserProfileScreen';
 import ManageEventScreen from '../screens/user/ManageEventScreen';
 import EventScreen from '../screens/events/EventScreen'
 import StartupScreen from '../screens/StartupScreen';
@@ -18,6 +20,92 @@ import SignupScreen from '../screens/auth/SignupScreen';
 
 const WIDTH = Dimensions.get('window').width;
 
+const GigTrackerStackNavigator = createStackNavigator();
+
+const defaultNavOptions = {
+    headerStyle: {
+        backgroundColor: Colors.darkGrey,
+        height: Platform.OS === 'ios' ? 110 : Header.height
+    },
+    headerTitleStyle: {
+        fontSize: 30,
+        fontFamily: 'jack-silver',
+        color: '#fff',
+        textAlign: Platform.OS === 'ios' ? 'center' : 'auto',
+        width: WIDTH - 75,
+    },
+    headerTintColor: '#fff',
+    headerBackTitleVisible: false,
+}
+
+export const GigTrackerNavigator = () => {
+    return (
+        <GigTrackerStackNavigator.Navigator screensOptions={defaultNavOptions}>
+            <GigTrackerStackNavigator.Screen
+                name="Startup"
+                component={StartupScreen}
+                options={{ headerShown: false }}
+            />
+            <GigTrackerStackNavigator.Screen
+                name="Home"
+                component={MapScreen}
+                options={{
+                    headerShown: false,
+                    gestureEnabled: false, // this stops us from swiping back to startup screen
+                }}
+            />
+            <GigTrackerStackNavigator.Screen
+                name="CreateEvent"
+                component={CreateEventScreen}
+                options={{
+                    title: "create event",
+                }}
+            />
+            <GigTrackerStackNavigator.Screen
+                name="UserProfile"
+                component={UserProfileScreen}
+                options={UserProfileScreenOptions}
+            />
+            <GigTrackerStackNavigator.Screen
+                name="EventScreen"
+                component={EventScreen}
+                options={{title: "event details"}}
+            />
+            <GigTrackerStackNavigator.Screen
+                name="GoingListScreen"
+                component={UserDisplay}
+                options={{title: "People Going"}}
+            />
+            <GigTrackerStackNavigator.Screen
+                name="Settings"
+                component={SettingsScreen}
+                options={{title: "Settings"}}
+            />
+            <GigTrackerStackNavigator.Screen
+                name="SignupLogin"
+                component={SignupLoginScreen}
+                options={{title: "Account"}}
+            />
+            <GigTrackerStackNavigator.Screen
+                name="PrivacyStatement"
+                component={PrivacyStatementScreen}
+                options={{title: "Privacy Statement"}}
+            />
+            <GigTrackerStackNavigator.Screen
+                name="Signup"
+                component={SignupScreen}
+                options={{title: "Sign Up"}}
+            />
+            <GigTrackerStackNavigator.Screen
+                name="Delete"
+                component={DeleteScreen}
+                options={{title: "Delete Account"}}
+            />
+        </GigTrackerStackNavigator.Navigator>
+    );
+};
+
+/*
 const EventNavigator = createStackNavigator(
     {
         Startup: {
@@ -207,5 +295,6 @@ const EventNavigator = createStackNavigator(
         }
     }
 );
+*/
 
-export default createAppContainer(EventNavigator);
+//export default createAppContainer(EventNavigator);

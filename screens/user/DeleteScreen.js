@@ -2,6 +2,8 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { Button, Card } from 'native-base';
+import { CommonActions } from '@react-navigation/native';
+
 import Colors from '../../constants/Colors';
 import * as authActions from '../../store/actions/user';
 
@@ -18,7 +20,12 @@ const DeleteScreen = props => {
                     text: "Yes",
                     onPress: () => {
                         dispatch(authActions.deleteAccount())
-                        props.navigation.navigate('Home');
+                        // v4: props.navigation.navigate('Home');
+                        props.navigation.dispatch(
+                            CommonActions.navigate({
+                                name: 'Home',
+                            })
+                        );
                     },
                     style: 'destructive'
                 },
@@ -56,7 +63,7 @@ const DeleteScreen = props => {
                             paddingHorizontal: 10,
                             paddingVertical: 5
                         }}>
-                            <Text style={{ fontSize: 17}}>Delete</Text>
+                            <Text style={{ fontSize: 17 }}>Delete</Text>
                         </View>
                     </TouchableOpacity>
                 </View>

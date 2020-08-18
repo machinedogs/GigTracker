@@ -14,6 +14,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Tab, Tabs, Button } from "native-base";
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
+import { CommonActions } from '@react-navigation/native';
 
 import HeaderButton from '../../components/HeaderButton';
 import { updateUserProfile } from "../../store/actions/user";
@@ -149,7 +150,15 @@ const UserProfileScreen = (props) => {
 							renderItem={({ item }) =>
 								<View>
 									<TouchableOpacity onPress={() => {
-										props.navigation.navigate('EventScreen', { event: item })
+										// v4: props.navigation.navigate('EventScreen', { event: item })
+										props.navigation.dispatch(
+											CommonActions.navigate({
+												name: 'EventScreen',
+												params: {
+													event: item,
+												},
+											})
+										);
 									}} >
 										<EventCard event={item} />
 									</TouchableOpacity>
@@ -167,7 +176,15 @@ const UserProfileScreen = (props) => {
 							renderItem={({ item }) =>
 								<View>
 									<TouchableOpacity onPress={() => {
-										props.navigation.navigate('EventScreen', { event: item })
+										// v4: props.navigation.navigate('EventScreen', { event: item })
+										props.navigation.dispatch(
+											CommonActions.navigate({
+												name: 'EventScreen',
+												params: {
+													event: item,
+												},
+											})
+										);
 									}} >
 										<EventCard event={item} />
 									</TouchableOpacity>
@@ -185,14 +202,30 @@ const UserProfileScreen = (props) => {
 							renderItem={({ item }) =>
 								<View>
 									<TouchableOpacity onPress={() => {
-										props.navigation.navigate('EventScreen', { event: item })
+										// props.navigation.navigate('EventScreen', { event: item })
+										props.navigation.dispatch(
+											CommonActions.navigate({
+												name: 'EventScreen',
+												params: {
+													event: item,
+												},
+											})
+										);
 									}} >
 										<EventCard event={item} />
 									</TouchableOpacity>
 									<View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingHorizontal: 15 }}>
 										<Button full transparent light
 											onPress={() => {
-												props.navigation.navigate('CreateEvent', { event: item })
+												// v4: props.navigation.navigate('CreateEvent', { event: item })
+												props.navigation.dispatch(
+													CommonActions.navigate({
+														name: 'CreateEvent',
+														params: {
+															event: item,
+														},
+													})
+												);
 											}}
 										>
 											<Text style={styles.buttonText}>Edit</Text>
@@ -223,15 +256,21 @@ const UserProfileScreen = (props) => {
 	);
 };
 
-UserProfileScreen.navigationOptions = navData => {
+export const screenOptions = navData => {
 	return {
+		title: 'Profile',
 		headerRight: () => (
 			<HeaderButtons HeaderButtonComponent={HeaderButton}>
 				<Item
 					title='Menu'
 					iconName='ios-cog'
 					onPress={() => {
-						navData.navigation.navigate('Settings');
+						// v4: navData.navigation.navigate('Settings');
+						navData.navigation.dispatch(
+							CommonActions.navigate({
+								name: 'Settings',
+							})
+						);
 					}}
 				/>
 			</HeaderButtons>

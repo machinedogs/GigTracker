@@ -32,6 +32,7 @@ import Geocoder from 'react-native-geocoding';
 import InsetShadow from 'react-native-inset-shadow';
 import { Ionicons, Fontisto } from "@expo/vector-icons";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { CommonActions } from '@react-navigation/native';
 
 import MapStyle from "../../constants/MapStyle";
 import eventBuilder from "../../models/createEvent";
@@ -57,10 +58,9 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 Geocoder.init("AIzaSyBWXt03TgEnGb9oIeTPXgB1dyGtSsG9IAs");
 
 const CreateEventScreen = (props) => {
-  let initEvent = false;
-  if (props.navigation.getParam('event', 0)) {
+  let initEvent = props.route.params?.event ?? false; // Pull in event if passed in, if not deafult value is false
+  if (initEvent) {
     console.log('CreateEventScreen.js/ - initial event was passed');
-    initEvent = props.navigation.getParam('event');
   }
   //Initial states of event screen
   const initTitle = initEvent ? initEvent.title : null;
@@ -105,7 +105,8 @@ const CreateEventScreen = (props) => {
 
   useEffect(() => {
     getLocation();
-    if (props.navigation.getParam('event', 0)) {
+    let initEvent = props.route.params?.event ?? false;
+    if (initEvent) { //props.navigation.getParam('event', 0)
       console.log('CreateEventScreen.js/useEffect() - setting location to initEvents location: ' + JSON.stringify(initEvent.location) + "\n");
       setLocation(initEvent.location);
     }
@@ -169,14 +170,30 @@ const CreateEventScreen = (props) => {
         // Edit existing event
         console.log(`CreateEventScreen.js/handleSubmitEvent() - Dispatching editEvent action on: ${newEvent.title}\n`);
         dispatch(eventActions.editEvent(newEvent, initEvent.id)).then(() => {
-          props.navigation.navigate("Home", { eventModified: true, });
+          // v4: props.navigation.navigate("Home", { eventModified: true, });
+          props.navigation.dispatch(
+            CommonActions.navigate({
+              name: 'Home',
+              params: {
+                eventModified: true,
+              },
+            })
+          );
         });
       }
       else {
         // Create new event
         console.log(`CreateEventScreen.js/handleSubmitEvent() - Dispatching createEvent action on: ${newEvent.title}\n`);
         dispatch(eventActions.createEvent(newEvent)).then(() => {
-          props.navigation.navigate("Home", { eventCreated: true, });
+          // v4: props.navigation.navigate("Home", { eventCreated: true, });
+          props.navigation.dispatch(
+            CommonActions.navigate({
+              name: 'Home',
+              params: {
+                eventCreated: true,
+              },
+            })
+          );
         });
       }
     } else {

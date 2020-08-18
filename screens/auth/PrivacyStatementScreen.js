@@ -1,8 +1,11 @@
 import React from 'react';
+import { CommonActions } from '@react-navigation/native';
 import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
 import { Button } from 'native-base';
-import Colors from '../../constants/Colors';
 import { ScrollView } from 'react-native-gesture-handler';
+
+import Colors from '../../constants/Colors';
+
 
 const PrivacyStatementScreen = props => {
     return (
@@ -32,7 +35,12 @@ const PrivacyStatementScreen = props => {
                             light
                             style={styles.agreeButton}
                             onPress={() => {
-                                props.navigation.navigate('Signup');
+                                // v4: props.navigation.navigate('Signup');
+                                props.navigation.dispatch(
+                                    CommonActions.navigate({
+                                        name: 'Signup',
+                                    })
+                                );
                             }}
                         >
                             <Text style={styles.buttonText}>
@@ -45,7 +53,14 @@ const PrivacyStatementScreen = props => {
                             round
                             light
                             style={styles.disagreeButton}
-                            onPress={() => {props.navigation.navigate('Home');}}
+                            onPress={() => {
+                                // v4: props.navigation.navigate('Home');
+                                props.navigation.dispatch(
+                                    CommonActions.navigate({
+                                        name: 'Home',
+                                    })
+                                );
+                            }}
                         >
                             <Text style={styles.buttonText}>
                                 Disagree
