@@ -26,6 +26,8 @@ const StartupScreen = props => {
         const tryLogin = async () => {
             let coordinates = '';
             await getGeoInfo().then(coords => coordinates = coords);
+            // Set the initial User Location state
+            dispatch(authActions.setInitialLocation(coordinates))
             var currentDate = new Date()
             currentDate.setHours(0, 0, 0, 0);
             dispatch(eventActions.setDateFilter(currentDate))

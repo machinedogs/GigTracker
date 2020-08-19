@@ -12,6 +12,11 @@ export const GOING_TO_EVENT = 'GOING_TO_EVENT';
 export const NOT_GOING_TO_EVENT = 'NOT_GOING_TO_EVENT';
 export const UPDATE_EVENT = "UPDATE_EVENT";
 export const SET_DID_TRY_AUTO_LOGIN = 'SET_DID_TRY_AUTO_LOGIN';
+export const SET_INITIAL_LOCATION = 'SET_INITIAL_LOCATION';
+
+export const setInitialLocation = (coords) => {
+    return { type: SET_INITIAL_LOCATION, coords: coords }
+};
 
 export const setDidTryAutoLogin = () => {
     return { type: SET_DID_TRY_AUTO_LOGIN };
