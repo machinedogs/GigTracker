@@ -40,13 +40,6 @@ const ASPECT_RATIO = width / height
 const LATITUDE_DELTA = 0.0922
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
 
-const INITIAL_REGION = {
-  latitude: 39.9,
-  longitude: -75.1,
-  latitudeDelta: 1,
-  longitudeDelta: 1,
-};
-
 const MapScreen = props => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const userAccessToken = useSelector(state => state.user.accessToken);
@@ -224,7 +217,7 @@ const MapScreen = props => {
         />
       )}
       <MapView
-        initialRegion={INITIAL_REGION}
+        initialRegion={useSelector(state => state.user.initialLocation)}
         style={styles.map}
         provider={PROVIDER_GOOGLE}
         showsUserLocation
@@ -237,158 +230,158 @@ const MapScreen = props => {
         customMapStyle={MapStyle /* theme.dark ? darkMapStyle : lightMapStyle */}
         clusterColor="#341f97"
         onPress={() => {
-          setShowCalendar(false);
-          setShowCategories(false);
-        }}
+        setShowCalendar(false);
+        setShowCategories(false);
+      }}
         edgePadding={{ top: 100, left: 50, bottom: 150, right: 50 }}
       >
-        {filteredEvents.map(event => (
-          <Marker
-            ref={markerRef}
-            coordinate={{
-              latitude: parseFloat(event.location.latitude),
-              longitude: parseFloat(event.location.longitude)
-            }}
-            pinColor="#341f97"
-            key={event.id}
-            tracksViewChanges={false}
-            onPress={onPinPress.bind(this, event)}
-          >
-            {/* customMarker needs to be nested within the marker component for our icons to show */}
-            <EventPin category={event.category} size={50} />
-            {Platform.OS === 'ios' ?
-              (
-                <Callout
-                  style={styles.plainView}
-                  tooltip={true}
-                  key={event.id}
-                >
-                  <View>
-                    <CalloutSubview onPress={onEventCalloutPress.bind(this, event)}>
-                      <EventCard event={event} style={{ width: SCREEN_WIDTH * 0.75 }} streetAddress />
-                    </CalloutSubview>
-                  </View>
-                </Callout>
-              ) :
-              ( // Android
-                <Callout
-                  style={styles.plainView}
-                  onPress={onEventCalloutPress.bind(this, event)}
-                  tooltip={true}
-                  key={event.id}
-                >
-                  <CustomCallout
-                    style={{ width: SCREEN_WIDTH * 0.75 }}
-                    event={event}
-                  />
-                </Callout>
-              )
-            }
-          </Marker>
-        ))
-        }
+      {filteredEvents.map(event => (
+        <Marker
+          ref={markerRef}
+          coordinate={{
+            latitude: parseFloat(event.location.latitude),
+            longitude: parseFloat(event.location.longitude)
+          }}
+          pinColor="#341f97"
+          key={event.id}
+          tracksViewChanges={false}
+          onPress={onPinPress.bind(this, event)}
+        >
+          {/* customMarker needs to be nested within the marker component for our icons to show */}
+          <EventPin category={event.category} size={50} />
+          {Platform.OS === 'ios' ?
+            (
+              <Callout
+                style={styles.plainView}
+                tooltip={true}
+                key={event.id}
+              >
+                <View>
+                  <CalloutSubview onPress={onEventCalloutPress.bind(this, event)}>
+                    <EventCard event={event} style={{ width: SCREEN_WIDTH * 0.75 }} streetAddress />
+                  </CalloutSubview>
+                </View>
+              </Callout>
+            ) :
+            ( // Android
+              <Callout
+                style={styles.plainView}
+                onPress={onEventCalloutPress.bind(this, event)}
+                tooltip={true}
+                key={event.id}
+              >
+                <CustomCallout
+                  style={{ width: SCREEN_WIDTH * 0.75 }}
+                  event={event}
+                />
+              </Callout>
+            )
+          }
+        </Marker>
+      ))
+      }
       </MapView>
       {
-        !userAccessToken ?
-          (
-            <SafeAreaView
-              style={{
-                position: 'absolute',//use absolute position to show button on top of the map
-                bottom: '0.5%',
-                alignSelf: 'center' //for align to right
-              }}
-            >
+    !userAccessToken ?
+      (
+        <SafeAreaView
+          style={{
+            position: 'absolute',//use absolute position to show button on top of the map
+            bottom: '0.5%',
+            alignSelf: 'center' //for align to right
+          }}
+        >
+          <TouchableOpacity
+            style={styles.bottomButtonContainer}
+            onPress={() => {
+              // v4: props.navigation.navigate('SignupLogin')
+              props.navigation.dispatch(
+                CommonActions.navigate('Auth', {
+                  screen: 'SignupLogin',
+                })
+              );
+            }}
+          >
+            <View style={styles.bottomButtonStyle}>
+              <VectorIcon
+                name='ios-person'
+                type='Ionicons'
+                size={28}
+                style={{ color: 'white' }}
+              />
+            </View>
+          </TouchableOpacity>
+        </SafeAreaView>
+      ) :
+      (
+        <SafeAreaView style={styles.row}>
+          <TouchableOpacity
+            style={styles.bottomButtonContainer}
+            onPress={() => {
+              // v4: props.navigation.navigate('UserProfile')
+              props.navigation.dispatch(
+                CommonActions.navigate('User', {
+                  screen: 'UserProfile',
+                })
+              );
+            }}
+          >
+            <View style={styles.bottomButtonStyle}>
+              <VectorIcon
+                name='ios-person'
+                type='Ionicons'
+                size={28}
+                style={{ color: 'white' }}
+              />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ paddingHorizontal: 10, paddingBottom: 10 }}
+            onPress={() => {
+              // v4: props.navigation.navigate('CreateEvent')
+              props.navigation.dispatch(
+                CommonActions.navigate({
+                  name: 'CreateEvent',
+                })
+              );
+            }}
+          >
+            <View style={styles.bottomButtonStyle}>
+              <VectorIcon
+                name='add-location'
+                type='MaterialIcons'
+                size={28}
+                style={{ color: 'white' }}
+              />
+            </View>
+          </TouchableOpacity>
+          {isRefreshing ? // if refreshing events, show activity indicator
+            (
+              <View style={styles.bottomButtonContainer}>
+                <View style={styles.bottomButtonStyle}>
+                  <ActivityIndicator color='white' />
+                </View>
+              </View>
+            ) :
+            (
               <TouchableOpacity
                 style={styles.bottomButtonContainer}
-                onPress={() => {
-                  // v4: props.navigation.navigate('SignupLogin')
-                  props.navigation.dispatch(
-                    CommonActions.navigate('Auth', {
-                      screen: 'SignupLogin',
-                    })
-                  );
-                }}
+                onPress={refreshEvents}
               >
                 <View style={styles.bottomButtonStyle}>
                   <VectorIcon
-                    name='ios-person'
-                    type='Ionicons'
+                    name='reload1'
+                    type='AntDesign'
                     size={28}
                     style={{ color: 'white' }}
                   />
                 </View>
               </TouchableOpacity>
-            </SafeAreaView>
-          ) :
-          (
-            <SafeAreaView style={styles.row}>
-              <TouchableOpacity
-                style={styles.bottomButtonContainer}
-                onPress={() => {
-                  // v4: props.navigation.navigate('UserProfile')
-                  props.navigation.dispatch(
-                    CommonActions.navigate('User', {
-                      screen: 'UserProfile',
-                    })
-                  );
-                }}
-              >
-                <View style={styles.bottomButtonStyle}>
-                  <VectorIcon
-                    name='ios-person'
-                    type='Ionicons'
-                    size={28}
-                    style={{ color: 'white' }}
-                  />
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{ paddingHorizontal: 10, paddingBottom: 10 }}
-                onPress={() => {
-                  // v4: props.navigation.navigate('CreateEvent')
-                  props.navigation.dispatch(
-                    CommonActions.navigate({
-                      name: 'CreateEvent',
-                    })
-                  );
-                }}
-              >
-                <View style={styles.bottomButtonStyle}>
-                  <VectorIcon
-                    name='add-location'
-                    type='MaterialIcons'
-                    size={28}
-                    style={{ color: 'white' }}
-                  />
-                </View>
-              </TouchableOpacity>
-              {isRefreshing ? // if refreshing events, show activity indicator
-                (
-                  <View style={styles.bottomButtonContainer}>
-                    <View style={styles.bottomButtonStyle}>
-                      <ActivityIndicator color='white' />
-                    </View>
-                  </View>
-                ) :
-                (
-                  <TouchableOpacity
-                    style={styles.bottomButtonContainer}
-                    onPress={refreshEvents}
-                  >
-                    <View style={styles.bottomButtonStyle}>
-                      <VectorIcon
-                        name='reload1'
-                        type='AntDesign'
-                        size={28}
-                        style={{ color: 'white' }}
-                      />
-                    </View>
-                  </TouchableOpacity>
-                )
-              }
-            </SafeAreaView>
-          )
-      }
+            )
+          }
+        </SafeAreaView>
+      )
+  }
     </View >
   );
 }

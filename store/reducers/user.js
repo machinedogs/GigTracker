@@ -6,6 +6,7 @@ import {
 	NOT_GOING_TO_EVENT,
 	SET_GOING_EVENTS,
 	SET_DID_TRY_AUTO_LOGIN,
+	SET_INITIAL_LOCATION
 } from "../actions/user";
 
 const initialState = {
@@ -15,11 +16,22 @@ const initialState = {
 	refreshToken: "",
 	profileImage: "https://images.unsplash.com/photo-1582266255765-fa5cf1a1d501?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80",
 	goingEvents: [],
-	didTryAutoLogin: false
+	didTryAutoLogin: false,
+	initialLocation: {}
 };
 
 export default (state = initialState, action) => {
 	switch (action.type) {
+		case SET_INITIAL_LOCATION:
+			return {
+				...state,
+				initialLocation: {
+					latitude: action.coords.latitude,
+					longitude: action.coords.longitude,
+					latitudeDelta: .03,
+					longitudeDelta: .03,
+				  }
+			}
 		case SET_DID_TRY_AUTO_LOGIN:
 			return {
 				...state,
