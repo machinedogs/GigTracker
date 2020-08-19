@@ -32,6 +32,7 @@ import Geocoder from 'react-native-geocoding';
 import InsetShadow from 'react-native-inset-shadow';
 import { Ionicons, Fontisto } from "@expo/vector-icons";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { CommonActions } from '@react-navigation/native';
 
 import MapStyle from "../../constants/MapStyle";
 import eventBuilder from "../../models/createEvent";
@@ -57,10 +58,9 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 Geocoder.init("AIzaSyBWXt03TgEnGb9oIeTPXgB1dyGtSsG9IAs");
 
 const CreateEventScreen = (props) => {
-  let initEvent = false;
-  if (props.navigation.getParam('event', 0)) {
+  let initEvent = props.route.params?.event ?? false; // Pull in event if passed in, if not deafult value is false
+  if (initEvent) {
     console.log('CreateEventScreen.js/ - initial event was passed');
-    initEvent = props.navigation.getParam('event');
   }
   //Initial states of event screen
   const initTitle = initEvent ? initEvent.title : null;
@@ -95,6 +95,19 @@ const CreateEventScreen = (props) => {
   let mapRef = useRef(null);
   let markerRef = useRef(null);
 
+  // Reset the form fields after submitting or modifying event so that when user navigates back it doesn't have old values
+  const resetForm = () => {
+    setTitle(null);
+    setDescription(null);
+    setLocation(null);
+    setAddress(null);
+    setDate(new Date());
+    setTime(new Date());
+    setCategory("Select a Category");
+    setImage(null);
+    setIsImageUploading(false);
+  }
+
   //Updates event photo
   const updateEventPhoto = async () => {
     let eventPhotoRatio = [4, 3];
@@ -105,7 +118,8 @@ const CreateEventScreen = (props) => {
 
   useEffect(() => {
     getLocation();
-    if (props.navigation.getParam('event', 0)) {
+    let initEvent = props.route.params?.event ?? false;
+    if (initEvent) { //props.navigation.getParam('event', 0)
       console.log('CreateEventScreen.js/useEffect() - setting location to initEvents location: ' + JSON.stringify(initEvent.location) + "\n");
       setLocation(initEvent.location);
     }
@@ -169,17 +183,32 @@ const CreateEventScreen = (props) => {
         // Edit existing event
         console.log(`CreateEventScreen.js/handleSubmitEvent() - Dispatching editEvent action on: ${newEvent.title}\n`);
         dispatch(eventActions.editEvent(newEvent, initEvent.id)).then(() => {
-          props.navigation.navigate("Home", { eventModified: true, });
-        });
-      }
-      else {
+          // v4: props.navigation.navigate("Home", { eventModified: true, });
+          props.navigation.dispatch(
+            CommonActions.navigate({
+              name: 'Map',
+              params: {
+                eventModified: true,
+              },
+            })
+          );
+        }).then(resetForm());
+      } else {
         // Create new event
         console.log(`CreateEventScreen.js/handleSubmitEvent() - Dispatching createEvent action on: ${newEvent.title}\n`);
         dispatch(eventActions.createEvent(newEvent)).then(() => {
-          props.navigation.navigate("Home", { eventCreated: true, });
-        });
+          // v4: props.navigation.navigate("Home", { eventCreated: true, });
+          props.navigation.dispatch(
+            CommonActions.navigate({
+              name: 'Map',
+              params: {
+                eventCreated: true,
+              },
+            })
+          );
+        }).then(resetForm());
       }
-    } else {
+    } else { // Form is Not Valid 
       // Alert that create event form is not valid
       Alert.alert(
         "Incomplete form",
@@ -205,7 +234,7 @@ const CreateEventScreen = (props) => {
         console.log("CreateEventScreen.js/handlePinDragEnd() - received address: " + addressComponent);
         setAddress(addressComponent);
       })
-      .catch(error => console.warn(error));
+      .catch(error => console.warn("CreateEventScreen.js/handlePinDragEnd() - Caught error:\n" + error));
   };
 
   // Executed when user selects an address from the google autocomplete search

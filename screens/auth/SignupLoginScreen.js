@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
 import { Button } from 'native-base';
+import { StackActions, CommonActions } from '@react-navigation/native';
+
 
 import Colors from '../../constants/Colors';
 import LoginModal from '../../components/LoginModal';
@@ -12,13 +14,9 @@ const SignupLoginScreen = props => {
         setIsLoginMode(false);
     }
 
-    const goHomeHandler = () => {
-        props.navigation.replace('Home');
-    }
-
     return (
         <SafeAreaView style={styles.container}>
-            <LoginModal visible={isLoginMode} onCancel={cancelLoginHandler} navigateHome={goHomeHandler}/>
+            <LoginModal visible={isLoginMode} onCancel={cancelLoginHandler} />
             <Text style={styles.welcomeText}>
                 {'Stay Current\nwith whats\ngoing on'}
             </Text>
@@ -28,7 +26,12 @@ const SignupLoginScreen = props => {
                     light
                     style={styles.createAccountButton}
                     onPress={() => {
-                        props.navigation.navigate("PrivacyStatement")
+                        // v4: props.navigation.navigate("PrivacyStatement")
+                        props.navigation.dispatch(
+                            CommonActions.navigate({
+                                name: 'PrivacyStatement'
+                            })
+                        );
                     }}
                 >
                     <Text style={styles.createAccountButtonText}>

@@ -11,6 +11,11 @@ export const SET_GOING_EVENTS = 'SET_GOING_EVENTS';
 export const GOING_TO_EVENT = 'GOING_TO_EVENT';
 export const NOT_GOING_TO_EVENT = 'NOT_GOING_TO_EVENT';
 export const UPDATE_EVENT = "UPDATE_EVENT";
+export const SET_DID_TRY_AUTO_LOGIN = 'SET_DID_TRY_AUTO_LOGIN';
+
+export const setDidTryAutoLogin = () => {
+    return { type: SET_DID_TRY_AUTO_LOGIN };
+};
 
 export const addToGoingEvents = (event) => {
     return async (dispatch, getState) => {

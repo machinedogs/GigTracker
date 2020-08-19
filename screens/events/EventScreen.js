@@ -11,7 +11,8 @@ import {
 	Image,
 	Platform,
 	Linking,
-	Dimensions
+	Dimensions,
+	Alert
 } from "react-native";
 import { Col, Grid } from "react-native-easy-grid";
 import InsetShadow from "react-native-inset-shadow";
@@ -33,12 +34,12 @@ const EventScreen = (props) => {
 	const accessToken = useSelector((state) => state.user.accessToken);
 	const savedEvents = useSelector((state) => state.events.savedEvents);
 	const goingEvents = useSelector((state) => state.user.goingEvents);
-	const event = props.navigation.getParam("event");
+	const { event } = props.route.params; //v4: props.navigation.getParam("event");
 	const [numGoing, setNumGoing] = useState(event.attending);
 
 	const dispatch = useDispatch();
 
-	console.log("this is the event " + JSON.stringify(event));
+	console.log("EventScreen.js/ - Pulled in the following Event:\n" + JSON.stringify(event) + "\n");
 
 	// See if user previously saved the event
 	var initialEventSaveState;
@@ -75,7 +76,7 @@ const EventScreen = (props) => {
 	});
 
 	const pressAddress = () => {
-		console.log("pressing address link");
+		console.log("EventScreen.js/pressAddress() - Pressing Address to open in native mobile map");
 		Linking.openURL(url);
 	}
 
@@ -89,7 +90,7 @@ const EventScreen = (props) => {
 			dispatch(eventActions.unsaveEvent(event));
 		}
 		setEventSaved(!isEventSaved);
-		console.log(isEventSaved);
+		console.log("EventScreen.js/toggleSaveButton() - Save button pressed, current state is: " + isEventSaved);
 	};
 
 	const toggleGoingButton = () => {
@@ -103,13 +104,18 @@ const EventScreen = (props) => {
 			dispatch(userActions.removeFromGoingEvents(event));
 		}
 		setGoing(!isGoing);
-		console.log(isGoing);
+		console.log("EventScreen.js/toggleGoingButton() - Going button pressed, current state is: " + isGoing);
 	};
 
 	const navigateToGoingList = () => {
-		console.log('dispatching get people going')
-		dispatch(eventActions.getPeopleGoing(event.id, accessToken));
-		props.navigation.navigate('GoingListScreen');
+		if (accessToken) {
+			console.log('EventScreen.js/navigateToGoingList() - Dispatching getPeopleGoing action creator')
+			dispatch(eventActions.getPeopleGoing(event.id, accessToken));
+			props.navigation.navigate('GoingListScreen');
+		} else {
+			Alert.alert("You must log in to see who is going to this event");
+		}
+		
 	};
 
 	return (

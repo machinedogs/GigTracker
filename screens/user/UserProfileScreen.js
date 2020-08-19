@@ -14,6 +14,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Tab, Tabs, Button } from "native-base";
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
+import { CommonActions } from '@react-navigation/native';
 
 import HeaderButton from '../../components/HeaderButton';
 import { updateUserProfile } from "../../store/actions/user";
@@ -38,7 +39,7 @@ const UserProfileScreen = (props) => {
 	const [loading, setLoading] = useState(false);
 
 	let updateProfilePhoto = async () => {
-		console.log("Inside update profile photo ");
+		console.log("UserProfileScreen.js/updateProfilePhoto() - User clicked upload image button");
 		//Get image from camera library
 		setLoading(true);
 		var file = await openImagePickerAsync();
@@ -49,12 +50,11 @@ const UserProfileScreen = (props) => {
 			//Get image from firebase
 			var imageUrl = await getImage(file);
 			//dispatch action
-			console.log("Dispatching update user profile with ");
-			console.log(user);
-			console.log(
-				`Dispatching update user profile with this image url ${imageUrl} and this user ${user}`
-			);
+			
 			saveProfileDataToStorage(imageUrl);
+			console.log(
+				`UserProfileScreen.js/updateProfilePhoto() - Dispatching updateUserProfile action creator with:\nimage url ${imageUrl} and this user ${user}`
+			);
 			await dispatch(updateUserProfile(imageUrl, user));
 			setLoading(false);
 		}
@@ -68,12 +68,15 @@ const UserProfileScreen = (props) => {
 			[
 				{
 					text: "Yes",
-					onPress: () => dispatch(eventActions.deleteEvent(event)),
+					onPress: () => {
+						console.log("UserProfileScreen.js/handleDelete() - User pressed Yes on Delete Event Alert")
+						dispatch(eventActions.deleteEvent(event))
+					},
 					style: 'destructive'
 				},
 				{
 					text: "No",
-					onPress: () => console.log("Delete Event Canceled"),
+					onPress: () => console.log("UserProfileScreen.js/handleDelete() - Delete Event Canceled"),
 					style: "cancel"
 				}
 			],
@@ -88,7 +91,7 @@ const UserProfileScreen = (props) => {
 			await dispatch(GetSavedEvents(user.accessToken));
 			setSavedRefreshing(false)
 		} catch (error) {
-			console.error(error);
+			console.error("UserProfile.js/refreshSaved() - Caught error dispatching GetSavedEvents action creator:\n" + error);
 			setSavedRefreshing(false)
 		}
 	}, [savedRefreshing]);
@@ -99,7 +102,7 @@ const UserProfileScreen = (props) => {
 			await dispatch(userActions.getGoingEvents(user.accessToken));
 			setGoingRefreshing(false)
 		} catch (error) {
-			console.error(error);
+			console.error("UserProfile.js/refreshGoing() - Caught error dispatching getGoingEvents action creator:\n" + error);
 			setGoingRefreshing(false)
 		}
 	}, [goingRefreshing]);
@@ -110,7 +113,7 @@ const UserProfileScreen = (props) => {
 			await dispatch(GetHostedEvents(user.accessToken));
 			setHostedRefreshing(false)
 		} catch (error) {
-			console.error(error);
+			console.error("UserProfile.js/refreshHosted() - Caught error dispatching GetHostedEvents action creator:\n" + error);
 			setHostedRefreshing(false)
 		}
 	}, [hostedRefreshing]);
@@ -149,7 +152,15 @@ const UserProfileScreen = (props) => {
 							renderItem={({ item }) =>
 								<View>
 									<TouchableOpacity onPress={() => {
-										props.navigation.navigate('EventScreen', { event: item })
+										// v4: props.navigation.navigate('EventScreen', { event: item })
+										props.navigation.dispatch(
+											CommonActions.navigate({
+												name: 'EventScreen',
+												params: {
+													event: item,
+												},
+											})
+										);
 									}} >
 										<EventCard event={item} />
 									</TouchableOpacity>
@@ -167,7 +178,15 @@ const UserProfileScreen = (props) => {
 							renderItem={({ item }) =>
 								<View>
 									<TouchableOpacity onPress={() => {
-										props.navigation.navigate('EventScreen', { event: item })
+										// v4: props.navigation.navigate('EventScreen', { event: item })
+										props.navigation.dispatch(
+											CommonActions.navigate({
+												name: 'EventScreen',
+												params: {
+													event: item,
+												},
+											})
+										);
 									}} >
 										<EventCard event={item} />
 									</TouchableOpacity>
@@ -185,14 +204,30 @@ const UserProfileScreen = (props) => {
 							renderItem={({ item }) =>
 								<View>
 									<TouchableOpacity onPress={() => {
-										props.navigation.navigate('EventScreen', { event: item })
+										// props.navigation.navigate('EventScreen', { event: item })
+										props.navigation.dispatch(
+											CommonActions.navigate({
+												name: 'EventScreen',
+												params: {
+													event: item,
+												},
+											})
+										);
 									}} >
 										<EventCard event={item} />
 									</TouchableOpacity>
 									<View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingHorizontal: 15 }}>
 										<Button full transparent light
 											onPress={() => {
-												props.navigation.navigate('CreateEvent', { event: item })
+												// v4: props.navigation.navigate('CreateEvent', { event: item })
+												props.navigation.dispatch(
+													CommonActions.navigate({
+														name: 'CreateEvent',
+														params: {
+															event: item,
+														},
+													})
+												);
 											}}
 										>
 											<Text style={styles.buttonText}>Edit</Text>
@@ -223,15 +258,22 @@ const UserProfileScreen = (props) => {
 	);
 };
 
-UserProfileScreen.navigationOptions = navData => {
+export const screenOptions = navData => {
 	return {
+		title: 'Profile',
 		headerRight: () => (
 			<HeaderButtons HeaderButtonComponent={HeaderButton}>
 				<Item
 					title='Menu'
 					iconName='ios-cog'
+					buttonStyle={{color: 'black'}}
 					onPress={() => {
-						navData.navigation.navigate('Settings');
+						// v4: navData.navigation.navigate('Settings');
+						navData.navigation.dispatch(
+							CommonActions.navigate({
+								name: 'Settings',
+							})
+						);
 					}}
 				/>
 			</HeaderButtons>

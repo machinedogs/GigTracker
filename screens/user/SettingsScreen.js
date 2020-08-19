@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { Container, Header, Content, Button, ListItem, Text, Icon, Left, Body, Right, Switch } from 'native-base';
+import { CommonActions } from '@react-navigation/native';
 
 import * as authActions from '../../store/actions/user';
 import Colors from '../../constants/Colors';
@@ -16,9 +17,16 @@ export const SettingsScreen = (props) => {
                 <ListItem itemDivider>
                     <Text>Account Management</Text>
                 </ListItem>
-                <ListItem icon onPress={() => {
+                <ListItem icon first onPress={() => {
                     dispatch(authActions.logout());
-                    props.navigation.navigate("Home");
+                    // v4: props.navigation.navigate("Home");
+                    /* v5:
+                        props.navigation.dispatch(
+                            CommonActions.navigate({
+                                name: 'Home',
+                            })
+                        );
+                        */
                 }}>
                     <Left>
                         <Button style={{ backgroundColor: Colors.yellow }}>
@@ -32,8 +40,13 @@ export const SettingsScreen = (props) => {
                         <Icon active name="arrow-forward" />
                     </Right>
                 </ListItem>
-                <ListItem icon onPress={() => {
-                    props.navigation.navigate('Delete');
+                <ListItem icon last onPress={() => {
+                    // v4: props.navigation.navigate('Delete');
+                    props.navigation.dispatch(
+                        CommonActions.navigate({
+                            name: 'Delete',
+                        })
+                    );
                 }}>
                     <Left>
                         <Button style={{ backgroundColor: Colors.darkGrey }}>
@@ -50,7 +63,7 @@ export const SettingsScreen = (props) => {
                 <ListItem itemDivider>
                     <Text></Text>
                 </ListItem>
-                <Text style={{padding: 10, alignSelf: 'center'}}>Made with ❤️ and 🍺 by Machinedogs</Text>
+                <Text style={{ padding: 10, alignSelf: 'center' }}>Made with ❤️ and 🍺 by Machinedogs</Text>
             </Content>
         </Container>
     );

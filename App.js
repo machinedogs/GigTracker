@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import GigTrackerNavigator from './navigation/GigTrackerNavigator';
+import AppNavigator from './navigation/AppNavigator';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import ReduxThunk from 'redux-thunk';
@@ -55,7 +55,7 @@ export default function App() {
 
   return (
     <Provider store={store} >
-      <GigTrackerNavigator />
+      <AppNavigator />
     </Provider>
   );
 };

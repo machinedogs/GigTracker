@@ -2,6 +2,8 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { Button, Card } from 'native-base';
+import { CommonActions } from '@react-navigation/native';
+
 import Colors from '../../constants/Colors';
 import * as authActions from '../../store/actions/user';
 
@@ -9,7 +11,7 @@ const DeleteScreen = props => {
     const dispatch = useDispatch();
 
     const deleteAccountHandler = () => {
-        console.log("User triggered deleteAccount action creator");
+        console.log("DeleteScreen.js/deleteAccountHandler() - User pressed delete button");
         Alert.alert(
             "Delete your account?",
             "",
@@ -17,14 +19,14 @@ const DeleteScreen = props => {
                 {
                     text: "Yes",
                     onPress: () => {
-                        dispatch(authActions.deleteAccount())
-                        props.navigation.navigate('Home');
+                        console.log("DeleteScreen.js/deleteAccountHandler() - User pressed Yes on Delete Account Alert");
+                        dispatch(authActions.deleteAccount());
                     },
                     style: 'destructive'
                 },
                 {
                     text: "No",
-                    onPress: () => console.log("Delete Account Canceled"),
+                    onPress: () => console.log("DeleteScreen.js/deleteAccountHandler() - User cancelled deleting account"),
                     style: "cancel"
                 }
             ],
@@ -56,7 +58,7 @@ const DeleteScreen = props => {
                             paddingHorizontal: 10,
                             paddingVertical: 5
                         }}>
-                            <Text style={{ fontSize: 17}}>Delete</Text>
+                            <Text style={{ fontSize: 17 }}>Delete</Text>
                         </View>
                     </TouchableOpacity>
                 </View>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { CommonActions } from '@react-navigation/native';
 import { View, StyleSheet, Modal, Text, StatusBar, SafeAreaView, TouchableOpacity, ActivityIndicator, Alert, TouchableWithoutFeedback, Keyboard, ScrollView } from 'react-native';
 import { Button, Icon, Item, Input, } from 'native-base';
 
@@ -27,7 +28,10 @@ const SignupScreen = props => {
                 setIsLoading(true);
                 try {
                     await dispatch(authActions.signup(email, password, userName));
-                    props.navigation.replace('Home');
+                    // v4: props.navigation.replace('Home');
+                    // props.navigation.dispatch(
+                    //    StackActions.replace('Map')
+                    //);
                 } catch (err) {
                     setError(err.message);
                     // set it back to false here because we only need to reload app state if we
@@ -40,31 +44,31 @@ const SignupScreen = props => {
         } else {
             Alert.alert('Incomplete Form', 'Please complete the form', [{ text: 'Okay' }]);
         }
-        
+
 
     }
 
     const handleUserNameInput = (userNameInput) => {
         setUserName(userNameInput);
         // Pass username to the validator to confirm its a valid username
-        console.log(userNameInput)
-        console.log(userNameInputValidator(userNameInput))
+        //console.log(userNameInput)
+        //console.log(userNameInputValidator(userNameInput))
         setIsUserNameValid(userNameInputValidator(userNameInput));
     }
 
     const handleEmailInput = (emailInput) => {
         setEmail(emailInput);
         // Pass email to the validator to confirm its an email
-        console.log(emailInput)
-        console.log(emailInputValidator(emailInput))
+        console.log("emailInput")
+        //console.log(emailInputValidator(emailInput))
         setIsEmailValid(emailInputValidator(emailInput));
     }
 
     const handlePasswordInput = (passwordInput) => {
         setPassword(passwordInput);
         // Pass password to the validator to confirm its a valid password
-        console.log(passwordInput)
-        console.log(passwordInputValidator(passwordInput))
+        //console.log(passwordInput)
+        //console.log(passwordInputValidator(passwordInput))
         setPasswordValid(passwordInputValidator(passwordInput));
     }
 

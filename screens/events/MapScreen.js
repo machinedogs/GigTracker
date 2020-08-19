@@ -19,6 +19,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { PROVIDER_GOOGLE, Marker, Callout, CalloutSubview } from 'react-native-maps';
 import MapView from 'react-native-map-clustering';
 import CalendarPicker from 'react-native-calendar-picker';
+import { CommonActions } from '@react-navigation/native';
+
 
 import { EventCard } from "../../components/EventCard";
 import MapStyle from '../../constants/MapStyle';
@@ -67,9 +69,9 @@ const MapScreen = props => {
           latitudeDelta: LATITUDE_DELTA,
           longitudeDelta: LONGITUDE_DELTA
         };
-        console.log("MapScreen.js/useEffect() - Got the coords in map screen: " + coords);
+        console.log("MapScreen.js/animateToUser() - Got the coords in map screen: " + coords);
         mapRef.current.animateToRegion(coords, 0);
-      }, (error) => console.log("MapScreen.js/useEffect() - Got error from navigator.geolocation.getCurrentPosition: " + error));
+      }, (error) => console.log("MapScreen.js/animateToUser() - Got error from navigator.geolocation.getCurrentPosition: " + error));
   }
 
   //  get initial location then animate to that location
@@ -81,7 +83,9 @@ const MapScreen = props => {
 
   // Use effect for toasting user if they created / edited an event
   useEffect(() => {
-    if (props.navigation.getParam('eventCreated')) {
+    let eventCreated = props.route.params?.eventCreated ?? false;
+    let eventModified = props.route.params?.eventModified ?? false;
+    if (eventCreated) { //v4: props.navigation.getParam('eventCreated')
       // Close any potentially open callouts just in case
       if (markerRef.current) {
         markerRef.current.hideCallout();
@@ -89,9 +93,9 @@ const MapScreen = props => {
       // Toast user on successful creation
       toastRef.current.show(`Event Successfully Created`, 500);
       // now set to false so toast doesn't appear again on the next render
-      props.navigation.setParams({ 'eventCreated': false });
+      props.navigation.dispatch(CommonActions.setParams({ 'eventCreated': false })); // v4: props.navigation.setParams({ 'eventCreated': false });
       animateToUser();
-    } else if (props.navigation.getParam('eventModified')) {
+    } else if (eventModified) { //v4: props.navigation.getParam('eventModified')
       // Close old callout because it doesn't update itself, then open it again to see updated callout
       if (markerRef.current) {
         markerRef.current.hideCallout();
@@ -99,10 +103,10 @@ const MapScreen = props => {
       // Toast user on successful edit
       toastRef.current.show(`Event Successfully Updated`, 500);
       // now set to false so toast doesn't appear again on the next render
-      props.navigation.setParams({ 'eventModified': false });
+      props.navigation.dispatch(CommonActions.setParams({ 'eventModified': false })); // v4: props.navigation.setParams({ 'eventModified': false });
       animateToUser();
     }
-  }, [props.navigation.state.params]);
+  }, [props.route.params]); //v4: props.navigation.state.params
 
   const refreshEvents = async () => {
     console.log("MapScreen.js/refreshEvents() - Refreshing events")
@@ -119,7 +123,15 @@ const MapScreen = props => {
 
   // gets called when callout is pressed i.e. pin must be pressed first
   const onEventCalloutPress = (event) => {
-    props.navigation.navigate('EventScreen', { event: event });
+    // v4: props.navigation.navigate('EventScreen', { event: event });
+    props.navigation.dispatch(
+      CommonActions.navigate({
+        name: 'EventScreen',
+        params: {
+          event: event,
+        },
+      })
+    );
   }
 
   const onPinPress = (event) => {
@@ -288,7 +300,14 @@ const MapScreen = props => {
             >
               <TouchableOpacity
                 style={styles.bottomButtonContainer}
-                onPress={() => { props.navigation.navigate('SignupLogin') }}
+                onPress={() => {
+                  // v4: props.navigation.navigate('SignupLogin')
+                  props.navigation.dispatch(
+                    CommonActions.navigate('Auth', {
+                      screen: 'SignupLogin',
+                    })
+                  );
+                }}
               >
                 <View style={styles.bottomButtonStyle}>
                   <VectorIcon
@@ -305,7 +324,14 @@ const MapScreen = props => {
             <SafeAreaView style={styles.row}>
               <TouchableOpacity
                 style={styles.bottomButtonContainer}
-                onPress={() => { props.navigation.navigate('UserProfile') }}
+                onPress={() => {
+                  // v4: props.navigation.navigate('UserProfile')
+                  props.navigation.dispatch(
+                    CommonActions.navigate('User', {
+                      screen: 'UserProfile',
+                    })
+                  );
+                }}
               >
                 <View style={styles.bottomButtonStyle}>
                   <VectorIcon
@@ -318,7 +344,14 @@ const MapScreen = props => {
               </TouchableOpacity>
               <TouchableOpacity
                 style={{ paddingHorizontal: 10, paddingBottom: 10 }}
-                onPress={() => { props.navigation.navigate('CreateEvent') }}
+                onPress={() => {
+                  // v4: props.navigation.navigate('CreateEvent')
+                  props.navigation.dispatch(
+                    CommonActions.navigate({
+                      name: 'CreateEvent',
+                    })
+                  );
+                }}
               >
                 <View style={styles.bottomButtonStyle}>
                   <VectorIcon

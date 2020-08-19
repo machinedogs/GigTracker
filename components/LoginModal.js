@@ -26,7 +26,7 @@ const LoginModal = props => {
             setIsLoading(true);
             try {
                 await dispatch(authActions.login(email, password));
-                props.navigateHome();
+                // now, we auto navigate to the map screen because the user gets their auth token and this causes the UserNavigator to load
             } catch (err) {
                 setError(err.message);
                 // set it back to false here because we only need to reload app state if we
