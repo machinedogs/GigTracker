@@ -40,7 +40,6 @@ const StartupScreen = props => {
                 // Go to home screen if no userData saved to storage
                 //props.navigation.replace('Home');
                 dispatch(authActions.setDidTryAutoLogin());
-                return;
             }
 
             const transformedData = JSON.parse(userData);
@@ -57,7 +56,6 @@ const StartupScreen = props => {
             if (refreshTokenExpiryDate <= new Date() || !refreshToken || !userName || !userEmail || !accessToken) {
                 // v4: props.navigation.replace('Home');
                 dispatch(authActions.setDidTryAutoLogin());
-                return;
             }
 
             // check if access token expired, then make refresh endpoint call
@@ -76,7 +74,6 @@ const StartupScreen = props => {
                     //);
                     // If error then don't log user in and just bring them home to login themselves
                     dispatch(authActions.setDidTryAutoLogin());
-                    return;
                 }
 
                 dispatch(eventActions.GetSavedEvents(accessToken));
@@ -88,7 +85,7 @@ const StartupScreen = props => {
                 //props.navigation.dispatch(
                 //    StackActions.replace('Map')
                 //);
-                return;
+                dispatch(authActions.setDidTryAutoLogin());
             }
 
             // pass user data to state and navigate to home
