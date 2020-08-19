@@ -40,6 +40,7 @@ const StartupScreen = props => {
                 // Go to home screen if no userData saved to storage
                 //props.navigation.replace('Home');
                 dispatch(authActions.setDidTryAutoLogin());
+                return;
             }
 
             const transformedData = JSON.parse(userData);
@@ -56,6 +57,7 @@ const StartupScreen = props => {
             if (refreshTokenExpiryDate <= new Date() || !refreshToken || !userName || !userEmail || !accessToken) {
                 // v4: props.navigation.replace('Home');
                 dispatch(authActions.setDidTryAutoLogin());
+                return;
             }
 
             // check if access token expired, then make refresh endpoint call
@@ -86,6 +88,7 @@ const StartupScreen = props => {
                 //    StackActions.replace('Map')
                 //);
                 dispatch(authActions.setDidTryAutoLogin());
+                return;
             }
 
             // pass user data to state and navigate to home
@@ -94,9 +97,8 @@ const StartupScreen = props => {
             dispatch(authActions.getGoingEvents(accessToken));
             await dispatch(updateUserProfile(profileImage, transformedData));
             await dispatch(authActions.authenticate(userName, userEmail, accessToken, refreshToken));
-            //Dispatch action to update profile image state in store 
-            // await dispatch(updateUserProfile(profileImage, transformedData));
-            // v4: props.navigation.replace('Home');
+            dispatch(authActions.setDidTryAutoLogin());
+            return;
         };
         tryLogin();
     }, [dispatch]);
