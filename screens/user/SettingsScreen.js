@@ -60,6 +60,18 @@ export const SettingsScreen = (props) => {
                         <Icon active name="arrow-forward" />
                     </Right>
                 </ListItem>
+                <ListItem icon last onPress={() => {
+                    //toggle dark mode
+                }}>
+                    <Left>
+                        <Button style={{ backgroundColor: Colors.darkGrey }}>
+                            <Icon active name="settings" type="MaterialCommunityIcons" />
+                        </Button>
+                    </Left>
+                    <Body>
+                        <Text>Dark Mode</Text>
+                    </Body>
+                </ListItem>
                 <ListItem itemDivider>
                     <Text></Text>
                 </ListItem>
