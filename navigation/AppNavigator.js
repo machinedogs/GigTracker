@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 
@@ -11,6 +11,15 @@ const LightTheme = {
   colors = {
     ...DefaultTheme.colors,
     primary: Colors.purpleButton,
+    background: 'white'
+  }
+}
+
+const DarkTheme = {
+  ...DefaultTheme,
+  colors = {
+    ...DefaultTheme.colors,
+    primary: Colors.purpleButton,
     background: Colors.darkGrey
   }
 }
@@ -18,9 +27,10 @@ const LightTheme = {
 const AppNavigator = props => {
   const isAuth = useSelector(state => state.user.accessToken);
   const didTryAutoLogin = useSelector(state => state.user.didTryAutoLogin);
+  const [darkMode, setDarkMode] = useState(false)
 
   return (
-    <NavigationContainer theme={LightTheme}>
+    <NavigationContainer theme={darkMode ? DarkTheme : LightTheme}>
       {isAuth.length > 0 && didTryAutoLogin === true && <UserNavigator />}
       {isAuth.length < 1 && didTryAutoLogin === true && <GuestNavigator />}
       {isAuth.length < 1 && didTryAutoLogin === false && <StartupScreen />}
