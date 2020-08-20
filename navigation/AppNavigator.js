@@ -8,7 +8,7 @@ import Colors from '../constants/Colors';
 
 const LightTheme = {
   ...DefaultTheme,
-  colors = {
+  colors: {
     ...DefaultTheme.colors,
     primary: Colors.purpleButton,
     background: 'white'
@@ -17,7 +17,7 @@ const LightTheme = {
 
 const DarkTheme = {
   ...DefaultTheme,
-  colors = {
+  colors: {
     ...DefaultTheme.colors,
     primary: Colors.purpleButton,
     background: Colors.darkGrey

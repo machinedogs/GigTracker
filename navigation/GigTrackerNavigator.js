@@ -37,6 +37,12 @@ const defaultNavOptions = {
     headerBackTitleVisible: false,
 }
 
+const defaultTabOptions = {
+    activeBackgroundColor: Colors.darkGrey,
+    inactiveBackgroundColor: Colors.darkGrey,
+    activeTintColor: 'white'
+}
+
 // The User navigator when user is signed in
 const UserTabNavigator = createBottomTabNavigator();
 // The Guest navigator when user is not signed in
@@ -159,7 +165,7 @@ MainTabNavigator
 */
 export const UserNavigator = () => {
     return (
-        <UserTabNavigator.Navigator screenOptions={defaultNavOptions} >
+        <UserTabNavigator.Navigator screenOptions={defaultNavOptions} tabBarOptions={defaultTabOptions} >
             <UserTabNavigator.Screen name="Home" component={HomeNavigator} />
             <UserTabNavigator.Screen name="Feed" component={FeedNavigator} />
             <UserTabNavigator.Screen name="Create" component={CreateNavigator} />
