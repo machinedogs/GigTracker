@@ -32,7 +32,7 @@ import Geocoder from 'react-native-geocoding';
 import InsetShadow from 'react-native-inset-shadow';
 import { Ionicons, Fontisto } from "@expo/vector-icons";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import { CommonActions } from '@react-navigation/native';
+import { CommonActions, useTheme } from '@react-navigation/native';
 
 import MapStyle from "../../constants/MapStyle";
 import eventBuilder from "../../models/createEvent";
@@ -94,6 +94,8 @@ const CreateEventScreen = (props) => {
 
   let mapRef = useRef(null);
   let markerRef = useRef(null);
+
+  const {theme} = useTheme();
 
   // Reset the form fields after submitting or modifying event so that when user navigates back it doesn't have old values
   const resetForm = () => {
@@ -565,7 +567,7 @@ const CreateEventScreen = (props) => {
                     }}
                     styles={{
                       textInputContainer: {
-                        backgroundColor: 'white',
+                        backgroundColor: theme.background,
                         borderWidth: 1,
                         borderRadius: 5,
                         borderColor: 'white',
@@ -583,12 +585,12 @@ const CreateEventScreen = (props) => {
                       description: {
                         paddingTop: 10,
                         color: Colors.darkGrey,
-                        backgroundColor: 'white',
+                        backgroundColor: theme.background,
                         paddingHorizontal: 10,
                         fontSize: 16,
                       },
                       listView: {
-                        backgroundColor: 'white',
+                        backgroundColor: theme.background,
                         borderColor: 'white',
                         borderRadius: 5,
                         borderWidth: 1,
@@ -658,7 +660,7 @@ const CreateEventScreen = (props) => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "white"
+    backgroundColor: theme.background
   },
   mapContainer: {
     flex: 1,
