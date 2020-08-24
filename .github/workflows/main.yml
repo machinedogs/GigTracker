@@ -1,0 +1,35 @@
+# This will build the app through expo build and then publish to testflight
+
+name: Publish to Testflight
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+ publish-to-testflight:
+   runs-on: macos-latest
+   steps:
+     - uses: actions/checkout@v1
+     - uses: actions/setup-node@v1
+       with: 
+         node-version: 12
+     - uses: expo/expo-github-action@v4
+       with:
+         expo-username: ${{secrets.EXPO_CLI_USERNAME}}
+         expo-password: ${{secrets.EXPO_CLI_PASSWORD}}
+         expo-packager: npm
+     - name: Install dependencies
+       run: npm install
+     - name: Build iOS app
+       run: expo build:ios
+       env:
+         EXPO_APPLE_ID: ${{secrets.EXPO_APPLE_ID}}
+         EXPO_APPLE_ID_PASSWORD: ${{secrets.EXPO_APPLE_ID_PASSWORD}}
+     - name: Upload iOS app
+       run: expo upload:ios --app-name "Current"
+       env:
+         EXPO_APPLE_ID: ${{secrets.EXPO_APPLE_ID}}
+         EXPO_APPLE_ID_PASSWORD: ${{secrets.EXPO_APPLE_ID_PASSWORD}}
