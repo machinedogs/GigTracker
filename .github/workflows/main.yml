@@ -29,7 +29,7 @@ jobs:
          EXPO_APPLE_ID: ${{secrets.EXPO_APPLE_ID}}
          EXPO_APPLE_ID_PASSWORD: ${{secrets.EXPO_APPLE_ID_PASSWORD}}
      - name: Upload iOS app
-       run: expo upload:ios --app-name "Current"
+       run: expo upload:ios --app-name "Current" --non-interactive --no-wait
        env:
          EXPO_APPLE_ID: ${{secrets.EXPO_APPLE_ID}}
-         EXPO_APPLE_ID_PASSWORD: ${{secrets.EXPO_APPLE_ID_PASSWORD}}
+         EXPO_APPLE_PASSWORD: ${{secrets.EXPO_APPLE_ID_PASSWORD}}
