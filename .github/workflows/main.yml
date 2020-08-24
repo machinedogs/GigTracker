@@ -24,7 +24,9 @@ jobs:
      - name: Install dependencies
        run: npm install
      - name: Build iOS app
-       run: expo build:ios
+       run: |
+        expo start -c
+        expo build:ios
        env:
          EXPO_APPLE_ID: ${{secrets.EXPO_APPLE_ID}}
          EXPO_APPLE_ID_PASSWORD: ${{secrets.EXPO_APPLE_ID_PASSWORD}}
