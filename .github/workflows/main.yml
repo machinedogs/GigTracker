@@ -12,17 +12,17 @@ jobs:
  publish-to-testflight:
    runs-on: macos-latest
    steps:
-     - uses: actions/checkout@v1
+     - uses: actions/checkout@v2
      - uses: actions/setup-node@v1
        with: 
          node-version: 12
-     - uses: expo/expo-github-action@v4
+     - uses: expo/expo-github-action@v5
        with:
          expo-username: ${{secrets.EXPO_CLI_USERNAME}}
          expo-password: ${{secrets.EXPO_CLI_PASSWORD}}
          expo-packager: npm
      - name: Install dependencies
-       run: npm install && npm cache clean
+       run: npm install
      - name: Build iOS app
        run: expo build:ios
        env:
