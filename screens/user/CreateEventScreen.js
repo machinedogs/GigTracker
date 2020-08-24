@@ -95,7 +95,7 @@ const CreateEventScreen = (props) => {
   let mapRef = useRef(null);
   let markerRef = useRef(null);
 
-  const {theme} = useTheme();
+  const theme = useTheme();
 
   // Reset the form fields after submitting or modifying event so that when user navigates back it doesn't have old values
   const resetForm = () => {
@@ -567,7 +567,7 @@ const CreateEventScreen = (props) => {
                     }}
                     styles={{
                       textInputContainer: {
-                        backgroundColor: theme.background,
+                        //backgroundColor: theme.background,
                         borderWidth: 1,
                         borderRadius: 5,
                         borderColor: 'white',
@@ -585,12 +585,12 @@ const CreateEventScreen = (props) => {
                       description: {
                         paddingTop: 10,
                         color: Colors.darkGrey,
-                        backgroundColor: theme.background,
+                        //backgroundColor: theme.background,
                         paddingHorizontal: 10,
                         fontSize: 16,
                       },
                       listView: {
-                        backgroundColor: theme.background,
+                        //backgroundColor: theme.background,
                         borderColor: 'white',
                         borderRadius: 5,
                         borderWidth: 1,
@@ -660,7 +660,7 @@ const CreateEventScreen = (props) => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: theme.background
+    //backgroundColor: theme.background
   },
   mapContainer: {
     flex: 1,
