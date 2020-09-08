@@ -28,11 +28,10 @@ const StartupScreen = props => {
             await getGeoInfo().then(coords => coordinates = coords);
             // Set the initial User Location state
             dispatch(authActions.setInitialLocation(coordinates))
-            var currentDate = new Date()
-            currentDate.setHours(0, 0, 0, 0);
+            var currentDate = new Date(new Date().setUTCHours(0, 0, 0, 0))
             dispatch(eventActions.setDateFilter(currentDate))
             await dispatch(eventActions.getEvents(currentDate.toISOString(), coordinates.latitude, coordinates.longitude));
-            dispatch(eventActions.getEvents(currentDate));
+            dispatch(eventActions.getEvents(currentDate.toISOString()));
 
             const userData = await SecureStore.getItemAsync('userData');
 

@@ -44,7 +44,7 @@ const MapScreen = props => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const userAccessToken = useSelector(state => state.user.accessToken);
   const filteredEvents = useSelector(state => state.events.filteredEvents);
-  const [selectedDate, setSelectedDate] = useState(new Date().setHours(0, 0, 0, 0));
+  const [selectedDate, setSelectedDate] = useState(new Date().setUTCHours(0, 0, 0, 0));
   const [showCategories, setShowCategories] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
   let mapRef = useRef(null);
@@ -106,7 +106,7 @@ const MapScreen = props => {
     let coordinates = '';
     await getGeoInfo().then(coords => coordinates = coords);
     setIsRefreshing(true);
-    const formattedDate = new Date(selectedDate)
+    const formattedDate = new Date(new Date(selectedDate).setUTCHours(0,0,0,0));
     await dispatch(eventActions.getEvents(formattedDate.toISOString(), coordinates.latitude, coordinates.longitude));
     dispatch(eventActions.getEvents(formattedDate.toISOString()));
     setIsRefreshing(false);
@@ -140,9 +140,9 @@ const MapScreen = props => {
   const filterDate = async (givenDate) => {
     let coordinates = '';
     await getGeoInfo().then(coords => coordinates = coords);
-    const dateToSet = new Date(givenDate)
-    dateToSet.setHours(0, 0, 0, 0);
-    console.log("MapScreen.js/filterDate.js - User selected date: " + givenDate)
+    const dateToSet = new Date(givenDate);
+    dateToSet.setUTCHours(0, 0, 0, 0);
+    console.log("MapScreen.js/filterDate.js - User selected date: " + givenDate);
     setSelectedDate(dateToSet);
     dispatch(eventActions.setDateFilter(dateToSet));
     setIsRefreshing(true);
